@@ -26,8 +26,8 @@ module.exports = withPWA({
     },
     webpackDevMiddleware: config => {
         config.watchOptions = {
-            poll: 1000,
-            aggregateTimeout: 300,
+            poll: 2000,
+            aggregateTimeout: 600,
             ignored: /node_modules/,
         }
         return config
