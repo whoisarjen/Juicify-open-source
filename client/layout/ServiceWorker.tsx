@@ -4,7 +4,7 @@ const ServiceWorker = ({ children }: { children: any }) => {
     const isServerSide = typeof window === 'undefined';
 
     useEffect(() => {
-        if (!isServerSide) {
+        if (!isServerSide && process.env.isProduction) {
             if (localStorage.getItem('version') !== process.env.APP_VERSION) {
                 if ('serviceWorker' in navigator) {
                     navigator.serviceWorker.getRegistrations().then(function (registrations) {

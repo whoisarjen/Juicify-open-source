@@ -10,8 +10,8 @@ module.exports = withPWA({
     reactStrictMode: true,
     pwa: {
         dest: "public",
-        register: true,
-        skipWaiting: true,
+        register: isProduction,
+        skipWaiting: isProduction,
         disable: !isProduction,
     },
     env: {
@@ -22,11 +22,13 @@ module.exports = withPWA({
         SERVER: isProduction ? 'https://server.juicify.app/graphql' : 'http://localhost:8000/graphql',
         INDEXEDDB: 'cache',
         APP_VERSION: new Date().toISOString(),
+        isProduction,
     },
     webpackDevMiddleware: config => {
         config.watchOptions = {
             poll: 1000,
             aggregateTimeout: 300,
+            ignored: /node_modules/,
         }
         return config
     },
