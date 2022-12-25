@@ -85,14 +85,11 @@ const LoginPage = () => {
                 >
                     {t("auth:SIGN_IN")}
                 </LoadingButton>
-                <Link
-                    passHref
-                    href="/reset-password"
-                >
+                <Link passHref href="/reset-password" legacyBehavior>
                     {t("auth:FORGOT_PASSWORD_RESET_IT")}
                 </Link>
             </Stack>
-            <Link passHref href="/register">
+            <Link passHref href="/register" legacyBehavior>
                 <LoadingButton
                     data-testid="register_button"
                     color="success"

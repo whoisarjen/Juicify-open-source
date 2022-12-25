@@ -172,7 +172,7 @@ const RegisterPage = () => {
                     {t("auth:REGISTER")}
                 </LoadingButton>
             </Stack>
-            <Link passHref href="/login">
+            <Link passHref href="/login" legacyBehavior>
                 <LoadingButton
                     color="success"
                     style={{ margin: 'auto 0' }}

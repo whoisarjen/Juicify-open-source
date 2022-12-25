@@ -137,7 +137,7 @@ const Layout = ({ children }: { children: any }) => {
 
     useEffect(() => {
         (async () => {
-            if (!await isBrowserValid() && router.pathname != '/not-supported') {
+            if (!(await isBrowserValid()) && router.pathname != '/not-supported') {
                 return router.push('/not-supported')
             }
 
