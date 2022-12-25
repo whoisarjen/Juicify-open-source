@@ -1,0 +1,19 @@
+mutation tokenAuth($username: String!, $password: String!) {
+	tokenAuth(username: $username, password: $password) {
+		token
+		refreshToken
+		payload
+		refreshExpiresIn
+		__typename
+	}
+}
+
+mutation RefreshToken($refreshToken: String!) {
+	refreshToken(refreshToken: $refreshToken) {
+		token
+		payload
+		refreshToken
+		refreshExpiresIn
+		__typename
+	}
+}

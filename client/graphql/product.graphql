@@ -1,0 +1,67 @@
+fragment ProductFields on ProductType {
+	id
+	name
+	proteins
+	carbs
+	sugar
+	fats
+	fiber
+	isVerified
+	sodium
+	ethanol
+	barcode
+	isExpectingCheck
+	isDeleted
+	user {
+		id
+	}
+	__typename
+}
+
+mutation createProduct(
+	$id: UUID!
+	$name: String!
+	$user: UUID!
+	$proteins: Decimal
+	$carbs: Decimal
+	$sugar: Decimal
+	$fats: Decimal
+	$fiber: Decimal
+	$sodium: Decimal
+	$ethanol: Decimal
+	$barcode: Int
+	$isExpectingCheck: Boolean
+) {
+	createProduct(
+		id: $id
+		name: $name
+		user: $user
+		proteins: $proteins
+		carbs: $carbs
+		sugar: $sugar
+		fats: $fats
+		fiber: $fiber
+		sodium: $sodium
+		ethanol: $ethanol
+		barcode: $barcode
+		isExpectingCheck: $isExpectingCheck
+	) {
+		product {
+			...ProductFields
+		}
+	}
+}
+
+mutation deleteProduct($id: UUID!, $user: UUID!) {
+	deleteProduct(id: $id, user: $user) {
+		product {
+			...ProductFields
+		}
+	}
+}
+
+query productsByName($name: String!) {
+	productsByName(name: $name) {
+		...ProductFields
+	}
+}

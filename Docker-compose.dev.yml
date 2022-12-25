@@ -1,0 +1,58 @@
+version: "3.8"
+services:
+    nextjs:
+        ports:
+            - 3000:3000
+        expose:
+            - "3000"
+        build:
+            context: client/.
+            dockerfile: Dockerfile.dev
+        container_name: nextjs
+        volumes:
+            - ./client:/usr/src/app
+            - /usr/src/app/node_modules
+            - /usr/src/app/.next
+        depends_on:
+            - django
+        command: npm run dev
+        networks:
+            - main
+
+    django:
+        build:
+            context: server/.
+            dockerfile: Dockerfile
+        container_name: django
+        ports:
+            - 8000:8000
+        expose:
+            - "8000"
+        volumes:
+            - ./server:/django
+        depends_on:
+            - postgres
+        command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+        networks:
+            - main
+
+    postgres:
+        image: postgres
+        container_name: postgres
+        volumes:
+            - postgres-data:/var/lib/postgresql/data
+        ports:
+            - 5432:5432
+        expose:
+            - "5432"
+        networks:
+            - main
+        environment:
+            POSTGRES_USER: admin
+            POSTGRES_PASSWORD: admin
+
+volumes:
+    postgres-data:
+
+networks:
+    main:

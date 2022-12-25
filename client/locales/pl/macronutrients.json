@@ -1,0 +1,22 @@
+{
+    "TITLE": "Makroskładniki",
+    "DESCRIPTION": "Naciśnij wykres, aby zmianieć makro dla danego dnia. Róźnica zostanie rozłożona na odblokowane dni. Naciśnij",
+    "DESCRIPTION_2": "aby zablokować dzień. Tygodniowe makro będzie taka sama.",
+    "BUTTON": "Ustaw własne",
+    "SHORT_SUNDAY": "Ni",
+    "SHORT_MONDAY": "Po",
+    "SHORT_TUESDAY": "Wt",
+    "SHORT_WEDNESDAY": "Śr",
+    "SHORT_THURSDAY": "Cz",
+    "SHORT_FRIDAY": "Pi",
+    "SHORT_SATURDAY": "So",
+    "P": "B",
+    "C": "W",
+    "F": "T",
+    "PROTEINS": "Białko",
+    "CARBS": "Węgle",
+    "FATS": "Tłuszcze",
+    "OWN_MACRO_DESCRIPTION": "Możesz ustawić własne makro, ale jest to opcja dla osób, które wiedzą, co robią. W większości przypakdów lepiej postawić na zalecenia trenera.",
+    "CLOSE": "Zamknij",
+    "CHANGE_ALL_DAYS": "Zmień wszystkie dni"
+}

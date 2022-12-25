@@ -1,0 +1,22 @@
+{
+    "TITLE": "Macronutrients",
+    "DESCRIPTION": "Click bar to change macro for this day. The diffrent will put on unlocked days. Click",
+    "DESCRIPTION_2": "to lock day. Week macro will stay same.",
+    "BUTTON": "Use own",
+    "SHORT_SUNDAY": "Su",
+    "SHORT_MONDAY": "Mo",
+    "SHORT_TUESDAY": "Tu",
+    "SHORT_WEDNESDAY": "We",
+    "SHORT_THURSDAY": "Th",
+    "SHORT_FRIDAY": "Fr",
+    "SHORT_SATURDAY": "Sa",
+    "P": "P",
+    "C": "C",
+    "F": "F",
+    "PROTEINS": "Proteins",
+    "CARBS": "Carbs",
+    "FATS": "Fats",
+    "OWN_MACRO_DESCRIPTION": "You can settle own macro, but it's only for people, who knows how to play w macro. Mostly you want coach to does it for you.",
+    "CLOSE": "Close",
+    "CHANGE_ALL_DAYS": "Change all days"
+}

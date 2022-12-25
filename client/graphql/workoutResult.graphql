@@ -1,0 +1,100 @@
+fragment WorkoutResultFields on WorkoutResultType {
+	id
+	name
+	burnedCalories
+	exercises
+    note
+    when
+    workoutPlan {
+        id
+        name
+        description
+    }
+	user {
+		id
+		username
+	}
+	__typename
+}
+
+query workoutResults ($username: String!) {
+    workoutResults (username: $username) {
+        ...WorkoutResultFields
+    }
+	userByUsername(username: $username){
+		...BasicUserFields
+	}
+}
+
+query workoutResult ($id: UUID!) {
+    workoutResult (id: $id) {
+        ...WorkoutResultFields
+    }
+    previousWorkoutResult (id: $id) {
+        ...WorkoutResultFields
+    }
+}
+
+query workoutResultsByWhen ($when: Date!, $username: String!) {
+    workoutResultsByWhen(when: $when, username: $username){
+        ...WorkoutResultFields
+    }
+}
+
+query workoutResultsByRangeAndUsername ($startDate: Date!, $endDate: Date!, $username: String!){
+	workoutResultsByRangeAndUsername(startDate: $startDate, endDate: $endDate, username: $username){
+        ...WorkoutResultFields
+	}
+}
+
+mutation createWorkoutResult(
+	$id: UUID!
+	$name: String!
+	$when: Date!
+	$burnedCalories: Int!
+	$workoutPlan: UUID!
+	$exercises: JSONString!
+) {
+	createWorkoutResult(
+		id: $id
+		name: $name
+		when: $when
+		burnedCalories: $burnedCalories
+		workoutPlan: $workoutPlan
+		exercises: $exercises
+	) {
+		workoutResult {
+			...WorkoutResultFields
+		}
+	}
+}
+
+mutation updateWorkoutResult(
+	$id: UUID!
+	$burnedCalories: Int
+	$note: String
+	$name: String!
+	$exercises: JSONString!
+    $when: Date!
+) {
+	updateWorkoutResult(
+		id: $id
+		burnedCalories: $burnedCalories
+		note: $note
+		name: $name
+		exercises: $exercises
+        when: $when
+	) {
+		workoutResult {
+			...WorkoutResultFields
+		}
+	}
+}
+
+mutation deleteWorkoutResult($id: UUID!) {
+	deleteWorkoutResult(id: $id) {
+		workoutResult {
+			...WorkoutResultFields
+		}
+	}
+}
