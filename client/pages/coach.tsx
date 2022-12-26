@@ -16,7 +16,7 @@ import Tutorial_6 from "@/containers/coach/Tutorial_6";
 import Tutorial_7 from "@/containers/coach/Tutorial_7";
 import Welcome from "@/containers/coach/Welcome";
 import { useCreateCoachMutation, useDailyByWhenAndUsernameQuery } from "@/generated/graphql";
-import { useAppSelector } from "@/hooks/useRedux";
+import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -28,10 +28,10 @@ export interface PrepareObject {
 }
 
 const Coach = () => {
-    const token = useAppSelector(state => state.token)
-    const [step, setStep] = useState(token.isCoachAnalyze ? 'Standard' : 'Welcome')
+    const { data: sessionData } = useSession()
+    const [step, setStep] = useState(sessionData?.user?.isCoachAnalyze ? 'Standard' : 'Welcome')
     const when = new Date().toISOString().slice(0, 10)
-    const username = token?.username || ''
+    const username = sessionData?.user?.username || ''
     const [{ data }, getDailyByWhenAndUsernameQuery] = useDailyByWhenAndUsernameQuery({
         variables: {
             when,
@@ -48,7 +48,7 @@ const Coach = () => {
 
         await createCoach({
             id: uuidv4(),
-            user: token.id,
+            user: sessionData?.user?.id,
             weight: data.measurementByWhenAndUsername.weight,
             ...object,
         })
@@ -70,12 +70,12 @@ const Coach = () => {
         //     setStep('Result')
     }
 
-    const handlePreviousStep = () => setStep(token.isCoachAnalyze ? 'Standard' : 'Welcome')
+    const handlePreviousStep = () => setStep(sessionData?.user?.isCoachAnalyze ? 'Standard' : 'Welcome')
 
     useEffect(() => {
         if (when && username) {
             getDailyByWhenAndUsernameQuery()
-            setStep(token.isCoachAnalyze ? 'Standard' : 'Welcome')
+            setStep(sessionData?.user?.isCoachAnalyze ? 'Standard' : 'Welcome')
         }
     }, [when, username])
 

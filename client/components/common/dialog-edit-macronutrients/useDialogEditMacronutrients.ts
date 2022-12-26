@@ -1,10 +1,10 @@
+import { useSession } from "next-auth/react"
 import useTranslation from "next-translate/useTranslation"
 import { useState, useEffect } from "react"
 import { DialogEditMacronutrientsProps } from "."
-import { useAppSelector } from "../../../hooks/useRedux"
 
 const useDialogEditMacronutrients = ({ isOwnMacro, close }: DialogEditMacronutrientsProps) => {
-    const token = useAppSelector(state => state.token)
+    const { data } = useSession()
     const [isDialog, setIsDialog] = useState(false)
     const [proteins, setProteins] = useState(0)
     const [carbs, setCarbs] = useState(0)
@@ -28,12 +28,12 @@ const useDialogEditMacronutrients = ({ isOwnMacro, close }: DialogEditMacronutri
     }
 
     useEffect(() => {
-        if (token) {
-            // setProteins(token.macronutrients[0].proteins)
-            // setCarbs(token.macronutrients[0].carbs)
-            // setFats(token.macronutrients[0].fats)
+        if (data?.user) {
+            // setProteins(data?.user.macronutrients[0].proteins)
+            // setCarbs(data?.user.macronutrients[0].carbs)
+            // setFats(data?.user.macronutrients[0].fats)
         }
-    }, [token.id])
+    }, [data?.user?.id])
 
     return { isOwnMacro, close, t, proteins, setProteins, carbs, setCarbs, fats, setFats, isDialog, setIsDialog, handleConfirm }
 }

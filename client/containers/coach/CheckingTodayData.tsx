@@ -1,10 +1,10 @@
 import Button from '@mui/material/Button';
-import { useAppSelector } from "../../hooks/useRedux";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 import NavbarOnlyTitle from "@/components/NavbarOnlyTitle/NavbarOnlyTitle"
 import moment from 'moment';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 
 const Grid = styled.div`
     width: 100%;
@@ -26,7 +26,7 @@ interface CheckingTodayDataProps {
 
 const CheckingTodayData = ({ setStep, weight }: CheckingTodayDataProps) => {
     const { t } = useTranslation('coach')
-    const token = useAppSelector(state => state.token)
+    const { data } = useSession()
     const router: any = useRouter()
 
     return (
@@ -41,7 +41,7 @@ const CheckingTodayData = ({ setStep, weight }: CheckingTodayDataProps) => {
                                 <tbody>
                                     <tr>
                                         <th>{t('HEIGHT')}:</th>
-                                        <td>{token.height}cm</td>
+                                        <td>{data?.user?.height}cm</td>
                                     </tr>
                                 </tbody>
                                 <tbody>
@@ -53,7 +53,7 @@ const CheckingTodayData = ({ setStep, weight }: CheckingTodayDataProps) => {
                                 <tbody>
                                     <tr>
                                         <th>{t('AGE')}:</th>
-                                        <td>{moment().diff(token.birth, 'years')}</td>
+                                        <td>{moment().diff(data?.user?.birth, 'years')}</td>
                                     </tr>
                                 </tbody>
                             </table>

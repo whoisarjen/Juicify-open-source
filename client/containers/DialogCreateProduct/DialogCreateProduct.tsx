@@ -19,6 +19,7 @@ import { useForm } from 'react-hook-form';
 import { object, string, preprocess, number, boolean, TypeOf } from 'zod';
 import { useCreateProductMutation } from '@/generated/graphql';
 import { v4 as uuidv4 } from 'uuid';
+import { useSession } from 'next-auth/react';
 
 const ButtonHolder = styled.div`
     width: 100%;
@@ -48,7 +49,7 @@ export type ProductSchemaProps = TypeOf<typeof ProductSchema>
 
 const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProductProps) => {
     const { t } = useTranslation('nutrition-diary')
-    const token = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
     const { success } = useNotify()
     const [isDialog, setIsDialog] = useState(false)
     const [{ fetching }, createProduct] = useCreateProductMutation()
@@ -58,10 +59,10 @@ const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProduct
     })
 
     const onSubmit = async (newProduct: ProductSchemaProps) => {
-        if (token?.id) {
+        if (sessionData?.user?.id) {
             await createProduct({
                 ...newProduct,
-                user: token.id,
+                user: sessionData?.user.id,
                 id: uuidv4(),
             })
             created(newProduct.name)

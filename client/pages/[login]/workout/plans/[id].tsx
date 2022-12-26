@@ -4,7 +4,6 @@ import TextField from '@mui/material/TextField'
 import DeleteIcon from '@mui/icons-material/Delete'
 import SwapVertIcon from '@mui/icons-material/SwapVert'
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
-import { useAppSelector } from '@/hooks/useRedux'
 import { zodResolver } from '@hookform/resolvers/zod'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
@@ -16,11 +15,12 @@ import { ExerciseFieldsFragment, useDeleteWorkoutPlanMutation, useUpdateWorkoutP
 import DialogAddExercises from '@/containers/DialogAddExercises/DialogAddExercises'
 import { WorkoutPlanSchemaProps, WorkoutPlanSchema } from '@/containers/Workout/workout.schema'
 import InputAdornment from '@mui/material/InputAdornment';
+import { useSession } from 'next-auth/react'
 
 const WorkoutPlan = () => {
     const router: any = useRouter()
     const { t } = useTranslation('workout')
-    const token = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
     const [, updateWorkoutPlan] = useUpdateWorkoutPlanMutation()
     const [, deleteWorkoutPlan] = useDeleteWorkoutPlanMutation()
 
@@ -70,9 +70,9 @@ const WorkoutPlan = () => {
                 ...newWorkoutPlan,
                 exercises: JSON.stringify(newWorkoutPlan?.exercises)
             })
-            router.push(`/${token.username}/workout/plans`)
+            router.push(`/${sessionData?.user?.username}/workout/plans`)
         }
-    }, [data?.workoutPlan?.id, router, token.username, updateWorkoutPlan])
+    }, [data?.workoutPlan?.id, router, sessionData?.user?.username, updateWorkoutPlan])
 
     useEffect(() => {
         window.addEventListener('blur', () => handleSubmit(handleOnSave)())
@@ -91,7 +91,7 @@ const WorkoutPlan = () => {
             await deleteWorkoutPlan({
                 id: data.workoutPlan.id,
             })
-            router.push(`/${token.username}/workout/plans`)
+            router.push(`/${sessionData?.user?.username}/workout/plans`)
         }
     }
 
@@ -100,7 +100,7 @@ const WorkoutPlan = () => {
         move(result.source.index, result.destination.index)
     }
 
-    const isOwner = token?.id == data?.workoutPlan?.user?.id
+    const isOwner = sessionData?.user?.id == data?.workoutPlan?.user?.id
 
     useEffect(() => {
         if (router?.query?.id) {
@@ -114,7 +114,7 @@ const WorkoutPlan = () => {
                 isLoading={fetching}
                 onSave={handleSubmit(handleOnSaveWithRouter)}
                 onDelete={handleOnDelete}
-                onArrowBack={() => router.push(`/${token.username}/workout/plans`)}
+                onArrowBack={() => router.push(`/${sessionData?.user?.username}/workout/plans`)}
             />
             <TextField
                 focused

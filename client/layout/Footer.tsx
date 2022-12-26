@@ -3,12 +3,12 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import BookIcon from "@mui/icons-material/Book";
 import styled from 'styled-components'
-import { useAppSelector } from "@/hooks/useRedux";
 import CustomAvatar from "@/components/CustomAvatar/CustomAvatar";
 import BetterLink from "@/components/BetterLink/BetterLink";
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import moment from "moment";
 import IconButton from '@mui/material/IconButton';
+import { useSession } from "next-auth/react";
 
 const Box = styled.footer`
     width: 100%;
@@ -39,18 +39,18 @@ const Copyright = styled.p`
 `
 
 const Footer = () => {
-    const token = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
 
     return (
         <Box>
-            {token?.username
+            {sessionData?.user?.username
                 ? <Menu>
                     <BetterLink style={{ margin: 'auto', display: 'grid' }} href="/coach">
                         <IconButton color="primary">
                             <SmartToyIcon color="primary" />
                         </IconButton>
                     </BetterLink>
-                    <BetterLink style={{ margin: 'auto', display: 'grid' }} href={`/${token.username}/workout`}>
+                    <BetterLink style={{ margin: 'auto', display: 'grid' }} href={`/${sessionData?.user?.username}/workout`}>
                         <IconButton color="primary">
                             <FitnessCenterIcon color="primary" />
                         </IconButton>
@@ -65,14 +65,14 @@ const Footer = () => {
                             <PhotoCameraIcon color="primary" />
                         </IconButton>
                     </BetterLink>
-                    <BetterLink style={{ margin: 'auto', display: 'grid' }} href={`/${token.username}/consumed/${moment().format('YYYY-MM-DD')}`}>
+                    <BetterLink style={{ margin: 'auto', display: 'grid' }} href={`/${sessionData?.user?.username}/consumed/${moment().format('YYYY-MM-DD')}`}>
                         <IconButton color="primary">
                             <BookIcon color="primary" />
                         </IconButton>
                     </BetterLink>
-                    <BetterLink style={{ margin: 'auto', display: 'grid' }} href={`/${token.username}`}>
+                    <BetterLink style={{ margin: 'auto', display: 'grid' }} href={`/${sessionData?.user?.username}`}>
                         <IconButton color="primary">
-                            <CustomAvatar id={token?.id} username={token?.username} size="28px" />
+                            <CustomAvatar id={sessionData?.user?.id || ''} username={sessionData?.user?.username || ''} size="28px" />
                         </IconButton>
                     </BetterLink>
                 </Menu>

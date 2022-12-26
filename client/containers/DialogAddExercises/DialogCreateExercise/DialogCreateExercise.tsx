@@ -12,8 +12,8 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ExerciseSchema, ExerciseSchemaProps } from '@/containers/Workout/workout.schema'
 import { useCreateExerciseMutation } from '@/generated/graphql';
-import { useAppSelector } from '@/hooks/useRedux';
 import { v4 as uuidv4 } from 'uuid';
+import { useSession } from 'next-auth/react';
 
 interface DialogCreateExerciseProps {
     onCreated: (name: string) => void
@@ -24,7 +24,7 @@ const DialogCreateExercise = ({
 }: DialogCreateExerciseProps) => {
     const { t } = useTranslation('workout')
     const [isOpen, setIsOpen] = useState(false)
-    const token = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
     const [{ fetching }, createExercise] = useCreateExerciseMutation()
 
     const onSubmit = async ({ name }: ExerciseSchemaProps) => {
@@ -32,7 +32,7 @@ const DialogCreateExercise = ({
             await createExercise({
                 id: uuidv4(),
                 name,
-                user: token?.id || '',
+                user: sessionData?.user?.id || '',
             })
             onCreated(name)
             setIsOpen(false)

@@ -18,14 +18,14 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TextField } from "@mui/material"
 import LoadingButton from '@mui/lab/LoadingButton'
-import { useAppSelector } from '@/hooks/useRedux'
 import { v4 as uuidv4 } from 'uuid';
+import { useSession } from 'next-auth/react'
 
 const DialogAddWorkoutResult = () => {
     const { t } = useTranslation('workout')
     const router: any = useRouter()
     const [isOpen, setIsOpen] = useState(false)
-    const token = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
     const [when, setWhen] = useState(new Date())
     const [choosenWorkoutPlan, setChoosenWorkoutPlan] = useState('')
     const [{ data, fetching }, getWorkoutPlans] = useWorkoutPlansQuery({
@@ -51,7 +51,7 @@ const DialogAddWorkoutResult = () => {
                 })))
             })
             if (newResult?.data?.createWorkoutResult?.workoutResult?.id) {
-                router.push(`/${token?.username}/workout/results/${newResult?.data?.createWorkoutResult?.workoutResult?.id}`)
+                router.push(`/${sessionData?.user?.username}/workout/results/${newResult?.data?.createWorkoutResult?.workoutResult?.id}`)
             }
         }
     }

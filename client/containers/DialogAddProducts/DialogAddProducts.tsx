@@ -20,6 +20,7 @@ import DialogCreateProduct from '@/containers/DialogCreateProduct/DialogCreatePr
 import TabsAddDialog from '@/components/TabsAddDialog/TabsAddDialog';
 import ButtonSubmitItems from '@/components/ButtonSubmitItems/ButtonSubmitItems';
 import { v4 as uuidv4 } from 'uuid';
+import { useSession } from 'next-auth/react';
 
 const Grid = styled.div`
     width: 100%;
@@ -45,8 +46,7 @@ const DialogAddProducts = () => {
         mealToAdd,
         checked,
     } = useAppSelector(state => state.dialogAddProducts)
-    const token = useAppSelector(state => state.token)
-
+    const { data: sessionData } = useSession()
 
     const { t } = useTranslation('nutrition-diary');
     const [tab, setTab] = useState(0)
@@ -73,13 +73,13 @@ const DialogAddProducts = () => {
 
     const addProductsToDiary = () => {
         [...checked].forEach(async (product) => {
-            if (token.id) {
+            if (sessionData?.user?.id) {
                 await createConsumed({
                     id: uuidv4(),
                     meal: mealToAdd,
                     when: router.query.date,
                     product: product.id,
-                    user: token.id as string,
+                    user: sessionData?.user?.id || '',
                     howMany: product.howMany
                 })
             }
@@ -113,7 +113,7 @@ const DialogAddProducts = () => {
                     fullWidth
                     onChange={(e) => dispatch(setMealToAdd(e.target.value))}
                 >
-                    {[...Array(token?.numberOfMeals)].map((x, i) =>
+                    {[...Array(sessionData?.user?.numberOfMeals)].map((x, i) =>
                         <MenuItem key={i} value={i}>{t('Meal')} {i + 1}</MenuItem>
                     )}
                 </Select>

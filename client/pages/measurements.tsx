@@ -9,11 +9,11 @@ import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
-import { useAppSelector } from "@/hooks/useRedux"
 import Header from "@/components/Header/Header"
 import MeasurementsDialogUpdateWeight from "@/containers/measurements/MeasurementsDialogUpdateWeight/MeasurementsDialogUpdateWeight"
 import moment from 'moment'
 import { v4 as uuidv4 } from 'uuid';
+import { useSession } from "next-auth/react";
 
 const Content = styled.div`
     width: 100%;
@@ -34,21 +34,21 @@ const MeasurementsPage = () => {
     const [loadedDays, setLoadedDays] = useState(14)
     const [updateMeasurements, setUpdateMeasurements] = useState<null | MeasurementFieldsFragment>(null)
 
-    const token = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
     const [{ data, fetching }, getMeasurementsByRangeAndUsername] = useMeasurementsByRangeAndUsernameQuery({
         variables: {
             startDate: moment().add(-loadedDays, 'd').format('YYYY-MM-DD'),
             endDate: moment().format('YYYY-MM-DD'),
-            username: token?.username as string,
+            username: sessionData?.user?.username as string,
         },
         pause: true,
     })
 
     useEffect(() => {
-        if (token?.username) {
+        if (sessionData?.user?.username) {
             getMeasurementsByRangeAndUsername()
         }
-    }, [token?.username])
+    }, [sessionData?.user?.username])
 
     const measurements = useMemo(() => {
         return [...Array(loadedDays)].map((x, i) => {

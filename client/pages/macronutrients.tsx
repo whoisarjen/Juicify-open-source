@@ -3,13 +3,13 @@ import Button from '@mui/material/Button';
 import styled from 'styled-components'
 import Header from '@/components/Header/Header';
 import DialogEditMacronutrients from '@/components/common/dialog-edit-macronutrients';
-import { useAppSelector } from '@/hooks/useRedux';
 import useTranslation from 'next-translate/useTranslation';
 import { useEffect, useState } from 'react';
 import ButtonSubmitItems from '@/components/ButtonSubmitItems/ButtonSubmitItems';
 import CustomSlider from '@/containers/macronutrients/CustomSlider/CustomSlider';
 import BarMacronutrients from '@/containers/macronutrients/BarMacronutrients/BarMacronutrients';
 import useAuth from '@/hooks/useAuth';
+import { useSession } from 'next-auth/react';
 
 const Box = styled.div`
     display: grid;
@@ -55,7 +55,7 @@ const Grid__description = styled.div`
 `
 
 const MacronutrientsPage = () => {
-    const token = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
     const [macronutrients, setMacronutrients] = useState<any[]>([])
     const [oryginalMacronutrients, setOryginalMacronutrients] = useState<any[]>([])
     const [changeObject, setChangeObject] = useState<any>({})
@@ -152,18 +152,18 @@ const MacronutrientsPage = () => {
     }
 
     useEffect(() => {
-        if (token?.id) {
+        if (sessionData?.user?.id) {
             const macro = [...Array(7)].map((_: number, day: number) => ({
-                proteins: token[`proteinsDay${day}` as keyof typeof token] as number,
-                carbs: token[`carbsDay${day}` as keyof typeof token] as number,
-                fats: token[`fatsDay${day}` as keyof typeof token] as number,
+                proteins: sessionData?.user?.[`proteinsDay${day}` as keyof typeof sessionData.user] as number,
+                carbs: sessionData?.user?.[`carbsDay${day}` as keyof typeof sessionData.user] as number,
+                fats: sessionData?.user?.[`fatsDay${day}` as keyof typeof sessionData.user] as number,
                 locked: false,
                 day,
             }))
             setMacronutrients(macro)
             setOryginalMacronutrients(macro)
         }
-    }, [token?.id])
+    }, [sessionData?.user?.id])
 
     return (
         <>

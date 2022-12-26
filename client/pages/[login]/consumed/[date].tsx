@@ -7,7 +7,6 @@ import BoxMeal from "@/containers/consumed/BoxMeal/BoxMeal";
 import ButtonShare from '@/components/ButtonShare/ButtonShare';
 import { ConsumedFieldsFragment, useConsumedByWhenAndUsernameQuery } from '@/generated/graphql';
 import { useEffect, useMemo } from 'react';
-import { useAppSelector } from '@/hooks/useRedux';
 import { max } from 'lodash';
 import { multipleConsumedProductByHowMany } from '@/utils/consumed.utils'
 import DateChanger from '@/containers/consumed/DateChanger/DateChanger';
@@ -15,6 +14,7 @@ import DateChangerFast from "@/containers/consumed/DateChangerFast/DateChangerFa
 import Header from "@/components/Header/Header";
 import useTranslation from "next-translate/useTranslation";
 import BoxBurned from "@/containers/consumed/BoxBurned/BoxBurned";
+import { useSession } from "next-auth/react";
 
 const Box = styled.div`
     width: 100%;
@@ -30,7 +30,7 @@ const Consumed = () => {
     const router: any = useRouter()
     const when = router?.query?.date
     const username = router?.query?.login
-    const token = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
     const [{ data, fetching }, getConsumedByWhenAndUsername] = useConsumedByWhenAndUsernameQuery({
         variables: {
             when,
@@ -67,7 +67,7 @@ const Consumed = () => {
 
         return {
             meals,
-            isOwner: token?.username === data?.userByUsername?.username
+            isOwner: sessionData?.user?.username === data?.userByUsername?.username
         }
     }, [data?.consumedByWhenAndUsername, data?.userByUsername, fetching])
 

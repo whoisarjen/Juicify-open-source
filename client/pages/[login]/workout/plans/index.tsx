@@ -9,10 +9,11 @@ import BoxWorkout from '@/containers/Workout/BoxWorkout/BoxWorkout';
 import useTranslation from 'next-translate/useTranslation';
 import NavbarProfile from '@/containers/profile/NavbarProfile/NavbarProfile';
 import { v4 as uuidv4 } from 'uuid';
+import { useSession } from 'next-auth/react';
 
 const WorkoutPlansPage = () => {
     const router = useRouter()
-    const token = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
     const { t } = useTranslation('workout')
     const [{ data }, getWorkoutPlans] = useWorkoutPlansQuery({
         variables: {
@@ -38,7 +39,7 @@ const WorkoutPlansPage = () => {
             && router.push(`/${router.query.login}/workout/plans/${newWorkoutPlan.data.createWorkoutPlan.workoutPlan.id}`)
     }
 
-    const isOwner = router.query.login == token.username
+    const isOwner = router.query.login == sessionData?.user?.username
 
     return (
         <div>

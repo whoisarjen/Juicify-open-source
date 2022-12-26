@@ -8,11 +8,9 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import BookIcon from "@mui/icons-material/Book";
 import { useRouter } from "next/router";
-import SchoolIcon from '@mui/icons-material/School';
 import Settings from "@mui/icons-material/Settings";
 import useTranslation from "next-translate/useTranslation";
 import styled from 'styled-components'
-import { useAppSelector } from '@/hooks/useRedux';
 import CustomAvatar from '@/components/CustomAvatar/CustomAvatar';
 import moment from 'moment';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
@@ -34,7 +32,6 @@ const Grid = styled.aside`
 const SidebarLeft = () => {
     const router = useRouter()
     const { t } = useTranslation('home')
-    const token = useAppSelector(state => state.token)
     const { data: sessionData } = useSession()
 
     return (
@@ -44,11 +41,11 @@ const SidebarLeft = () => {
                     <nav>
                         <List>
                             <ListItem disablePadding>
-                                <ListItemButton onClick={() => router.push(`/${token.username}`)}>
+                                <ListItemButton onClick={() => router.push(`/${sessionData?.user?.username}`)}>
                                     <ListItemIcon>
                                         <CustomAvatar
-                                            id={token?.id}
-                                            username={token?.username}
+                                            id={sessionData?.user?.id || ''}
+                                            username={sessionData?.user?.username || ''}
                                             size="28px"
                                             margin="auto auto auto 0"
                                         />
@@ -57,7 +54,7 @@ const SidebarLeft = () => {
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding>
-                                <ListItemButton onClick={() => router.push(`/${token.username}/consumed/${moment().format('YYYY-MM-DD')}`)}>
+                                <ListItemButton onClick={() => router.push(`/${sessionData?.user?.username}/consumed/${moment().format('YYYY-MM-DD')}`)}>
                                     <ListItemIcon>
                                         <BookIcon color="primary" />
                                     </ListItemIcon>
@@ -73,7 +70,7 @@ const SidebarLeft = () => {
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding>
-                                <ListItemButton onClick={() => router.push(`/${token.username}/workout`)}>
+                                <ListItemButton onClick={() => router.push(`/${sessionData?.user?.username}/workout`)}>
                                     <ListItemIcon>
                                         <FitnessCenterIcon color="primary" />
                                     </ListItemIcon>

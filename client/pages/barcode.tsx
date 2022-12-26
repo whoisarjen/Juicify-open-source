@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Quagga from 'quagga';
 import { useAppSelector } from "@/hooks/useRedux";
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 
 const Grid = styled.div`
     width: 100%;
@@ -28,7 +29,7 @@ const Grid = styled.div`
 const BarcodeScannerPage = () => {
     const [loadedBarcode, setLoadedBarcode] = useState(0)
     const [loadedProduct, setLoadedProduct] = useState<any>(false)
-    const token = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
 
     const _onDetected = async (res: any) => {
         try {

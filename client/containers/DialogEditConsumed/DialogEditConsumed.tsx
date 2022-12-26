@@ -15,6 +15,7 @@ import { object, preprocess, number, TypeOf } from 'zod';
 import { setIsDialogEditConsumed } from '@/redux/features/dialogEditConsumed.slice';
 import { useDeleteConsumedMutation, useUpdateConsumedMutation } from '@/generated/graphql';
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm';
+import { useSession } from 'next-auth/react';
 
 export const ConsumedSchema = object({
     meal: preprocess((val) => Number(val), number()).optional(),
@@ -26,7 +27,7 @@ type ConsumedSchemaProps = TypeOf<typeof ConsumedSchema>
 const DialogEditConsumed = () => {
     const dispatch = useAppDispatch()
     const { t } = useTranslation('nutrition-diary');
-    const token = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
     const { isDialogEditConsumed, selectedConsumed } = useAppSelector(state => state.dialogEditConsumed)
     const [, updateConsumed] = useUpdateConsumedMutation()
     const [, deleteConsumed] = useDeleteConsumedMutation()
@@ -67,7 +68,7 @@ const DialogEditConsumed = () => {
                             {...register('meal')}
                         >
                             {
-                                Array.from(Array(token.numberOfMeals).keys()).map((x) =>
+                                Array.from(Array(sessionData?.user?.numberOfMeals).keys()).map((x) =>
                                     <MenuItem key={x} value={x}>{t('Meal')} {x + 1}</MenuItem>
                                 )
                             }

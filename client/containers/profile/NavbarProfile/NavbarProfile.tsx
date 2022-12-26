@@ -7,11 +7,11 @@ import LinkIcon from '@mui/icons-material/Link';
 import styled from 'styled-components'
 import ButtonShare from '../../../components/ButtonShare/ButtonShare';
 import CustomAvatar from '../../../components/CustomAvatar/CustomAvatar';
-import { useAppSelector } from '@/hooks/useRedux';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import ProfileTabs from '../ProfileTabs/ProfileTabs';
 import { useUserByUsernameQuery } from '@/generated/graphql';
+import { useSession } from 'next-auth/react';
 
 const Box = styled.div`
     width: 100%;
@@ -46,7 +46,7 @@ const Content = styled.div`
 
 const NavbarProfile = ({ tab }: { tab: number }) => {
     const router: any = useRouter()
-    const token = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
     const [{ data }, getUserByUsername] = useUserByUsernameQuery({
         variables: {
             username: router?.query?.login,
@@ -74,7 +74,7 @@ const NavbarProfile = ({ tab }: { tab: number }) => {
                             <div>
                                 <h2>{data?.userByUsername?.username}</h2>
                                 {
-                                    data?.userByUsername?.username == token.username ?
+                                    data?.userByUsername?.username == sessionData?.user?.username ?
                                         <>
                                             <ButtonShare />
                                             <IconButton onClick={() => router.push('/settings')} sx={{ margin: 'auto' }} aria-label="settings" color="primary">

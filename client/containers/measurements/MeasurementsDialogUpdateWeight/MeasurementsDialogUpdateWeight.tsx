@@ -8,8 +8,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { object, preprocess, string, TypeOf, number } from "zod"
 import TextField from '@mui/material/TextField';
-import { useAppSelector } from "@/hooks/useRedux";
 import { omit } from 'lodash'
+import { useSession } from "next-auth/react";
 
 const MeasurementSchema = object({
     id: string(),
@@ -28,7 +28,7 @@ const MeasurementsDialogUpdateWeight = ({
     onClose,
 }: MeasurementsDialogUpdateWeightProps) => {
     const { t } = useTranslation()
-    const token = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
     const [, createMeasurement] = useCreateMeasurementMutation()
     const [, updateMeasurement] = useUpdateMeasurementMutation()
 
@@ -47,13 +47,13 @@ const MeasurementsDialogUpdateWeight = ({
                 await createMeasurement({
                     ...omit(measurement, ['isFake']),
                     weight,
-                    user: token.id as string,
+                    user: sessionData?.user?.id || '',
                 })
             } else {
                 await updateMeasurement({
                     ...measurement,
                     weight,
-                    user: token.id as string,
+                    user: sessionData?.user?.id || '',
                 })
             }
         }

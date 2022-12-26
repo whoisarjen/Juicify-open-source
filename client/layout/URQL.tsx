@@ -4,12 +4,12 @@ import { authExchange } from '@urql/exchange-auth'
 import { makeOperation } from '@urql/core'
 import { ReactNode, useMemo } from 'react'
 import { createClient as createWSClient } from 'graphql-ws';
-import { useAppSelector } from '@/hooks/useRedux'
 import { offlineExchange } from '@urql/exchange-graphcache';
 import { makeDefaultStorage } from '@urql/exchange-graphcache/default-storage';
 import { customCacheExchangeValue } from 'utils/urql.utils'
 import useAuth from '@/hooks/useAuth';
 import schema, { RefreshTokenDocument } from '@/generated/graphql'
+import { useSession } from 'next-auth/react';
 
 const addAuthToOperation = ({ authState, operation }: any) => {
     if (!authState || !authState.token) {
@@ -35,9 +35,9 @@ const addAuthToOperation = ({ authState, operation }: any) => {
 
 const URQL = ({ children }: { children: ReactNode }) => {
     const isServerSide = typeof window === 'undefined';
-    const token = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
     const { reloadToken, logout } = useAuth()
-    console.log('owner', token)
+    console.log({ sessionData })
 
     const didAuthError = ({ error }: any) => {
         console.log(error.graphQLErrors[0]?.message)

@@ -11,6 +11,7 @@ import { ReactNode } from 'react';
 import ButtonCloseDialog from '@/components/ButtonCloseDialog/ButtonCloseDialog';
 import { useDeleteProductMutation } from '@/generated/graphql';
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm';
+import { useSession } from 'next-auth/react';
 
 const Remove = styled.div`
     display: grid;
@@ -75,7 +76,7 @@ const DialogShowProduct = ({ children }: { children: ReactNode }) => {
     const dispatch = useAppDispatch()
     const { mealToAdd } = useAppSelector(state => state.dialogAddProducts)
     const { isDialogShowProduct, selectedProduct } = useAppSelector(state => state.dialogShowProduct)
-    const token = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
     const [, deleteProduct] = useDeleteProductMutation()
 
     const handleDialogAddProduct = () => {
@@ -85,10 +86,10 @@ const DialogShowProduct = ({ children }: { children: ReactNode }) => {
     }
 
     const handleDeleteProduct = async () => {
-        if (token?.id) {
+        if (sessionData?.user?.id) {
             await deleteProduct({
                 id: selectedProduct?.id,
-                user: token?.id,
+                user: sessionData.user.id,
             })
             dispatch(setIsDialogShowProduct(false))
         }
@@ -113,7 +114,7 @@ const DialogShowProduct = ({ children }: { children: ReactNode }) => {
                     </tbody>
                 </table>
                 <Placeholder />
-                {token?.id == selectedProduct?.user?.id &&
+                {sessionData?.user?.id == selectedProduct?.user?.id &&
                     <DialogConfirm confirmed={handleDeleteProduct}>
                         <Remove>
                             <Button variant="contained">

@@ -5,9 +5,9 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
 import styled from 'styled-components'
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm'
-import { useAppSelector } from '@/hooks/useRedux'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
 
 const Grid = styled.div`
     width: 100%;
@@ -31,7 +31,7 @@ const NavbarWorkout = ({
 }: NavbarWorkoutProp) => {
     const router = useRouter()
     const { t } = useTranslation('workout')
-    const token = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
 
     return (
         <Grid>
@@ -39,7 +39,7 @@ const NavbarWorkout = ({
                 <KeyboardBackspaceIcon />
             </IconButton>
             <div />
-            {token.username == router.query.login
+            {sessionData?.user?.username == router.query.login
                 ? <>
                     <DialogConfirm confirmed={onDelete}>
                         <IconButton aria-label="delete" sx={{ margin: 'auto' }}>

@@ -26,13 +26,14 @@ import {
     useUpdateWorkoutResultMutation,
     useWorkoutResultQuery
 } from "@/generated/graphql"
+import { useSession } from "next-auth/react"
 
 const sxTextField = { width: '100%', marginTop: '10px' }
 
 const WorkoutResultPage = () => {
     const router: any = useRouter()
     const { t } = useTranslation('workout')
-    const token = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
     const [when, setWhen] = useState<null | string>(null)
     const [previousExercises, setPreviousExercises] = useState([])
 
@@ -214,21 +215,21 @@ const WorkoutResultPage = () => {
                         key={exercise.uuid}
                         exercise={exercise}
                         previousExercise={previousExercises.find((previousExercise: ExerciseSchemaProps) => previousExercise?.id === exercise.id)}
-                        isOwner={token?.username == data?.workoutResult?.user?.username}
+                        isOwner={sessionData?.user?.username == data?.workoutResult?.user?.username}
                         setNewValues={(results: Array<ExerciseResultSchemaProps>) => updateResults({ results, exercise, index })}
                         deleteExerciseWithIndex={() => remove(index)}
                     />
                 </div>
             )}
 
-            {token?.username == router?.query?.login &&
+            {sessionData?.user?.username == router?.query?.login &&
                 <ButtonMoreOptionsWorkoutResult
                     exercises={fields as unknown as ExerciseFieldsFragment[]}
                     setExercises={exercises => append(exercises.map(exercise => ({ ...exercise, results: [] })))}
                 />
             }
 
-            {data?.workoutResult?.user.username && token?.username != data?.workoutResult?.user.username &&
+            {data?.workoutResult?.user.username && sessionData?.user?.username != data?.workoutResult?.user.username &&
                 <BottomFlyingGuestBanner
                     id={data?.workoutResult?.user.id}
                     username={data?.workoutResult?.user.username}

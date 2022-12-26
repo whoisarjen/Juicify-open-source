@@ -46,14 +46,43 @@ model Session {
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
-  username      String    @unique
-  email         String    @unique
-  emailVerified DateTime?
-  image         String?
-  locale        String?   @default("en")
-  accounts      Account[]
-  sessions      Session[]
+  id             Int       @id @default(autoincrement())
+  username       String    @unique
+  email          String    @unique
+  emailVerified  DateTime?
+  image          String?
+  locale         String?   @default("en")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @default(now())
+  numberOfMeals  Int       @default(5)
+  proteinsDay0   Int       @default(0)
+  carbsDay0      Int       @default(0)
+  fatsDay0       Int       @default(0)
+  proteinsDay1   Int       @default(0)
+  carbsDay1      Int       @default(0)
+  fatsDay1       Int       @default(0)
+  proteinsDay2   Int       @default(0)
+  carbsDay2      Int       @default(0)
+  fatsDay2       Int       @default(0)
+  proteinsDay3   Int       @default(0)
+  carbsDay3      Int       @default(0)
+  fatsDay3       Int       @default(0)
+  proteinsDay4   Int       @default(0)
+  carbsDay4      Int       @default(0)
+  fatsDay4       Int       @default(0)
+  proteinsDay5   Int       @default(0)
+  carbsDay5      Int       @default(0)
+  fatsDay5       Int       @default(0)
+  proteinsDay6   Int       @default(0)
+  carbsDay6      Int       @default(0)
+  fatsDay6       Int       @default(0)
+  nextCoach      DateTime?
+  goal           Float?
+  isCoachAnalyze Boolean?  @default(false)
+  height         Int?
+  birth          DateTime?
+  accounts       Account[]
+  sessions       Session[]
 }
 
 model VerificationToken {

@@ -6,11 +6,11 @@ import ListSubheader from '@mui/material/ListSubheader';
 import useTranslation from "next-translate/useTranslation";
 import { useTheme } from "../hooks/useTheme";
 import styled from 'styled-components'
-import { useAppSelector } from "@/hooks/useRedux";
 import { getConsumedMacro, getExpectedMacro } from "@/utils/consumed.utils";
 import BetterLink from "@/components/BetterLink/BetterLink";
 import moment from "moment";
 import { useDailyByWhenAndUsernameQuery } from "@/generated/graphql";
+import { useSession } from "next-auth/react";
 
 const Box = styled.aside`
     padding: 12px;
@@ -36,10 +36,10 @@ const CircularBox = styled.aside`
 
 const SidebarRight = () => {
     const { t } = useTranslation('home')
-    const token = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
     const { getTheme } = useTheme()
     const when = new Date().toISOString().slice(0, 10)
-    const username = token?.username || ''
+    const username = sessionData?.user?.username || ''
 
     const styles = useMemo(() => buildStyles({
         textSize: '15px',
@@ -67,7 +67,7 @@ const SidebarRight = () => {
 
     const burnedCalories = useMemo(() => data?.workoutResultsByWhen?.reduce((prev: any, current: any) => prev + (current?.burnedCalories || 0), 0) || 0, [data?.workoutResultsByWhen])
 
-    const coach = moment(moment()).diff(token?.nextCoach, 'days')
+    const coach = moment(moment()).diff(sessionData?.user?.nextCoach, 'days')
 
     useEffect(() => {
         when && username && getDailyByWhenAndUsername()
@@ -98,7 +98,7 @@ const SidebarRight = () => {
                             </CircularBox>
                         </ListItemButton>
                     </BetterLink>
-                    <BetterLink href={`/${token?.username}/consumed/${moment().format('YYYY-MM-DD')}`}>
+                    <BetterLink href={`/${sessionData?.user?.username}/consumed/${moment().format('YYYY-MM-DD')}`}>
                         <ListItemButton>
                             <CircularBox>
                                 <CircularProgressbar
@@ -112,7 +112,7 @@ const SidebarRight = () => {
                             </CircularBox>
                         </ListItemButton>
                     </BetterLink>
-                    <BetterLink href={`/${token?.username}/workout/results/`}>
+                    <BetterLink href={`/${sessionData?.user?.username}/workout/results/`}>
                         <ListItemButton>
                             <CircularBox>
                                 <CircularProgressbar

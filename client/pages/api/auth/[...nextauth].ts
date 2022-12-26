@@ -3,7 +3,6 @@ import DiscordProvider from "next-auth/providers/discord";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db/client";
-import { type User } from "@prisma/client";
 
 export const authOptions: NextAuthOptions = {
     callbacks: {
@@ -12,7 +11,7 @@ export const authOptions: NextAuthOptions = {
                 ...session,
                 user,
             }
-        }
+        },
     },
     adapter: PrismaAdapter(prisma),
     providers: [

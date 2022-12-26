@@ -17,10 +17,11 @@ import { useCreateConsumedMutation } from '@/generated/graphql';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
+import { useSession } from 'next-auth/react';
 
 const DialogAddProduct = () => {
     const { t } = useTranslation('nutrition-diary')
-    const token = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
     const { success } = useNotify()
     const dispatch = useAppDispatch()
     const [howMany, setHowMany] = useState('1.0')
@@ -33,7 +34,7 @@ const DialogAddProduct = () => {
             id: uuidv4(),
             when: router?.query?.date || moment().format('YYYY-MM-DD'),
             howMany,
-            user: token.id as string,
+            user: sessionData?.user?.id || '',
             product: selectedProduct.id,
             meal: mealToAdd,
         })
@@ -60,7 +61,7 @@ const DialogAddProduct = () => {
                     onChange={(e) => dispatch(setMealToAdd(e.target.value))}
                 >
                     {
-                        [...Array(token.numberOfMeals)].map((x, i) =>
+                        [...Array(sessionData?.user?.numberOfMeals)].map((x, i) =>
                             <MenuItem key={i} value={i}>{t('Meal')} {i + 1}</MenuItem>
                         )
                     }

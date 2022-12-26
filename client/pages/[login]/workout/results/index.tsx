@@ -10,7 +10,7 @@ import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
 
 const WorkoutResultsPage = () => {
     const router = useRouter()
-    const token = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
     const [{ data }, getWorkoutResults] = useWorkoutResultsQuery({
         variables: {
             username: router.query.login as string,
@@ -26,7 +26,7 @@ const WorkoutResultsPage = () => {
 
     return (
         <div>
-            {token.username == router.query.login
+            {sessionData?.user?.username == router.query.login
                 ? <>
                     <NavbarOnlyTitle title="workout:WORKOUT_RESULTS" />
                     <DialogAddWorkoutResult />

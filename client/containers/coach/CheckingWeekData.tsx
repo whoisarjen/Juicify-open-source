@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import Button from '@mui/material/Button';
 import useTranslation from "next-translate/useTranslation";
-import { useAppSelector } from "../../hooks/useRedux";
 import styled from "styled-components";
 import NavbarOnlyTitle from "@/components/NavbarOnlyTitle/NavbarOnlyTitle"
 import moment from "moment";
+import { useSession } from "next-auth/react";
 
 interface ChooseDietProps {
     setStep: (arg0: string) => void
@@ -29,7 +29,7 @@ const Description = styled.div`
 
 const CheckingWeekData = ({ setStep }: ChooseDietProps) => {
     const { t } = useTranslation('coach')
-    const token = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
     const [allowNextStep, setAllowNextStep] = useState(false)
 
     // useEffect(() => {

@@ -3,13 +3,13 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import HistoryIcon from '@mui/icons-material/History';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import { useAppSelector } from "../../hooks/useRedux";
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 import NavbarOnlyTitle from "@/components/NavbarOnlyTitle/NavbarOnlyTitle"
 import moment from 'moment'
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 interface StandardProps {
     setStep: (arg0: string) => void
@@ -77,14 +77,14 @@ const SecondBold = styled.div`
 const Standard = ({ setStep }: StandardProps) => {
     const { t } = useTranslation('coach')
     const [daysToCoach, setDaysToCoach] = useState(7)
-    const token = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
     const router: any = useRouter()
 
     useEffect(() => {
-        if (token) {
-            setDaysToCoach(moment(token.nextCoach).diff(moment(), 'd'))
+        if (sessionData?.user) {
+            setDaysToCoach(moment(sessionData?.user?.nextCoach).diff(moment(), 'd'))
         }
-    }, [token])
+    }, [sessionData?.user])
 
     return (
         <Grid>
@@ -109,17 +109,17 @@ const Standard = ({ setStep }: StandardProps) => {
                         <div>{t('HISTORY')}</div>
                     </div>
                 </TopButtons>
-                {token.goal === 0
+                {sessionData?.user?.goal === 0
                     ?
                     <NavbarOnlyTitle title="coach:RECOMPOSITION" />
                     :
-                    (token.goal || 0) > 0
+                    (sessionData?.user?.goal || 0) > 0
                         ?
                         <NavbarOnlyTitle title="coach:MUSCLE_BUILDING" />
                         :
                         <NavbarOnlyTitle title="coach:LOSING_WEIGHT" />
                 }
-                <div>{token.goal}% / {t('WEEK')}</div>
+                <div>{sessionData?.user?.goal}% / {t('WEEK')}</div>
                 <div>
                     {t('STANDARD_DESCRIPTION')}
                 </div>
@@ -148,12 +148,12 @@ const Standard = ({ setStep }: StandardProps) => {
                 <SecondInfo>
                     <div>
                         <div>{t('LAST_CHECK')}</div>
-                        <SecondBold>{moment(token.nextCoach).add('days', -7).format('DD.MM.YYYY')}</SecondBold>
+                        <SecondBold>{moment(sessionData?.user?.nextCoach).add('days', -7).format('DD.MM.YYYY')}</SecondBold>
                     </div>
                     <div />
                     <div>
                         <div>{t('NEXT_CHECK')}</div>
-                        <SecondBold>{moment(token.nextCoach).format('DD.MM.YYYY')}</SecondBold>
+                        <SecondBold>{moment(sessionData?.user?.nextCoach).format('DD.MM.YYYY')}</SecondBold>
                     </div>
                 </SecondInfo>
                 {
