@@ -3,16 +3,15 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import SidebarLeft from './SidebarLeft'
 import SidebarRight from './SidebarRight'
-import { useAppSelector } from '../hooks/useRedux'
 import SidebarRightLoggouted from './SidebarRightLoggouted'
 import SidebarLeftLoggouted from './SidebarLeftLoggouted'
 import styled from 'styled-components'
 import DialogAddProducts from '@/containers/DialogAddProducts/DialogAddProducts'
 import DialogEditConsumed from '@/containers/DialogEditConsumed/DialogEditConsumed'
-import { Token } from '@/redux/features/token.slice'
 import DialogShowProduct from '@/containers/DialogShowProduct/DialogShowProduct'
 import DialogAddProduct from '@/containers/DialogAddProduct/DialogAddProduct'
 import moment from 'moment'
+import { useSession } from 'next-auth/react'
 
 const Grid = styled.div`
     margin: auto;
@@ -133,7 +132,7 @@ const isBrowserValid = async () => {
 const Layout = ({ children }: { children: any }) => {
     const router = useRouter()
     const [isAllowedLocation, setIsAllowedLocation] = useState(false)
-    const token = useAppSelector(state => state.token)
+    const { data } = useSession()
 
     useEffect(() => {
         (async () => {
@@ -146,42 +145,40 @@ const Layout = ({ children }: { children: any }) => {
                 return router.push(router.asPath, router.asPath, { locale });
             }
 
-            const tokenValue: Token = JSON.parse(localStorage.getItem('payload') || '{}')
-            if (tokenValue?.username && notRequiredAuth.includes(router.pathname)) {
-                router.push(`/${tokenValue.username}/consumed/${moment().format('YYYY-MM-DD')}`);
-            } else if (!tokenValue && requiredAuth.includes(router.pathname)) {
+            if (data?.user?.username && notRequiredAuth.includes(router.pathname)) {
+                router.push(`/${data.user.username}/consumed/${moment().format('YYYY-MM-DD')}`);
+            } else if (!data && requiredAuth.includes(router.pathname)) {
                 router.push('/login')
             } else {
                 setIsAllowedLocation(true)
             }
         })()
-    }, [token?.id, router])
+    }, [router, data])
 
-    const isLoggedGrid = () => !token?.id || notRequiredAuth.filter(route => route == router.pathname).length || router.pathname == '/'
+    const isLoggoutedGrid = !data || notRequiredAuth.filter(route => route == router.pathname).length || router.pathname == '/'
 
     return (
         <main>
             {isAllowedLocation &&
                 <>
-                    {
-                        router.pathname.includes('blog') || router.pathname == '/'
-                            ? <>{children}</>
-                            : <Grid>
-                                {
-                                    isLoggedGrid()
-                                        ? <SidebarLeftLoggouted />
-                                        : <SidebarLeft />
-                                }
-                                <Content>{children}</Content>
-                                {
-                                    isLoggedGrid()
-                                        ? <SidebarRightLoggouted />
-                                        : <SidebarRight />
-                                }
-                            </Grid>
+                    {router.pathname.includes('blog') || router.pathname == '/'
+                        ? <>{children}</>
+                        : <Grid>
+                            {
+                                isLoggoutedGrid
+                                    ? <SidebarLeftLoggouted />
+                                    : <SidebarLeft />
+                            }
+                            <Content>{children}</Content>
+                            {
+                                isLoggoutedGrid
+                                    ? <SidebarRightLoggouted />
+                                    : <SidebarRight />
+                            }
+                        </Grid>
                     }
                     <Footer />
-                    {token?.id &&
+                    {data &&
                         <>
                             <DialogAddProducts />
                             <DialogEditConsumed />

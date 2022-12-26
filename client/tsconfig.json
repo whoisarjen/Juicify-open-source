@@ -26,6 +26,7 @@
       "@/hooks/*": ["hooks/*"],
       "@/redux/*": ["redux/*"],
       "@/utils/*": ["utils/*"],
+      "@/env/*": ["env/*"],
     }
   },
   "include": [

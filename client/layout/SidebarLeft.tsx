@@ -16,6 +16,9 @@ import { useAppSelector } from '@/hooks/useRedux';
 import CustomAvatar from '@/components/CustomAvatar/CustomAvatar';
 import moment from 'moment';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useSession, signIn, signOut } from "next-auth/react"
+import Divider from '@mui/material/Divider';
 
 const Grid = styled.aside`
     padding: 12px;
@@ -32,11 +35,11 @@ const SidebarLeft = () => {
     const router = useRouter()
     const { t } = useTranslation('home')
     const token = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
 
     return (
         <Grid>
-            {
-                token?.username &&
+            {sessionData &&
                 <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
                     <nav>
                         <List>
@@ -99,6 +102,15 @@ const SidebarLeft = () => {
                                         <Settings color="primary" />
                                     </ListItemIcon>
                                     <ListItemText primary={t('Settings')} />
+                                </ListItemButton>
+                            </ListItem>
+                            <Divider />
+                            <ListItem disablePadding>
+                                <ListItemButton onClick={() => sessionData ? signOut({ callbackUrl: '/', redirect: true }) : signIn()}>
+                                    <ListItemIcon>
+                                        <LogoutIcon color="primary" />
+                                    </ListItemIcon>
+                                    <ListItemText primary={sessionData ? t('Logout') : t('Login')} />
                                 </ListItemButton>
                             </ListItem>
                         </List>

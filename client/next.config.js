@@ -1,19 +1,18 @@
-const nextTranslate = require("next-translate");
+/** @type {import("next").NextConfig} */
 
-const withPWA = require("next-pwa")({
-    dest: 'public'
-})
+const nextTranslate = require("next-translate");
 
 const isProduction = process.env.NODE_ENV === 'production'
 
-module.exports = withPWA({
+const withPWA = require("next-pwa")({
+    dest: 'public',
+    disable: !isProduction,
+    register: isProduction,
+    skipWaiting: isProduction,
+})
+
+const nextConfig = {
     reactStrictMode: true,
-    pwa: {
-        dest: "public",
-        register: isProduction,
-        skipWaiting: isProduction,
-        disable: !isProduction,
-    },
     env: {
         PRODUCT_DECIMAL_PLACES: 1,
         DEFAULT_NUMBER_OF_MEALS: 5,
@@ -24,13 +23,16 @@ module.exports = withPWA({
         APP_VERSION: new Date().toISOString(),
         isProduction,
     },
-    webpackDevMiddleware: config => {
-        config.watchOptions = {
-            poll: 2000,
-            aggregateTimeout: 600,
-            ignored: /node_modules/,
-        }
-        return config
-    },
+    // webpackDevMiddleware: config => {
+    //     config.watchOptions = {
+    //         poll: 2000,
+    //         aggregateTimeout: 600,
+    //         ignored: /node_modules/,
+    //     }
+    //     return config
+    // },
+    // @ts-ignore
     ...nextTranslate(),
-});
+}
+
+module.exports = withPWA(nextConfig);

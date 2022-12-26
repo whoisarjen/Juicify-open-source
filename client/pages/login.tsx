@@ -10,6 +10,7 @@ import { object, string, TypeOf } from "zod"
 import Logo from "@/components/Logo/Logo";
 import { useTokenAuthMutation } from "@/generated/graphql";
 import moment from "moment";
+import { signIn } from "next-auth/react"
 
 const Form = styled.form`
     height: 100%;
@@ -84,6 +85,15 @@ const LoginPage = () => {
                     data-testid="login_button"
                 >
                     {t("auth:SIGN_IN")}
+                </LoadingButton>
+                <LoadingButton
+                    loading={fetching}
+                    variant="contained"
+                    data-testid="login_button"
+                    color="secondary"
+                    onClick={() => signIn()}
+                >
+                    {t("auth:ANOTHER_OPTIONS")}
                 </LoadingButton>
                 <Link passHref href="/reset-password" legacyBehavior>
                     {t("auth:FORGOT_PASSWORD_RESET_IT")}
