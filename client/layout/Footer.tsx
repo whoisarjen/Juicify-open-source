@@ -72,7 +72,11 @@ const Footer = () => {
                     </BetterLink>
                     <BetterLink style={{ margin: 'auto', display: 'grid' }} href={`/${sessionData?.user?.username}`}>
                         <IconButton color="primary">
-                            <CustomAvatar src={sessionData?.user?.image} size="28px" />
+                            <CustomAvatar
+                                src={sessionData?.user?.image}
+                                username={sessionData?.user?.username}
+                                size="28px"
+                            />
                         </IconButton>
                     </BetterLink>
                 </Menu>

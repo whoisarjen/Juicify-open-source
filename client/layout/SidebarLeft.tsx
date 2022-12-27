@@ -45,6 +45,7 @@ const SidebarLeft = () => {
                                     <ListItemIcon>
                                         <CustomAvatar
                                             src={sessionData?.user?.image}
+                                            username={sessionData?.user?.username}
                                             size="28px"
                                             margin="auto auto auto 0"
                                         />
