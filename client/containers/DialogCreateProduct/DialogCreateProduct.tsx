@@ -10,7 +10,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import LoadingButton from '@mui/lab/LoadingButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import styled from 'styled-components'
-import { useNotify } from '@/hooks/useNotify';
 import { useAppSelector } from '@/hooks/useRedux';
 import { zodResolver } from '@hookform/resolvers/zod';
 import useTranslation from 'next-translate/useTranslation';
@@ -50,7 +49,6 @@ export type ProductSchemaProps = TypeOf<typeof ProductSchema>
 const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProductProps) => {
     const { t } = useTranslation('nutrition-diary')
     const { data: sessionData } = useSession()
-    const { success } = useNotify()
     const [isDialog, setIsDialog] = useState(false)
     const [{ fetching }, createProduct] = useCreateProductMutation()
 
@@ -67,7 +65,6 @@ const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProduct
             })
             created(newProduct.name)
             setIsDialog(false)
-            success()
         }
     }
 

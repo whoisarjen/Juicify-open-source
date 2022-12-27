@@ -1,11 +1,10 @@
 import SelectLanguage from '@/containers/settings/SelectLanguage/SelectLanguage';
-import useAuth from '@/hooks/useAuth';
-import { useNotify } from '@/hooks/useNotify';
 import { useAppSelector } from '@/hooks/useRedux';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Button from '@mui/material/Button';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
+import { signOut, useSession } from 'next-auth/react';
 import useTranslation from 'next-translate/useTranslation';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -44,15 +43,13 @@ const SettingsSchema = object({
 type SettingsSchemaProps = TypeOf<typeof SettingsSchema>
 
 const SettingsPage = () => {
-    const { success } = useNotify()
     const { t } = useTranslation('settings')
-    const token: any = useAppSelector(state => state.token)
+    const { data: sessionData } = useSession()
 
     const changeSettings = async (object: SettingsSchemaProps) => {
         try {
             // const response = await post({ object, url: '/auth/change' });
             // await dispatchToken(response.data.token)
-            success()
         } catch (e: any) {
             console.log(e)
         }
@@ -62,9 +59,13 @@ const SettingsPage = () => {
         resolver: zodResolver(SettingsSchema)
     })
 
-    useEffect(() => reset(token), [token._id])
+    useEffect(() => {
+        if (!sessionData?.user) {
+            return
+        }
 
-    const { logout } = useAuth()
+        reset(sessionData.user)
+    }, [sessionData?.user?.id])
 
     return (
         <Form onSubmit={handleSubmit(changeSettings)}>
@@ -176,7 +177,7 @@ const SettingsPage = () => {
                 helperText={errors.twitter?.message && t(`notify:${errors.twitter.message || ''}`)}
             />
             <Separator>{t('Logout')}</Separator>
-            <Button color="error" onClick={async () => await logout()}>
+            <Button color="error" onClick={() => signOut({ callbackUrl: '/', redirect: true })}>
                 Logout
             </Button>
             {/* {

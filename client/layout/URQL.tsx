@@ -7,7 +7,6 @@ import { createClient as createWSClient } from 'graphql-ws';
 import { offlineExchange } from '@urql/exchange-graphcache';
 import { makeDefaultStorage } from '@urql/exchange-graphcache/default-storage';
 import { customCacheExchangeValue } from 'utils/urql.utils'
-import useAuth from '@/hooks/useAuth';
 import schema, { RefreshTokenDocument } from '@/generated/graphql'
 import { useSession } from 'next-auth/react';
 
@@ -36,7 +35,6 @@ const addAuthToOperation = ({ authState, operation }: any) => {
 const URQL = ({ children }: { children: ReactNode }) => {
     const isServerSide = typeof window === 'undefined';
     const { data: sessionData } = useSession()
-    const { reloadToken, logout } = useAuth()
     console.log({ sessionData })
 
     const didAuthError = ({ error }: any) => {
@@ -44,7 +42,7 @@ const URQL = ({ children }: { children: ReactNode }) => {
         return error.graphQLErrors.some(
             (e: any) => {
                 if (e.message === 'User is disabled') {
-                    logout()
+                    // logout()
                 }
 
                 return e.message === 'Signature has expired'
@@ -60,7 +58,7 @@ const URQL = ({ children }: { children: ReactNode }) => {
         if (!authState) {
             const token = localStorage.getItem('token')
             const refreshToken = localStorage.getItem('refreshToken')
-            reloadToken()
+            // reloadToken()
 
             if (token && refreshToken) {
                 return { token, refreshToken }
@@ -76,7 +74,7 @@ const URQL = ({ children }: { children: ReactNode }) => {
             localStorage.setItem('token', result.data.refreshToken.token)
             localStorage.setItem('refreshToken', result.data.refreshToken.refreshToken)
             localStorage.setItem('payload', JSON.stringify(result.data.refreshToken.payload))
-            reloadToken()
+            // reloadToken()
 
             return {
                 token: result.data.refreshToken.token,
@@ -84,7 +82,7 @@ const URQL = ({ children }: { children: ReactNode }) => {
             }
         }
 
-        logout()
+        // logout()
 
         return null
     }

@@ -1,6 +1,5 @@
 const ResetPasswordHashPage = () => {
     // const router: any = useRouter()
-    // const { success } = useNotify()
 
     // useEffect(() => {
     //     (async () => {

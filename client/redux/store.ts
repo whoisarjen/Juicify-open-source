@@ -1,5 +1,4 @@
 import { configureStore } from "@reduxjs/toolkit";
-import token from "./features/token.slice";
 import dialogAddProduct from './features/dialogAddProduct.slice'
 import dialogAddProducts from './features/dialogAddProducts.slice'
 import dialogAddExercises from './features/dialogAddExercises.slice'
@@ -8,7 +7,6 @@ import dialogShowProduct from './features/dialogShowProduct.slice'
 
 export const store = configureStore({
     reducer: {
-        token,
         dialogAddProduct,
         dialogAddProducts,
         dialogAddExercises,

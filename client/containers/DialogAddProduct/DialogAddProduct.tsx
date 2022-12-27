@@ -8,7 +8,6 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import SlideUp from "../../transition/SlideUp";
-import { useNotify } from '@/hooks/useNotify';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import useTranslation from 'next-translate/useTranslation';
 import { setIsDialogAddProduct, setMealToAdd } from '@/redux/features/dialogAddProduct.slice';
@@ -22,7 +21,6 @@ import { useSession } from 'next-auth/react';
 const DialogAddProduct = () => {
     const { t } = useTranslation('nutrition-diary')
     const { data: sessionData } = useSession()
-    const { success } = useNotify()
     const dispatch = useAppDispatch()
     const [howMany, setHowMany] = useState('1.0')
     const { isDialogAddProduct, selectedProduct, mealToAdd } = useAppSelector(state => state.dialogAddProduct)
@@ -39,7 +37,6 @@ const DialogAddProduct = () => {
             meal: mealToAdd,
         })
         dispatch(setIsDialogAddProduct(false))
-        success()
     }
 
     return (

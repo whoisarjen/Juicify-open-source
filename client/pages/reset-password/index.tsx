@@ -22,7 +22,6 @@ const LogoWrapper = styled.div`
 
 const ResetPasswordPage = () => {
     // const { t } = useTranslation('auth');
-    // const { success } = useNotify()
     // const [loading, setLoading] = useState(false)
 
     // const { register, formState: { errors }, handleSubmit } = useForm<RemindPasswordUserSchemaProps>({

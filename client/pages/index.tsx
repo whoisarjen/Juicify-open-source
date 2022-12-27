@@ -1,23 +1,17 @@
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { signIn } from 'next-auth/react';
 import styled from 'styled-components'
 
-const Box = styled.div`
+const Main = styled.main`
     width: 100%;
     min-height: calc(calc(100vh - var(--BothNavHeightAndPadding) + 24px));
 `
 
 const Home = () => {
-    const router = useRouter()
-
-    useEffect(() => {
-        router?.push?.('/login')
-    })
-
     return (
-        <Box>
+        <Main>
             Coming soon.
-        </Box>
+            <button onClick={() => signIn()}>Sign in</button>
+        </Main>
     );
 }
 

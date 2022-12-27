@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react';
 import ButtonSubmitItems from '@/components/ButtonSubmitItems/ButtonSubmitItems';
 import CustomSlider from '@/containers/macronutrients/CustomSlider/CustomSlider';
 import BarMacronutrients from '@/containers/macronutrients/BarMacronutrients/BarMacronutrients';
-import useAuth from '@/hooks/useAuth';
 import { useSession } from 'next-auth/react';
 
 const Box = styled.div`
@@ -61,7 +60,6 @@ const MacronutrientsPage = () => {
     const [changeObject, setChangeObject] = useState<any>({})
     const [isOwnMacro, setIsOwnMacro] = useState(false)
     const { t } = useTranslation('macronutrients')
-    const { updateUser } = useAuth()
 
     const changed = (newValue: any, key: string) => {
         let newMacro = JSON.parse(JSON.stringify(macronutrients))
@@ -121,7 +119,7 @@ const MacronutrientsPage = () => {
                 newMacroDB[`carbsDay${day}` as keyof typeof newMacroDB] = x.carbs
                 newMacroDB[`fatsDay${day}` as keyof typeof newMacroDB] = x.fats
             })
-            await updateUser(newMacroDB)
+            // await updateUser(newMacroDB)
         }
 
         setChangeObject({})

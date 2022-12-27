@@ -48,7 +48,6 @@ const Content = styled.div`
 
 const requiredAuth = [
     '',
-    '/',
     '/settings',
     '/workout',
     '/statistics',
@@ -148,7 +147,7 @@ const Layout = ({ children }: { children: any }) => {
             if (data?.user?.username && notRequiredAuth.includes(router.pathname)) {
                 router.push(`/${data.user.username}/consumed/${moment().format('YYYY-MM-DD')}`);
             } else if (!data && requiredAuth.includes(router.pathname)) {
-                router.push('/login')
+                router.push('/')
             } else {
                 setIsAllowedLocation(true)
             }
