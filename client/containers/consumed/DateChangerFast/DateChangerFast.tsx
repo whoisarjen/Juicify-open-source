@@ -1,5 +1,5 @@
-import BetterLink from "@/components/BetterLink/BetterLink";
 import moment from "moment";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import styled from 'styled-components'
 
@@ -34,23 +34,23 @@ const DateChangerFast = () => {
 
     return (
         <Box>
-            <BetterLink
+            <Link
                 href={`/${router.query.login}/consumed/${moment(router.query.date).add(-2, 'days').format('YYYY-MM-DD')}`}>
                 <div>{moment(router.query.date).add(-2, 'days').format('DD')}</div>
-            </BetterLink>
-            <BetterLink
+            </Link>
+            <Link
                 href={`/${router.query.login}/consumed/${moment(router.query.date).add(-1, 'days').format('YYYY-MM-DD')}`}>
                 <div>{moment(router.query.date).add(-1, 'days').format('DD')}</div>
-            </BetterLink>
+            </Link>
             <div>{moment(router.query.date).format('DD.MM.YYYY')}</div>
-            <BetterLink
+            <Link
                 href={`/${router.query.login}/consumed/${moment(router.query.date).add(1, 'days').format('YYYY-MM-DD')}`}>
                 <div>{moment(router.query.date).add(1, 'days').format('DD')}</div>
-            </BetterLink>
-            <BetterLink
+            </Link>
+            <Link
                 href={`/${router.query.login}/consumed/${moment(router.query.date).add(2, 'days').format('YYYY-MM-DD')}`}>
                 <div>{moment(router.query.date).add(2, 'days').format('DD')}</div>
-            </BetterLink>
+            </Link>
         </Box>
     )
 }

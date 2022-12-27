@@ -7,10 +7,10 @@ import useTranslation from "next-translate/useTranslation";
 import { useTheme } from "../hooks/useTheme";
 import styled from 'styled-components'
 import { getConsumedMacro, getExpectedMacro } from "@/utils/consumed.utils";
-import BetterLink from "@/components/BetterLink/BetterLink";
 import moment from "moment";
 import { useDailyByWhenAndUsernameQuery } from "@/generated/graphql";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 const Box = styled.aside`
     padding: 12px;
@@ -84,7 +84,7 @@ const SidebarRight = () => {
                         </ListSubheader>
                     }
                 >
-                    <BetterLink href="/measurements">
+                    <Link href="/measurements">
                         <ListItemButton>
                             <CircularBox>
                                 <CircularProgressbar
@@ -97,8 +97,8 @@ const SidebarRight = () => {
                                 </div>
                             </CircularBox>
                         </ListItemButton>
-                    </BetterLink>
-                    <BetterLink href={`/${sessionData?.user?.username}/consumed/${moment().format('YYYY-MM-DD')}`}>
+                    </Link>
+                    <Link href={`/${sessionData?.user?.username}/consumed/${moment().format('YYYY-MM-DD')}`}>
                         <ListItemButton>
                             <CircularBox>
                                 <CircularProgressbar
@@ -111,8 +111,8 @@ const SidebarRight = () => {
                                 </div>
                             </CircularBox>
                         </ListItemButton>
-                    </BetterLink>
-                    <BetterLink href={`/${sessionData?.user?.username}/workout/results/`}>
+                    </Link>
+                    <Link href={`/${sessionData?.user?.username}/workout/results/`}>
                         <ListItemButton>
                             <CircularBox>
                                 <CircularProgressbar
@@ -125,8 +125,8 @@ const SidebarRight = () => {
                                 </div>
                             </CircularBox>
                         </ListItemButton>
-                    </BetterLink>
-                    <BetterLink href={`/coach`}>
+                    </Link>
+                    <Link href={`/coach`}>
                         <ListItemButton>
                             <CircularBox>
                                 <CircularProgressbar
@@ -139,7 +139,7 @@ const SidebarRight = () => {
                                 </div>
                             </CircularBox>
                         </ListItemButton>
-                    </BetterLink>
+                    </Link>
                 </List>
             }
         </Box>

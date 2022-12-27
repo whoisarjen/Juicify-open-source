@@ -1,9 +1,9 @@
 import styled from 'styled-components'
-import BetterLink from '@/components/BetterLink/BetterLink';
 import { useTheme } from "../../../hooks/useTheme";
 import useTranslation from 'next-translate/useTranslation';
 import { ReactNode } from 'react';
 import moment from 'moment';
+import Link from 'next/link';
 
 const Grid = styled.div`
     min-height: 140px;
@@ -56,7 +56,7 @@ const BoxWorkout = ({ title, description, route, icon, isNotSaved, whenAdded }: 
     const { getTheme } = useTheme()
 
     return (
-        <BetterLink href={route}>
+        <Link href={route}>
             <Grid style={{ background: isNotSaved ? 'red' : getTheme('PRIMARY') }}>
                 
                 <Text>
@@ -70,7 +70,7 @@ const BoxWorkout = ({ title, description, route, icon, isNotSaved, whenAdded }: 
                 
                 {isNotSaved && <NotSavedText>{t('Notsaved')}</NotSavedText>}
             </Grid>
-        </BetterLink>
+        </Link>
     )
 }
 

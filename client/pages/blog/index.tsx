@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import Image from "next/image";
-import BetterLink from '@/components/BetterLink/BetterLink';
 import useTranslation from 'next-translate/useTranslation';
+import Link from 'next/link';
 
 const Box = styled.div`
     position: relative;
@@ -68,12 +68,12 @@ const BlogPage = () => {
                 {
                     posts?.length > 0 &&
                     posts.map((post: any) =>
-                        <BetterLink href={`/blog/${post.url}`} key={post.url}>
+                        <Link href={`/blog/${post.url}`} key={post.url}>
                             <article>
                                 <Image src="/images/logo_big.png" width="515" height="290" alt={post.title} />
                                 <h3>{post.title}</h3>
                             </article>
-                        </BetterLink>
+                        </Link>
                     )
                 }
             </Grid>
