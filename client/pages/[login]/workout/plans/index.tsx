@@ -1,42 +1,26 @@
 import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon';
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle';
-import { useCreateWorkoutPlanMutation, useWorkoutPlansQuery } from '@/generated/graphql';
-import { useAppSelector } from '@/hooks/useRedux';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import NoteAltIcon from '@mui/icons-material/NoteAlt'
 import BoxWorkout from '@/containers/Workout/BoxWorkout/BoxWorkout';
-import useTranslation from 'next-translate/useTranslation';
 import NavbarProfile from '@/containers/profile/NavbarProfile/NavbarProfile';
-import { v4 as uuidv4 } from 'uuid';
 import { useSession } from 'next-auth/react';
+import { trpc } from '@/utils/trpc';
 
 const WorkoutPlansPage = () => {
-    const router = useRouter()
+    const router: any = useRouter()
     const { data: sessionData } = useSession()
-    const { t } = useTranslation('workout')
-    const [{ data }, getWorkoutPlans] = useWorkoutPlansQuery({
-        variables: {
-            username: router.query.login as string,
-        },
-        pause: true,
-    })
-    const [, createWorkoutPlan] = useCreateWorkoutPlanMutation()
-
-    useEffect(() => {
-        if (router.query.login) {
-            getWorkoutPlans()
-        }
-    }, [router.query.login])
+    const { data: workoutPlans } = trpc.workoutPlan.getAll.useQuery({ username: router.query.login }, { enabled: !!router.query.login })
+    const createWorkoutPlan = trpc.workoutPlan.create.useMutation()
 
     const handleCreateWorkoutPlan = async () => {
-        const newWorkoutPlan = await createWorkoutPlan({
-            name: t('WORKOUT_PLANS'),
-            id: uuidv4(),
+        await createWorkoutPlan.mutate({
+            name: '',
+        }, {
+            onSuccess: (data) => {
+                router.push(`/${router.query.login}/workout/plans/${data.id}`)
+            }
         })
-
-        newWorkoutPlan?.data?.createWorkoutPlan?.workoutPlan?.id
-            && router.push(`/${router.query.login}/workout/plans/${newWorkoutPlan.data.createWorkoutPlan.workoutPlan.id}`)
     }
 
     const isOwner = router.query.login == sessionData?.user?.username
@@ -46,11 +30,11 @@ const WorkoutPlansPage = () => {
             {isOwner && <NavbarOnlyTitle title="workout:WORKOUT_PLANS" />}
             {isOwner && <ButtonPlusIcon click={handleCreateWorkoutPlan} />}
             {!isOwner && <NavbarProfile tab={3} />}
-            {data?.workoutPlans?.map(workoutPlan =>
+            {workoutPlans?.map(workoutPlan =>
                 <BoxWorkout
-                    title={workoutPlan?.name || ''}
-                    description={workoutPlan?.description || ''}
-                    route={`/${router.query.login}/workout/plans/${workoutPlan?.id}`}
+                    title={workoutPlan.name || ''}
+                    description={workoutPlan.description || ''}
+                    route={`/${router.query.login}/workout/plans/${workoutPlan.id}`}
                     icon={<NoteAltIcon />}
                     key={workoutPlan?.id}
                 />

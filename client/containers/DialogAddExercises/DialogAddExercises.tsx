@@ -3,10 +3,9 @@ import styled from 'styled-components'
 import SlideUp from '../../transition/SlideUp';
 import Autocomplete from '@mui/material/Autocomplete';
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle';
-import { useState, useEffect, ReactNode, Fragment, useMemo } from 'react';
+import { useState, ReactNode, Fragment, useMemo } from 'react';
 import ButtonCloseDialog from '@/components/ButtonCloseDialog/ButtonCloseDialog';
 import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon';
-import { ExerciseFieldsFragment, useExercisesByNameQuery } from '@/generated/graphql';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import { grey } from '@mui/material/colors';
 import { TextField, CircularProgress } from '@mui/material';
@@ -17,6 +16,9 @@ import TabsAddDialog from '@/components/TabsAddDialog/TabsAddDialog';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { addToChecked, cleanChecked, removeFromChecked } from '@/redux/features/dialogAddExercises.slice';
 import ButtonSubmitItems from '@/components/ButtonSubmitItems/ButtonSubmitItems';
+import { trpc } from '@/utils/trpc';
+import { env } from '@/env/client.mjs';
+import { type Exercise } from '@prisma/client';
 
 const DialogContent = styled.div`
     width: 100%;
@@ -42,8 +44,8 @@ const ButtonHolder = styled.div`
 
 export interface DialogAddExercisesProps {
     children?: ReactNode,
-    skipThoseIDS: ExerciseFieldsFragment[],
-    addThoseExercises: (exercises: ExerciseFieldsFragment[]) => void,
+    skipThoseIDS: Exercise[],
+    addThoseExercises: (exercises: Exercise[]) => void,
 }
 
 const DialogAddExercises = ({
@@ -57,25 +59,26 @@ const DialogAddExercises = ({
     const dispatch = useAppDispatch()
     const [isDialog, setIsDialog] = useState(false)
     const [name, setName] = useState('')
-    const [{ data, fetching }, getExercisesByName] = useExercisesByNameQuery({
-        variables: {
-            name,
-        },
-        pause: true,
-    })
 
-    useEffect(() => {
-        if (name?.length >= (process.env.SEARCH_MIN_NAME_LENGTH as unknown as number)) {
-            getExercisesByName()
-        }
-    }, [name, tab])
+    const enabled = name.length >= env.NEXT_PUBLIC_SEARCH_MIN_NAME_LENGTH && tab === 0
+
+    const {
+        data: loadedExercises,
+        isLoading: fetching,
+    } = trpc
+        .exercise
+        .getAll
+        .useQuery({ name }, { enabled: name.length >= env.NEXT_PUBLIC_SEARCH_MIN_NAME_LENGTH })
+
+    // Default isLoading is bugged, when enbaled = false
+    const isLoading = fetching && enabled
 
     const addExercisesToWorkoutPlan = async () => {
         addThoseExercises(checked)
         setIsDialog(false)
         setName('')
         dispatch(cleanChecked())
-        
+
     }
 
     const exercises = useMemo(() => {
@@ -83,8 +86,12 @@ const DialogAddExercises = ({
             return checked
         }
 
-        return (data?.exercisesByName || []).filter(exercise => !skipThoseIDS.some(x => x.id === exercise?.id))
-    }, [skipThoseIDS.length, fetching, data?.exercisesByName?.length, checked?.length, tab])
+        if (!loadedExercises) {
+            return []
+        }
+
+        return loadedExercises.filter(exercise => !skipThoseIDS.some(x => x.id === exercise?.id))
+    }, [skipThoseIDS.length, isLoading, checked?.length, tab])
 
     return (
         <>
@@ -103,7 +110,7 @@ const DialogAddExercises = ({
                         isOptionEqualToValue={(option, value) => option === value}
                         getOptionLabel={option => option ? option : ''}
                         options={[]}
-                        loading={fetching}
+                        loading={isLoading}
                         onInputChange={(_e, value) => setName(value.trim().toLowerCase())}
                         renderInput={(params) => (
                             <TextField
@@ -113,7 +120,7 @@ const DialogAddExercises = ({
                                     ...params.InputProps,
                                     endAdornment: (
                                         <Fragment>
-                                            {fetching ? <CircularProgress color="inherit" size={20} /> : null}
+                                            {isLoading ? <CircularProgress color="inherit" size={20} /> : null}
                                             {params.InputProps.endAdornment}
                                         </Fragment>
                                     ),
@@ -122,10 +129,9 @@ const DialogAddExercises = ({
                         )}
                     />
 
-                    <TabsAddDialog changeTab={(value: number)  => setTab(value)} checkedLength={checked.length} />
+                    <TabsAddDialog changeTab={(value: number) => setTab(value)} checkedLength={checked.length} />
 
                     {exercises.map(exercise =>
-                        exercise &&
                         <BoxExercise
                             isChecked={checked.some(x => x.id === exercise.id)}
                             onCheck={state => state ? dispatch(addToChecked(exercise)) : dispatch(removeFromChecked(exercise))}

@@ -1,8 +1,8 @@
-import { ExerciseFieldsFragment } from "@/generated/graphql";
+import { type Exercise } from "@prisma/client";
 import { createSlice } from "@reduxjs/toolkit";
 
 interface DialogAddExercises {
-    checked: ExerciseFieldsFragment[]
+    checked: Exercise[]
 }
 
 const initialState: DialogAddExercises = {

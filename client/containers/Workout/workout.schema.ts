@@ -26,17 +26,3 @@ export const WorkoutResultSchema = object({
 })
 
 export type WorkoutResultSchemaProps = TypeOf<typeof WorkoutResultSchema>
-
-export const WorkoutPlanSchema = object({
-    id: string(),
-    name: string().max(100).nullable(),
-    description: string().max(500).nullable(),
-    user: string(),
-    burnedCalories: preprocess((val) => Number(val), number().min(0).max(5000)),
-    exercises: array(object({
-        id: string(),
-        name: string(),
-    })),
-})
-
-export type WorkoutPlanSchemaProps = TypeOf<typeof WorkoutPlanSchema>

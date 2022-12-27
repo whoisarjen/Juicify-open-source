@@ -11,42 +11,53 @@ import { useCallback, useEffect } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
 import BottomFlyingGuestBanner from '@/components/BottomFlyingGuestBanner/BottomFlyingGuestBanner'
 import NavbarWorkout from '@/containers/Workout/NavbarWorkout/NavbarWorkout'
-import { ExerciseFieldsFragment, useDeleteWorkoutPlanMutation, useUpdateWorkoutPlanMutation, useWorkoutPlanQuery } from '@/generated/graphql'
 import DialogAddExercises from '@/containers/DialogAddExercises/DialogAddExercises'
-import { WorkoutPlanSchemaProps, WorkoutPlanSchema } from '@/containers/Workout/workout.schema'
 import InputAdornment from '@mui/material/InputAdornment';
 import { useSession } from 'next-auth/react'
+import { trpc } from '@/utils/trpc'
+import { type WorkoutPlanSchema, workoutPlanSchema } from 'server/schema/workoutPlan.schema'
+import { type Exercise } from '@prisma/client'
 
 const WorkoutPlan = () => {
     const router: any = useRouter()
     const { t } = useTranslation('workout')
     const { data: sessionData } = useSession()
-    const [, updateWorkoutPlan] = useUpdateWorkoutPlanMutation()
-    const [, deleteWorkoutPlan] = useDeleteWorkoutPlanMutation()
 
-    const [{ data, fetching, error }, getWorkoutPlan] = useWorkoutPlanQuery({
-        variables: {
-            id: router?.query?.id,
-        },
-        pause: true,
+    const {
+        data,
+        isLoading,
+    } = trpc
+        .workoutPlan
+        .get
+        .useQuery({ id: parseInt(router.query.id), username: router.query.login }, { enabled: !!(router.query.id && router.query.login) })
+
+    const updateWorkoutPlan = trpc.workoutPlan.update.useMutation()
+    const deleteWorkoutPlan = trpc.workoutPlan.delete.useMutation({
+        onSuccess: () => {
+            router.push(`/${sessionData?.user?.username}/workout/plans`)
+        }
     })
 
-    const { register, formState: { errors }, handleSubmit, control, reset } = useForm<WorkoutPlanSchemaProps>({
-        resolver: zodResolver(WorkoutPlanSchema)
-    })
+    const {
+        register,
+        formState: { errors },
+        handleSubmit,
+        control,
+        reset,
+    } = useForm<WorkoutPlanSchema>({ resolver: zodResolver(workoutPlanSchema) })
 
     useEffect(() => {
-        if (data?.workoutPlan?.id) {
+        if (data?.id) {
             reset({
-                id: data.workoutPlan.id,
-                name: data.workoutPlan.name,
-                description: data.workoutPlan.description,
-                burnedCalories: data.workoutPlan.burnedCalories,
-                user: data.workoutPlan.user?.id,
-                exercises: JSON.parse(data.workoutPlan?.exercises || '[]'),
+                id: data.id,
+                name: data.name,
+                description: data.description,
+                burnedCalories: data.burnedCalories,
+                exercises: data.exercises,
             })
         }
-    }, [data?.workoutPlan?.id, data?.workoutPlan?.exercises?.length])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [data?.id, data?.exercises.length])
 
     const {
         fields,
@@ -55,63 +66,43 @@ const WorkoutPlan = () => {
         move
     } = useFieldArray({ control, name: "exercises", keyName: 'uuid' })
 
-    const handleOnSave = useCallback(async (newWorkoutPlan: WorkoutPlanSchemaProps) => {
-        if (data?.workoutPlan?.id) {
-            await updateWorkoutPlan({
-                ...newWorkoutPlan,
-                exercises: JSON.stringify(newWorkoutPlan?.exercises)
-            })
-        }
-    }, [data?.workoutPlan?.id, updateWorkoutPlan])
+    const handleOnSave = useCallback(async (newWorkoutPlan: WorkoutPlanSchema) => {
+        if (!data?.id) return
 
-    const handleOnSaveWithRouter = useCallback(async (newWorkoutPlan: WorkoutPlanSchemaProps) => {
-        if (data?.workoutPlan?.id) {
-            await updateWorkoutPlan({
-                ...newWorkoutPlan,
-                exercises: JSON.stringify(newWorkoutPlan?.exercises)
-            })
-            router.push(`/${sessionData?.user?.username}/workout/plans`)
-        }
-    }, [data?.workoutPlan?.id, router, sessionData?.user?.username, updateWorkoutPlan])
+        await updateWorkoutPlan.mutate(newWorkoutPlan)
+    }, [data?.id, updateWorkoutPlan])
 
-    useEffect(() => {
-        window.addEventListener('blur', () => handleSubmit(handleOnSave)())
+    const handleOnSaveWithRouter = useCallback(async (newWorkoutPlan: WorkoutPlanSchema) => {
+        if (!data?.id) return
 
-        return window.removeEventListener('blur', () => handleSubmit(handleOnSave)());
-    }, [handleOnSave, handleSubmit])
+        await updateWorkoutPlan.mutate(newWorkoutPlan)
+        router.push(`/${sessionData?.user?.username}/workout/plans`)
+    }, [data?.id, router, sessionData?.user?.username, updateWorkoutPlan])
 
-    useEffect(() => {
-        if (error) {
-            router.push(`/${router.query?.login}/workout/plans`)
-        }
-    }, [error])
+    // useEffect(() => {
+    //     window.addEventListener('blur', () => handleSubmit(handleOnSave)())
+
+    //     return window.removeEventListener('blur', () => handleSubmit(handleOnSave)());
+    // }, [handleOnSave, handleSubmit])
 
     const handleOnDelete = async () => {
-        if (data?.workoutPlan?.id) {
-            await deleteWorkoutPlan({
-                id: data.workoutPlan.id,
-            })
-            router.push(`/${sessionData?.user?.username}/workout/plans`)
-        }
+        if (!data?.id) return
+
+        await deleteWorkoutPlan.mutate({ id: data.id })
     }
 
     const handleOnDragEnd = (result: any) => {
         if (!result.destination) return
+
         move(result.source.index, result.destination.index)
     }
 
-    const isOwner = sessionData?.user?.id == data?.workoutPlan?.user?.id
-
-    useEffect(() => {
-        if (router?.query?.id) {
-            getWorkoutPlan()
-        }
-    }, [router?.query?.id])
+    const isOwner = sessionData?.user?.id == data?.userId
 
     return (
         <form>
             <NavbarWorkout
-                isLoading={fetching}
+                isLoading={isLoading}
                 onSave={handleSubmit(handleOnSaveWithRouter)}
                 onDelete={handleOnDelete}
                 onArrowBack={() => router.push(`/${sessionData?.user?.username}/workout/plans`)}
@@ -159,7 +150,7 @@ const WorkoutPlan = () => {
                     {(provided: any) => (
                         <Stack direction="column" spacing={1} {...provided.droppableProps} ref={provided.innerRef}>
                             {fields.map((exercise, i: number) =>
-                                <Draggable key={exercise.id} draggableId={exercise.id} index={i}>
+                                <Draggable key={exercise.id} draggableId={exercise.id.toString()} index={i}>
                                     {(provided: any) => (
                                         <Chip
                                             {...provided.draggableProps}
@@ -187,16 +178,16 @@ const WorkoutPlan = () => {
                     )}
                 </Droppable>
             </DragDropContext>
-            {data?.workoutPlan?.user?.id && isOwner &&
+            {data?.userId && isOwner &&
                 <DialogAddExercises
-                    skipThoseIDS={fields as unknown as ExerciseFieldsFragment[]}
+                    skipThoseIDS={fields as unknown as Exercise[]}
                     addThoseExercises={exercises => append(exercises)}
                 />
             }
-            {data?.workoutPlan?.user?.id && !isOwner &&
+            {data?.userId && !isOwner &&
                 <BottomFlyingGuestBanner
-                    id={data.workoutPlan.user.id}
-                    username={data.workoutPlan.user.username}
+                    src={data.user.image}
+                    username={data.user.username}
                 />
             }
         </form>

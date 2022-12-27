@@ -9,7 +9,7 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import useTranslation from 'next-translate/useTranslation'
-import { ExerciseFieldsFragment, useCreateWorkoutResultMutation, useWorkoutPlansQuery } from '@/generated/graphql'
+import { useCreateWorkoutResultMutation, useWorkoutPlansQuery } from '@/generated/graphql'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon'
@@ -20,6 +20,7 @@ import { TextField } from "@mui/material"
 import LoadingButton from '@mui/lab/LoadingButton'
 import { v4 as uuidv4 } from 'uuid';
 import { useSession } from 'next-auth/react'
+import { type Exercise } from '@prisma/client'
 
 const DialogAddWorkoutResult = () => {
     const { t } = useTranslation('workout')
@@ -45,7 +46,7 @@ const DialogAddWorkoutResult = () => {
                 when: new Date(when).toISOString().slice(0, 10),
                 burnedCalories: workoutPlan.burnedCalories || 0,
                 workoutPlan: workoutPlan.id,
-                exercises: JSON.stringify(JSON.parse(workoutPlan.exercises || '[]').map((exercise: ExerciseFieldsFragment) => ({
+                exercises: JSON.stringify(JSON.parse(workoutPlan.exercises || '[]').map((exercise: Exercise) => ({
                     ...exercise,
                     results: []
                 })))

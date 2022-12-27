@@ -4,17 +4,17 @@ import SpeedDialAction from '@mui/material/SpeedDialAction';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import { useState } from 'react';
 import DialogAddExercises from '@/containers/DialogAddExercises/DialogAddExercises';
-import { ExerciseFieldsFragment } from '@/generated/graphql';
+import { type Exercise } from '@prisma/client';
 
 export interface ButtonMoreOptionsWorkoutResultProps {
-    exercises: ExerciseFieldsFragment[],
-    setExercises: (exercises: ExerciseFieldsFragment[]) => void
+    exercises: Exercise[],
+    setExercises: (exercises: Exercise[]) => void
 }
 
 const ButtonMoreOptionsWorkoutResult = ({ exercises, setExercises }: ButtonMoreOptionsWorkoutResultProps) => {
     const [open, setOpen] = useState(false);
 
-    const handleAddThoseExercises = (selectedExercises: ExerciseFieldsFragment[]) => {
+    const handleAddThoseExercises = (selectedExercises: Exercise[]) => {
         setOpen(false)
         setExercises(selectedExercises)
     }

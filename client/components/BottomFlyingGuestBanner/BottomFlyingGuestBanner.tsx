@@ -10,15 +10,15 @@ const Placeholder = styled.div`
 `
 
 interface BottomFlyingGuestBannerProps {
-    id: string
+    src?: string | null
     username: string
 }
 
-const BottomFlyingGuestBanner = ({ id, username }: BottomFlyingGuestBannerProps) => {
+const BottomFlyingGuestBanner = ({ src, username }: BottomFlyingGuestBannerProps) => {
     const router = useRouter()
     const { t } = useTranslation()
 
-    if (!id || !username) {
+    if (!username) {
         return null
     }
 
@@ -36,7 +36,7 @@ const BottomFlyingGuestBanner = ({ id, username }: BottomFlyingGuestBannerProps)
                 }}
                 variant="contained"
                 startIcon={<CustomAvatar
-                    id={id}
+                    src={src}
                     username={username}
                     size="24px"
                 />}

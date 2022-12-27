@@ -1,6 +1,6 @@
-import { ExerciseFieldsFragment } from '@/generated/graphql';
 import { useTheme } from '@/hooks/useTheme';
 import Checkbox from '@mui/material/Checkbox';
+import { Exercise } from '@prisma/client';
 import styled from 'styled-components';
 
 const Box = styled.div`
@@ -24,7 +24,7 @@ const Name = styled.div`
 `
 
 interface BoxExerciseProps {
-    exercise: ExerciseFieldsFragment
+    exercise: Exercise
     isChecked: boolean
     onCheck: (state: boolean) => void
 }

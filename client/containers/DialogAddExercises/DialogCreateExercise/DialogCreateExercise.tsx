@@ -10,10 +10,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import useTranslation from 'next-translate/useTranslation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { ExerciseSchema, ExerciseSchemaProps } from '@/containers/Workout/workout.schema'
-import { useCreateExerciseMutation } from '@/generated/graphql';
-import { v4 as uuidv4 } from 'uuid';
 import { useSession } from 'next-auth/react';
+import { trpc } from '@/utils/trpc';
+import { type CreateExerciseSchema, createExerciseSchema } from 'server/schema/exercise.schema';
 
 interface DialogCreateExerciseProps {
     onCreated: (name: string) => void
@@ -25,23 +24,22 @@ const DialogCreateExercise = ({
     const { t } = useTranslation('workout')
     const [isOpen, setIsOpen] = useState(false)
     const { data: sessionData } = useSession()
-    const [{ fetching }, createExercise] = useCreateExerciseMutation()
-
-    const onSubmit = async ({ name }: ExerciseSchemaProps) => {
-        if (name) {
-            await createExercise({
-                id: uuidv4(),
-                name,
-                user: sessionData?.user?.id || '',
-            })
-            onCreated(name)
+    const createExercise = trpc.exercise.create.useMutation({
+        onSuccess: (data, variables) => {
+            onCreated(variables.name)
             setIsOpen(false)
         }
+    })
+
+    const onSubmit = async (newExercise: CreateExerciseSchema) => {
+        await createExercise.mutate(newExercise)
     }
 
-    const { register, formState: { errors }, handleSubmit } = useForm<ExerciseSchemaProps>({
-        resolver: zodResolver(ExerciseSchema)
-    })
+    const {
+        register,
+        formState: { errors },
+        handleSubmit,
+    } = useForm<CreateExerciseSchema>({ resolver: zodResolver(createExerciseSchema) })
 
     return (
         <>
@@ -71,7 +69,7 @@ const DialogCreateExercise = ({
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => setIsOpen(false)}>{t('Cancel')}</Button>
-                        <LoadingButton loading={fetching} type="submit">
+                        <LoadingButton loading={createExercise.isLoading} type="submit">
                             {t('Submit')}
                         </LoadingButton>
                     </DialogActions>
