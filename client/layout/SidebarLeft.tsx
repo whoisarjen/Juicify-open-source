@@ -44,8 +44,7 @@ const SidebarLeft = () => {
                                 <ListItemButton onClick={() => router.push(`/${sessionData?.user?.username}`)}>
                                     <ListItemIcon>
                                         <CustomAvatar
-                                            id={sessionData?.user?.id || ''}
-                                            username={sessionData?.user?.username || ''}
+                                            src={sessionData?.user?.image}
                                             size="28px"
                                             margin="auto auto auto 0"
                                         />

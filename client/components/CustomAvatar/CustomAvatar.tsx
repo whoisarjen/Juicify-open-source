@@ -1,31 +1,39 @@
 import Avatar from '@mui/material/Avatar';
 
 interface CustomAvatarProps {
-    id?: string
-    username: string
+    src?: string | null
     size?: string
     margin?: string
 }
 
 const CustomAvatar = ({
-    id,
-    username,
+    src,
     size = '110px',
     margin = 'auto'
-}: CustomAvatarProps) => (
-    <Avatar
-        data-testid="user_logo"
-        sx={{ background: 'none !important', width: size, height: size, margin }}
-        alt={`${username} on Juicify`}
-        src={`${process.env.SERVER}/avatar/${id}.jpg`}
-    >
+}: CustomAvatarProps) => {
+    if (!src) {
+        return (
+            <Avatar
+                data-testid="default_logo"
+                sx={{ background: 'none !important', width: size, height: size, margin }}
+                src='/images/logo.png'
+            />
+        )
+    }
+
+    return (
         <Avatar
-            data-testid="default_logo"
+            data-testid="user_logo"
             sx={{ background: 'none !important', width: size, height: size, margin }}
-            alt={`${username} on Juicify`}
-            src='/images/logo.png'
-        />
-    </Avatar>
-)
+            src={src}
+        >
+            <Avatar
+                data-testid="default_logo"
+                sx={{ background: 'none !important', width: size, height: size, margin }}
+                src='/images/logo.png'
+            />
+        </Avatar>
+    )
+}
 
 export default CustomAvatar;
