@@ -34,17 +34,13 @@ const Menu = styled.nav`
     }
 `
 
-const Copyright = styled.p`
-    margin: 0;
-`
-
 const Footer = () => {
     const { data: sessionData } = useSession()
 
     return (
         <Box>
-            {sessionData?.user?.username
-                ? <Menu>
+            {sessionData?.user?.username &&
+                <Menu>
                     <Link style={{ margin: 'auto', display: 'grid' }} href="/coach">
                         <IconButton color="primary">
                             <SmartToyIcon color="primary" />
@@ -80,7 +76,6 @@ const Footer = () => {
                         </IconButton>
                     </Link>
                 </Menu>
-                : <Copyright>©2022 Juicify.app</Copyright>
             }
         </Box>
     );
