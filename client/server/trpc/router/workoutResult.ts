@@ -26,7 +26,7 @@ export const workoutResultRouter = router({
                 },
             })
 
-            return workoutResult as unknown as WorkoutResultWithExercises<typeof workoutResult>
+            return workoutResult as unknown as WorkoutResult<typeof workoutResult>
         }),
     getAll: publicProcedure
         .input(
@@ -59,7 +59,7 @@ export const workoutResultRouter = router({
                     id: workoutPlanId,
                     userId: ctx.session.user.id,
                 }
-            }) as unknown as WorkoutPlanWithExercises
+            }) as unknown as WorkoutPlan
 
             return await ctx.prisma.workoutResult.create({
                 data: {

@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { TextField } from "@mui/material"
 import useTranslation from "next-translate/useTranslation"
 import { useRouter } from "next/router"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 import { useForm, useFieldArray } from "react-hook-form"
 import InputAdornment from '@mui/material/InputAdornment';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
@@ -40,19 +40,12 @@ const WorkoutResultPage = () => {
     } = trpc
         .workoutResult
         .get
-        .useQuery({ id: parseInt(router.query.id), username: router.query.login }, { enabled: !!(router.query.id && router.query.login) })
-
-    const updateResults = async ({
-        results,
-        exercise,
-        index
-    }: {
-        results: Result[],
-        exercise: WorkoutResultExercise,
-        index: number
-    }) => {
-        update(index, { ...exercise, results })
-    }
+        .useQuery({ id: parseInt(router.query.id), username: router.query.login }, {
+            enabled: !!(router.query.id && router.query.login),
+            onSuccess(data) {
+                reset(data)
+            },
+        })
 
     const {
         register,
@@ -61,15 +54,13 @@ const WorkoutResultPage = () => {
         control,
         reset,
         setValue
-    } = useForm<WorkoutResultSchema>({
-        resolver: zodResolver(workoutResultSchema)
-    })
+    } = useForm<WorkoutResultSchema>({ resolver: zodResolver(workoutResultSchema) })
 
     const {
         fields,
         append,
         remove,
-        update
+        update,
     } = useFieldArray({ control, name: "exercises", keyName: 'uuid' })
 
     // const handleOnSave = useCallback(async (values: WorkoutResultSchema) => {
@@ -93,21 +84,11 @@ const WorkoutResultPage = () => {
     //     return window.removeEventListener('blur', () => handleSubmit(handleOnSave)());
     // }, [handleOnSave, handleSubmit])
 
-    useEffect(() => {
-        if (!data) return
-
-        reset(data)
-
-
-        // if (data?.previousWorkoutResult) {
-        //     setPreviousExercises(data.previousWorkoutResult.exercises)
-        // }
-    }, [data, reset])
-
     const onWhenChange = (newDate: string | null) => {
         if (newDate) {
             setValue('whenAdded', new Date(newDate))
         }
+
         setWhen(newDate)
     }
 
@@ -167,9 +148,9 @@ const WorkoutResultPage = () => {
                 {...register('burnedCalories')}
                 error={!!errors.burnedCalories}
                 helperText={errors.burnedCalories?.message && t(`notify:${errors.burnedCalories.message || ''}`)}
-            // Input={{
-            //     endAdornment: <InputAdornment position="end">kcal</InputAdornment>,
-            // }}
+                InputProps={{
+                    endAdornment: <InputAdornment position="end">kcal</InputAdornment>,
+                }}
             />
 
             <TextField
@@ -191,7 +172,7 @@ const WorkoutResultPage = () => {
                         exercise={exercise}
                         previousExercise={previousExercises.find((previousExercise: WorkoutResultExercise) => previousExercise?.id === exercise.id)}
                         isOwner={sessionData?.user?.username == data?.user?.username}
-                        setNewValues={(results: Result[]) => updateResults({ results, exercise, index })}
+                        setNewValues={(results: WorkoutResultExerciseResult[]) => update(index, { ...exercise, results })}
                         deleteExerciseWithIndex={() => remove(index)}
                     />
                 </div>

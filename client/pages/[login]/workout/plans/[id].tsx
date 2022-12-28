@@ -29,7 +29,18 @@ const WorkoutPlan = () => {
     } = trpc
         .workoutPlan
         .get
-        .useQuery({ id: parseInt(router.query.id), username: router.query.login }, { enabled: !!(router.query.id && router.query.login) })
+        .useQuery({ id: parseInt(router.query.id), username: router.query.login }, {
+            enabled: !!(router.query.id && router.query.login),
+            onSuccess(data) {
+                reset({
+                    id: data.id,
+                    name: data.name,
+                    description: data.description,
+                    burnedCalories: data.burnedCalories,
+                    exercises: data.exercises,
+                })
+            },
+        })
 
     const updateWorkoutPlan = trpc.workoutPlan.update.useMutation()
     const deleteWorkoutPlan = trpc.workoutPlan.delete.useMutation({
@@ -47,19 +58,6 @@ const WorkoutPlan = () => {
         control,
         reset,
     } = useForm<WorkoutPlanSchema>({ resolver: zodResolver(workoutPlanSchema) })
-
-    useEffect(() => {
-        if (!data?.id) return
-
-        reset({
-            id: data.id,
-            name: data.name,
-            description: data.description,
-            burnedCalories: data.burnedCalories,
-            exercises: data.exercises,
-        })
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [data?.id, data?.exercises.length])
 
     const {
         fields,

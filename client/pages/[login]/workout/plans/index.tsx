@@ -11,16 +11,14 @@ const WorkoutPlansPage = () => {
     const router: any = useRouter()
     const { data: sessionData } = useSession()
     const { data: workoutPlans } = trpc.workoutPlan.getAll.useQuery({ username: router.query.login }, { enabled: !!router.query.login })
-    const createWorkoutPlan = trpc.workoutPlan.create.useMutation()
+    const createWorkoutPlan = trpc.workoutPlan.create.useMutation({
+        onSuccess: (data) => {
+            router.push(`/${router.query.login}/workout/plans/${data.id}`)
+        }
+    })
 
     const handleCreateWorkoutPlan = async () => {
-        await createWorkoutPlan.mutate({
-            name: '',
-        }, {
-            onSuccess: (data) => {
-                router.push(`/${router.query.login}/workout/plans/${data.id}`)
-            }
-        })
+        await createWorkoutPlan.mutate({ name: '' })
     }
 
     const isOwner = router.query.login == sessionData?.user?.username

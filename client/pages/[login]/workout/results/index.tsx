@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router'
-import { useWorkoutResultsQuery } from '@/generated/graphql'
 import DialogAddWorkoutResult from '@/containers/Workout/DialogAddWorkoutResult/DialogAddWorkoutResult'
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter'
 import BoxWorkout from '@/containers/Workout/BoxWorkout/BoxWorkout'

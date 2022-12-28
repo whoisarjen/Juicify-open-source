@@ -32,6 +32,9 @@ export const trpc = createTRPCNext<AppRouter>({
             // refetchOnMount: false,
             retryOnMount: false,
             retry: false,
+          },
+          mutations: {
+            retry: false,
           }
         }
       },

@@ -2,8 +2,7 @@ import { z } from "zod";
 import { omit } from "lodash";
 
 import { router, publicProcedure, protectedProcedure } from "../trpc";
-import { workoutPlanSchema } from "server/schema/workoutPlan.schema";
-import { exerciseSchema } from "server/schema/exercise.schema";
+import { createWorkoutPlanSchema, workoutPlanSchema } from "server/schema/workoutPlan.schema";
 
 export const workoutPlanRouter = router({
     get: publicProcedure
@@ -27,7 +26,7 @@ export const workoutPlanRouter = router({
                 },
             });
 
-            return workoutPlan as unknown as WorkoutPlanWithExercises
+            return workoutPlan as unknown as WorkoutPlan<typeof workoutPlan>
         }),
     getAll: publicProcedure
         .input(
@@ -43,22 +42,16 @@ export const workoutPlanRouter = router({
                         username,
                     },
                 },
-            }) as unknown as WorkoutPlanWithExercises[]
+            }) as unknown as WorkoutPlan[]
         }),
     create: protectedProcedure
-        .input(
-            z.object({
-                name: z.string(),
-                exercises: z.array(exerciseSchema)
-                    .optional()
-                    .default([])
-            })
-        )
+        .input(createWorkoutPlanSchema)
         .mutation(async ({ ctx, input }) => {
             return await ctx.prisma.workoutPlan.create({
                 data: {
                     ...input,
                     userId: ctx.session.user.id,
+                    exercises: [],
                 }
             })
         }),

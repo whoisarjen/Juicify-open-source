@@ -1,18 +1,19 @@
 import { object, preprocess, boolean, number, TypeOf, string, array, date } from "zod"
 
-export const resultSchema = object({
+import { workoutPlanExerciseSchema } from './workoutPlan.schema'
+
+export const workoutResultExerciseResultSchema = object({
     open: preprocess((val) => Boolean(val), boolean()).optional(),
     reps: preprocess((val) => Number(val), number()),
     weight: preprocess((val) => Number(val), number()),
 })
 
-export type ResultSchema = TypeOf<typeof resultSchema>
+export type WorkoutResultExerciseResultSchema = TypeOf<typeof workoutResultExerciseResultSchema>
 
 export const workoutResultExerciseSchema = object({
-    id: number().optional(),
-    name: string().optional(),
-    results: array(resultSchema).optional().default([]),
+    results: array(workoutResultExerciseResultSchema).optional().default([]),
 })
+    .merge(workoutPlanExerciseSchema)
 
 export type WorkoutResultExerciseSchema = TypeOf<typeof workoutResultExerciseSchema>
 

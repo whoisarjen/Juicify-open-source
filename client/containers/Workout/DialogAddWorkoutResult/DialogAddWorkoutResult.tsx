@@ -51,9 +51,9 @@ const DialogAddWorkoutResult = () => {
     }
 
     useEffect(() => {
-        if (workoutPlans?.[0]?.id) {
-            setChoosenWorkoutPlan(workoutPlans[0].id)
-        }
+        if (!workoutPlans?.[0]?.id) return
+        
+        setChoosenWorkoutPlan(workoutPlans[0].id)
     }, [isFetching, workoutPlans])
 
     return (
