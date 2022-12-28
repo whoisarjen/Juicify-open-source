@@ -1,3 +1,4 @@
+import { createExerciseSchema } from "@/server/schema/exercise.schema";
 import { z } from "zod"
 
 import { router, publicProcedure, protectedProcedure } from "../trpc";
@@ -39,11 +40,7 @@ export const exerciseRouter = router({
             })
         }),
     create: protectedProcedure
-        .input(
-            z.object({
-                name: z.string(),
-            })
-        )
+        .input(createExerciseSchema)
         .mutation(async ({ ctx, input: { name } }) => {
             return await ctx.prisma.exercise.create({
                 data: {

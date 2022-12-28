@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSession } from 'next-auth/react';
 import { trpc } from '@/utils/trpc';
-import { type CreateExerciseSchema, createExerciseSchema } from 'server/schema/exercise.schema';
+import { type CreateExerciseSchema, createExerciseSchema } from '@/server/schema/exercise.schema';
 
 interface DialogCreateExerciseProps {
     onCreated: (name: string) => void

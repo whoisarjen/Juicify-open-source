@@ -87,7 +87,6 @@ const DialogAddWorkoutResult = () => {
                             onChange={event => setChoosenWorkoutPlan(parseInt(event.target.value.toString()))}
                         >
                             {workoutPlans?.map(workoutPlan =>
-                                workoutPlan &&
                                 <MenuItem
                                     value={workoutPlan.id}
                                     key={workoutPlan.id}
