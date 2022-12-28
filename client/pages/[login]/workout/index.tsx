@@ -1,7 +1,7 @@
 import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter'
-import BoxWorkout from "@/containers/Workout/BoxWorkout/BoxWorkout";
+import BoxWorkout from "@/containers/Workout/BoxWorkout/BoxWorkout"
 import NoteAltIcon from '@mui/icons-material/NoteAlt'
 
 const Workout = () => {

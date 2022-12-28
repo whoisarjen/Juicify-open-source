@@ -17,6 +17,7 @@ const Grid = styled.div`
 `
 
 interface NavbarWorkoutProp {
+    isDisabled: boolean
     isLoading: boolean
     onSave: () => void
     onDelete: () => void
@@ -24,6 +25,7 @@ interface NavbarWorkoutProp {
 }
 
 const NavbarWorkout = ({
+    isDisabled,
     onArrowBack,
     isLoading,
     onSave,
@@ -41,12 +43,13 @@ const NavbarWorkout = ({
             <div />
             {sessionData?.user?.username == router.query.login
                 ? <>
-                    <DialogConfirm confirmed={onDelete}>
-                        <IconButton aria-label="delete" sx={{ margin: 'auto' }}>
+                    <DialogConfirm confirmed={onDelete} isDisabled={isDisabled}>
+                        <IconButton disabled={isDisabled} aria-label="delete" sx={{ margin: 'auto' }}>
                             <DeleteIcon />
                         </IconButton>
                     </DialogConfirm>
                     <LoadingButton
+                        disabled={isDisabled}
                         loading={isLoading}
                         loadingPosition="start"
                         startIcon={<SaveIcon />}

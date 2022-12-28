@@ -25,7 +25,7 @@ const WorkoutPlan = () => {
 
     const {
         data,
-        isLoading,
+        isFetching,
     } = trpc
         .workoutPlan
         .get
@@ -47,15 +47,15 @@ const WorkoutPlan = () => {
     } = useForm<WorkoutPlanSchema>({ resolver: zodResolver(workoutPlanSchema) })
 
     useEffect(() => {
-        if (data?.id) {
-            reset({
-                id: data.id,
-                name: data.name,
-                description: data.description,
-                burnedCalories: data.burnedCalories,
-                exercises: data.exercises,
-            })
-        }
+        if (!data?.id) return
+
+        reset({
+            id: data.id,
+            name: data.name,
+            description: data.description,
+            burnedCalories: data.burnedCalories,
+            exercises: data.exercises,
+        })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data?.id, data?.exercises.length])
 
@@ -66,11 +66,11 @@ const WorkoutPlan = () => {
         move
     } = useFieldArray({ control, name: "exercises", keyName: 'uuid' })
 
-    const handleOnSave = useCallback(async (newWorkoutPlan: WorkoutPlanSchema) => {
-        if (!data?.id) return
+    // const handleOnSave = useCallback(async (newWorkoutPlan: WorkoutPlanSchema) => {
+    //     if (!data?.id) return
 
-        await updateWorkoutPlan.mutate(newWorkoutPlan)
-    }, [data?.id, updateWorkoutPlan])
+    //     await updateWorkoutPlan.mutate(newWorkoutPlan)
+    // }, [data?.id, updateWorkoutPlan])
 
     const handleOnSaveWithRouter = useCallback(async (newWorkoutPlan: WorkoutPlanSchema) => {
         if (!data?.id) return
@@ -102,7 +102,8 @@ const WorkoutPlan = () => {
     return (
         <form>
             <NavbarWorkout
-                isLoading={isLoading}
+                isDisabled={!data?.id}
+                isLoading={isFetching}
                 onSave={handleSubmit(handleOnSaveWithRouter)}
                 onDelete={handleOnDelete}
                 onArrowBack={() => router.push(`/${sessionData?.user?.username}/workout/plans`)}

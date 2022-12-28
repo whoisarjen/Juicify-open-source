@@ -31,6 +31,7 @@ export const trpc = createTRPCNext<AppRouter>({
             refetchOnWindowFocus: false,
             refetchOnMount: false,
             retryOnMount: false,
+            retry: false,
           }
         }
       },

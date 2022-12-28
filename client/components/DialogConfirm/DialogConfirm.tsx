@@ -11,9 +11,10 @@ import { useState } from 'react'
 interface DialogConfirmProps {
     children: any
     confirmed: () => void
+    isDisabled: boolean
 }
 
-const DialogConfirm = ({ children, confirmed }: DialogConfirmProps) => {
+const DialogConfirm = ({ children, confirmed, isDisabled }: DialogConfirmProps) => {
     const [isDialog, setIsDialog] = useState(false)
     const { t } = useTranslation('home')
 
@@ -31,7 +32,7 @@ const DialogConfirm = ({ children, confirmed }: DialogConfirmProps) => {
         <>
             <div onClick={event => handleSetIsDialog(event, true)}>{children}</div>
             <Dialog
-                open={isDialog}
+                open={!isDisabled && isDialog}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >

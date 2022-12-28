@@ -163,11 +163,7 @@ const Layout = ({ children }: { children: any }) => {
                     {router.pathname.includes('blog') || router.pathname == '/'
                         ? <>{children}</>
                         : <Grid>
-                            {
-                                isLoggoutedGrid
-                                    ? <SidebarLeftLoggouted />
-                                    : <SidebarLeft />
-                            }
+                            <SidebarLeft />
                             <Content>{children}</Content>
                             {
                                 isLoggoutedGrid

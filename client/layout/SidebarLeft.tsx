@@ -17,6 +17,7 @@ import SmartToyIcon from '@mui/icons-material/SmartToy';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useSession, signIn, signOut } from "next-auth/react"
 import Divider from '@mui/material/Divider';
+import NoteAltIcon from '@mui/icons-material/NoteAlt'
 
 const Grid = styled.aside`
     padding: 12px;
@@ -29,91 +30,116 @@ const Grid = styled.aside`
     }
 `
 
+const getRouterPushOptions = (username: string) => ({
+    profile: `/${username}`,
+    diary: `/${username}/consumed/${moment().format('YYYY-MM-DD')}`,
+    measurements: `/measurements`,
+    results: `/${username}/workout/results`,
+    plans: `/${username}/workout/plans`,
+    coach: `/coach`,
+    settings: `/settings`,
+    blog: `/blog`,
+})
+
 const SidebarLeft = () => {
     const router = useRouter()
     const { t } = useTranslation('home')
     const { data: sessionData } = useSession()
 
+    const handleRouter = (where: keyof ReturnType<typeof getRouterPushOptions>) => () => {
+        if (!sessionData?.user) {
+            return signIn()
+        }
+
+        router.push(getRouterPushOptions(sessionData.user.username)[where])
+    }
+
     return (
         <Grid>
-            {sessionData &&
-                <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                    <nav>
-                        <List>
-                            <ListItem disablePadding>
-                                <ListItemButton onClick={() => router.push(`/${sessionData?.user?.username}`)}>
-                                    <ListItemIcon>
-                                        <CustomAvatar
-                                            src={sessionData?.user?.image}
-                                            username={sessionData?.user?.username}
-                                            size="28px"
-                                            margin="auto auto auto 0"
-                                        />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Profile" />
-                                </ListItemButton>
-                            </ListItem>
-                            <ListItem disablePadding>
-                                <ListItemButton onClick={() => router.push(`/${sessionData?.user?.username}/consumed/${moment().format('YYYY-MM-DD')}`)}>
-                                    <ListItemIcon>
-                                        <BookIcon color="primary" />
-                                    </ListItemIcon>
-                                    <ListItemText primary={t('Diary')} />
-                                </ListItemButton>
-                            </ListItem>
-                            <ListItem disablePadding>
-                                <ListItemButton onClick={() => router.push(`/measurements`)}>
-                                    <ListItemIcon>
-                                        <EmojiEventsIcon color="primary" />
-                                    </ListItemIcon>
-                                    <ListItemText primary={t('Measurements')} />
-                                </ListItemButton>
-                            </ListItem>
-                            <ListItem disablePadding>
-                                <ListItemButton onClick={() => router.push(`/${sessionData?.user?.username}/workout`)}>
-                                    <ListItemIcon>
-                                        <FitnessCenterIcon color="primary" />
-                                    </ListItemIcon>
-                                    <ListItemText primary={t('Workout')} />
-                                </ListItemButton>
-                            </ListItem>
-                            <ListItem disablePadding>
-                                <ListItemButton onClick={() => router.push(`/coach`)}>
-                                    <ListItemIcon>
-                                        <SmartToyIcon color="primary" />
-                                    </ListItemIcon>
-                                    <ListItemText primary={t('Coach')} />
-                                </ListItemButton>
-                            </ListItem>
-                            {/* <ListItem disablePadding>
-                                <ListItemButton onClick={() => router.push(`/blog`)}>
+            <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                <nav>
+                    <List>
+                        <ListItem disablePadding>
+                            <ListItemButton onClick={handleRouter("profile")}>
+                                <ListItemIcon>
+                                    <CustomAvatar
+                                        src={sessionData?.user?.image}
+                                        username={sessionData?.user?.username}
+                                        size="28px"
+                                        margin="auto auto auto 0"
+                                    />
+                                </ListItemIcon>
+                                <ListItemText primary="Profile" />
+                            </ListItemButton>
+                        </ListItem>
+                        <ListItem disablePadding>
+                            <ListItemButton onClick={handleRouter('diary')}>
+                                <ListItemIcon>
+                                    <BookIcon color="primary" />
+                                </ListItemIcon>
+                                <ListItemText primary={t('Diary')} />
+                            </ListItemButton>
+                        </ListItem>
+                        <ListItem disablePadding>
+                            <ListItemButton onClick={handleRouter('measurements')}>
+                                <ListItemIcon>
+                                    <EmojiEventsIcon color="primary" />
+                                </ListItemIcon>
+                                <ListItemText primary={t('Measurements')} />
+                            </ListItemButton>
+                        </ListItem>
+                        <ListItem disablePadding>
+                            <ListItemButton onClick={handleRouter('results')}>
+                                <ListItemIcon>
+                                    <FitnessCenterIcon color="primary" />
+                                </ListItemIcon>
+                                <ListItemText primary={t('WORKOUT_RESULTS')} />
+                            </ListItemButton>
+                        </ListItem>
+                        <ListItem disablePadding>
+                            <ListItemButton onClick={handleRouter('plans')}>
+                                <ListItemIcon>
+                                    <NoteAltIcon color="primary" />
+                                </ListItemIcon>
+                                <ListItemText primary={t('WORKOUT_PLANS')} />
+                            </ListItemButton>
+                        </ListItem>
+                        <ListItem disablePadding>
+                            <ListItemButton onClick={handleRouter('coach')}>
+                                <ListItemIcon>
+                                    <SmartToyIcon color="primary" />
+                                </ListItemIcon>
+                                <ListItemText primary={t('Coach')} />
+                            </ListItemButton>
+                        </ListItem>
+                        {/* <ListItem disablePadding>
+                                <ListItemButton onClick={handleRouter('blog')}>
                                     <ListItemIcon>
                                         <SchoolIcon color="primary" />
                                     </ListItemIcon>
                                     <ListItemText primary={t('Blog')} />
                                 </ListItemButton>
                             </ListItem> */}
-                            <ListItem disablePadding>
-                                <ListItemButton onClick={() => router.push(`/settings`)}>
-                                    <ListItemIcon>
-                                        <Settings color="primary" />
-                                    </ListItemIcon>
-                                    <ListItemText primary={t('Settings')} />
-                                </ListItemButton>
-                            </ListItem>
-                            <Divider />
-                            <ListItem disablePadding>
-                                <ListItemButton onClick={() => sessionData ? signOut({ callbackUrl: '/', redirect: true }) : signIn()}>
-                                    <ListItemIcon>
-                                        <LogoutIcon color="primary" />
-                                    </ListItemIcon>
-                                    <ListItemText primary={sessionData ? t('Logout') : t('Login')} />
-                                </ListItemButton>
-                            </ListItem>
-                        </List>
-                    </nav>
-                </Box>
-            }
+                        <ListItem disablePadding>
+                            <ListItemButton onClick={handleRouter('settings')}>
+                                <ListItemIcon>
+                                    <Settings color="primary" />
+                                </ListItemIcon>
+                                <ListItemText primary={t('Settings')} />
+                            </ListItemButton>
+                        </ListItem>
+                        <Divider />
+                        <ListItem disablePadding>
+                            <ListItemButton onClick={() => sessionData ? signOut({ callbackUrl: '/', redirect: true }) : signIn()}>
+                                <ListItemIcon>
+                                    <LogoutIcon color="primary" />
+                                </ListItemIcon>
+                                <ListItemText primary={sessionData ? t('Logout') : t('Login')} />
+                            </ListItemButton>
+                        </ListItem>
+                    </List>
+                </nav>
+            </Box>
         </Grid>
     )
 }
