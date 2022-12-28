@@ -16,7 +16,6 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { useSession } from 'next-auth/react'
 import { trpc } from '@/utils/trpc'
 import { type WorkoutPlanSchema, workoutPlanSchema } from 'server/schema/workoutPlan.schema'
-import { type Exercise } from '@prisma/client'
 
 const WorkoutPlan = () => {
     const router: any = useRouter()
@@ -63,27 +62,26 @@ const WorkoutPlan = () => {
         fields,
         append,
         remove,
-        move
+        move,
     } = useFieldArray({ control, name: "exercises", keyName: 'uuid' })
 
-    // const handleOnSave = useCallback(async (newWorkoutPlan: WorkoutPlanSchema) => {
-    //     if (!data?.id) return
-
-    //     await updateWorkoutPlan.mutate(newWorkoutPlan)
-    // }, [data?.id, updateWorkoutPlan])
-
-    const handleOnSaveWithRouter = useCallback(async (newWorkoutPlan: WorkoutPlanSchema) => {
-        if (!data?.id) return
-
+    const handleOnSave = async (newWorkoutPlan: WorkoutPlanSchema) => {
         await updateWorkoutPlan.mutate(newWorkoutPlan)
-        router.push(`/${sessionData?.user?.username}/workout/plans`)
-    }, [data?.id, router, sessionData?.user?.username, updateWorkoutPlan])
+    }
 
-    // useEffect(() => {
-    //     window.addEventListener('blur', () => handleSubmit(handleOnSave)())
+    const handleOnSaveWithRouter = async (newWorkoutPlan: WorkoutPlanSchema) => {
+        await updateWorkoutPlan.mutateAsync(newWorkoutPlan)
+            .then(() => router.push(`/${sessionData?.user?.username}/workout/plans`))
+    }
 
-    //     return window.removeEventListener('blur', () => handleSubmit(handleOnSave)());
-    // }, [handleOnSave, handleSubmit])
+    useEffect(() => {
+        const handleSubmitProxy = () => handleSubmit(handleOnSave)()
+
+        window.addEventListener('blur', handleSubmitProxy)
+
+        return window.removeEventListener('blur', handleSubmitProxy)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const handleOnDelete = async () => {
         if (!data?.id) return
@@ -151,7 +149,7 @@ const WorkoutPlan = () => {
                     {(provided: any) => (
                         <Stack direction="column" spacing={1} {...provided.droppableProps} ref={provided.innerRef}>
                             {fields.map((exercise, i: number) =>
-                                <Draggable key={exercise.id} draggableId={exercise.id.toString()} index={i}>
+                                <Draggable key={exercise.id} draggableId={exercise.uuid} index={i}>
                                     {(provided: any) => (
                                         <Chip
                                             {...provided.draggableProps}

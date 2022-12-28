@@ -12,7 +12,7 @@ const withPWA = require("next-pwa")({
 })
 
 const nextConfig = {
-    reactStrictMode: true,
+    reactStrictMode: false, // react-beautiful-dnd is not working, when true
     env: {
         PRODUCT_DECIMAL_PLACES: 1,
         DEFAULT_NUMBER_OF_MEALS: 5,
@@ -23,15 +23,6 @@ const nextConfig = {
         APP_VERSION: new Date().toISOString(),
         isProduction,
     },
-    // webpackDevMiddleware: config => {
-    //     config.watchOptions = {
-    //         poll: 2000,
-    //         aggregateTimeout: 600,
-    //         ignored: /node_modules/,
-    //     }
-    //     return config
-    // },
-    // @ts-ignore
     ...nextTranslate(),
 }
 

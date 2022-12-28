@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { TextField } from "@mui/material"
 import useTranslation from "next-translate/useTranslation"
 import { useRouter } from "next/router"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useForm, useFieldArray } from "react-hook-form"
 import InputAdornment from '@mui/material/InputAdornment';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
@@ -63,26 +63,25 @@ const WorkoutResultPage = () => {
         update,
     } = useFieldArray({ control, name: "exercises", keyName: 'uuid' })
 
-    // const handleOnSave = useCallback(async (values: WorkoutResultSchema) => {
-    //     await updateWorkoutResult({
-    //         ...values,
-    //         exercises: JSON.stringify(values.exercises?.map(exercise => ({
-    //             ...omit(exercise, ['uuid']),
-    //             results: exercise?.results?.map((result: any) => !result.open ? omit(result, ['open']) : result),
-    //         })))
-    //     })
-    // }, [updateWorkoutResult])
+    const handleOnSave = async (values: WorkoutResultSchema) => {
+        await updateWorkoutResult.mutate(values)
+    }
 
     const handleOnSaveWithRouter = useCallback(async (newWorkoutResult: WorkoutResultSchema) => {
-        await updateWorkoutResult.mutate(newWorkoutResult)
-        router.push(`/${router.query?.login}/workout/results`)
+        await updateWorkoutResult.mutateAsync(newWorkoutResult)
+            .then(() => router.push(`/${router.query?.login}/workout/results`))
     }, [router, updateWorkoutResult])
 
-    // useEffect(() => {
-    //     window.addEventListener('blur', () => handleSubmit(handleOnSave)())
+    useEffect(() => {
+        const handleSubmitProxy = () => handleSubmit(handleOnSave)()
+    
+        window.addEventListener('blur', handleSubmitProxy)
 
-    //     return window.removeEventListener('blur', () => handleSubmit(handleOnSave)());
-    // }, [handleOnSave, handleSubmit])
+        return () => {
+            window.removeEventListener('blur', handleSubmitProxy)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const onWhenChange = (newDate: string | null) => {
         if (newDate) {
