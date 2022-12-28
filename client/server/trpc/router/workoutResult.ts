@@ -2,10 +2,9 @@ import { z } from "zod";
 import { omit } from "lodash";
 
 import { router, publicProcedure, protectedProcedure } from "../trpc";
-import { workoutPlanSchema } from "server/schema/workoutPlan.schema";
-import { exerciseSchema } from "server/schema/exercise.schema";
+import { workoutResultSchema } from "@/server/schema/workoutResult.schema";
 
-export const workoutPlanRouter = router({
+export const workoutResultRouter = router({
     get: publicProcedure
         .input(
             z.object({
@@ -14,20 +13,20 @@ export const workoutPlanRouter = router({
             })
         )
         .query(async ({ ctx, input: { id, username } }) => {
-            const workoutPlan = await ctx.prisma.workoutPlan.findFirstOrThrow({
+            const workoutResult = await ctx.prisma.workoutResult.findFirstOrThrow({
                 where: {
                     id,
-                    isDeleted: false,
                     user: {
                         username,
                     },
                 },
                 include: {
                     user: true,
+                    workoutPlan: true,
                 },
-            });
+            })
 
-            return workoutPlan as unknown as WorkoutPlanWithExercises
+            return workoutResult as unknown as WorkoutResultWithExercises<typeof workoutResult>
         }),
     getAll: publicProcedure
         .input(
@@ -36,36 +35,46 @@ export const workoutPlanRouter = router({
             })
         )
         .query(async ({ ctx, input: { username } }) => {
-            return await ctx.prisma.workoutPlan.findMany({
+            return await ctx.prisma.workoutResult.findMany({
                 where: {
-                    isDeleted: false,
                     user: {
                         username,
                     },
                 },
-            }) as unknown as WorkoutPlanWithExercises[]
+                orderBy: {
+                    whenAdded: 'desc'
+                }
+            });
         }),
     create: protectedProcedure
         .input(
             z.object({
-                name: z.string(),
-                exercises: z.array(exerciseSchema)
-                    .optional()
-                    .default([])
+                workoutPlanId: z.number(),
+                whenAdded: z.date().optional().default(new Date())
             })
         )
-        .mutation(async ({ ctx, input }) => {
-            return await ctx.prisma.workoutPlan.create({
-                data: {
-                    ...input,
+        .mutation(async ({ ctx, input: { workoutPlanId } }) => {
+            const workoutPlan = await ctx.prisma.workoutPlan.findFirstOrThrow({
+                where: {
+                    id: workoutPlanId,
                     userId: ctx.session.user.id,
+                }
+            }) as unknown as WorkoutPlanWithExercises
+
+            return await ctx.prisma.workoutResult.create({
+                data: {
+                    userId: ctx.session.user.id,
+                    workoutPlanId: workoutPlan.id,
+                    name: workoutPlan.name,
+                    burnedCalories: workoutPlan.burnedCalories,
+                    exercises: workoutPlan.exercises.map(exercise => ({ ...exercise, results: [] }))
                 }
             })
         }),
     update: protectedProcedure
-        .input(workoutPlanSchema)
+        .input(workoutResultSchema)
         .mutation(async ({ ctx, input }) => {
-            return await ctx.prisma.workoutPlan.update({
+            return await ctx.prisma.workoutResult.update({
                 data: omit(input, ['id']),
                 where: {
                     id_userId: {
@@ -82,10 +91,7 @@ export const workoutPlanRouter = router({
             })
         )
         .mutation(async ({ ctx, input: { id } }) => {
-            return await ctx.prisma.workoutPlan.update({
-                data: {
-                    isDeleted: true,
-                },
+            return await ctx.prisma.workoutResult.delete({
                 where: {
                     id_userId: {
                         id,

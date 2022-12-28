@@ -44,8 +44,8 @@ const ButtonHolder = styled.div`
 
 export interface DialogAddExercisesProps {
     children?: ReactNode,
-    skipThoseIDS: Exercise[],
-    addThoseExercises: (exercises: Exercise[]) => void,
+    skipThoseIDS: (WorkoutPlanExercise | WorkoutResultExercise)[],
+    addThoseExercises: (exercises: (WorkoutPlanExercise | WorkoutResultExercise)[]) => void,
 }
 
 const DialogAddExercises = ({

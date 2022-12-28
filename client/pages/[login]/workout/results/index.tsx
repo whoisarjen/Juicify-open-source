@@ -1,47 +1,43 @@
-import { useAppSelector } from '@/hooks/useRedux'
 import { useRouter } from 'next/router'
 import { useWorkoutResultsQuery } from '@/generated/graphql'
-import { useEffect } from 'react'
 import DialogAddWorkoutResult from '@/containers/Workout/DialogAddWorkoutResult/DialogAddWorkoutResult'
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter'
 import BoxWorkout from '@/containers/Workout/BoxWorkout/BoxWorkout'
 import NavbarProfile from '@/containers/profile/NavbarProfile/NavbarProfile'
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
+import { useSession } from 'next-auth/react'
+import { trpc } from '@/utils/trpc'
 
 const WorkoutResultsPage = () => {
-    const router = useRouter()
+    const router: any = useRouter()
     const { data: sessionData } = useSession()
-    const [{ data }, getWorkoutResults] = useWorkoutResultsQuery({
-        variables: {
-            username: router.query.login as string,
-        },
-        pause: true,
-    })
 
-    useEffect(() => {
-        if (router.query.login) {
-            getWorkoutResults()
-        }
-    }, [router.query.login])
+    const {
+        data: workoutResults,
+    } = trpc
+        .workoutResult
+        .getAll
+        .useQuery({ username: router.query.login }, { enabled: !!router.query.login })
+
+    const isOwner = sessionData?.user?.username == router.query.login
 
     return (
         <div>
-            {sessionData?.user?.username == router.query.login
+            {isOwner
                 ? <>
                     <NavbarOnlyTitle title="workout:WORKOUT_RESULTS" />
                     <DialogAddWorkoutResult />
                 </>
                 : <NavbarProfile tab={2} />
             }
-            {data?.workoutResults?.map((result: any) =>
-                result &&
+            {workoutResults?.map(workoutResult =>
                 <BoxWorkout
-                    whenAdded={result.when}
-                    title={result.name}
-                    description={result.note || ''}
-                    route={`/${router.query.login}/workout/results/${result.id}`}
+                    whenAdded={workoutResult.whenAdded}
+                    title={workoutResult.name}
+                    description={workoutResult.note || ''}
+                    route={`/${router.query.login}/workout/results/${workoutResult.id}`}
                     icon={<FitnessCenterIcon />}
-                    key={result.id}
+                    key={workoutResult.id}
                 />
             )}
         </div>

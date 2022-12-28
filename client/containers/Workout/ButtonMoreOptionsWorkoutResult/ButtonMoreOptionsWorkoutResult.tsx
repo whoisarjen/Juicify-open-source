@@ -4,17 +4,16 @@ import SpeedDialAction from '@mui/material/SpeedDialAction';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import { useState } from 'react';
 import DialogAddExercises from '@/containers/DialogAddExercises/DialogAddExercises';
-import { type Exercise } from '@prisma/client';
 
 export interface ButtonMoreOptionsWorkoutResultProps {
-    exercises: Exercise[],
-    setExercises: (exercises: Exercise[]) => void
+    exercises: (WorkoutPlanExercise | WorkoutResultExercise)[],
+    setExercises: (exercises: (WorkoutPlanExercise | WorkoutResultExercise)[]) => void
 }
 
 const ButtonMoreOptionsWorkoutResult = ({ exercises, setExercises }: ButtonMoreOptionsWorkoutResultProps) => {
     const [open, setOpen] = useState(false);
 
-    const handleAddThoseExercises = (selectedExercises: Exercise[]) => {
+    const handleAddThoseExercises = (selectedExercises: (WorkoutPlanExercise | WorkoutResultExercise)[]) => {
         setOpen(false)
         setExercises(selectedExercises)
     }
@@ -24,8 +23,7 @@ const ButtonMoreOptionsWorkoutResult = ({ exercises, setExercises }: ButtonMoreO
             icon: <DialogAddExercises
                 skipThoseIDS={exercises}
                 addThoseExercises={handleAddThoseExercises}
-                children={<FitnessCenterIcon />}
-            />,
+            ><FitnessCenterIcon /></DialogAddExercises>,
             name: 'Exercise',
             click: () => undefined
         },

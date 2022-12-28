@@ -1,6 +1,5 @@
 import BottomFlyingGuestBanner from "@/components/BottomFlyingGuestBanner/BottomFlyingGuestBanner"
 import NavbarWorkout from "@/containers/Workout/NavbarWorkout/NavbarWorkout"
-import { useAppSelector } from "@/hooks/useRedux"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { TextField } from "@mui/material"
 import useTranslation from "next-translate/useTranslation"
@@ -13,20 +12,10 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import ButtonMoreOptionsWorkoutResult from "@/containers/Workout/ButtonMoreOptionsWorkoutResult/ButtonMoreOptionsWorkoutResult"
 import BoxResult from "@/containers/Workout/BoxExercise/BoxExercise"
-import { omit } from "lodash"
-import {
-    ExerciseResultSchemaProps,
-    ExerciseSchemaProps,
-    WorkoutResultSchemaProps,
-    WorkoutResultSchema,
-} from "@/containers/Workout/workout.schema"
-import {
-    ExerciseFieldsFragment,
-    useDeleteWorkoutResultMutation,
-    useUpdateWorkoutResultMutation,
-    useWorkoutResultQuery
-} from "@/generated/graphql"
+import { pick } from "lodash"
 import { useSession } from "next-auth/react"
+import { trpc } from '@/utils/trpc'
+import { workoutResultSchema, type WorkoutResultSchema } from "@/server/schema/workoutResult.schema"
 
 const sxTextField = { width: '100%', marginTop: '10px' }
 
@@ -37,33 +26,29 @@ const WorkoutResultPage = () => {
     const [when, setWhen] = useState<null | string>(null)
     const [previousExercises, setPreviousExercises] = useState([])
 
-    const [{ data, fetching, error }, getWorkoutResult] = useWorkoutResultQuery({
-        variables: {
-            id: router?.query?.id,
-        },
-        pause: true,
-    })
-    const [{ fetching: fetchingUpdate }, updateWorkoutResult] = useUpdateWorkoutResultMutation()
-    const [{ fetching: fetchingDelete }, deleteWorkoutResult] = useDeleteWorkoutResultMutation()
-
-    useEffect(() => {
-        if (router?.query?.id) {
-            getWorkoutResult()
+    const deleteWorkoutResult = trpc.workoutResult.delete.useMutation({
+        onSuccess: () => {
+            router.push(`/${router.query?.login}/workout/results`)
         }
-    }, [router?.query?.id])
+    })
 
-    const handleOnDelete = async () => {
-        await deleteWorkoutResult({ id: router.query.id })
-        router.push(`/${router.query?.login}/workout/results`)
-    }
+    const updateWorkoutResult = trpc.workoutResult.update.useMutation()
+
+    const {
+        data,
+        isFetching,
+    } = trpc
+        .workoutResult
+        .get
+        .useQuery({ id: parseInt(router.query.id), username: router.query.login }, { enabled: !!(router.query.id && router.query.login) })
 
     const updateResults = async ({
         results,
         exercise,
         index
     }: {
-        results: Array<ExerciseResultSchemaProps>,
-        exercise: ExerciseSchemaProps,
+        results: Result[],
+        exercise: WorkoutResultExercise,
         index: number
     }) => {
         update(index, { ...exercise, results })
@@ -76,8 +61,8 @@ const WorkoutResultPage = () => {
         control,
         reset,
         setValue
-    } = useForm<WorkoutResultSchemaProps>({
-        resolver: zodResolver(WorkoutResultSchema)
+    } = useForm<WorkoutResultSchema>({
+        resolver: zodResolver(workoutResultSchema)
     })
 
     const {
@@ -87,67 +72,57 @@ const WorkoutResultPage = () => {
         update
     } = useFieldArray({ control, name: "exercises", keyName: 'uuid' })
 
-    const handleOnSave = useCallback(async (values: WorkoutResultSchemaProps) => {
-        await updateWorkoutResult({
-            ...values,
-            exercises: JSON.stringify(values.exercises?.map(exercise => ({
-                ...omit(exercise, ['uuid']),
-                results: exercise?.results?.map((result: any) => !result.open ? omit(result, ['open']) : result),
-            })))
-        })
-    }, [updateWorkoutResult])
+    // const handleOnSave = useCallback(async (values: WorkoutResultSchema) => {
+    //     await updateWorkoutResult({
+    //         ...values,
+    //         exercises: JSON.stringify(values.exercises?.map(exercise => ({
+    //             ...omit(exercise, ['uuid']),
+    //             results: exercise?.results?.map((result: any) => !result.open ? omit(result, ['open']) : result),
+    //         })))
+    //     })
+    // }, [updateWorkoutResult])
 
-    const handleOnSaveWithRouter = useCallback(async (values: WorkoutResultSchemaProps) => {
-        await updateWorkoutResult({
-            ...values,
-            exercises: JSON.stringify(values.exercises?.map(exercise => ({
-                ...omit(exercise, ['uuid']),
-                results: exercise?.results?.map((result: any) => !result.open ? omit(result, ['open']) : result),
-            })))
-        })
+    const handleOnSaveWithRouter = useCallback(async (newWorkoutResult: WorkoutResultSchema) => {
+        await updateWorkoutResult.mutate(newWorkoutResult)
         router.push(`/${router.query?.login}/workout/results`)
     }, [router, updateWorkoutResult])
 
-    useEffect(() => {
-        window.addEventListener('blur', () => handleSubmit(handleOnSave)())
+    // useEffect(() => {
+    //     window.addEventListener('blur', () => handleSubmit(handleOnSave)())
 
-        return window.removeEventListener('blur', () => handleSubmit(handleOnSave)());
-    }, [handleOnSave, handleSubmit])
-
-    useEffect(() => {
-        if (data?.workoutResult) {
-            reset({
-                ...data.workoutResult,
-                exercises: JSON.parse(data.workoutResult.exercises || '[]')
-            })
-        }
-        if (data?.previousWorkoutResult) {
-            setPreviousExercises(JSON.parse(data.previousWorkoutResult.exercises || '[]'))
-        }
-    }, [data?.workoutResult?.id])
+    //     return window.removeEventListener('blur', () => handleSubmit(handleOnSave)());
+    // }, [handleOnSave, handleSubmit])
 
     useEffect(() => {
-        if (error) {
-            router.push(`/${router.query?.login}/workout/results`)
-        }
-    }, [error])
+        if (!data) return
+
+        reset(data)
+
+
+        // if (data?.previousWorkoutResult) {
+        //     setPreviousExercises(data.previousWorkoutResult.exercises)
+        // }
+    }, [data, reset])
 
     const onWhenChange = (newDate: string | null) => {
         if (newDate) {
-            setValue('when', new Date(newDate).toISOString().slice(0, 10))
+            setValue('whenAdded', new Date(newDate))
         }
         setWhen(newDate)
     }
 
+    const isLoading = isFetching || updateWorkoutResult.isLoading || deleteWorkoutResult.isLoading
+
     return (
         <form>
             <NavbarWorkout
-                isLoading={fetching || fetchingUpdate || fetchingDelete}
+                isDisabled={isLoading}
+                isLoading={isLoading}
                 onSave={handleSubmit(handleOnSaveWithRouter)}
-                onDelete={handleOnDelete}
+                onDelete={() => deleteWorkoutResult.mutate({ id: parseInt(router.query.id) })}
                 onArrowBack={() => router.push(`/${router.query?.login}/workout/results`)}
             />
-            
+
             <TextField
                 variant="outlined"
                 label={t("Title")}
@@ -160,7 +135,7 @@ const WorkoutResultPage = () => {
                 helperText={errors.name?.message && t(`notify:${errors.name.message || ''}`)}
             />
 
-            {data?.workoutResult?.workoutPlan?.description &&
+            {data?.workoutPlan?.description &&
                 <TextField
                     variant="outlined"
                     label={t("Description of workout plan")}
@@ -168,21 +143,21 @@ const WorkoutResultPage = () => {
                     sx={sxTextField}
                     disabled
                     multiline
-                    defaultValue={data.workoutResult.workoutPlan.description}
+                    defaultValue={data.workoutPlan.description}
                 />
             }
 
             <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <MobileDatePicker
-                    value={when || data?.workoutResult?.when}
+                    value={when || data?.whenAdded}
                     onChange={onWhenChange}
                     label={t("Date")}
                     inputFormat="dd.MM.yyyy"
-                    renderInput={(params: any) => 
-                    <TextField {...register('when')} focused sx={sxTextField} {...params} />}
+                    renderInput={(params: any) =>
+                        <TextField {...register('whenAdded')} focused sx={sxTextField} {...params} />}
                 />
             </LocalizationProvider>
-            
+
             <TextField
                 variant="outlined"
                 label={t("Burnt")}
@@ -192,11 +167,11 @@ const WorkoutResultPage = () => {
                 {...register('burnedCalories')}
                 error={!!errors.burnedCalories}
                 helperText={errors.burnedCalories?.message && t(`notify:${errors.burnedCalories.message || ''}`)}
-                InputProps={{
-                    endAdornment: <InputAdornment position="end">kcal</InputAdornment>,
-                }}
+            // Input={{
+            //     endAdornment: <InputAdornment position="end">kcal</InputAdornment>,
+            // }}
             />
-            
+
             <TextField
                 variant="outlined"
                 label={t("Notes")}
@@ -214,9 +189,9 @@ const WorkoutResultPage = () => {
                     <BoxResult
                         key={exercise.uuid}
                         exercise={exercise}
-                        previousExercise={previousExercises.find((previousExercise: ExerciseSchemaProps) => previousExercise?.id === exercise.id)}
-                        isOwner={sessionData?.user?.username == data?.workoutResult?.user?.username}
-                        setNewValues={(results: Array<ExerciseResultSchemaProps>) => updateResults({ results, exercise, index })}
+                        previousExercise={previousExercises.find((previousExercise: WorkoutResultExercise) => previousExercise?.id === exercise.id)}
+                        isOwner={sessionData?.user?.username == data?.user?.username}
+                        setNewValues={(results: Result[]) => updateResults({ results, exercise, index })}
                         deleteExerciseWithIndex={() => remove(index)}
                     />
                 </div>
@@ -224,15 +199,15 @@ const WorkoutResultPage = () => {
 
             {sessionData?.user?.username == router?.query?.login &&
                 <ButtonMoreOptionsWorkoutResult
-                    exercises={fields as unknown as ExerciseFieldsFragment[]}
-                    setExercises={exercises => append(exercises.map(exercise => ({ ...exercise, results: [] })))}
+                    exercises={fields as unknown as WorkoutResultExercise[]}
+                    setExercises={exercises => append(exercises.map(exercise => ({ ...pick(exercise, ['id', 'name']), results: [] })))}
                 />
             }
 
-            {data?.workoutResult?.user.username && sessionData?.user?.username != data?.workoutResult?.user.username &&
+            {data?.user.username && sessionData?.user?.username != data?.user.username &&
                 <BottomFlyingGuestBanner
-                    id={data?.workoutResult?.user.id}
-                    username={data?.workoutResult?.user.username}
+                    src={data?.user.image}
+                    username={data?.user.username}
                 />
             }
         </form>

@@ -27,11 +27,12 @@
       "@/redux/*": ["redux/*"],
       "@/utils/*": ["utils/*"],
       "@/env/*": ["env/*"],
+      "@/server/*": ["server/*"],
     }
   },
   "include": [
-    "next-env.d.ts",
     "**/*.ts",
+    "**/*.d.ts",
     "**/*.tsx",
     "**/**/*.ts",
     "**/**/*.tsx",

@@ -29,7 +29,7 @@ export const trpc = createTRPCNext<AppRouter>({
         defaultOptions: {
           queries: {
             refetchOnWindowFocus: false,
-            refetchOnMount: false,
+            // refetchOnMount: false,
             retryOnMount: false,
             retry: false,
           }

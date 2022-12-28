@@ -1,10 +1,12 @@
 import { router } from "../trpc";
-import { workoutPlanRouter } from "./workoutPlan";
 import { exerciseRouter } from "./exercise";
+import { workoutPlanRouter } from "./workoutPlan";
+import { workoutResultRouter } from "./workoutResult"
 
 export const appRouter = router({
-    workoutPlan: workoutPlanRouter,
     exercise: exerciseRouter,
+    workoutPlan: workoutPlanRouter,
+    workoutResult: workoutResultRouter,
 });
 
 // export type definition of API

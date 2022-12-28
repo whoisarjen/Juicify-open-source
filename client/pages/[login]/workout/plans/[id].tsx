@@ -38,6 +38,8 @@ const WorkoutPlan = () => {
         }
     })
 
+    const isLoading = isFetching || updateWorkoutPlan.isLoading || deleteWorkoutPlan.isLoading
+
     const {
         register,
         formState: { errors },
@@ -102,8 +104,8 @@ const WorkoutPlan = () => {
     return (
         <form>
             <NavbarWorkout
-                isDisabled={!data?.id}
-                isLoading={isFetching}
+                isDisabled={isLoading || !data?.id}
+                isLoading={isLoading}
                 onSave={handleSubmit(handleOnSaveWithRouter)}
                 onDelete={handleOnDelete}
                 onArrowBack={() => router.push(`/${sessionData?.user?.username}/workout/plans`)}
@@ -181,7 +183,7 @@ const WorkoutPlan = () => {
             </DragDropContext>
             {data?.userId && isOwner &&
                 <DialogAddExercises
-                    skipThoseIDS={fields as unknown as Exercise[]}
+                    skipThoseIDS={fields as unknown as WorkoutPlanExercise[]}
                     addThoseExercises={exercises => append(exercises)}
                 />
             }

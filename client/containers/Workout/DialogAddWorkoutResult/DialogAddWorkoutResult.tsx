@@ -9,7 +9,6 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import useTranslation from 'next-translate/useTranslation'
-import { useCreateWorkoutResultMutation, useWorkoutPlansQuery } from '@/generated/graphql'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon'
@@ -18,56 +17,44 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TextField } from "@mui/material"
 import LoadingButton from '@mui/lab/LoadingButton'
-import { v4 as uuidv4 } from 'uuid';
 import { useSession } from 'next-auth/react'
-import { type Exercise } from '@prisma/client'
+import { trpc } from '@/utils/trpc'
 
 const DialogAddWorkoutResult = () => {
     const { t } = useTranslation('workout')
     const router: any = useRouter()
     const [isOpen, setIsOpen] = useState(false)
     const { data: sessionData } = useSession()
-    const [when, setWhen] = useState(new Date())
-    const [choosenWorkoutPlan, setChoosenWorkoutPlan] = useState('')
-    const [{ data, fetching }, getWorkoutPlans] = useWorkoutPlansQuery({
-        variables: {
-            username: router.query.login as string,
-        },
-        pause: true,
-    })
-    const [{ fetching: fetchingCreate }, createWorkoutResult] = useCreateWorkoutResultMutation()
+    const [whenAdded, setWhenAdded] = useState(new Date())
+    const [choosenWorkoutPlan, setChoosenWorkoutPlan] = useState(0)
 
-    const DialogAddWorkoutResult = async () => {
-        const workoutPlan = data?.workoutPlans?.find(workoutPlan => workoutPlan?.id === choosenWorkoutPlan)
-        if (workoutPlan) {
-            const newResult = await createWorkoutResult({
-                id: uuidv4(),
-                name: workoutPlan.name,
-                when: new Date(when).toISOString().slice(0, 10),
-                burnedCalories: workoutPlan.burnedCalories || 0,
-                workoutPlan: workoutPlan.id,
-                exercises: JSON.stringify(JSON.parse(workoutPlan.exercises || '[]').map((exercise: Exercise) => ({
-                    ...exercise,
-                    results: []
-                })))
-            })
-            if (newResult?.data?.createWorkoutResult?.workoutResult?.id) {
-                router.push(`/${sessionData?.user?.username}/workout/results/${newResult?.data?.createWorkoutResult?.workoutResult?.id}`)
-            }
+    const workoutResultCreate = trpc.workoutResult.create.useMutation({
+        onSuccess: (data) => {
+            router.push(`/${sessionData?.user?.username}/workout/results/${data.id}`)
         }
+    })
+
+    const {
+        data: workoutPlans = [],
+        isFetching,
+    } = trpc
+        .workoutPlan
+        .getAll
+        .useQuery({ username: router.query.login }, { enabled: !!router.query.login })
+
+    const DialogAddWorkoutResult = () => {
+        const workoutPlan = workoutPlans.find(workoutPlan => workoutPlan.id === choosenWorkoutPlan)
+
+        if (!workoutPlan) return
+
+        workoutResultCreate.mutate({ workoutPlanId: workoutPlan.id, whenAdded })
     }
 
     useEffect(() => {
-        if (router.query.login) {
-            getWorkoutPlans()
+        if (workoutPlans?.[0]?.id) {
+            setChoosenWorkoutPlan(workoutPlans[0].id)
         }
-    }, [router.query.login])
-
-    useEffect(() => {
-        if (data?.workoutPlans?.[0]?.id) {
-            setChoosenWorkoutPlan(data.workoutPlans[0].id)
-        }
-    }, [data?.workoutPlans, fetching])
+    }, [isFetching, workoutPlans])
 
     return (
         <>
@@ -79,8 +66,8 @@ const DialogAddWorkoutResult = () => {
 
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <MobileDatePicker
-                            value={when}
-                            onChange={value => value && setWhen(value)}
+                            value={whenAdded}
+                            onChange={value => value && setWhenAdded(value)}
                             label={t("Date")}
                             inputFormat="dd.MM.yyyy"
                             renderInput={(params: any) =>
@@ -95,11 +82,11 @@ const DialogAddWorkoutResult = () => {
                     <FormControl fullWidth sx={{ marginTop: '12px' }}>
                         <InputLabel>{t('Workout plan')}</InputLabel>
                         <Select
-                            value={choosenWorkoutPlan || data?.workoutPlans?.[0]?.id}
+                            value={choosenWorkoutPlan || workoutPlans?.[0]?.id}
                             label={t('WORKOUT_PLAN')}
-                            onChange={event => setChoosenWorkoutPlan(event.target.value)}
+                            onChange={event => setChoosenWorkoutPlan(parseInt(event.target.value.toString()))}
                         >
-                            {data?.workoutPlans?.map(workoutPlan =>
+                            {workoutPlans?.map(workoutPlan =>
                                 workoutPlan &&
                                 <MenuItem
                                     value={workoutPlan.id}
@@ -112,8 +99,8 @@ const DialogAddWorkoutResult = () => {
                 <DialogActions>
                     <Button onClick={() => setIsOpen(false)}>{t('Cancel')}</Button>
                     <LoadingButton
-                        loading={fetchingCreate}
-                        disabled={!choosenWorkoutPlan || !when}
+                        loading={workoutResultCreate.isLoading}
+                        disabled={!choosenWorkoutPlan || !whenAdded}
                         onClick={DialogAddWorkoutResult}
                     >{t('Submit')}</LoadingButton>
                 </DialogActions>

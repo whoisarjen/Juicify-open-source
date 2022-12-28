@@ -46,45 +46,46 @@ model Session {
 }
 
 model User {
-  id             Int           @id @default(autoincrement())
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @default(now())
-  username       String        @unique
-  email          String        @unique
+  id             Int             @id @default(autoincrement())
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @default(now())
+  username       String          @unique
+  email          String          @unique
   emailVerified  DateTime?
   image          String?
-  locale         String?       @default("en") @db.Char(2)
-  numberOfMeals  Int           @default(5)
-  proteinsDay0   Int           @default(0)
-  carbsDay0      Int           @default(0)
-  fatsDay0       Int           @default(0)
-  proteinsDay1   Int           @default(0)
-  carbsDay1      Int           @default(0)
-  fatsDay1       Int           @default(0)
-  proteinsDay2   Int           @default(0)
-  carbsDay2      Int           @default(0)
-  fatsDay2       Int           @default(0)
-  proteinsDay3   Int           @default(0)
-  carbsDay3      Int           @default(0)
-  fatsDay3       Int           @default(0)
-  proteinsDay4   Int           @default(0)
-  carbsDay4      Int           @default(0)
-  fatsDay4       Int           @default(0)
-  proteinsDay5   Int           @default(0)
-  carbsDay5      Int           @default(0)
-  fatsDay5       Int           @default(0)
-  proteinsDay6   Int           @default(0)
-  carbsDay6      Int           @default(0)
-  fatsDay6       Int           @default(0)
+  locale         String?         @default("en") @db.Char(2)
+  numberOfMeals  Int             @default(5)
+  proteinsDay0   Int             @default(0)
+  carbsDay0      Int             @default(0)
+  fatsDay0       Int             @default(0)
+  proteinsDay1   Int             @default(0)
+  carbsDay1      Int             @default(0)
+  fatsDay1       Int             @default(0)
+  proteinsDay2   Int             @default(0)
+  carbsDay2      Int             @default(0)
+  fatsDay2       Int             @default(0)
+  proteinsDay3   Int             @default(0)
+  carbsDay3      Int             @default(0)
+  fatsDay3       Int             @default(0)
+  proteinsDay4   Int             @default(0)
+  carbsDay4      Int             @default(0)
+  fatsDay4       Int             @default(0)
+  proteinsDay5   Int             @default(0)
+  carbsDay5      Int             @default(0)
+  fatsDay5       Int             @default(0)
+  proteinsDay6   Int             @default(0)
+  carbsDay6      Int             @default(0)
+  fatsDay6       Int             @default(0)
   nextCoach      DateTime?
   goal           Float?
-  isCoachAnalyze Boolean?      @default(false)
+  isCoachAnalyze Boolean?        @default(false)
   height         Int?
   birth          DateTime?
   accounts       Account[]
   sessions       Session[]
   Exercise       Exercise[]
   WorkoutPlan    WorkoutPlan[]
+  WorkoutResult  WorkoutResult[]
 }
 
 model VerificationToken {
@@ -110,17 +111,37 @@ model Exercise {
 }
 
 model WorkoutPlan {
-  id             Int      @id @default(autoincrement())
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @default(now())
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             Int             @id @default(autoincrement())
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @default(now())
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         Int
   name           String
   description    String?
-  burnedCalories Int      @default(0)
-  isDeleted      Boolean  @default(false)
+  burnedCalories Int             @default(0)
+  isDeleted      Boolean         @default(false)
   exercises      Json
+  WorkoutResult  WorkoutResult[]
 
-  @@index([userId])
   @@unique([id, userId])
+  @@index([userId])
+}
+
+model WorkoutResult {
+  id             Int         @id @default(autoincrement())
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @default(now())
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         Int
+  name           String
+  note           String?
+  burnedCalories Int         @default(0)
+  exercises      Json
+  workoutPlan    WorkoutPlan @relation(fields: [workoutPlanId], references: [id])
+  workoutPlanId  Int
+  whenAdded      DateTime    @default(now())
+
+  @@unique([id, userId])
+  @@index([userId])
+  @@index([workoutPlanId])
 }

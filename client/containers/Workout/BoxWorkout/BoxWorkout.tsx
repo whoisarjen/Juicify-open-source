@@ -48,7 +48,7 @@ interface BoxWorkoutProps {
     route: string,
     icon: ReactNode,
     isNotSaved?: boolean,
-    whenAdded?: string
+    whenAdded?: Date
 }
 
 const BoxWorkout = ({ title, description, route, icon, isNotSaved, whenAdded }: BoxWorkoutProps) => {
