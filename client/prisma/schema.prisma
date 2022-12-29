@@ -48,7 +48,7 @@ model Session {
 model User {
   id             Int             @id @default(autoincrement())
   createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @default(now())
+  updatedAt      DateTime        @default(now()) @updatedAt
   username       String          @unique
   email          String          @unique
   emailVerified  DateTime?
@@ -87,6 +87,7 @@ model User {
   WorkoutPlan    WorkoutPlan[]
   WorkoutResult  WorkoutResult[]
   Product        Product[]
+  Consumed       Consumed[]
 }
 
 model VerificationToken {
@@ -100,8 +101,8 @@ model VerificationToken {
 model Exercise {
   id         Int      @id @default(autoincrement())
   createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now())
-  user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  updatedAt  DateTime @default(now()) @updatedAt
+  user       User?    @relation(fields: [userId], references: [id], onDelete: NoAction)
   userId     Int?
   name       String   @db.VarChar(100)
   nameLength Int
@@ -114,7 +115,7 @@ model Exercise {
 model WorkoutPlan {
   id             Int             @id @default(autoincrement())
   createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @default(now())
+  updatedAt      DateTime        @default(now()) @updatedAt
   user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         Int
   name           String          @db.VarChar(100)
@@ -129,18 +130,18 @@ model WorkoutPlan {
 }
 
 model WorkoutResult {
-  id             Int         @id @default(autoincrement())
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @default(now())
-  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             Int          @id @default(autoincrement())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @default(now()) @updatedAt
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         Int
-  name           String      @db.VarChar(100)
+  name           String       @db.VarChar(100)
   note           String?
-  burnedCalories Int         @default(0)
+  burnedCalories Int          @default(0)
   exercises      Json
-  workoutPlan    WorkoutPlan @relation(fields: [workoutPlanId], references: [id])
-  workoutPlanId  Int
-  whenAdded      DateTime    @default(now())
+  workoutPlan    WorkoutPlan? @relation(fields: [workoutPlanId], references: [id], onDelete: SetNull)
+  workoutPlanId  Int?
+  whenAdded      DateTime     @default(now())
 
   @@unique([id, userId])
   @@index([userId])
@@ -148,25 +149,42 @@ model WorkoutResult {
 }
 
 model Product {
-  id               Int      @id @default(autoincrement())
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @default(now())
-  user             User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id               Int        @id @default(autoincrement())
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @default(now()) @updatedAt
+  user             User?      @relation(fields: [userId], references: [id], onDelete: NoAction)
   userId           Int?
-  name             String   @db.VarChar(100)
+  name             String     @db.VarChar(100)
   nameLength       Int
-  proteins         Decimal  @default(0) @db.Decimal(5, 2)
-  carbs            Decimal  @default(0) @db.Decimal(5, 2)
-  sugar            Decimal  @default(0) @db.Decimal(5, 2)
-  fats             Decimal  @default(0) @db.Decimal(5, 2)
-  fiber            Decimal  @default(0) @db.Decimal(5, 2)
-  sodium           Decimal  @default(0) @db.Decimal(5, 2)
-  ethanol          Decimal  @default(0) @db.Decimal(5, 2)
+  proteins         Decimal    @default(0) @db.Decimal(5, 2)
+  carbs            Decimal    @default(0) @db.Decimal(5, 2)
+  sugar            Decimal    @default(0) @db.Decimal(5, 2)
+  fats             Decimal    @default(0) @db.Decimal(5, 2)
+  fiber            Decimal    @default(0) @db.Decimal(5, 2)
+  sodium           Decimal    @default(0) @db.Decimal(5, 2)
+  ethanol          Decimal    @default(0) @db.Decimal(5, 2)
   barcode          String?
-  isVerified       Boolean? @default(false)
-  isDeleted        Boolean? @default(false)
-  isExpectingCheck Boolean? @default(false)
+  isVerified       Boolean?   @default(false)
+  isDeleted        Boolean?   @default(false)
+  isExpectingCheck Boolean?   @default(false)
+  Consumed         Consumed[]
 
   @@unique([id, userId])
   @@index([userId])
+}
+
+model Consumed {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  whenAdded DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int
+  howMany   Decimal  @default(1) @db.Decimal(5, 2)
+  meal      Int      @default(0)
+
+  @@index([userId])
+  @@index([productId])
 }
