@@ -4,12 +4,9 @@ import { useEffect, useState } from 'react'
 import SidebarLeft from './SidebarLeft'
 import SidebarRight from './SidebarRight'
 import SidebarRightLoggouted from './SidebarRightLoggouted'
-import SidebarLeftLoggouted from './SidebarLeftLoggouted'
 import styled from 'styled-components'
 import DialogAddProducts from '@/containers/DialogAddProducts/DialogAddProducts'
 import DialogEditConsumed from '@/containers/DialogEditConsumed/DialogEditConsumed'
-import DialogShowProduct from '@/containers/DialogShowProduct/DialogShowProduct'
-import DialogAddProduct from '@/containers/DialogAddProduct/DialogAddProduct'
 import moment from 'moment'
 import { useSession } from 'next-auth/react'
 
@@ -117,9 +114,6 @@ const Layout = ({ children }: { children: any }) => {
                         <>
                             <DialogAddProducts />
                             <DialogEditConsumed />
-                            <DialogShowProduct>
-                                <DialogAddProduct />
-                            </DialogShowProduct>
                         </>
                     }
                 </>

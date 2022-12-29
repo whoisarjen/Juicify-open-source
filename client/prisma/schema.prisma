@@ -86,6 +86,7 @@ model User {
   Exercise       Exercise[]
   WorkoutPlan    WorkoutPlan[]
   WorkoutResult  WorkoutResult[]
+  Product        Product[]
 }
 
 model VerificationToken {
@@ -102,7 +103,7 @@ model Exercise {
   updatedAt  DateTime @default(now())
   user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     Int?
-  name       String
+  name       String   @db.VarChar(100)
   nameLength Int
   isDeleted  Boolean  @default(false)
 
@@ -116,7 +117,7 @@ model WorkoutPlan {
   updatedAt      DateTime        @default(now())
   user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         Int
-  name           String
+  name           String          @db.VarChar(100)
   description    String?
   burnedCalories Int             @default(0)
   isDeleted      Boolean         @default(false)
@@ -133,7 +134,7 @@ model WorkoutResult {
   updatedAt      DateTime    @default(now())
   user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         Int
-  name           String
+  name           String      @db.VarChar(100)
   note           String?
   burnedCalories Int         @default(0)
   exercises      Json
@@ -144,4 +145,28 @@ model WorkoutResult {
   @@unique([id, userId])
   @@index([userId])
   @@index([workoutPlanId])
+}
+
+model Product {
+  id               Int      @id @default(autoincrement())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @default(now())
+  user             User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           Int?
+  name             String   @db.VarChar(100)
+  nameLength       Int
+  proteins         Decimal  @default(0) @db.Decimal(5, 2)
+  carbs            Decimal  @default(0) @db.Decimal(5, 2)
+  sugar            Decimal  @default(0) @db.Decimal(5, 2)
+  fats             Decimal  @default(0) @db.Decimal(5, 2)
+  fiber            Decimal  @default(0) @db.Decimal(5, 2)
+  sodium           Decimal  @default(0) @db.Decimal(5, 2)
+  ethanol          Decimal  @default(0) @db.Decimal(5, 2)
+  barcode          String?
+  isVerified       Boolean? @default(false)
+  isDeleted        Boolean? @default(false)
+  isExpectingCheck Boolean? @default(false)
+
+  @@unique([id, userId])
+  @@index([userId])
 }

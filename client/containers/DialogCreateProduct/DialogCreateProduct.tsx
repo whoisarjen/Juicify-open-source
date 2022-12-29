@@ -10,15 +10,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import LoadingButton from '@mui/lab/LoadingButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import styled from 'styled-components'
-import { useAppSelector } from '@/hooks/useRedux';
-import { zodResolver } from '@hookform/resolvers/zod';
 import useTranslation from 'next-translate/useTranslation';
 import { useState, useEffect, ReactNode } from 'react';
 import { useForm } from 'react-hook-form';
-import { object, string, preprocess, number, boolean, TypeOf } from 'zod';
-import { useCreateProductMutation } from '@/generated/graphql';
-import { v4 as uuidv4 } from 'uuid';
-import { useSession } from 'next-auth/react';
+import { type CreateProductSchema, createProductSchema } from '@/server/schema/product.schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { trpc } from '@/utils/trpc';
 
 const ButtonHolder = styled.div`
     width: 100%;
@@ -28,48 +25,34 @@ const ButtonHolder = styled.div`
 interface DialogCreateProductProps {
     children: ReactNode
     created: (name: string) => void
-    barcode?: number
+    barcode?: string
 }
-
-export const ProductSchema = object({
-    name: string().min(3).max(100),
-    proteins: preprocess(val => Number(val), number().min(0).max(999).default(0)),
-    carbs: preprocess(val => Number(val), number().min(0).max(999).default(0)),
-    sugar: preprocess(val => Number(val), number().min(0).max(100).default(0)),
-    fats: preprocess(val => Number(val), number().min(0).max(999).default(0)),
-    fiber: preprocess(val => Number(val), number().min(0).max(999).default(0)),
-    sodium: preprocess(val => Number(val), number().min(0).max(999).default(0)),
-    ethanol: preprocess(val => Number(val), number().min(0).max(999).default(0)),
-    barcode: preprocess(val => Number(val), number().min(0)).optional(),
-    isExpectingCheck: boolean().default(false),
-})
-
-export type ProductSchemaProps = TypeOf<typeof ProductSchema>
 
 const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProductProps) => {
     const { t } = useTranslation('nutrition-diary')
-    const { data: sessionData } = useSession()
     const [isDialog, setIsDialog] = useState(false)
-    const [{ fetching }, createProduct] = useCreateProductMutation()
-
-    const { register, formState: { errors }, handleSubmit, setValue } = useForm<ProductSchemaProps>({
-        resolver: zodResolver(ProductSchema)
+    const createProduct = trpc.product.create.useMutation({
+        onSuccess(_, variables) {
+            created(variables.name)
+            setIsDialog(false)
+        },
     })
 
-    const onSubmit = async (newProduct: ProductSchemaProps) => {
-        if (sessionData?.user?.id) {
-            await createProduct({
-                ...newProduct,
-                user: sessionData?.user.id,
-                id: uuidv4(),
-            })
-            created(newProduct.name)
-            setIsDialog(false)
-        }
+    const {
+        register,
+        formState: { errors },
+        handleSubmit,
+        setValue,
+    } = useForm<CreateProductSchema>({ resolver: zodResolver(createProductSchema) })
+
+    const onSubmit = async (newProduct: CreateProductSchema) => {
+        console.log({ newProduct })
+        await createProduct.mutate(newProduct)
     }
 
     useEffect(() => {
         setValue('barcode', barcode)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [barcode])
 
     return (
@@ -101,14 +84,9 @@ const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProduct
                             {...register('barcode')}
                             error={!!errors.barcode}
                             helperText={errors.barcode?.message && t(`notify:${errors.barcode.message || ''}`)}
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end">{t('g in 100g/ml')}</InputAdornment>,
-                            }}
                         />
                         <TextField
                             sx={{ marginTop: '12px' }}
-                            type="number"
-                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                             fullWidth
                             variant="standard"
                             label={t('Proteins')}
@@ -121,8 +99,6 @@ const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProduct
                         />
                         <TextField
                             sx={{ marginTop: '12px' }}
-                            type="number"
-                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                             fullWidth
                             variant="standard"
                             label={t('Carbs')}
@@ -135,8 +111,6 @@ const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProduct
                         />
                         <TextField
                             sx={{ marginTop: '12px' }}
-                            type="number"
-                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                             fullWidth
                             variant="standard"
                             label={t('Sugar')}
@@ -149,8 +123,6 @@ const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProduct
                         />
                         <TextField
                             sx={{ marginTop: '12px' }}
-                            type="number"
-                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                             fullWidth
                             variant="standard"
                             label={t('Fats')}
@@ -163,8 +135,6 @@ const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProduct
                         />
                         <TextField
                             sx={{ marginTop: '12px' }}
-                            type="number"
-                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                             fullWidth
                             variant="standard"
                             label={t('Fiber')}
@@ -177,8 +147,6 @@ const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProduct
                         />
                         <TextField
                             sx={{ marginTop: '12px' }}
-                            type="number"
-                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                             fullWidth
                             variant="standard"
                             label={t('Salt')}
@@ -191,8 +159,6 @@ const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProduct
                         />
                         <TextField
                             sx={{ marginTop: '12px' }}
-                            type="number"
-                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                             fullWidth
                             variant="standard"
                             label={t('Ethanol')}
@@ -215,7 +181,7 @@ const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProduct
                     <DialogActions>
                         <Button onClick={() => setIsDialog(false)}>{t('Cancel')}</Button>
                         <LoadingButton
-                            loading={fetching}
+                            loading={createProduct.isLoading}
                             variant="contained"
                             type="submit"
                         >

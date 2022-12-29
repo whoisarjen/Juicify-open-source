@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const createExerciseSchema = z.object({
-    name: z.string().max(100),
+    name: z.string().min(3).max(100),
 })
 
 export type CreateExerciseSchema = z.infer<typeof createExerciseSchema>

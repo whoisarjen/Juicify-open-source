@@ -1,31 +1,32 @@
-import { Fragment, useState } from 'react'
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 import useTranslation from 'next-translate/useTranslation';
 
-interface AutocompleteProps {
+interface CustomAutocompleteProps {
     find: string | null,
     setFind: (arg0: string) => void,
-    loading: boolean,
-    searchCache: string[]
+    isLoading: boolean,
+    searchCache?: string[]
 }
 
-const CustomAutocomplete = ({ find, setFind, loading, searchCache }: AutocompleteProps) => {
+const CustomAutocomplete = ({
+    find,
+    setFind,
+    isLoading,
+    searchCache = [],
+}: CustomAutocompleteProps) => {
     const { t } = useTranslation()
-    const [open, setOpen] = useState(false)
 
     return (
         <Autocomplete
             sx={{ marginBottom: '10px' }}
-            open={open}
+            open={false}
             value={find}
-            onOpen={() => setOpen(true)}
-            onClose={() => setOpen(false)}
             isOptionEqualToValue={(option, value) => option === value}
             getOptionLabel={option => option ? option : ''}
             options={searchCache}
-            loading={loading}
+            loading={isLoading}
             onInputChange={(e, value) => setFind(value.trim().toLowerCase())}
             renderInput={(params) => (
                 <TextField
@@ -34,10 +35,10 @@ const CustomAutocomplete = ({ find, setFind, loading, searchCache }: Autocomplet
                     InputProps={{
                         ...params.InputProps,
                         endAdornment: (
-                            <Fragment>
-                                {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                            <>
+                                {isLoading ? <CircularProgress color="inherit" size={20} /> : null}
                                 {params.InputProps.endAdornment}
-                            </Fragment>
+                            </>
                         ),
                     }}
                 />

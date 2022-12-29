@@ -8,7 +8,7 @@ export const workoutPlanExerciseSchema = exerciseSchema
 export type WorkoutPlanExerciseSchema = z.infer<typeof workoutPlanExerciseSchema>
 
 export const createWorkoutPlanSchema = z.object({
-    name: z.string().max(100),
+    name: z.string().min(3).max(100),
 })
 
 export type CreateWorkoutPlanSchema = z.infer<typeof createWorkoutPlanSchema>

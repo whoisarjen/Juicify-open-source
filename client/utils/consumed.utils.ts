@@ -1,6 +1,6 @@
-import { ConsumedFieldsFragment, ProductFieldsFragment, UserFieldsFragment } from "@/generated/graphql"
+import { ConsumedFieldsFragment, UserFieldsFragment } from "@/generated/graphql"
 
-export const getCaloriesFromProduct = (product: ProductFieldsFragment) => {
+export const getCaloriesFromProduct = (product: Product) => {
     return Math.round(product.proteins * 4 + product.carbs * 4 + product.fats * 9)
 }
 

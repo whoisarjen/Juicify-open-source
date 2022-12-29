@@ -3,15 +3,14 @@ import Dialog from '@mui/material/Dialog';
 import styled from 'styled-components'
 import SlideUp from '../../transition/SlideUp';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { setIsDialogShowProduct } from '@/redux/features/dialogShowProduct.slice';
 import { omit } from 'lodash';
 import useTranslation from 'next-translate/useTranslation';
 import { setIsDialogAddProduct, setMealToAdd, setSelectProduct } from '@/redux/features/dialogAddProduct.slice';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import ButtonCloseDialog from '@/components/ButtonCloseDialog/ButtonCloseDialog';
-import { useDeleteProductMutation } from '@/generated/graphql';
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm';
 import { useSession } from 'next-auth/react';
+import { trpc } from '@/utils/trpc';
 
 const Remove = styled.div`
     display: grid;
@@ -64,20 +63,30 @@ const Grid = styled.div`
 
 const PROPERTY_TO_OMIT = [
     'id',
-    'user',
+    'userId',
+    'nameLength',
     'isVerified',
     'isDeleted',
     'isExpectingCheck',
-    '__typename',
+    'createdAt',
+    'updatedAt',
 ]
 
-const DialogShowProduct = ({ children }: { children: ReactNode }) => {
+const DialogShowProduct = ({ children, onClose }: { children: ReactNode, onClose: () => void }) => {
     const { t } = useTranslation('nutrition-diary')
     const dispatch = useAppDispatch()
     const { mealToAdd } = useAppSelector(state => state.dialogAddProducts)
-    const { isDialogShowProduct, selectedProduct } = useAppSelector(state => state.dialogShowProduct)
+    const { selectedProduct } = useAppSelector(state => state.dialogShowProduct)
     const { data: sessionData } = useSession()
-    const [, deleteProduct] = useDeleteProductMutation()
+
+    const [isDialog, setIsDialog] = useState(false)
+
+    const deleteProduct = trpc.product.delete.useMutation({
+        onSuccess() {
+            onClose()
+            setIsDialog(false)
+        },
+    })
 
     const handleDialogAddProduct = () => {
         dispatch(setMealToAdd(mealToAdd))
@@ -85,20 +94,12 @@ const DialogShowProduct = ({ children }: { children: ReactNode }) => {
         dispatch(setIsDialogAddProduct(true))
     }
 
-    const handleDeleteProduct = async () => {
-        if (sessionData?.user?.id) {
-            await deleteProduct({
-                id: selectedProduct?.id,
-                user: sessionData.user.id,
-            })
-            dispatch(setIsDialogShowProduct(false))
-        }
-    }
+    const isOwner = sessionData?.user?.id == selectedProduct?.userId
 
     return (
         <Dialog
             fullScreen
-            open={isDialogShowProduct}
+            open={isDialog}
             TransitionComponent={SlideUp}
         >
             <Grid>
@@ -108,14 +109,17 @@ const DialogShowProduct = ({ children }: { children: ReactNode }) => {
                         {Object.keys(omit(selectedProduct, PROPERTY_TO_OMIT)).map(key =>
                             <tr key={key}>
                                 <td key={key}>{key}</td>
-                                <td>{selectedProduct[key as keyof typeof selectedProduct]}</td>
+                                <td>{selectedProduct[key as keyof typeof selectedProduct] as unknown as ReactNode}</td>
                             </tr>
                         )}
                     </tbody>
                 </table>
                 <Placeholder />
-                {sessionData?.user?.id == selectedProduct?.user?.id &&
-                    <DialogConfirm confirmed={handleDeleteProduct}>
+                {isOwner &&
+                    <DialogConfirm
+                        isDisabled={!isOwner}
+                        confirmed={async () => await deleteProduct.mutate({ id: selectedProduct.id })}
+                    >
                         <Remove>
                             <Button variant="contained">
                                 {t('Delete')}
@@ -128,7 +132,7 @@ const DialogShowProduct = ({ children }: { children: ReactNode }) => {
                         {t('ADD_TO_DIARY')}
                     </Button>
                 </Close>
-                <ButtonCloseDialog clicked={() => dispatch(setIsDialogShowProduct(false))} />
+                <ButtonCloseDialog clicked={() => setIsDialog(false)} />
             </Grid>
         </Dialog>
     )

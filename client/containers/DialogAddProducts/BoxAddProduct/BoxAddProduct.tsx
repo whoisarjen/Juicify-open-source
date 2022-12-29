@@ -10,7 +10,6 @@ import { useState } from 'react';
 import { useTheme } from '../../../hooks/useTheme';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { addToChecked, changeChecked, removeFromChecked } from '@/redux/features/dialogAddProducts.slice';
-import { ProductFieldsFragment } from '@/generated/graphql';
 import { setIsDialogShowProduct, setSelectedProduct } from '@/redux/features/dialogShowProduct.slice';
 import { getCaloriesFromProduct } from '@/utils/consumed.utils';
 
@@ -62,7 +61,7 @@ const Submit = styled.div`
 `
 
 interface BoxProductProps {
-    product: ProductFieldsFragment
+    product: Product
     isChecked: boolean
 }
 
@@ -73,19 +72,8 @@ const BoxAddProduct = ({
     const { t } = useTranslation('nutrition-diary');
     const [checked, setChecked] = useState(isChecked);
     const [value, setValue] = useState('1.0')
-    const [fav, setFav] = useState(false)
     const { getTheme } = useTheme()
     const dispatch = useAppDispatch()
-
-    const handleLike = async () => {
-        if (fav) {
-            setFav(false)
-            // await deleteIndexedDB('favourite_product', product.id)
-        } else {
-            setFav(true)
-            // await addIndexedDB('favourite_product', [product])
-        }
-    }
 
     const handleCheck = async () => {
         if (checked) {
@@ -115,9 +103,6 @@ const BoxAddProduct = ({
             <Description>
                 {(product.proteins || 0)}{t('P')} {(product.carbs || 0)}{t('C')} {(product.fats || 0)}{t('F')} {getCaloriesFromProduct(product)}kcal
             </Description>
-            {/* <Favourite onClick={handleLike} data-testid="handleLike">
-                <Checkbox checked={fav} icon={<FavoriteBorder fontSize="small" />} checkedIcon={<Favorite fontSize="small" />} />
-            </Favourite> */}
             <div />
             <MoreInfo onClick={handleDialogShowProduct} data-testid="handleDialogShowProduct">
                 <IconButton color="primary">

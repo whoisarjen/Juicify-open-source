@@ -1,10 +1,9 @@
-import { ProductFieldsFragment } from "@/generated/graphql";
 import { createSlice } from "@reduxjs/toolkit";
 
 interface DialogAddProducts {
     isDialogAddProducts: boolean
     mealToAdd: number
-    checked: (ProductFieldsFragment & { howMany: number })[]
+    checked: (Product & { howMany: number })[]
 }
 
 const initialState: DialogAddProducts = {
