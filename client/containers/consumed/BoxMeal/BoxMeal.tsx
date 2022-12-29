@@ -5,7 +5,6 @@ import useTranslation from "next-translate/useTranslation";
 import { useMemo } from "react";
 import { useAppDispatch } from "@/hooks/useRedux";
 import { setIsDialogAddProducts, setMealToAdd } from "@/redux/features/dialogAddProducts.slice";
-import { ConsumedFieldsFragment } from "@/generated/graphql";
 import BoxMealItem from "@/containers/consumed/BoxMeal/BoxMealItem/BoxMealItem";
 import { getConsumedMacro } from "@/utils/consumed.utils";
 
@@ -40,7 +39,7 @@ const AddButtonContainer = styled.div`
 
 interface BoxMealProps {
     index: number
-    meal: ConsumedFieldsFragment[]
+    meal: Consumed[]
     isOwner: boolean
 }
 
@@ -78,7 +77,7 @@ const BoxMeal = ({ index, meal, isOwner }: BoxMealProps) => {
                     <div />
                 }
             </AddButtonContainer>
-            <div>{(proteins).toFixed(process.env.PRODUCT_DECIMAL_PLACES)}{t('P')} {(carbs).toFixed(process.env.PRODUCT_DECIMAL_PLACES)}{t('C')} {(fats).toFixed(process.env.PRODUCT_DECIMAL_PLACES)}{t('F')} {calories}Kcal</div>
+            <div>{proteins}{t('P')} {carbs}{t('C')} {fats}{t('F')} {calories}Kcal</div>
             {meal.map(consumed => <BoxMealItem key={consumed.id} consumed={consumed} isOwner={isOwner} />)}
         </Grid >
     );

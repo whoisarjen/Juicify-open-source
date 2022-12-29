@@ -13,6 +13,7 @@ datasource db {
 }
 
 // TODO adequate @db.Text
+// TODO enum goal for user
 
 model Account {
   id                Int      @id @default(autoincrement())
@@ -53,7 +54,7 @@ model User {
   email          String          @unique
   emailVerified  DateTime?
   image          String?
-  locale         String?         @default("en") @db.Char(2)
+  locale         String          @default("en") @db.Char(2)
   numberOfMeals  Int             @default(5)
   proteinsDay0   Int             @default(0)
   carbsDay0      Int             @default(0)
@@ -156,13 +157,13 @@ model Product {
   userId           Int?
   name             String     @db.VarChar(100)
   nameLength       Int
-  proteins         Decimal    @default(0) @db.Decimal(5, 2)
-  carbs            Decimal    @default(0) @db.Decimal(5, 2)
-  sugar            Decimal    @default(0) @db.Decimal(5, 2)
-  fats             Decimal    @default(0) @db.Decimal(5, 2)
-  fiber            Decimal    @default(0) @db.Decimal(5, 2)
-  sodium           Decimal    @default(0) @db.Decimal(5, 2)
-  ethanol          Decimal    @default(0) @db.Decimal(5, 2)
+  proteins         Decimal    @default(0) @db.Decimal(4, 1)
+  carbs            Decimal    @default(0) @db.Decimal(4, 1)
+  sugar            Decimal    @default(0) @db.Decimal(4, 1)
+  fats             Decimal    @default(0) @db.Decimal(4, 1)
+  fiber            Decimal    @default(0) @db.Decimal(4, 1)
+  sodium           Decimal    @default(0) @db.Decimal(4, 1)
+  ethanol          Decimal    @default(0) @db.Decimal(4, 1)
   barcode          String?
   isVerified       Boolean?   @default(false)
   isDeleted        Boolean?   @default(false)
@@ -182,9 +183,10 @@ model Consumed {
   whenAdded DateTime @default(now())
   product   Product  @relation(fields: [productId], references: [id])
   productId Int
-  howMany   Decimal  @default(1) @db.Decimal(5, 2)
+  howMany   Decimal  @default(1) @db.Decimal(4, 1)
   meal      Int      @default(0)
 
+  @@unique([id, userId])
   @@index([userId])
   @@index([productId])
 }

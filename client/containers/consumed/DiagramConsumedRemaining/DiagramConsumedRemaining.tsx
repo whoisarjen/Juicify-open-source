@@ -93,27 +93,27 @@ const DiagramConsumedRemaining = () => {
                         <tbody>
                             <tr>
                                 <th>Proteins:</th>
-                                <td>{(consumedMacro.proteins).toFixed(process.env.PRODUCT_DECIMAL_PLACES as unknown as number)}g</td>
+                                <td>{(consumedMacro.proteins)}g</td>
                                 <td>{expectedMacro.proteins}g</td>
                             </tr>
                             <tr>
                                 <th>Carbs:</th>
-                                <td>{(consumedMacro.carbs).toFixed(process.env.PRODUCT_DECIMAL_PLACES as unknown as number)}g</td>
+                                <td>{(consumedMacro.carbs)}g</td>
                                 <td>{expectedMacro.carbs}g</td>
                             </tr>
                             <tr>
                                 <th>Sugar:</th>
-                                <td>{(consumedMacro.sugar / (consumedMacro.carbs === 0 ? 1 : consumedMacro.carbs) * 100).toFixed(process.env.PRODUCT_DECIMAL_PLACES as unknown as number)}%</td>
+                                <td>{(consumedMacro.sugar / (consumedMacro.carbs === 0 ? 1 : consumedMacro.carbs) * 100)}%</td>
                                 <td>{expectedMacro.carbsPercentAsSugar}%</td>
                             </tr>
                             <tr>
                                 <th>Fats:</th>
-                                <td>{(consumedMacro.fats).toFixed(process.env.PRODUCT_DECIMAL_PLACES as unknown as number)}g</td>
+                                <td>{(consumedMacro.fats)}g</td>
                                 <td>{expectedMacro.fats}g</td>
                             </tr>
                             <tr>
                                 <th>Fiber:</th>
-                                <td>{(consumedMacro.fiber).toFixed(process.env.PRODUCT_DECIMAL_PLACES as unknown as number)}g</td>
+                                <td>{(consumedMacro.fiber)}g</td>
                                 <td>{expectedMacro.fiber}g</td>
                             </tr>
                         </tbody>
@@ -132,27 +132,27 @@ const DiagramConsumedRemaining = () => {
                         <tbody>
                             <tr>
                                 <th>Proteins:</th>
-                                <td>{(expectedMacro.proteins - consumedMacro.proteins).toFixed(process.env.PRODUCT_DECIMAL_PLACES as unknown as number)}g</td>
+                                <td>{(expectedMacro.proteins - consumedMacro.proteins)}g</td>
                                 <td>{expectedMacro.proteins}g</td>
                             </tr>
                             <tr>
                                 <th>Carbs:</th>
-                                <td>{(expectedMacro.carbs - consumedMacro.carbs).toFixed(process.env.PRODUCT_DECIMAL_PLACES as unknown as number)}g</td>
+                                <td>{(expectedMacro.carbs - consumedMacro.carbs)}g</td>
                                 <td>{expectedMacro.carbs}g</td>
                             </tr>
                             <tr>
                                 <th>Sugar:</th>
-                                <td>{(expectedMacro.carbsPercentAsSugar - (consumedMacro.sugar / (consumedMacro.carbs === 0 ? 1 : consumedMacro.carbs) * 100)).toFixed(process.env.PRODUCT_DECIMAL_PLACES as unknown as number)}%</td>
+                                <td>{(expectedMacro.carbsPercentAsSugar - (consumedMacro.sugar / (consumedMacro.carbs === 0 ? 1 : consumedMacro.carbs) * 100))}%</td>
                                 <td>{expectedMacro.carbsPercentAsSugar}%</td>
                             </tr>
                             <tr>
                                 <th>Fats:</th>
-                                <td>{(expectedMacro.fats - consumedMacro.fats).toFixed(process.env.PRODUCT_DECIMAL_PLACES as unknown as number)}g</td>
+                                <td>{(expectedMacro.fats - consumedMacro.fats)}g</td>
                                 <td>{expectedMacro.fats}g</td>
                             </tr>
                             <tr>
                                 <th>Fiber:</th>
-                                <td>{(expectedMacro.fiber - consumedMacro.fiber).toFixed(process.env.PRODUCT_DECIMAL_PLACES as unknown as number)}g</td>
+                                <td>{(expectedMacro.fiber - consumedMacro.fiber)}g</td>
                                 <td>{expectedMacro.fiber}g</td>
                             </tr>
                         </tbody>

@@ -11,7 +11,6 @@ import BoxAddProduct from './BoxAddProduct/BoxAddProduct';
 import { useRouter } from 'next/router';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { cleanChecked, setIsDialogAddProducts, setMealToAdd } from '@/redux/features/dialogAddProducts.slice';
-import { useCreateConsumedMutation } from '@/generated/graphql';
 import ButtonCloseDialog from '@/components/ButtonCloseDialog/ButtonCloseDialog';
 import DialogCreateProduct from '@/containers/DialogCreateProduct/DialogCreateProduct';
 import TabsAddDialog from '@/components/TabsAddDialog/TabsAddDialog';
@@ -23,6 +22,7 @@ import DialogAddProduct from '../DialogAddProduct/DialogAddProduct';
 import DialogShowProduct from '../DialogShowProduct/DialogShowProduct';
 import CustomAutocomplete from '@/components/CustomAutocomplete/CustomAutocomplete';
 import { range } from 'lodash';
+import moment from 'moment';
 
 const Grid = styled.div`
     width: 100%;
@@ -63,22 +63,21 @@ const DialogAddProducts = () => {
         refetch,
     } = trpc.product.getAll.useQuery({ name }, { enabled })
 
-    const [, createConsumed] = useCreateConsumedMutation()
+    const createConsumed = trpc.consumed.create.useMutation()
 
-    const addProductsToDiary = () => {
-        // [...checked].forEach(async (product) => {
-        //     if (sessionData?.user?.id) {
-        //         await createConsumed({
-        //             meal: mealToAdd,
-        //             when: router.query.date,
-        //             product: product.id,
-        //             user: sessionData?.user?.id || '',
-        //             howMany: product.howMany
-        //         })
-        //     }
-        // })
-        // dispatch(cleanChecked())
-        // dispatch(setIsDialogAddProducts(false))
+    const addProductsToDiary = async () => {
+        await Promise.all([...checked]
+            .map(product => createConsumed.mutateAsync({
+                productId: product.id,
+                whenAdded: moment(router.query.date).add(moment().format("hh:mm:ss")).toDate(),
+                howMany: product.howMany,
+                meal: mealToAdd,
+            }))
+        )
+            .then(() => {
+                dispatch(cleanChecked())
+                dispatch(setIsDialogAddProducts(false))
+            })
     }
 
     const products = useMemo(() => {

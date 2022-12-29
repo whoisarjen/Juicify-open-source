@@ -14,3 +14,10 @@ export const createProductSchema = z.object({
 })
 
 export type CreateProductSchema = z.infer<typeof createProductSchema>
+
+export const productSchema = z.object({
+    id: z.number(),
+})
+    .merge(createProductSchema)
+
+export type ProductSchema = z.infer<typeof productSchema>

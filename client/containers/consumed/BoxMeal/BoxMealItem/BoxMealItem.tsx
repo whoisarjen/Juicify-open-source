@@ -1,4 +1,3 @@
-import { ConsumedFieldsFragment } from "@/generated/graphql";
 import { useAppDispatch } from "@/hooks/useRedux";
 import { setIsDialogEditConsumed, setSelectedConsumed } from "@/redux/features/dialogEditConsumed.slice";
 import { getCaloriesFromProduct } from "@/utils/consumed.utils";
@@ -34,7 +33,7 @@ const ProductContent = styled.div`
 `
 
 interface BoxMealItemProps {
-    consumed: ConsumedFieldsFragment
+    consumed: Consumed
     isOwner: boolean
 }
 
@@ -67,13 +66,10 @@ const BoxMealItem = ({ consumed, isOwner }: BoxMealItemProps) => {
                 <div>{getCaloriesFromProduct(product)}kcal</div>
             </ProductContent>
             <ProductContent>
-                {
-                    consumed.howMany &&
-                    <>
-                        <div>{product.proteins.toFixed(process.env.PRODUCT_DECIMAL_PLACES)}{t('P')} {product.carbs.toFixed(process.env.PRODUCT_DECIMAL_PLACES)}{t('C')} {product.fats.toFixed(process.env.PRODUCT_DECIMAL_PLACES)}{t('F')}</div>
-                        <div>{consumed.howMany * 100}g/ml</div>
-                    </>
-                }
+                <>
+                    <div>{product.proteins}{t('P')} {product.carbs}{t('C')} {product.fats}{t('F')}</div>
+                    <div>{Number(consumed.howMany) * 100}g/ml</div>
+                </>
             </ProductContent>
 
         </Product>

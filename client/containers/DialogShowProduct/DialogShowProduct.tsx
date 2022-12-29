@@ -61,7 +61,7 @@ const Grid = styled.div`
     }
 `
 
-const PROPERTY_TO_OMIT = [
+const PROPERTIES_TO_OMIT = [
     'id',
     'userId',
     'nameLength',
@@ -72,7 +72,15 @@ const PROPERTY_TO_OMIT = [
     'updatedAt',
 ]
 
-const DialogShowProduct = ({ children, onClose }: { children: ReactNode, onClose: () => void }) => {
+interface DialogShowProductProps {
+    children: ReactNode
+    onClose: () => void
+}
+
+const DialogShowProduct = ({
+    children,
+    onClose,
+}: DialogShowProductProps) => {
     const { t } = useTranslation('nutrition-diary')
     const dispatch = useAppDispatch()
     const { mealToAdd } = useAppSelector(state => state.dialogAddProducts)
@@ -106,7 +114,7 @@ const DialogShowProduct = ({ children, onClose }: { children: ReactNode, onClose
                 {children}
                 <table style={{ textAlign: 'center' }}>
                     <tbody>
-                        {Object.keys(omit(selectedProduct, PROPERTY_TO_OMIT)).map(key =>
+                        {Object.keys(omit(selectedProduct, PROPERTIES_TO_OMIT)).map(key =>
                             <tr key={key}>
                                 <td key={key}>{key}</td>
                                 <td>{selectedProduct[key as keyof typeof selectedProduct] as unknown as ReactNode}</td>
@@ -118,7 +126,7 @@ const DialogShowProduct = ({ children, onClose }: { children: ReactNode, onClose
                 {isOwner &&
                     <DialogConfirm
                         isDisabled={!isOwner}
-                        confirmed={async () => await deleteProduct.mutate({ id: selectedProduct.id })}
+                        confirmed={async () => await deleteProduct.mutateAsync({ id: selectedProduct.id })}
                     >
                         <Remove>
                             <Button variant="contained">

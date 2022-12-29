@@ -14,7 +14,11 @@ interface DialogConfirmProps {
     isDisabled: boolean
 }
 
-const DialogConfirm = ({ children, confirmed, isDisabled }: DialogConfirmProps) => {
+const DialogConfirm = ({
+    children,
+    confirmed,
+    isDisabled,
+}: DialogConfirmProps) => {
     const [isDialog, setIsDialog] = useState(false)
     const { t } = useTranslation('home')
 
