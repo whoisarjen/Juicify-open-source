@@ -96,8 +96,8 @@ const URQL = ({ children }: { children: ReactNode }) => {
     const storage =
         !isServerSide &&
         makeDefaultStorage({
-            idbName: process.env.INDEXEDDB,
-            maxAge: process.env.MAX_SUPPORTED_AGE_IN_DAYS as unknown as number,
+            idbName: 'juicify',
+            maxAge: 7,
         });
 
     const client = useMemo(() => createClient({
