@@ -11,7 +11,7 @@ import { useState } from 'react'
 interface DialogConfirmProps {
     children: any
     confirmed: () => void
-    isDisabled: boolean
+    isDisabled?: boolean
 }
 
 const DialogConfirm = ({

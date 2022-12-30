@@ -63,7 +63,19 @@ const DialogAddProducts = () => {
         refetch,
     } = trpc.product.getAll.useQuery({ name }, { enabled })
 
-    const createConsumed = trpc.consumed.create.useMutation()
+    const utils = trpc.useContext()
+
+    const createConsumed = trpc.consumed.create.useMutation({
+        onSuccess(data, variables, context) {
+            dispatch(cleanChecked())
+            dispatch(setIsDialogAddProducts(false))
+
+            utils
+                .consumed
+                .getDay
+                .refetch()
+        },
+    })
 
     const addProductsToDiary = async () => {
         await Promise.all([...checked]
@@ -74,10 +86,6 @@ const DialogAddProducts = () => {
                 meal: mealToAdd,
             }))
         )
-            .then(() => {
-                dispatch(cleanChecked())
-                dispatch(setIsDialogAddProducts(false))
-            })
     }
 
     const products = useMemo(() => {
@@ -138,7 +146,7 @@ const DialogAddProducts = () => {
 
                 <ButtonCloseDialog clicked={() => dispatch(setIsDialogAddProducts(false))} />
 
-                <DialogShowProduct onClose={refetch}>
+                <DialogShowProduct>
                     <DialogAddProduct />
                 </DialogShowProduct>
             </Grid>

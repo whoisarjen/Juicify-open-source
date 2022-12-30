@@ -74,12 +74,10 @@ const PROPERTIES_TO_OMIT = [
 
 interface DialogShowProductProps {
     children: ReactNode
-    onClose: () => void
 }
 
 const DialogShowProduct = ({
     children,
-    onClose,
 }: DialogShowProductProps) => {
     const { t } = useTranslation('nutrition-diary')
     const dispatch = useAppDispatch()
@@ -91,7 +89,6 @@ const DialogShowProduct = ({
 
     const deleteProduct = trpc.product.delete.useMutation({
         onSuccess() {
-            onClose()
             setIsDialog(false)
         },
     })

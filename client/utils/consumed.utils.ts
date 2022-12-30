@@ -25,12 +25,12 @@ const emptyMacro = {
 }
 
 export const getConsumedMacro = (consumed?: Consumed[]) => !consumed ? emptyMacro : consumed
-    .reduce((prev, { product }) => ({
-        proteins: prev.proteins + Number(product.proteins),
-        carbs: prev.carbs + Number(product.carbs),
-        sugar: prev.sugar + Number(product.sugar),
-        fats: prev.fats + Number(product.fats),
-        fiber: prev.fiber + Number(product.fiber),
+    .reduce((prev, { product, howMany }) => ({
+        proteins: prev.proteins + Number(product.proteins) * Number(howMany),
+        carbs: prev.carbs + Number(product.carbs) * Number(howMany),
+        sugar: prev.sugar + Number(product.sugar) * Number(howMany),
+        fats: prev.fats + Number(product.fats) * Number(howMany),
+        fiber: prev.fiber + Number(product.fiber) * Number(howMany),
         calories: prev.calories + getCaloriesFromProduct(product),
     }), emptyMacro)
 

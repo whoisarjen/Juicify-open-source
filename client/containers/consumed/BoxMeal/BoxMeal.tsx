@@ -78,7 +78,13 @@ const BoxMeal = ({ index, meal, isOwner }: BoxMealProps) => {
                 }
             </AddButtonContainer>
             <div>{proteins}{t('P')} {carbs}{t('C')} {fats}{t('F')} {calories}Kcal</div>
-            {meal.map(consumed => <BoxMealItem key={consumed.id} consumed={consumed} isOwner={isOwner} />)}
+            {meal.map(consumed =>
+                <BoxMealItem
+                    key={consumed.id}
+                    consumed={consumed}
+                    isOwner={isOwner}
+                />
+            )}
         </Grid >
     );
 };

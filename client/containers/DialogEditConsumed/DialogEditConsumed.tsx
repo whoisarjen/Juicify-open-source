@@ -11,18 +11,14 @@ import useTranslation from 'next-translate/useTranslation';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
-import { object, preprocess, number, TypeOf } from 'zod';
 import { setIsDialogEditConsumed } from '@/redux/features/dialogEditConsumed.slice';
-import { useDeleteConsumedMutation, useUpdateConsumedMutation } from '@/generated/graphql';
+import { useUpdateConsumedMutation } from '@/generated/graphql';
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm';
 import { useSession } from 'next-auth/react';
-
-export const ConsumedSchema = object({
-    meal: preprocess((val) => Number(val), number()).optional(),
-    howMany: preprocess((val) => Number(val), number()).optional(),
-})
-
-type ConsumedSchemaProps = TypeOf<typeof ConsumedSchema>
+import { trpc } from '@/utils/trpc';
+import { type ConsumedSchema, consumedSchema } from '@/server/schema/consumed.schema';
+import { useRouter } from 'next/router';
+import moment from 'moment';
 
 const DialogEditConsumed = () => {
     const dispatch = useAppDispatch()
@@ -30,23 +26,38 @@ const DialogEditConsumed = () => {
     const { data: sessionData } = useSession()
     const { isDialogEditConsumed, selectedConsumed } = useAppSelector(state => state.dialogEditConsumed)
     const [, updateConsumed] = useUpdateConsumedMutation()
-    const [, deleteConsumed] = useDeleteConsumedMutation()
 
-    const { register, formState: { errors }, handleSubmit, reset } = useForm<ConsumedSchemaProps>({
-        resolver: zodResolver(ConsumedSchema)
+    const router: any = useRouter()
+
+    const username = router.query.login
+    const whenAdded = moment(router.query.date).toDate()
+
+    const utils = trpc.useContext()
+
+    const deleteConsumed = trpc.consumed.delete.useMutation({
+        onSuccess(data, variables) {
+            dispatch(setIsDialogEditConsumed(false))
+
+            utils
+                .consumed
+                .getDay
+                .setData({ username, whenAdded }, currentData => currentData?.filter(consumed => consumed.id !== variables.id))
+        }
     })
 
-    const handleUpdateConsumed = (newConsumed: ConsumedSchemaProps) => {
+    const {
+        register,
+        formState: { errors },
+        handleSubmit,
+        reset,
+    } = useForm<ConsumedSchema>({ resolver: zodResolver(consumedSchema) })
+
+    const handleUpdateConsumed = (newConsumed: ConsumedSchema) => {
         updateConsumed({ ...selectedConsumed, ...newConsumed })
         dispatch(setIsDialogEditConsumed(false))
     }
 
-    const handleDeleteConsumed = () => {
-        deleteConsumed({ id: selectedConsumed.id})
-        dispatch(setIsDialogEditConsumed(false))
-    }
-
-    useEffect(() => reset({ ...selectedConsumed }), [selectedConsumed.id])
+    useEffect(() => reset(selectedConsumed), [reset, selectedConsumed])
 
     return (
         <form onSubmit={handleSubmit(handleUpdateConsumed)}>
@@ -67,11 +78,9 @@ const DialogEditConsumed = () => {
                             defaultValue={selectedConsumed.meal || 0}
                             {...register('meal')}
                         >
-                            {
-                                Array.from(Array(sessionData?.user?.numberOfMeals).keys()).map((x) =>
-                                    <MenuItem key={x} value={x}>{t('Meal')} {x + 1}</MenuItem>
-                                )
-                            }
+                            {Array.from(Array(sessionData?.user?.numberOfMeals).keys()).map((x) =>
+                                <MenuItem key={x} value={x}>{t('Meal')} {x + 1}</MenuItem>
+                            )}
                         </Select>
                         <TextField
                             type="number"
@@ -85,7 +94,7 @@ const DialogEditConsumed = () => {
                     </DialogContent>
                 }
                 <DialogActions>
-                    <DialogConfirm confirmed={handleDeleteConsumed}>
+                    <DialogConfirm confirmed={async () => await deleteConsumed.mutate({ id: selectedConsumed.id })}>
                         <Button sx={{ color: 'red' }}>{t('Delete')}</Button>
                     </DialogConfirm>
                     <Button onClick={() => dispatch(setIsDialogEditConsumed(false))}>{t('Deny')}</Button>

@@ -40,7 +40,8 @@ interface BoxMealItemProps {
 const BoxMealItem = ({ consumed, isOwner }: BoxMealItemProps) => {
     const { t } = useTranslation('nutrition-diary')
     const dispatch = useAppDispatch()
-    const { product } = consumed
+
+    const { product, howMany } = consumed
 
     const handleDialogEditConsumed = () => {
         dispatch(setSelectedConsumed(consumed))
@@ -63,11 +64,11 @@ const BoxMealItem = ({ consumed, isOwner }: BoxMealItemProps) => {
 
             <ProductContent>
                 <div>{product.name}</div>
-                <div>{getCaloriesFromProduct(product)}kcal</div>
+                <div>{getCaloriesFromProduct(product) * Number(howMany)}kcal</div>
             </ProductContent>
             <ProductContent>
                 <>
-                    <div>{product.proteins}{t('P')} {product.carbs}{t('C')} {product.fats}{t('F')}</div>
+                    <div>{Number(product.proteins) * Number(howMany)}{t('P')} {Number(product.carbs) * Number(howMany)}{t('C')} {Number(product.fats) * Number(howMany)}{t('F')}</div>
                     <div>{Number(consumed.howMany) * 100}g/ml</div>
                 </>
             </ProductContent>
