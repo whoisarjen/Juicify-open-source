@@ -2,7 +2,8 @@ import { z } from "zod"
 import moment from "moment";
 
 import { router, publicProcedure, protectedProcedure } from "../trpc";
-import { createConsumedSchema } from '@/server/schema/consumed.schema'
+import { consumedSchema, createConsumedSchema } from '@/server/schema/consumed.schema'
+import { omit } from "lodash";
 
 export const consumedRouter = router({
     getDay: publicProcedure
@@ -45,6 +46,21 @@ export const consumedRouter = router({
                 data: {
                     ...input,
                     userId: ctx.session.user.id,
+                }
+            })
+        }),
+    update: protectedProcedure
+        .input(consumedSchema)
+        .mutation(async ({ ctx, input }) => {
+            return await ctx.prisma.consumed.update({
+                data: {
+                    ...omit(input, ['id']),
+                },
+                where: {
+                    id_userId: {
+                        id: input.id,
+                        userId: ctx.session.user.id,
+                    }
                 }
             })
         }),
