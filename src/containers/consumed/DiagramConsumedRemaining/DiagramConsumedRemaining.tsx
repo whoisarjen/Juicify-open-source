@@ -10,13 +10,13 @@ import DiagramCircular from '../../../components/DiagramCircular/DiagramCircular
 import useDaily from '@/hooks/useDaily'
 
 const Table = styled.table`
-    font-size: 0.875rem
-    text-align: left
+    font-size: 0.875rem;
+    text-align: left;
     ${this} td{
-        text-align: right
+        text-align: right;
     }
     ${this} tr td:first-of-type{
-        font-weight: bold
+        font-weight: bold;
     }
 `
 

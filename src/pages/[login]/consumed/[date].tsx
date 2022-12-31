@@ -12,6 +12,7 @@ import useTranslation from "next-translate/useTranslation";
 import BoxBurned from "@/containers/consumed/BoxBurned/BoxBurned";
 import { env } from "@/env/client.mjs";
 import useConsumed from "@/hooks/useConsumed";
+import { useSession } from "next-auth/react";
 
 const Box = styled.div`
     width: 100%;
@@ -24,12 +25,13 @@ const Box = styled.div`
 
 const Consumed = () => {
     const { t } = useTranslation('nutrition-diary')
-    const { data, user, isOwner } = useConsumed()
+    const { data, isOwner } = useConsumed()
+    const { data: sessionData } = useSession()
 
     const lastMeal = data.at(-1)
 
     const numberOfMeals = max([
-        isOwner ? user?.numberOfMeals : 0,
+        isOwner ? sessionData?.user?.numberOfMeals : 0,
         env.NEXT_PUBLIC_DEFAULT_NUMBER_OF_MEALS,
         lastMeal?.meal,
     ])
