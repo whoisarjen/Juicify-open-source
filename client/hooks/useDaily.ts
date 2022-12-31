@@ -2,13 +2,13 @@ import { sumMacroFromConsumed, getExpectedMacro } from "@/utils/consumed.utils"
 import { trpc } from "@/utils/trpc"
 import useConsumed from "./useConsumed"
 
-const useDaily = (overwriteWhenAdded?: string) => {
+const useDaily = (overwriteWhenAdded?: string, overwriteUsername?: string) => {
     const {
         data: consumed,
         username,
         whenAdded,
         owner,
-    } = useConsumed(overwriteWhenAdded)
+    } = useConsumed(overwriteWhenAdded, overwriteUsername)
 
     const {
         data: workoutResults = [],

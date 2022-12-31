@@ -1,6 +1,5 @@
-import { MeasurementFieldsFragment, useMeasurementsByRangeAndUsernameQuery } from "@/generated/graphql"
 import useTranslation from "next-translate/useTranslation"
-import { Fragment, useEffect, useMemo, useState } from "react"
+import { Fragment, useState } from "react"
 import styled from "styled-components"
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem from '@mui/lab/TimelineItem';
@@ -12,8 +11,8 @@ import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import Header from "@/components/Header/Header"
 import MeasurementsDialogUpdateWeight from "@/containers/measurements/MeasurementsDialogUpdateWeight/MeasurementsDialogUpdateWeight"
 import moment from 'moment'
-import { v4 as uuidv4 } from 'uuid';
 import { useSession } from "next-auth/react";
+import { trpc } from "@/utils/trpc";
 
 const Content = styled.div`
     width: 100%;
@@ -31,39 +30,18 @@ const Description = styled.div`
 
 const MeasurementsPage = () => {
     const { t } = useTranslation('home')
-    const [loadedDays, setLoadedDays] = useState(14)
-    const [updateMeasurements, setUpdateMeasurements] = useState<null | MeasurementFieldsFragment>(null)
+    const [updateMeasurements, setUpdateMeasurements] = useState<null | Measurement>(null)
 
     const { data: sessionData } = useSession()
-    const [{ data, fetching }, getMeasurementsByRangeAndUsername] = useMeasurementsByRangeAndUsernameQuery({
-        variables: {
-            startDate: moment().add(-loadedDays, 'd').format('YYYY-MM-DD'),
-            endDate: moment().format('YYYY-MM-DD'),
-            username: sessionData?.user?.username as string,
-        },
-        pause: true,
-    })
 
-    useEffect(() => {
-        if (sessionData?.user?.username) {
-            getMeasurementsByRangeAndUsername()
-        }
-    }, [sessionData?.user?.username])
+    const username = sessionData?.user?.username || ''
 
-    const measurements = useMemo(() => {
-        return [...Array(loadedDays)].map((x, i) => {
-            const when = moment().add(-i, 'd').format('YYYY-MM-DD')
-            const foundMeasurement = data?.measurementsByRangeAndUsername
-                ?.find(measurement => measurement && measurement.when == when)
-
-            return foundMeasurement || {
-                id: uuidv4(),
-                weight: 0,
-                when,
-                isFake: true,
-            } as MeasurementFieldsFragment & { isFake?: boolean }
-        })
-    }, [data?.measurementsByRangeAndUsername, fetching])
+    const {
+        data: measurements = [],
+    } = trpc
+        .measurement
+        .getAll
+        .useQuery({ username }, { enabled: !!username })
 
     return (
         <Content>
@@ -74,33 +52,23 @@ const MeasurementsPage = () => {
             <Fragment>
                 <Timeline position="alternate">
                     {measurements.map(measurement =>
-                        measurement &&
                         <TimelineItem key={measurement.id}>
                             <TimelineOppositeContent
                                 color="text.secondary"
                                 onClick={() => setUpdateMeasurements(measurement)}
                             >
-                                {moment(measurement.when).format('DD.MM.YYYY')}
+                                {moment(measurement.whenAdded).format('DD.MM.YYYY HH:MM')}
                             </TimelineOppositeContent>
                             <TimelineSeparator>
                                 <TimelineDot />
                                 <TimelineConnector />
                             </TimelineSeparator>
-                            {measurement.weight > 0
-                                ? <TimelineContent
-                                    style={{ fontWeight: 'bold' }}
-                                    onClick={() => setUpdateMeasurements(measurement)}
-                                >
-                                    {Math.round(measurement.weight * 10) / 10}kg
-                                </TimelineContent>
-                                : <TimelineContent
-                                    color="error"
-                                    style={{ fontWeight: 'bold' }}
-                                    onClick={() => setUpdateMeasurements(measurement)}
-                                >
-                                    {Math.round(measurement.weight * 10) / 10}kg
-                                </TimelineContent>
-                            }
+                            <TimelineContent
+                                style={{ fontWeight: 'bold' }}
+                                onClick={() => setUpdateMeasurements(measurement)}
+                            >
+                                {Math.round(Number(measurement.weight) * 10) / 10}kg
+                            </TimelineContent>
                         </TimelineItem>
                     )}
                 </Timeline>

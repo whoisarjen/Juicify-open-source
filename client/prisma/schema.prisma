@@ -91,6 +91,7 @@ model User {
   WorkoutResult       WorkoutResult[]
   Product             Product[]
   Consumed            Consumed[]
+  Measurement         Measurement[]
 }
 
 model VerificationToken {
@@ -191,4 +192,17 @@ model Consumed {
   @@unique([id, userId])
   @@index([userId])
   @@index([productId])
+}
+
+model Measurement {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  whenAdded DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  weight    Decimal  @default(0)
+  userId    Int
+
+  @@unique([id, userId])
+  @@index([userId])
 }

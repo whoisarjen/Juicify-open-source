@@ -5,12 +5,12 @@ import { setIsDialogEditConsumed } from "@/redux/features/dialogEditConsumed.sli
 import { trpc } from "@/utils/trpc"
 import { useAppDispatch } from "./useRedux"
 
-const useConsumed = (overwriteWhenAdded?: string) => {
+const useConsumed = (overwriteWhenAdded?: string, overwriteUsername?: string) => {
     const router = useRouter()
     const dispatch = useAppDispatch()
     const { data: sessionData } = useSession()
 
-    const username = router.query.login as unknown as string
+    const username = overwriteUsername || router.query.login as unknown as string
     const whenAdded = overwriteWhenAdded || router.query.date as unknown as string
 
     const utils = trpc.useContext()
@@ -67,7 +67,6 @@ const useConsumed = (overwriteWhenAdded?: string) => {
         username,
         whenAdded,
         isOwner,
-        user: sessionData?.user,
         owner: isOwner ? sessionData?.user : null,
     }
 }

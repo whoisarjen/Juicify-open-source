@@ -5,6 +5,7 @@ import type {
     WorkoutResult as WorkoutResultPrisma,
     Product as ProductPrisma,
     Consumed as ConsumedPrisma,
+    Measurement as MeasurementPrisma,
 } from "@prisma/client"
 
 import type { WorkoutPlanSchema, WorkoutPlanExerciseSchema } from 'server/schema/workoutPlan.schema'
@@ -24,6 +25,8 @@ declare global {
     export type Product<T = ProductPrisma> = T
 
     export type Consumed<T = ConsumedPrisma> = T & { product: Product }
+
+    export type Measurement<T = MeasurementPrisma> = T
 
     type ObjectKeys<T> =
         T extends object ? (keyof T)[] :

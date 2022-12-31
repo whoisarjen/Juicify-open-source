@@ -1,25 +1,20 @@
-import { MeasurementFieldsFragment, useUpdateMeasurementMutation, useCreateMeasurementMutation } from "@/generated/graphql"
 import { Dialog, DialogContent, DialogActions, Button } from "@mui/material"
 import InputAdornment from '@mui/material/InputAdornment';
 import useTranslation from "next-translate/useTranslation"
-import { useEffect } from "react"
 import SlideUp from "transition/SlideUp"
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { object, preprocess, string, TypeOf, number } from "zod"
 import TextField from '@mui/material/TextField';
-import { omit } from 'lodash'
+import { type MeasurementSchema, measurementSchema } from "@/server/schema/measurement.schema";
+import { useEffect } from "react";
+import { trpc } from "@/utils/trpc";
 import { useSession } from "next-auth/react";
+import moment from "moment";
 
-const MeasurementSchema = object({
-    id: string(),
-    weight: preprocess((val) => Number(val), number().min(0).max(1000)),
-})
-
-type MeasurementSchemaProps = TypeOf<typeof MeasurementSchema>
+const whenAdded = moment().format('YYYY-MM-DD')
 
 interface MeasurementsDialogUpdateWeightProps {
-    measurement: MeasurementFieldsFragment & { isFake?: boolean } | null
+    measurement: Measurement | null
     onClose: () => void
 }
 
@@ -29,40 +24,61 @@ const MeasurementsDialogUpdateWeight = ({
 }: MeasurementsDialogUpdateWeightProps) => {
     const { t } = useTranslation()
     const { data: sessionData } = useSession()
-    const [, createMeasurement] = useCreateMeasurementMutation()
-    const [, updateMeasurement] = useUpdateMeasurementMutation()
+
+    const username = sessionData?.user?.username || ''
 
     const {
         register,
         formState: { errors },
         handleSubmit,
         reset,
-    } = useForm<MeasurementSchemaProps>({
-        resolver: zodResolver(MeasurementSchema)
+    } = useForm<MeasurementSchema>({ resolver: zodResolver(measurementSchema) })
+
+    const utils = trpc.useContext()
+
+    const updateMeasurement = trpc.measurement.update.useMutation({
+        onSuccess(data) {
+            onClose()
+
+            utils
+                .measurement
+                .getDay
+                .setData({ username, whenAdded }, currentData => {
+                    if (!currentData || data.id === currentData.id) {
+                        return data
+                    }
+
+                    return currentData
+                })
+
+            utils
+                .measurement
+                .getAll
+                .setData({ username }, currentData => currentData
+                    ?.map(measurement => {
+                        if (measurement.id === data.id) {
+                            return {
+                                ...measurement,
+                                ...data,
+                            }
+                        }
+
+                        return measurement
+                    }))
+        },
     })
 
-    const onConfirm = async ({ weight }: MeasurementSchemaProps) => {
-        if (measurement) {
-            if (measurement.isFake) {
-                await createMeasurement({
-                    ...omit(measurement, ['isFake']),
-                    weight,
-                    user: sessionData?.user?.id || '',
-                })
-            } else {
-                await updateMeasurement({
-                    ...measurement,
-                    weight,
-                    user: sessionData?.user?.id || '',
-                })
-            }
-        }
-        onClose()
-    }
+    const onConfirm = async (newMeasurement: MeasurementSchema) =>
+        await updateMeasurement.mutateAsync(newMeasurement)
 
     useEffect(() => {
-        measurement && reset(measurement)
-    }, [measurement?.weight, measurement?.id])
+        if (measurement) {
+            reset({
+                ...measurement,
+                weight: Number(measurement.weight),
+            })
+        }
+    }, [measurement, measurement?.id, reset])
 
     return (
         <Dialog

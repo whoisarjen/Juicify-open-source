@@ -5,11 +5,11 @@ import ListSubheader from '@mui/material/ListSubheader';
 import useTranslation from 'next-translate/useTranslation';
 import { useTheme } from '../hooks/useTheme';
 import styled from 'styled-components'
-import { sumMacroFromConsumed, getExpectedMacro } from '@/utils/consumed.utils';
 import moment from 'moment';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import useDaily from '@/hooks/useDaily'
+import { trpc } from '@/utils/trpc';
 
 const Box = styled.aside`
     padding: 12px;
@@ -40,12 +40,14 @@ const SidebarRight = () => {
     const { data: sessionData } = useSession()
     const { getTheme } = useTheme()
 
+    const username = sessionData?.user?.username || ''
+
     const {
         consumedMacro,
         expectedMacro,
         burnedCalories,
         workoutResults,
-    } = useDaily(whenAdded)
+    } = useDaily(whenAdded, username)
 
     const styles = buildStyles({
         textSize: '15px',
@@ -56,11 +58,17 @@ const SidebarRight = () => {
         backgroundColor: getTheme('PRIMARY')
     })
 
-    const weight = 0 // TODO
-    const username = sessionData?.user?.username
+    const {
+        data: measurement,
+    } = trpc
+        .measurement
+        .getDay
+        .useQuery({ username, whenAdded }, { enabled: !!username && !!whenAdded })
+
+    const weight = measurement?.weight || 0
     const coach = moment(whenAdded).diff(sessionData?.user?.nextCoach, 'days')
 
-    const CIRCULAR_BOX_VALUES = [
+    const CIRCULAR_BOXES = [
         {
             href: '/measurements',
             value: weight ? 100 : 0,
@@ -100,7 +108,7 @@ const SidebarRight = () => {
                     </ListSubheader>
                 }
             >
-                {CIRCULAR_BOX_VALUES.map(({ href, text, value, label }) =>
+                {CIRCULAR_BOXES.map(({ href, text, value, label }) =>
                     <Link href={href} key={text}>
                         <ListItemButton>
                             <CircularBox>
