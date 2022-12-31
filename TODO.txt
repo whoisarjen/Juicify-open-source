@@ -1,9 +1,0 @@
-option to change order in workout result?
-
-coach analyze
-
-is barcode working?
-
-next_coach is not updating on new coach value and not show correctly on coach site on front end
-
-EmailField does not automatically lower the case in email addresses
