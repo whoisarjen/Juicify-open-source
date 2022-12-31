@@ -1,38 +1,31 @@
-import "../global.css";
-import { store } from "../redux/store";
-import { Provider } from "react-redux";
-import Layout from "../layout/Layout";
-import MUI from "../layout/MUI";
-import URQL from "../layout/URQL";
-import ServiceWorker from "layout/ServiceWorker";
-import type { AppType } from 'next/app';
-import { trpc } from '../utils/trpc';
+import "../global.css"
+import { store } from "../redux/store"
+import { Provider } from "react-redux"
+import Layout from "../layout/Layout"
+import MUI from "../layout/MUI"
+import ServiceWorker from "layout/ServiceWorker"
+import { trpc } from '../utils/trpc'
 import { SessionProvider } from "next-auth/react"
+import { type AppType } from 'next/app'
+import { type Session } from "next-auth"
 
-interface AppProps {
-    Component: any
-    pageProps: any
-}
-
-const App: AppType = ({
+const App: AppType<{ session: Session | null }> = ({
     Component,
     pageProps: { session, ...pageProps },
-}: AppProps) => {
+}) => {
     return (
         <MUI>
             <SessionProvider session={session}>
                 <Provider store={store}>
-                    <URQL>
-                        <ServiceWorker>
-                            <Layout>
-                                <Component {...pageProps} />
-                            </Layout>
-                        </ServiceWorker>
-                    </URQL>
+                    <ServiceWorker>
+                        <Layout>
+                            <Component {...pageProps} />
+                        </Layout>
+                    </ServiceWorker>
                 </Provider>
             </SessionProvider>
         </MUI>
-    );
+    )
 }
 
-export default trpc.withTRPC(App);
+export default trpc.withTRPC(App)

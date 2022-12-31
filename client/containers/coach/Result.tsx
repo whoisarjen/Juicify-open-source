@@ -2,7 +2,6 @@ import Button from '@mui/material/Button';
 import useTranslation from "next-translate/useTranslation";
 import styled from 'styled-components';
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle';
-import { CreateCoachMutation } from '@/generated/graphql';
 
 const Box = styled.div`
     width: 100%;
@@ -31,7 +30,7 @@ const Box = styled.div`
 
 interface Result {
     setStep: (arg0: string) => void
-    data?: CreateCoachMutation
+    data?: any // TODO
 }
 
 const Result = ({

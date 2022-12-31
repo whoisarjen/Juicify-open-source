@@ -10,7 +10,6 @@ import CustomAvatar from '../../../components/CustomAvatar/CustomAvatar';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import ProfileTabs from '../ProfileTabs/ProfileTabs';
-import { useUserByUsernameQuery } from '@/generated/graphql';
 import { useSession } from 'next-auth/react';
 
 const Box = styled.div`
@@ -47,16 +46,14 @@ const Content = styled.div`
 const NavbarProfile = ({ tab }: { tab: number }) => {
     const router: any = useRouter()
     const { data: sessionData } = useSession()
-    const [{ data }, getUserByUsername] = useUserByUsernameQuery({
-        variables: {
-            username: router?.query?.login,
-        },
-        pause: true,
-    })
+    // const [{ data }, getUserByUsername] = useUserByUsernameQuery({
+    //     variables: {
+    //         username: router?.query?.login,
+    //     },
+    //     pause: true,
+    // })
 
-    useEffect(() => {
-        router?.query?.login && getUserByUsername()
-    }, [router?.query?.login])
+    const data: any = null // TODO
 
     return (
         <>

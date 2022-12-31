@@ -15,10 +15,8 @@ import Tutorial_5 from "@/containers/coach/Tutorial_5";
 import Tutorial_6 from "@/containers/coach/Tutorial_6";
 import Tutorial_7 from "@/containers/coach/Tutorial_7";
 import Welcome from "@/containers/coach/Welcome";
-import { useCreateCoachMutation, useDailyByWhenAndUsernameQuery } from "@/generated/graphql";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
-import { v4 as uuidv4 } from 'uuid';
 
 export interface PrepareObject {
     goal: number
@@ -32,26 +30,29 @@ const Coach = () => {
     const [step, setStep] = useState(sessionData?.user?.isCoachAnalyze ? 'Standard' : 'Welcome')
     const when = new Date().toISOString().slice(0, 10)
     const username = sessionData?.user?.username || ''
-    const [{ data }, getDailyByWhenAndUsernameQuery] = useDailyByWhenAndUsernameQuery({
-        variables: {
-            when,
-            username,
-        },
-        pause: true,
-    })
-    const [{ data: createCoachData }, createCoach] = useCreateCoachMutation()
+    // const [{ data }, getDailyByWhenAndUsernameQuery] = useDailyByWhenAndUsernameQuery({
+    //     variables: {
+    //         when,
+    //         username,
+    //     },
+    //     pause: true,
+    // })
+    // const [{ data: createCoachData }, createCoach] = useCreateCoachMutation()
+
+    const data: any = null // TODO
+    const createCoachData: any = null // TODO
 
     const prepareCreate = async (object: PrepareObject) => {
         if (!data?.measurementByWhenAndUsername?.weight) {
             return null
         }
 
-        await createCoach({
-            id: uuidv4(),
-            user: sessionData?.user?.id,
-            weight: data.measurementByWhenAndUsername.weight,
-            ...object,
-        })
+        // await createCoach({
+        //     id: uuidv4(),
+        //     user: sessionData?.user?.id,
+        //     weight: data.measurementByWhenAndUsername.weight,
+        //     ...object,
+        // })
 
         setStep('Result')
     }

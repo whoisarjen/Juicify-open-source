@@ -4,7 +4,6 @@ import { useTheme } from "@/hooks/useTheme";
 import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
 import { useEffect, useMemo } from "react";
-import { ConsumedFieldsFragment, useDailiesByRangeAndUsernameQuery, WorkoutResultFieldsFragment } from '@/generated/graphql'
 import moment from "moment";
 import { getCalories, multipleConsumedProductByHowMany } from "@/utils/consumed.utils";
 import StackedBarChart from "@/components/common/diagram-stacked-bar-chart";
@@ -34,17 +33,15 @@ const ProfilePage = () => {
         { dataKey: t('Diffrent'), stroke: getTheme('PRIMARY') }
     ]
 
-    const [{ data }, getDailiesByRangeAndUsername] = useDailiesByRangeAndUsernameQuery({
-        variables: {
-            username: router?.query?.login,
-            startDate: moment().add(-7, 'd').format('YYYY-MM-DD'),
-            endDate: moment().format('YYYY-MM-DD'),
-        }
-    })
+    // const [{ data }, getDailiesByRangeAndUsername] = useDailiesByRangeAndUsernameQuery({
+    //     variables: {
+    //         username: router?.query?.login,
+    //         startDate: moment().add(-7, 'd').format('YYYY-MM-DD'),
+    //         endDate: moment().format('YYYY-MM-DD'),
+    //     }
+    // })
 
-    useEffect(() => {
-        router?.query?.login && getDailiesByRangeAndUsername()
-    }, [router?.query?.login])
+    const data: any = null // TODO
 
     const {
         dataCalories,

@@ -12,10 +12,8 @@ import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import useTranslation from 'next-translate/useTranslation';
 import { setIsDialogAddProduct, setMealToAdd } from '@/redux/features/dialogAddProduct.slice';
 import { useState } from 'react';
-import { useCreateConsumedMutation } from '@/generated/graphql';
 import { useRouter } from 'next/router';
 import moment from 'moment';
-import { v4 as uuidv4 } from 'uuid';
 import { useSession } from 'next-auth/react';
 
 const DialogAddProduct = () => {
@@ -24,19 +22,19 @@ const DialogAddProduct = () => {
     const dispatch = useAppDispatch()
     const [howMany, setHowMany] = useState('1.0')
     const { isDialogAddProduct, selectedProduct, mealToAdd } = useAppSelector(state => state.dialogAddProduct)
-    const [, createConsumed] = useCreateConsumedMutation()
     const router: any = useRouter()
 
     const addNewProduct = async () => {
-        await createConsumed({
-            id: uuidv4(),
-            when: router?.query?.date || moment().format('YYYY-MM-DD'),
-            howMany,
-            user: sessionData?.user?.id || '',
-            product: selectedProduct.id,
-            meal: mealToAdd,
-        })
-        dispatch(setIsDialogAddProduct(false))
+        // TODO
+        // await createConsumed({
+        //     id: uuidv4(),
+        //     when: router?.query?.date || moment().format('YYYY-MM-DD'),
+        //     howMany,
+        //     user: sessionData?.user?.id || '',
+        //     product: selectedProduct.id,
+        //     meal: mealToAdd,
+        // })
+        // dispatch(setIsDialogAddProduct(false))
     }
 
     return (

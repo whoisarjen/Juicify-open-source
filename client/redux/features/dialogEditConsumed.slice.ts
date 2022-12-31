@@ -1,14 +1,13 @@
-import { ConsumedFieldsFragment } from "@/generated/graphql";
 import { createSlice } from "@reduxjs/toolkit";
 
 interface DialogEditConsumed {
     isDialogEditConsumed: boolean
-    selectedConsumed: ConsumedFieldsFragment
+    selectedConsumed: Consumed
 }
 
 const initialState: DialogEditConsumed = {
     isDialogEditConsumed: false,
-    selectedConsumed: {} as ConsumedFieldsFragment,
+    selectedConsumed: {} as Consumed,
 };
 
 export const dialogEditConsumedSlice = createSlice({
