@@ -10,9 +10,6 @@ import DateChangerFast from "@/containers/consumed/DateChangerFast/DateChangerFa
 import Header from "@/components/Header/Header";
 import useTranslation from "next-translate/useTranslation";
 import BoxBurned from "@/containers/consumed/BoxBurned/BoxBurned";
-import { useSession } from "next-auth/react";
-import { trpc } from "@/utils/trpc";
-import moment from "moment";
 import { env } from "@/env/client.mjs";
 import useConsumed from "@/hooks/useConsumed";
 
@@ -55,7 +52,7 @@ const Consumed = () => {
 
             <SectionDiaryManaging isOwner={isOwner} />
 
-            <BoxBurned isOwner={isOwner} />
+            <BoxBurned />
 
             {meals.map((meal, i) =>
                 <BoxMeal

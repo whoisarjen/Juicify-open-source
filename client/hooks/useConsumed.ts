@@ -1,4 +1,3 @@
-import moment from "moment"
 import { useRouter } from "next/router"
 import { useSession } from "next-auth/react"
 
@@ -12,7 +11,7 @@ const useConsumed = (overwriteWhenAdded?: string) => {
     const { data: sessionData } = useSession()
 
     const username = router.query.login as unknown as string
-    const whenAdded = moment(overwriteWhenAdded || router.query.date).toDate()
+    const whenAdded = overwriteWhenAdded || router.query.date as unknown as string
 
     const utils = trpc.useContext()
 
@@ -58,6 +57,8 @@ const useConsumed = (overwriteWhenAdded?: string) => {
         }
     })
 
+    const isOwner = sessionData?.user?.username == username
+
     return {
         data,
         isLoading: isFetching || isLoading || updateConsumed.isLoading || deleteConsumed.isLoading,
@@ -65,8 +66,9 @@ const useConsumed = (overwriteWhenAdded?: string) => {
         deleteConsumed,
         username,
         whenAdded,
+        isOwner,
         user: sessionData?.user,
-        isOwner: sessionData?.user?.username == username,
+        owner: isOwner ? sessionData?.user : null,
     }
 }
 

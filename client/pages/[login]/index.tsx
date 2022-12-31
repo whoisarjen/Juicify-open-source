@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useEffect, useMemo } from "react";
 import { ConsumedFieldsFragment, useDailiesByRangeAndUsernameQuery, WorkoutResultFieldsFragment } from '@/generated/graphql'
 import moment from "moment";
-import { getCaloriesFromProduct, multipleConsumedProductByHowMany } from "@/utils/consumed.utils";
+import { getCalories, multipleConsumedProductByHowMany } from "@/utils/consumed.utils";
 import StackedBarChart from "@/components/common/diagram-stacked-bar-chart";
 import styled from 'styled-components'
 
@@ -76,7 +76,7 @@ const ProfilePage = () => {
                 const multipledProduct = multipleConsumedProductByHowMany(consumed).product
                 defaultData[index] = {
                     ...defaultData[index],
-                    [t('Calories')]: defaultData[index][t('Calories')] as number + getCaloriesFromProduct(
+                    [t('Calories')]: defaultData[index][t('Calories')] as number + getCalories(
                         multipledProduct
                     ),
                 }

@@ -1,6 +1,7 @@
-import { CircularProgressbar } from 'react-circular-progressbar';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import styled from "styled-components";
+import { useTheme } from '@/hooks/useTheme';
 
 const Grid = styled.div`
     width: 100%;
@@ -22,23 +23,33 @@ const CircularBox = styled.div`
 interface DiagramCircularProps {
     text: string
     value: number
-    styles: any
 }
 
 const DiagramCircular = ({
     text,
     value,
-    styles,
-}: DiagramCircularProps) => (
-    <Grid>
-        <CircularBox>
-            <CircularProgressbar
-                value={value}
-                text={text}
-                styles={styles}
-            />
-        </CircularBox>
-    </Grid>
-)
+}: DiagramCircularProps) => {
+    const { getTheme } = useTheme()
+
+    const styles = buildStyles({
+        pathTransitionDuration: 0.5,
+        pathColor: getTheme('PRIMARY'),
+        textColor: 'rgba(122, 122, 122, 1',
+        trailColor: '#d6d6d6',
+        backgroundColor: getTheme('PRIMARY'),
+    })
+
+    return (
+        <Grid>
+            <CircularBox>
+                <CircularProgressbar
+                    value={value}
+                    text={text}
+                    styles={styles}
+                />
+            </CircularBox>
+        </Grid>
+    )
+}
 
 export default DiagramCircular;

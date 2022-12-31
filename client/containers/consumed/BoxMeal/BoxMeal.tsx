@@ -6,7 +6,7 @@ import { useMemo } from "react";
 import { useAppDispatch } from "@/hooks/useRedux";
 import { setIsDialogAddProducts, setMealToAdd } from "@/redux/features/dialogAddProducts.slice";
 import BoxMealItem from "@/containers/consumed/BoxMeal/BoxMealItem/BoxMealItem";
-import { getConsumedMacro } from "@/utils/consumed.utils";
+import { sumMacroFromConsumed } from "@/utils/consumed.utils";
 
 const Grid = styled.div`
     width: calc(100% - 24px);
@@ -52,7 +52,7 @@ const BoxMeal = ({ index, meal, isOwner }: BoxMealProps) => {
         carbs,
         fats,
         calories,
-    } = useMemo(() => getConsumedMacro(meal), [meal])
+    } = useMemo(() => sumMacroFromConsumed(meal), [meal])
 
     const handleDialogAddProducts = () => {
         dispatch(setMealToAdd(index))

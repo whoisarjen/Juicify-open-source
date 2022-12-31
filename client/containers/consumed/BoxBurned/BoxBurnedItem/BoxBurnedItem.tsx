@@ -3,7 +3,6 @@ import IconButton from '@mui/material/IconButton';
 import styled from "styled-components";
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import EditIcon from "@mui/icons-material/Edit";
-import { WorkoutResultFieldsFragment } from "@/generated/graphql";
 
 const Burned = styled.div`
     width: 100%;
@@ -41,7 +40,7 @@ const FireIcon = styled.div`
 `
 
 interface BoxBurnedItemProps {
-    workoutResult: WorkoutResultFieldsFragment
+    workoutResult: WorkoutResult
 }
 
 const BoxBurnedItem = ({
@@ -65,8 +64,8 @@ const BoxBurnedItem = ({
             </EditButtonContainer>
 
             <Content>
-                <div>{workoutResult?.name}</div>
-                <div>{workoutResult?.burnedCalories}kcal</div>
+                <div>{workoutResult.name}</div>
+                <div>{workoutResult.burnedCalories}kcal</div>
             </Content>
 
             <Content>

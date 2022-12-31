@@ -1,6 +1,6 @@
 import { useAppDispatch } from "@/hooks/useRedux";
 import { setIsDialogEditConsumed, setSelectedConsumed } from "@/redux/features/dialogEditConsumed.slice";
-import { getCaloriesFromProduct } from "@/utils/consumed.utils";
+import { getCalories, multipleProductByHowMany } from "@/utils/consumed.utils";
 import EditIcon from "@mui/icons-material/Edit";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 import IconButton from '@mui/material/IconButton';
@@ -41,7 +41,7 @@ const BoxMealItem = ({ consumed, isOwner }: BoxMealItemProps) => {
     const { t } = useTranslation('nutrition-diary')
     const dispatch = useAppDispatch()
 
-    const { product, howMany } = consumed
+    const { product } = multipleProductByHowMany(consumed)
 
     const handleDialogEditConsumed = () => {
         dispatch(setSelectedConsumed(consumed))
@@ -64,11 +64,11 @@ const BoxMealItem = ({ consumed, isOwner }: BoxMealItemProps) => {
 
             <ProductContent>
                 <div>{product.name}</div>
-                <div>{getCaloriesFromProduct(product) * Number(howMany)}kcal</div>
+                <div>{getCalories(product)}kcal</div>
             </ProductContent>
             <ProductContent>
                 <>
-                    <div>{Number(product.proteins) * Number(howMany)}{t('P')} {Number(product.carbs) * Number(howMany)}{t('C')} {Number(product.fats) * Number(howMany)}{t('F')}</div>
+                    <div>{Number(product.proteins)}{t('P')} {Number(product.carbs)}{t('C')} {Number(product.fats)}{t('F')}</div>
                     <div>{Number(consumed.howMany) * 100}g/ml</div>
                 </>
             </ProductContent>

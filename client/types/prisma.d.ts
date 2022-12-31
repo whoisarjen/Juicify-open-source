@@ -1,4 +1,5 @@
 import type {
+    User as UserPrisma,
     Exercise as ExercisePrisma,
     WorkoutPlan as WorkoutPlanPrisma,
     WorkoutResult as WorkoutResultPrisma,
@@ -10,6 +11,7 @@ import type { WorkoutPlanSchema, WorkoutPlanExerciseSchema } from 'server/schema
 import type { WorkoutResultExerciseResultSchema, WorkoutResultExerciseSchema, WorkoutResultSchema } from 'server/schema/workoutResult.schema'
 
 declare global {
+    export type User<T = UserPrisma> = T
     export type Exercise<T = ExercisePrisma> = ExerciseSchema & T
 
     export type WorkoutPlanExercise = WorkoutPlanExerciseSchema
@@ -22,4 +24,14 @@ declare global {
     export type Product<T = ProductPrisma> = T
 
     export type Consumed<T = ConsumedPrisma> = T & { product: Product }
+
+    type ObjectKeys<T> =
+        T extends object ? (keyof T)[] :
+        T extends number ? [] :
+        T extends Array<any> | string ? string[] :
+        never;
+    
+    interface ObjectConstructor {
+        keys<T>(o: T): ObjectKeys<T>
+    }
 }

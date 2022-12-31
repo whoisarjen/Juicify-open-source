@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { omit } from "lodash";
+import moment from "moment"
 
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { workoutResultSchema } from "@/server/schema/workoutResult.schema";
@@ -28,6 +29,29 @@ export const workoutResultRouter = router({
 
             return workoutResult as unknown as WorkoutResult<typeof workoutResult>
         }),
+    getDay: publicProcedure
+        .input(
+            z.object({
+                username: z.string(),
+                whenAdded: z.preprocess(whenAdded => moment(String(whenAdded)).toDate(), z.date()),
+            })
+        )
+        .query(async ({ ctx, input: { username, whenAdded } }) => {
+            return await ctx.prisma.workoutResult.findMany({
+                where: {
+                    whenAdded: {
+                        gte: moment(whenAdded).startOf('day').toDate(),
+                        lte: moment(whenAdded).endOf('day').toDate(),
+                    },
+                    user: {
+                        username,
+                    },
+                },
+                orderBy: {
+                    whenAdded: 'desc'
+                }
+            }) as unknown as WorkoutResult[]
+        }),
     getAll: publicProcedure
         .input(
             z.object({
@@ -44,7 +68,7 @@ export const workoutResultRouter = router({
                 orderBy: {
                     whenAdded: 'desc'
                 }
-            });
+            }) as unknown as WorkoutResult[]
         }),
     create: protectedProcedure
         .input(

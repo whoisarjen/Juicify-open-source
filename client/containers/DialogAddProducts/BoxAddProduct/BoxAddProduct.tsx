@@ -11,7 +11,7 @@ import { useTheme } from '../../../hooks/useTheme';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { addToChecked, changeChecked, removeFromChecked } from '@/redux/features/dialogAddProducts.slice';
 import { setIsDialogShowProduct, setSelectedProduct } from '@/redux/features/dialogShowProduct.slice';
-import { getCaloriesFromProduct } from '@/utils/consumed.utils';
+import { getCalories } from '@/utils/consumed.utils';
 
 const Grid = styled.div`
     display: grid;
@@ -101,7 +101,7 @@ const BoxAddProduct = ({
                 {product.name}
             </Name>
             <Description>
-                {(product.proteins || 0)}{t('P')} {(product.carbs || 0)}{t('C')} {(product.fats || 0)}{t('F')} {getCaloriesFromProduct(product)}kcal
+                <>{(product.proteins || 0)}{t('P')} {(product.carbs || 0)}{t('C')} {(product.fats || 0)}{t('F')} {getCalories(product)}kcal</>
             </Description>
             <div />
             <MoreInfo onClick={handleDialogShowProduct} data-testid="handleDialogShowProduct">

@@ -10,7 +10,7 @@ export const consumedRouter = router({
         .input(
             z.object({
                 username: z.string(),
-                whenAdded: z.date(),
+                whenAdded: z.preprocess(whenAdded => moment(String(whenAdded)).toDate(), z.date()),
             })
         )
         .query(async ({ ctx, input: { username, whenAdded } }) => {

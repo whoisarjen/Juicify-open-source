@@ -1,12 +1,8 @@
-import AddIcon from "@mui/icons-material/Add";
-import IconButton from "@mui/material/IconButton";
 import styled from "styled-components";
-import useTranslation from "next-translate/useTranslation";
-import { useAppDispatch } from "@/hooks/useRedux";
 import BoxBurnedItem from "./BoxBurnedItem/BoxBurnedItem";
-import { useWorkoutResultsByWhenQuery } from "@/generated/graphql";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { trpc } from "@/utils/trpc";
 
 const Grid = styled.div`
     width: calc(100% - 24px);
@@ -38,26 +34,24 @@ const AddButtonContainer = styled.div`
     }
 `
 
-interface BoxMealProps {
-    isOwner: boolean
-}
+const BoxBurned = () => {
+    const router = useRouter()
+    const { data: sessionData } = useSession()
 
-const BoxBurned = ({
-    isOwner,
-}: BoxMealProps) => {
-    const router: any = useRouter()
-    const [{ data }, getWorkoutResultsByWhen] = useWorkoutResultsByWhenQuery({
-        variables: {
-            when: router?.query?.date,
-            username: router?.query?.login,
-        }
-    })
+    const username = router.query.login as string
+    const whenAdded = router.query.date as string
 
-    useEffect(() => {
-        router?.query?.login && router?.query?.date && getWorkoutResultsByWhen()
-    }, [router?.query?.login, router?.query?.date])
+    const {
+        data: workoutResults = [],
+    } = trpc
+        .workoutResult
+        .getDay
+        .useQuery({
+            username,
+            whenAdded,
+        }, { enabled: username == sessionData?.user?.username && !!username && !!whenAdded })
 
-    if (!data?.workoutResultsByWhen?.length) {
+    if (!workoutResults.length) {
         return null
     }
 
@@ -77,9 +71,9 @@ const BoxBurned = ({
                 } */}
                 <div />
             </AddButtonContainer>
-            <div>{data?.workoutResultsByWhen?.reduce((prev, current) => prev + (current?.burnedCalories || 0), 0)}kcal</div>
+            <div>{workoutResults.reduce((prev, current) => prev + (current?.burnedCalories || 0), 0)}kcal</div>
 
-            {data?.workoutResultsByWhen?.map(workoutResult => workoutResult &&
+            {workoutResults.map(workoutResult =>
                 <BoxBurnedItem
                     key={workoutResult?.id}
                     workoutResult={workoutResult}
