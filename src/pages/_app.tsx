@@ -1,9 +1,9 @@
-import "../global.css"
+import "../styles/global.css"
 import { store } from "../redux/store"
 import { Provider } from "react-redux"
 import Layout from "../layout/Layout"
 import MUI from "../layout/MUI"
-import ServiceWorker from "layout/ServiceWorker"
+import ServiceWorker from "../layout/ServiceWorker"
 import { trpc } from '../utils/trpc'
 import { SessionProvider } from "next-auth/react"
 import { type AppType } from 'next/app'

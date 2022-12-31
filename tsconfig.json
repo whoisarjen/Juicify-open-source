@@ -20,14 +20,14 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@/components/*": ["components/*"],
-      "@/containers/*": ["containers/*"],
-      "@/generated/*": ["generated/*"],
-      "@/hooks/*": ["hooks/*"],
-      "@/redux/*": ["redux/*"],
-      "@/utils/*": ["utils/*"],
-      "@/env/*": ["env/*"],
-      "@/server/*": ["server/*"],
+      "@/components/*": ["src/components/*"],
+      "@/containers/*": ["src/containers/*"],
+      "@/generated/*": ["src/generated/*"],
+      "@/hooks/*": ["src/hooks/*"],
+      "@/redux/*": ["src/redux/*"],
+      "@/utils/*": ["src/utils/*"],
+      "@/env/*": ["src/env/*"],
+      "@/server/*": ["src/server/*"],
     }
   },
   "include": [

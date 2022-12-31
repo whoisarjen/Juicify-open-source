@@ -2,7 +2,7 @@ import { z } from "zod";
 import { omit } from "lodash";
 
 import { router, publicProcedure, protectedProcedure } from "../trpc";
-import { createWorkoutPlanSchema, workoutPlanSchema } from "server/schema/workoutPlan.schema";
+import { createWorkoutPlanSchema, workoutPlanSchema } from "@/server/schema/workoutPlan.schema";
 
 export const workoutPlanRouter = router({
     get: publicProcedure
