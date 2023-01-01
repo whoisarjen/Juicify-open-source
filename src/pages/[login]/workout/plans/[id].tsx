@@ -15,7 +15,7 @@ import DialogAddExercises from '@/containers/DialogAddExercises/DialogAddExercis
 import InputAdornment from '@mui/material/InputAdornment';
 import { useSession } from 'next-auth/react'
 import { trpc } from '@/utils/trpc'
-import { type WorkoutPlanSchema, workoutPlanSchema } from '@/server/schema/workoutPlan.schema'
+import { type WorkoutPlanSchema, workoutPlanSchema, type WorkoutPlanExerciseSchema } from '@/server/schema/workoutPlan.schema'
 
 const WorkoutPlan = () => {
     const router: any = useRouter()
@@ -52,8 +52,12 @@ const WorkoutPlan = () => {
                 .workoutPlan
                 .get
                 .setData({ id, username }, currentData => {
-                    if (currentData?.id === id) {
-                        return data as unknown as WorkoutPlan<WorkoutPlan & { user: User }>
+                    if (currentData?.id === id && sessionData?.user) {
+                        return {
+                            ...data,
+                            exercises: data.exercises as unknown as WorkoutPlanExerciseSchema[],
+                            user: sessionData.user,
+                        }
                     }
 
                     return currentData
@@ -63,7 +67,13 @@ const WorkoutPlan = () => {
                 .workoutPlan
                 .getAll
                 .setData({ username }, currentData =>
-                    [...(currentData || []).filter(workoutPlan => workoutPlan.id !== id), data as unknown as WorkoutPlan]
+                    [
+                        ...(currentData || []).filter(workoutPlan => workoutPlan.id !== id),
+                        {
+                            ...data,
+                            exercises: data.exercises as unknown as WorkoutPlanExerciseSchema[]
+                        }
+                    ]
                 )
         },
     })
