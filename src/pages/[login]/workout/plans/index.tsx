@@ -18,7 +18,7 @@ const WorkoutPlansPage = () => {
     })
 
     const handleCreateWorkoutPlan = async () => {
-        await createWorkoutPlan.mutate({ name: '' })
+        await createWorkoutPlan.mutateAsync({ name: 'ABC' })
     }
 
     const isOwner = router.query.login == sessionData?.user?.username
@@ -26,7 +26,7 @@ const WorkoutPlansPage = () => {
     return (
         <div>
             {isOwner && <NavbarOnlyTitle title="workout:WORKOUT_PLANS" />}
-            {isOwner && <ButtonPlusIcon click={handleCreateWorkoutPlan} />}
+            {isOwner && <ButtonPlusIcon onClick={handleCreateWorkoutPlan} />}
             {!isOwner && <NavbarProfile tab={3} />}
             {workoutPlans?.map(workoutPlan =>
                 <BoxWorkout

@@ -22,14 +22,19 @@ const WorkoutPlan = () => {
     const { t } = useTranslation('workout')
     const { data: sessionData } = useSession()
 
+    const username = router.query.login || ''
+    const id = parseInt(router.query.id || 0)
+
+    const utils = trpc.useContext()
+
     const {
         data,
         isFetching,
     } = trpc
         .workoutPlan
         .get
-        .useQuery({ id: parseInt(router.query.id), username: router.query.login }, {
-            enabled: !!(router.query.id && router.query.login),
+        .useQuery({ id, username }, {
+            enabled: !!id && !!username,
             onSuccess(data) {
                 reset({
                     id: data.id,
@@ -41,9 +46,37 @@ const WorkoutPlan = () => {
             },
         })
 
-    const updateWorkoutPlan = trpc.workoutPlan.update.useMutation()
+    const updateWorkoutPlan = trpc.workoutPlan.update.useMutation({
+        onSuccess(data, variables, context) {
+            utils
+                .workoutPlan
+                .get
+                .setData({ id, username }, currentData => {
+                    if (currentData?.id === id) {
+                        return data as unknown as WorkoutPlan<WorkoutPlan & { user: User }>
+                    }
+
+                    return currentData
+                })
+
+            utils
+                .workoutPlan
+                .getAll
+                .setData({ username }, currentData =>
+                    [...(currentData || []).filter(workoutPlan => workoutPlan.id !== id), data as unknown as WorkoutPlan]
+                )
+        },
+    })
+
     const deleteWorkoutPlan = trpc.workoutPlan.delete.useMutation({
         onSuccess: () => {
+            utils
+                .workoutPlan
+                .getAll
+                .setData({ username }, currentData =>
+                    currentData?.filter(workoutPlan => workoutPlan.id !== id)
+                )
+
             router.push(`/${sessionData?.user?.username}/workout/plans`)
         }
     })

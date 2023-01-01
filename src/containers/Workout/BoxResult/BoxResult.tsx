@@ -150,7 +150,7 @@ const BoxResult = ({
                     </div>
                 </Box>
             }
-            {isOwner && isLast && <ButtonPlusIcon size="small" click={() => openNewResult({ reps: parseInt(reps), weight: parseFloat(weight) })} />}
+            {isOwner && isLast && <ButtonPlusIcon size="small" onClick={() => openNewResult({ reps: parseInt(reps), weight: parseFloat(weight) })} />}
         </>
     );
 }

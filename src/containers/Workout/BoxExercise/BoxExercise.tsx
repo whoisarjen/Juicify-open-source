@@ -126,7 +126,7 @@ const BaseBoxExercise = ({
                     openNewResult={openNewResult}
                 />
             )}
-            {isOwner && !values.length && <ButtonPlusIcon size="small" click={() => openNewResult(null)} />}
+            {isOwner && !values.length && <ButtonPlusIcon size="small" onClick={() => openNewResult(null)} />}
         </div>
     );
 }

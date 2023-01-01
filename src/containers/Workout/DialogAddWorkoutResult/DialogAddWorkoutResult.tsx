@@ -58,7 +58,7 @@ const DialogAddWorkoutResult = () => {
 
     return (
         <>
-            <ButtonPlusIcon click={() => setIsOpen(true)} />
+            <ButtonPlusIcon onClick={() => setIsOpen(true)} />
             <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
                 <DialogTitle>{t('CREATE_RESULT')}</DialogTitle>
                 <DialogContent>
