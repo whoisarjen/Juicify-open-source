@@ -14,6 +14,7 @@ import { useSession } from "next-auth/react"
 import { trpc } from '@/utils/trpc'
 import { workoutResultSchema, type WorkoutResultSchema } from "@/server/schema/workoutResult.schema"
 import { DatePicker } from '@/components/DatePicker'
+import moment from 'moment'
 
 const sxTextField = { width: '100%', marginTop: '10px' }
 
@@ -21,7 +22,7 @@ const WorkoutResultPage = () => {
     const router: any = useRouter()
     const { t } = useTranslation('workout')
     const { data: sessionData } = useSession()
-    const [when, setWhen] = useState<null | string>(null)
+    const [when, setWhen] = useState<null | Date>(null)
     const [previousExercises, setPreviousExercises] = useState([])
 
     const deleteWorkoutResult = trpc.workoutResult.delete.useMutation({
@@ -81,9 +82,9 @@ const WorkoutResultPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const onWhenChange = (newDate: string | null) => {
+    const onWhenChange = (newDate: Date | null) => {
         if (newDate) {
-            setValue('whenAdded', new Date(newDate))
+            setValue('whenAdded', newDate)
         }
 
         setWhen(newDate)
@@ -126,7 +127,7 @@ const WorkoutResultPage = () => {
             }
 
             <DatePicker
-                when={when || data?.whenAdded}
+                when={when || data?.whenAdded || moment().toDate()}
                 onChange={onWhenChange}
                 sx={sxTextField}
                 register={register('whenAdded')}

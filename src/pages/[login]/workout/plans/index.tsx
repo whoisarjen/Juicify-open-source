@@ -6,14 +6,35 @@ import BoxWorkout from '@/containers/Workout/BoxWorkout/BoxWorkout';
 import NavbarProfile from '@/containers/profile/NavbarProfile/NavbarProfile';
 import { useSession } from 'next-auth/react';
 import { trpc } from '@/utils/trpc';
+import { orderBy } from 'lodash'
 
 const WorkoutPlansPage = () => {
     const router: any = useRouter()
     const { data: sessionData } = useSession()
-    const { data: workoutPlans } = trpc.workoutPlan.getAll.useQuery({ username: router.query.login }, { enabled: !!router.query.login })
+
+    const username = router.query.login || ''
+
+    const utils = trpc.useContext()
+
+    const { data: workoutPlans } = trpc
+        .workoutPlan
+        .getAll
+        .useQuery({ username }, { enabled: !!username })
+
     const createWorkoutPlan = trpc.workoutPlan.create.useMutation({
         onSuccess: (data) => {
-            router.push(`/${router.query.login}/workout/plans/${data.id}`)
+            utils
+                .workoutPlan
+                .getAll
+                .setData({ username }, currentData =>
+                    orderBy(
+                        [...(currentData || []), data as unknown as WorkoutPlan],
+                        ['name'],
+                        ['desc'],
+                    )
+                )
+
+            router.push(`/${username}/workout/plans/${data.id}`)
         }
     })
 

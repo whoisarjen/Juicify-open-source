@@ -11,14 +11,16 @@ const WorkoutResultsPage = () => {
     const router: any = useRouter()
     const { data: sessionData } = useSession()
 
+    const username = router.query.login || ''
+
     const {
         data: workoutResults,
     } = trpc
         .workoutResult
         .getAll
-        .useQuery({ username: router.query.login }, { enabled: !!router.query.login })
+        .useQuery({ username }, { enabled: !!username })
 
-    const isOwner = sessionData?.user?.username == router.query.login
+    const isOwner = sessionData?.user?.username == username
 
     return (
         <div>
@@ -34,7 +36,7 @@ const WorkoutResultsPage = () => {
                     whenAdded={workoutResult.whenAdded}
                     title={workoutResult.name}
                     description={workoutResult.note || ''}
-                    route={`/${router.query.login}/workout/results/${workoutResult.id}`}
+                    route={`/${username}/workout/results/${workoutResult.id}`}
                     icon={<FitnessCenterIcon />}
                     key={workoutResult.id}
                 />

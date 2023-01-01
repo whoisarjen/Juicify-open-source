@@ -42,6 +42,9 @@ export const workoutPlanRouter = router({
                         username,
                     },
                 },
+                orderBy: {
+                    name: 'desc',
+                },
             }) as unknown as WorkoutPlan[]
         }),
     create: protectedProcedure

@@ -19,6 +19,7 @@ import { TextField } from "@mui/material"
 import LoadingButton from '@mui/lab/LoadingButton'
 import { useSession } from 'next-auth/react'
 import { trpc } from '@/utils/trpc'
+import { orderBy } from 'lodash'
 
 const DialogAddWorkoutResult = () => {
     const { t } = useTranslation('workout')
@@ -28,9 +29,24 @@ const DialogAddWorkoutResult = () => {
     const [whenAdded, setWhenAdded] = useState(new Date())
     const [choosenWorkoutPlan, setChoosenWorkoutPlan] = useState(0)
 
+    const username = sessionData?.user?.username || ''
+
+    const utils = trpc.useContext()
+
     const workoutResultCreate = trpc.workoutResult.create.useMutation({
         onSuccess: (data) => {
-            router.push(`/${sessionData?.user?.username}/workout/results/${data.id}`)
+            utils
+                .workoutResult
+                .getAll
+                .setData({ username }, currentData =>
+                    orderBy(
+                        [...(currentData || []), data as unknown as WorkoutResult],
+                        ['whenAdded'],
+                        ['desc'],
+                    )
+                )
+
+            router.push(`/${username}/workout/results/${data.id}`)
         }
     })
 
@@ -40,7 +56,7 @@ const DialogAddWorkoutResult = () => {
     } = trpc
         .workoutPlan
         .getAll
-        .useQuery({ username: router.query.login }, { enabled: !!router.query.login })
+        .useQuery({ username }, { enabled: !!username })
 
     const DialogAddWorkoutResult = () => {
         const workoutPlan = workoutPlans.find(workoutPlan => workoutPlan.id === choosenWorkoutPlan)
@@ -52,7 +68,7 @@ const DialogAddWorkoutResult = () => {
 
     useEffect(() => {
         if (!workoutPlans?.[0]?.id) return
-        
+
         setChoosenWorkoutPlan(workoutPlans[0].id)
     }, [isFetching, workoutPlans])
 
