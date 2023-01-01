@@ -3,7 +3,7 @@ import moment from "moment"
 import { omit } from "lodash"
 
 import { router, publicProcedure, protectedProcedure } from "../trpc"
-import { measurementSchema } from "@/server/schema/measurement.schema"
+import { measurementSchema, createMeasurementSchema } from "@/server/schema/measurement.schema"
 
 export const measurementRouter = router({
     getDay: publicProcedure
@@ -46,22 +46,26 @@ export const measurementRouter = router({
                         username,
                     },
                 },
-                orderBy: {
-                    whenAdded: 'desc',
-                },
+                orderBy: [
+                    {
+                        id: 'desc',
+                    },
+                    {
+                        whenAdded: 'desc',
+                    }
+                ],
             })
         }),
-    // create: protectedProcedure
-    //     .input(createmeasurementSchema)
-    //     .mutation(async ({ ctx, input }) => {
-    //         return await ctx.prisma.measurement.create({
-    //             data: {
-    //                 ...input,
-    //                 userId: ctx.session.user.id,
-    //                 exercises: [],
-    //             }
-    //         })
-    //     }),
+    create: protectedProcedure
+        .input(createMeasurementSchema)
+        .mutation(async ({ ctx, input }) => {
+            return await ctx.prisma.measurement.create({
+                data: {
+                    ...input,
+                    userId: ctx.session.user.id,
+                }
+            })
+        }),
     update: protectedProcedure
         .input(measurementSchema)
         .mutation(async ({ ctx, input }) => {

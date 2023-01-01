@@ -7,15 +7,13 @@ import { useRouter } from "next/router"
 import { useCallback, useEffect, useState } from "react"
 import { useForm, useFieldArray } from "react-hook-form"
 import InputAdornment from '@mui/material/InputAdornment';
-import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import ButtonMoreOptionsWorkoutResult from "@/containers/Workout/ButtonMoreOptionsWorkoutResult/ButtonMoreOptionsWorkoutResult"
 import BoxResult from "@/containers/Workout/BoxExercise/BoxExercise"
 import { pick } from "lodash"
 import { useSession } from "next-auth/react"
 import { trpc } from '@/utils/trpc'
 import { workoutResultSchema, type WorkoutResultSchema } from "@/server/schema/workoutResult.schema"
+import { DatePicker } from '@/components/DatePicker'
 
 const sxTextField = { width: '100%', marginTop: '10px' }
 
@@ -127,16 +125,12 @@ const WorkoutResultPage = () => {
                 />
             }
 
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <MobileDatePicker
-                    value={when || data?.whenAdded}
-                    onChange={onWhenChange}
-                    label={t("Date")}
-                    inputFormat="dd.MM.yyyy"
-                    renderInput={(params: any) =>
-                        <TextField {...register('whenAdded')} focused sx={sxTextField} {...params} />}
-                />
-            </LocalizationProvider>
+            <DatePicker
+                when={when || data?.whenAdded}
+                onChange={onWhenChange}
+                sx={sxTextField}
+                register={register('whenAdded')}
+            />
 
             <TextField
                 variant="outlined"

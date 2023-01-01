@@ -45,10 +45,8 @@ const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProduct
         setValue,
     } = useForm<CreateProductSchema>({ resolver: zodResolver(createProductSchema) })
 
-    const onSubmit = async (newProduct: CreateProductSchema) => {
-        console.log({ newProduct })
+    const onSubmit = async (newProduct: CreateProductSchema) =>
         await createProduct.mutate(newProduct)
-    }
 
     useEffect(() => {
         setValue('barcode', barcode)

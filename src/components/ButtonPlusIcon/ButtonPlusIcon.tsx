@@ -13,14 +13,18 @@ const Button = styled.div`
 `
 
 interface ButtonPlusIconProps {
-    click?: () => void
-    size?: "small" | "medium" | "large" | undefined
+    onClick: () => void
+    size?: "small" | "medium" | "large"
     icon?: ReactNode
 }
 
-const ButtonPlusIcon = ({ click, icon, size = 'medium' }: ButtonPlusIconProps) => {
+const ButtonPlusIcon = ({
+    onClick,
+    icon,
+    size = 'medium',
+}: ButtonPlusIconProps) => {
     return (
-        <Button onClick={click} data-testid="ButtonPlusIcon">
+        <Button onClick={onClick}>
             <Fab size={size} color="primary" aria-label="add">
                 {icon || <AddIcon />}
             </Fab>
