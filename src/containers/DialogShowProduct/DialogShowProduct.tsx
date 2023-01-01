@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import styled from 'styled-components'
-import SlideUp from '../../transition/SlideUp';
+import SlideUp from '@/transition/SlideUp';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { omit } from 'lodash';
 import useTranslation from 'next-translate/useTranslation';

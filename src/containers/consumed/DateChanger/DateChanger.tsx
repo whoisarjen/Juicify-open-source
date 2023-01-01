@@ -9,7 +9,7 @@ import { useState } from "react";
 import CalendarPicker from '@mui/lab/CalendarPicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import SlideUp from '../../../transition/SlideUp';
+import SlideUp from '@/transition/SlideUp';
 
 const DateChanger = ({ where = 'consumed' }: { where?: string }) => {
     const router = useRouter()

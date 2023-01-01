@@ -1,6 +1,6 @@
 import Dialog from '@mui/material/Dialog';
 import styled from 'styled-components'
-import SlideUp from '../../transition/SlideUp';
+import SlideUp from '@/transition/SlideUp';
 import Autocomplete from '@mui/material/Autocomplete';
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle';
 import { useState, ReactNode, Fragment, useMemo } from 'react';

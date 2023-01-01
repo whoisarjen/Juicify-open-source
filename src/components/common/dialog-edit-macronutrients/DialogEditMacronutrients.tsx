@@ -6,7 +6,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
-import SlideUp from '../../../transition/SlideUp';
+import SlideUp from '@/transition/SlideUp';
 import { useDialogEditMacronutrientsProps } from './useDialogEditMacronutrients';
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm';
 

@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogActions, Button } from "@mui/material"
 import InputAdornment from '@mui/material/InputAdornment';
 import useTranslation from "next-translate/useTranslation"
-import SlideUp from "transition/SlideUp"
+import SlideUp from '@/transition/SlideUp'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import TextField from '@mui/material/TextField';

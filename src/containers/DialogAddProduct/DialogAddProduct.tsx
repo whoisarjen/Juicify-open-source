@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import SlideUp from "../../transition/SlideUp";
+import SlideUp from "@/transition/SlideUp";
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import useTranslation from 'next-translate/useTranslation';
 import { setIsDialogAddProduct, setMealToAdd } from '@/redux/features/dialogAddProduct.slice';

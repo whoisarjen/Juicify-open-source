@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import styled from 'styled-components'
-import SlideUp from '../../transition/SlideUp';
+import SlideUp from '@/transition/SlideUp';
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle';
 import useTranslation from 'next-translate/useTranslation';
 import BoxAddProduct from './BoxAddProduct/BoxAddProduct';

@@ -28,6 +28,7 @@
       "@/utils/*": ["src/utils/*"],
       "@/env/*": ["src/env/*"],
       "@/server/*": ["src/server/*"],
+      "@/transition/*": ["src/transition/*"],
     }
   },
   "include": [
