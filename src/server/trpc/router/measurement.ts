@@ -79,23 +79,20 @@ export const measurementRouter = router({
                 }
             })
         }),
-    // delete: protectedProcedure
-    //     .input(
-    //         z.object({
-    //             id: z.number(),
-    //         })
-    //     )
-    //     .mutation(async ({ ctx, input: { id } }) => {
-    //         return await ctx.prisma.measurement.update({
-    //             data: {
-    //                 isDeleted: true,
-    //             },
-    //             where: {
-    //                 id_userId: {
-    //                     id,
-    //                     userId: ctx.session.user.id,
-    //                 }
-    //             }
-    //         })
-    //     }),
+    delete: protectedProcedure
+        .input(
+            z.object({
+                id: z.number(),
+            })
+        )
+        .mutation(async ({ ctx, input: { id } }) => {
+            return await ctx.prisma.measurement.delete({
+                where: {
+                    id_userId: {
+                        id,
+                        userId: ctx.session.user.id,
+                    }
+                }
+            })
+        }),
 })

@@ -1,5 +1,5 @@
 import useTranslation from "next-translate/useTranslation"
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Dialog from '@mui/material/Dialog'
@@ -9,39 +9,35 @@ import DialogTitle from '@mui/material/DialogTitle'
 import ButtonPlusIcon from "@/components/ButtonPlusIcon/ButtonPlusIcon";
 import { DatePicker } from '@/components/DatePicker'
 import moment from 'moment'
-import { type CreateMeasurementSchema, createMeasurementSchema } from "@/server/schema/measurement.schema"
+import {
+    measurementSchema,
+    type MeasurementSchema,
+    createMeasurementSchema,
+    type CreateMeasurementSchema,
+} from "@/server/schema/measurement.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import InputAdornment from '@mui/material/InputAdornment';
 import { trpc } from "@/utils/trpc"
-import { sortBy } from 'lodash'
+import { orderBy } from 'lodash'
 import { useSession } from "next-auth/react"
+import DialogConfirm from "@/components/DialogConfirm/DialogConfirm"
 
-export const DialogMeasurement = () => {
+interface DialogMeasurementProps {
+    measurement: Measurement | null
+    defaultWeight?: number
+}
+
+const today = moment().format('YYYY-MM-DD')
+
+export const DialogMeasurement = ({
+    measurement,
+    defaultWeight = 0,
+}: DialogMeasurementProps) => {
     const [whenAdded, setWhenAdded] = useState(moment().toDate())
     const [open, setOpen] = useState(false)
     const { t } = useTranslation('home')
     const { data: sessionData } = useSession()
-
-    const utils = trpc.useContext()
-    const username = sessionData?.user?.username || ''
-
-    // TODO remove option
-    // TODO update option
-
-    const createMeasurement = trpc.measurement.create.useMutation({
-        onSuccess(data, variables, context) {
-            handleClose()
-
-            // TODO check if newer on today day
-
-            utils
-                .measurement
-                .getAll
-                .setData({ username }, currentData =>
-                    sortBy([...(currentData || []), data], ['id', 'whenAdded']))
-        },
-    })
 
     const {
         register,
@@ -50,7 +46,12 @@ export const DialogMeasurement = () => {
         control,
         reset,
         setValue
-    } = useForm<CreateMeasurementSchema>({ resolver: zodResolver(createMeasurementSchema) })
+    } = useForm<CreateMeasurementSchema | MeasurementSchema>({
+        resolver: zodResolver(measurement
+            ? measurementSchema
+            : createMeasurementSchema
+        )
+    })
 
     const handleClickOpen = () => {
         setOpen(true)
@@ -58,22 +59,137 @@ export const DialogMeasurement = () => {
 
     const handleClose = () => {
         setOpen(false)
+        reset({ whenAdded, weight: defaultWeight })
     }
+
+    const utils = trpc.useContext()
+    const username = sessionData?.user?.username || ''
+
+    const createMeasurement = trpc.measurement.create.useMutation({
+        onSuccess(data, variables, context) {
+            handleClose()
+
+            utils
+                .measurement
+                .getDay
+                .setData({ username, whenAdded: today }, currentData => {
+
+                    if (moment(data.whenAdded).format('YYYY-MM-DD') === today) {
+                        if (!currentData) {
+                            return data
+                        }
+
+                        if (currentData.whenAdded < data.whenAdded) {
+                            return data
+                        }
+                    }
+
+                    return currentData
+                })
+
+            utils
+                .measurement
+                .getAll
+                .setData({ username }, currentData =>
+                    orderBy(
+                        [...(currentData || []), data],
+                        ['id', 'whenAdded'],
+                        ['desc', 'desc']
+                    )
+                )
+        },
+    })
+
+    const updateMeasurement = trpc.measurement.update.useMutation({
+        onSuccess(data, variables, context) {
+            handleClose()
+
+            utils
+                .measurement
+                .getDay
+                .setData({ username, whenAdded: today }, currentData => {
+                    if (currentData?.id === data.id) {
+                        return {
+                            ...currentData,
+                            data,
+                        }
+                    }
+
+                    return currentData
+                })
+
+            utils
+                .measurement
+                .getAll
+                .setData({ username }, currentData =>
+                    orderBy(
+                        [...(currentData || []).filter(measurement => measurement.id !== variables.id), data],
+                        ['id', 'whenAdded'],
+                        ['desc', 'desc']
+                    )
+                )
+        },
+    })
+
+    const deleteMeasurement = trpc.measurement.delete.useMutation({
+        onSuccess(data, variables, context) {
+            handleClose()
+
+            utils
+                .measurement
+                .getDay
+                .setData({ username, whenAdded: today }, currentData => {
+                    if (currentData?.id === data.id) {
+                        return null
+                    }
+
+                    return currentData
+                })
+
+            utils
+                .measurement
+                .getAll
+                .setData({ username }, currentData =>
+                    orderBy(
+                        (currentData || []).filter(measurement => measurement.id !== variables.id),
+                        ['id', 'whenAdded'],
+                        ['desc', 'desc']
+                    )
+                )
+        },
+    })
 
     const onWhenChange = (newWhenAdded: Date) => {
         setWhenAdded(newWhenAdded)
         setValue('whenAdded', moment(newWhenAdded).toDate())
     }
 
-    const handleCreateMeasurement = async (newMeasurement: CreateMeasurementSchema) =>
-        await createMeasurement.mutateAsync(newMeasurement)
+    const handleSubmitProxy = () => {
+        if (measurement) {
+            return handleSubmit(async (newMeasurement) =>
+                await updateMeasurement.mutateAsync(newMeasurement as unknown as MeasurementSchema))
+        }
+
+        return handleSubmit(async (newMeasurement) =>
+            await createMeasurement.mutateAsync(newMeasurement))
+    }
 
     useEffect(() => {
-        setValue('whenAdded', whenAdded)
-    }, [setValue, whenAdded])
+        if (!measurement) {
+            reset({ whenAdded })
+            return
+        }
+
+        reset({
+            ...measurement,
+            weight: Number(measurement.weight),
+        })
+        handleClickOpen()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [measurement?.id, reset])
 
     return (
-        <form onSubmit={handleSubmit(handleCreateMeasurement)}>
+        <form onSubmit={handleSubmitProxy()}>
             <ButtonPlusIcon onClick={handleClickOpen} />
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>{t('home:ADD_WEIGHT')}</DialogTitle>
@@ -90,6 +206,7 @@ export const DialogMeasurement = () => {
                         margin="dense"
                         label="Weight"
                         variant="outlined"
+                        defaultValue={defaultWeight}
                         {...register('weight')}
                         error={!!errors.weight}
                         helperText={errors.weight?.message && t(`notify:${errors.weight.message || ''}`)}
@@ -100,7 +217,12 @@ export const DialogMeasurement = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>{t('deny')}</Button>
-                    <Button onClick={handleSubmit(handleCreateMeasurement)}>{t('accept')}</Button>
+                    {measurement &&
+                        <DialogConfirm onConfirmed={async () => await deleteMeasurement.mutateAsync({ id: measurement.id })}>
+                            <Button color="error">{t('remove')}</Button>
+                        </DialogConfirm>
+                    }
+                    <Button onClick={handleSubmitProxy()}>{t('accept')}</Button>
                 </DialogActions>
             </Dialog>
         </form>

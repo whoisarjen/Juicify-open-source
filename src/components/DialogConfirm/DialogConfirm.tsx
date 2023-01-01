@@ -10,13 +10,13 @@ import { useState } from 'react'
 
 interface DialogConfirmProps {
     children: any
-    confirmed: () => void
+    onConfirmed: () => void
     isDisabled?: boolean
 }
 
 const DialogConfirm = ({
     children,
-    confirmed,
+    onConfirmed,
     isDisabled,
 }: DialogConfirmProps) => {
     const [isDialog, setIsDialog] = useState(false)
@@ -28,7 +28,7 @@ const DialogConfirm = ({
     }
 
     const handleConfimed = (event: any) => {
-        confirmed()
+        onConfirmed()
         handleSetIsDialog(event, false)
     }
 

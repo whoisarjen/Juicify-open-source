@@ -31,7 +31,7 @@ const Description = styled.div`
 
 const MeasurementsPage = () => {
     const { t } = useTranslation('home')
-    const [updateMeasurements, setUpdateMeasurements] = useState<null | Measurement>(null)
+    const [selectedMeasurement, setSelectedMeasurement] = useState<null | Measurement>(null)
 
     const { data: sessionData } = useSession()
 
@@ -50,13 +50,16 @@ const MeasurementsPage = () => {
             <Description>
                 {t('Add weight description')}
             </Description>
-            <DialogMeasurement />
+            <DialogMeasurement
+                measurement={selectedMeasurement}
+                defaultWeight={measurements[0]?.weight}
+            />
             <Timeline position="alternate">
                 {measurements.map(measurement =>
                     <TimelineItem key={measurement.id}>
                         <TimelineOppositeContent
                             color="text.secondary"
-                            onClick={() => setUpdateMeasurements(measurement)}
+                            onClick={() => setSelectedMeasurement(measurement)}
                         >
                             {moment(measurement.whenAdded).format('DD.MM.YYYY HH:MM')}
                         </TimelineOppositeContent>
@@ -66,17 +69,17 @@ const MeasurementsPage = () => {
                         </TimelineSeparator>
                         <TimelineContent
                             style={{ fontWeight: 'bold' }}
-                            onClick={() => setUpdateMeasurements(measurement)}
+                            onClick={() => setSelectedMeasurement(measurement)}
                         >
                             {Math.round(Number(measurement.weight) * 10) / 10}kg
                         </TimelineContent>
                     </TimelineItem>
                 )}
             </Timeline>
-            <MeasurementsDialogUpdateWeight
-                measurement={updateMeasurements}
-                onClose={() => setUpdateMeasurements(null)}
-            />
+            {/* <MeasurementsDialogUpdateWeight
+                measurement={selectedMeasurement}
+                onClose={() => setSelectedMeasurement(null)}
+            /> */}
         </Content>
     )
 }
