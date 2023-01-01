@@ -20,7 +20,7 @@ declare global {
 
     export type WorkoutResultExerciseResult = WorkoutResultExerciseResultSchema
     export type WorkoutResultExercise = WorkoutResultExerciseSchema
-    export type WorkoutResult<T = WorkoutResultPrisma> = WorkoutResultSchema & T
+    export type WorkoutResult<T = WorkoutResultPrisma> = (WorkoutResultSchema & T)
 
     export type Product<T = ProductPrisma> = T
 

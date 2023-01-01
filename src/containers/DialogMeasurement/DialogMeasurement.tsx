@@ -22,6 +22,7 @@ import { trpc } from "@/utils/trpc"
 import { orderBy } from 'lodash'
 import { useSession } from "next-auth/react"
 import DialogConfirm from "@/components/DialogConfirm/DialogConfirm"
+import { updateArray } from '@/utils/global.utils'
 
 interface DialogMeasurementProps {
     measurement: Measurement | null
@@ -73,7 +74,6 @@ export const DialogMeasurement = ({
                 .measurement
                 .getDay
                 .setData({ username, whenAdded: today }, currentData => {
-
                     if (moment(data.whenAdded).format('YYYY-MM-DD') === today) {
                         if (!currentData) {
                             return data
@@ -123,7 +123,7 @@ export const DialogMeasurement = ({
                 .getAll
                 .setData({ username }, currentData =>
                     orderBy(
-                        [...(currentData || []).filter(measurement => measurement.id !== variables.id), data],
+                        updateArray(currentData, data),
                         ['id', 'whenAdded'],
                         ['desc', 'desc']
                     )

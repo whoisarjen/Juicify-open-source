@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { trpc } from "@/utils/trpc";
 import { useSession } from "next-auth/react";
 import moment from "moment";
+import { updateArray } from '@/utils/global.utils'
 
 const whenAdded = moment().format('YYYY-MM-DD')
 
@@ -43,28 +44,12 @@ const MeasurementsDialogUpdateWeight = ({
             utils
                 .measurement
                 .getDay
-                .setData({ username, whenAdded }, currentData => {
-                    if (!currentData || data.id === currentData.id) {
-                        return data
-                    }
-
-                    return currentData
-                })
+                .setData({ username, whenAdded }, currentData => updateArray(currentData, data))
 
             utils
                 .measurement
                 .getAll
-                .setData({ username }, currentData => currentData
-                    ?.map(measurement => {
-                        if (measurement.id === data.id) {
-                            return {
-                                ...measurement,
-                                ...data,
-                            }
-                        }
-
-                        return measurement
-                    }))
+                .setData({ username }, currentData => updateArray(currentData, data))
         },
     })
 

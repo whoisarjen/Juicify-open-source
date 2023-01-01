@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react"
 import { setIsDialogEditConsumed } from "@/redux/features/dialogEditConsumed.slice"
 import { trpc } from "@/utils/trpc"
 import { useAppDispatch } from "./useRedux"
+import { updateArray } from '@/utils/global.utils'
 
 const useConsumed = (overwriteWhenAdded?: string, overwriteUsername?: string) => {
     const router = useRouter()
@@ -31,17 +32,7 @@ const useConsumed = (overwriteWhenAdded?: string, overwriteUsername?: string) =>
             utils
                 .consumed
                 .getDay
-                .setData({ username, whenAdded }, currentData => currentData
-                    ?.map(consumed => {
-                        if (consumed.id === data.id) {
-                            return {
-                                ...consumed,
-                                ...data,
-                            }
-                        }
-
-                        return consumed
-                    }))
+                .setData({ username, whenAdded }, currentData => updateArray<Consumed>(currentData, data))
         },
     })
 

@@ -14,9 +14,12 @@ import { useSession } from "next-auth/react"
 import { trpc } from '@/utils/trpc'
 import { workoutResultSchema, type WorkoutResultSchema } from "@/server/schema/workoutResult.schema"
 import { DatePicker } from '@/components/DatePicker'
+import { updateArray } from "@/utils/global.utils"
 import moment from 'moment'
 
 const sxTextField = { width: '100%', marginTop: '10px' }
+
+const today = moment().format('YYYY-MM-DD')
 
 const WorkoutResultPage = () => {
     const router: any = useRouter()
@@ -25,13 +28,46 @@ const WorkoutResultPage = () => {
     const [when, setWhen] = useState<null | Date>(null)
     const [previousExercises, setPreviousExercises] = useState([])
 
+    const id = parseInt(router.query.id || 0)
+    const username = router.query.login || ''
+
+    const utils = trpc.useContext()
+
     const deleteWorkoutResult = trpc.workoutResult.delete.useMutation({
         onSuccess: () => {
+            utils
+                .workoutResult
+                .getDay
+                .setData({ username, whenAdded: today }, currentData =>
+                    (currentData || []).filter(workoutResult => workoutResult.id !== id)
+                )
+
+            utils
+                .workoutResult
+                .getAll
+                .setData({ username }, currentData =>
+                    [...(currentData || []).filter(workoutPlan => workoutPlan.id !== id)]
+                )
+
             router.push(`/${router.query?.login}/workout/results`)
         }
     })
 
-    const updateWorkoutResult = trpc.workoutResult.update.useMutation()
+    const updateWorkoutResult = trpc.workoutResult.update.useMutation({
+        onSuccess: (data) => {
+            utils
+                .workoutResult
+                .getDay
+                .setData({ username, whenAdded: today }, currentData => updateArray<WorkoutResult>(currentData, data))
+
+            utils
+                .workoutResult
+                .getAll
+                .setData({ username }, currentData => updateArray<WorkoutResult>(currentData, data))
+
+            router.push(`/${router.query?.login}/workout/results`)
+        }
+    })
 
     const {
         data,
@@ -39,8 +75,8 @@ const WorkoutResultPage = () => {
     } = trpc
         .workoutResult
         .get
-        .useQuery({ id: parseInt(router.query.id), username: router.query.login }, {
-            enabled: !!(router.query.id && router.query.login),
+        .useQuery({ id, username }, {
+            enabled: !!id && !!username,
             onSuccess(data) {
                 reset(data)
             },
@@ -73,7 +109,7 @@ const WorkoutResultPage = () => {
 
     useEffect(() => {
         const handleSubmitProxy = () => handleSubmit(handleOnSave)()
-    
+
         window.addEventListener('blur', handleSubmitProxy)
 
         return () => {
@@ -98,8 +134,8 @@ const WorkoutResultPage = () => {
                 isDisabled={isLoading}
                 isLoading={isLoading}
                 onSave={handleSubmit(handleOnSaveWithRouter)}
-                onDelete={() => deleteWorkoutResult.mutate({ id: parseInt(router.query.id) })}
-                onArrowBack={() => router.push(`/${router.query?.login}/workout/results`)}
+                onDelete={() => deleteWorkoutResult.mutate({ id })}
+                onArrowBack={() => router.push(`/${username}/workout/results`)}
             />
 
             <TextField
@@ -114,23 +150,12 @@ const WorkoutResultPage = () => {
                 helperText={errors.name?.message && t(`notify:${errors.name.message || ''}`)}
             />
 
-            {data?.workoutPlan?.description &&
-                <TextField
-                    variant="outlined"
-                    label={t("Description of workout plan")}
-                    type="text"
-                    sx={sxTextField}
-                    disabled
-                    multiline
-                    defaultValue={data.workoutPlan.description}
-                />
-            }
-
             <DatePicker
                 when={when || data?.whenAdded || moment().toDate()}
                 onChange={onWhenChange}
                 sx={sxTextField}
                 register={register('whenAdded')}
+                focused
             />
 
             <TextField
@@ -159,6 +184,18 @@ const WorkoutResultPage = () => {
                 helperText={errors.note?.message && t(`notify:${errors.note.message || ''}`)}
             />
 
+            {data?.workoutPlan?.description &&
+                <TextField
+                    variant="outlined"
+                    label={t("Description of workout plan")}
+                    type="text"
+                    sx={sxTextField}
+                    disabled
+                    multiline
+                    defaultValue={data.workoutPlan.description}
+                />
+            }
+
             {fields.map((exercise, index: number) =>
                 <div style={fields.length == (index + 1) ? { marginBottom: '100px' } : {}} key={exercise.uuid}>
                     <BoxResult
@@ -172,7 +209,7 @@ const WorkoutResultPage = () => {
                 </div>
             )}
 
-            {sessionData?.user?.username == router?.query?.login &&
+            {sessionData?.user?.username == username &&
                 <ButtonMoreOptionsWorkoutResult
                     exercises={fields as unknown as WorkoutResultExercise[]}
                     setExercises={exercises => append(exercises.map(exercise => ({ ...pick(exercise, ['id', 'name']), results: [] })))}

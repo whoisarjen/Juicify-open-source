@@ -16,6 +16,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { useSession } from 'next-auth/react'
 import { trpc } from '@/utils/trpc'
 import { type WorkoutPlanSchema, workoutPlanSchema, type WorkoutPlanExerciseSchema } from '@/server/schema/workoutPlan.schema'
+import { updateArray } from '@/utils/global.utils'
 
 const WorkoutPlan = () => {
     const router: any = useRouter()
@@ -54,9 +55,8 @@ const WorkoutPlan = () => {
                 .setData({ id, username }, currentData => {
                     if (currentData?.id === id && sessionData?.user) {
                         return {
-                            ...data,
-                            exercises: data.exercises as unknown as WorkoutPlanExerciseSchema[],
-                            user: sessionData.user,
+                            ...data as unknown as WorkoutPlan,
+                            user: sessionData.user as unknown as User,
                         }
                     }
 
@@ -66,15 +66,7 @@ const WorkoutPlan = () => {
             utils
                 .workoutPlan
                 .getAll
-                .setData({ username }, currentData =>
-                    [
-                        ...(currentData || []).filter(workoutPlan => workoutPlan.id !== id),
-                        {
-                            ...data,
-                            exercises: data.exercises as unknown as WorkoutPlanExerciseSchema[]
-                        }
-                    ]
-                )
+                .setData({ username }, currentData => updateArray<WorkoutPlan>(currentData, data))
         },
     })
 

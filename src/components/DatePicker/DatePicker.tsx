@@ -10,6 +10,7 @@ interface DatePickerProps {
     register: object
     when: Date
     onChange: (when: Date) => void
+    focused?: boolean
 }
 
 export const DatePicker = ({
@@ -17,6 +18,7 @@ export const DatePicker = ({
     register,
     when,
     onChange,
+    focused = false,
 }: DatePickerProps) => {
     const { t } = useTranslation('home')
 
@@ -30,6 +32,7 @@ export const DatePicker = ({
                     <TextField
                         sx={sx}
                         fullWidth
+                        focused={focused}
                         {...params}
                         {...register}
                     />
