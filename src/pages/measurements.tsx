@@ -51,7 +51,7 @@ const MeasurementsPage = () => {
             </Description>
             <DialogMeasurement
                 measurement={selectedMeasurement}
-                defaultWeight={measurements[0]?.weight}
+                defaultWeight={Number(measurements[0]?.weight)}
             />
             <Timeline position="alternate">
                 {measurements.map(measurement =>
