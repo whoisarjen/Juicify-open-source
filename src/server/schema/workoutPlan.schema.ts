@@ -16,7 +16,7 @@ export type CreateWorkoutPlanSchema = z.infer<typeof createWorkoutPlanSchema>
 export const workoutPlanSchema = z.object({
     id: z.number(),
     description: z.string().max(500).nullable(),
-    burnedCalories: z.number().int().min(0).max(5000),
+    burnedCalories: z.preprocess(val => Number(val), z.number().min(0).max(9999)).optional().default(0),
     exercises: z.array(workoutPlanExerciseSchema)
         .optional()
         .default([])

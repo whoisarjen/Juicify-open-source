@@ -8,8 +8,8 @@ import type {
     Measurement as MeasurementPrisma,
 } from "@prisma/client"
 
-import type { WorkoutPlanSchema, WorkoutPlanExerciseSchema } from 'server/schema/workoutPlan.schema'
-import type { WorkoutResultExerciseResultSchema, WorkoutResultExerciseSchema, WorkoutResultSchema } from 'server/schema/workoutResult.schema'
+import type { WorkoutPlanSchema, WorkoutPlanExerciseSchema } from '@/server/schema/workoutPlan.schema'
+import type { WorkoutResultExerciseResultSchema, WorkoutResultExerciseSchema, WorkoutResultSchema } from '@/server/schema/workoutResult.schema'
 
 declare global {
     export type User<T = UserPrisma> = T

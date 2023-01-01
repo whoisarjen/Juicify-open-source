@@ -15,7 +15,7 @@ import DialogAddExercises from '@/containers/DialogAddExercises/DialogAddExercis
 import InputAdornment from '@mui/material/InputAdornment';
 import { useSession } from 'next-auth/react'
 import { trpc } from '@/utils/trpc'
-import { type WorkoutPlanSchema, workoutPlanSchema } from 'server/schema/workoutPlan.schema'
+import { type WorkoutPlanSchema, workoutPlanSchema } from '@/server/schema/workoutPlan.schema'
 
 const WorkoutPlan = () => {
     const router: any = useRouter()
