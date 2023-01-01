@@ -9,7 +9,6 @@ import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import Header from "@/components/Header/Header"
-import MeasurementsDialogUpdateWeight from "@/containers/measurements/MeasurementsDialogUpdateWeight/MeasurementsDialogUpdateWeight"
 import moment from 'moment'
 import { useSession } from "next-auth/react";
 import { trpc } from "@/utils/trpc";
@@ -76,10 +75,6 @@ const MeasurementsPage = () => {
                     </TimelineItem>
                 )}
             </Timeline>
-            {/* <MeasurementsDialogUpdateWeight
-                measurement={selectedMeasurement}
-                onClose={() => setSelectedMeasurement(null)}
-            /> */}
         </Content>
     )
 }
