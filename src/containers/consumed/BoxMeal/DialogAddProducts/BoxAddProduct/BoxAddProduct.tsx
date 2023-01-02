@@ -1,16 +1,11 @@
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
-import Favorite from '@mui/icons-material/Favorite';
-import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 import styled from 'styled-components';
 import useTranslation from 'next-translate/useTranslation';
 import { useState } from 'react';
-import { useTheme } from '../../../hooks/useTheme';
-import { useAppDispatch } from '@/hooks/useRedux';
-import { addToChecked, changeChecked, removeFromChecked } from '@/redux/features/dialogAddProducts.slice';
-import { setIsDialogShowProduct, setSelectedProduct } from '@/redux/features/dialogShowProduct.slice';
+import { useTheme } from '@/hooks/useTheme';
 import { getCalories } from '@/utils/consumed.utils';
 
 const Grid = styled.div`
@@ -36,12 +31,6 @@ const Description = styled.div`
     margin-bottom: auto;
 `
 
-const Favourite = styled.div`
-    grid-column: 2;
-    grid-row: 1 / 3;
-    margin: auto;
-`
-
 const MoreInfo = styled.div`
     grid-column: 3;
     grid-row: 1 / 3;
@@ -61,38 +50,31 @@ const Submit = styled.div`
 `
 
 interface BoxProductProps {
-    product: Product
+    product: Product & { howMany?: number }
     isChecked: boolean
+    onCheckClick: () => void
+    onValueChange: (howMany: number | undefined) => void
 }
 
 const BoxAddProduct = ({
     product,
     isChecked,
+    onCheckClick,
+    onValueChange,
 }: BoxProductProps) => {
     const { t } = useTranslation('nutrition-diary');
-    const [checked, setChecked] = useState(isChecked);
-    const [value, setValue] = useState('1.0')
+    const [howMany, setHowMany] = useState<number | undefined>(product.howMany || 1.0)
     const { getTheme } = useTheme()
-    const dispatch = useAppDispatch()
 
-    const handleCheck = async () => {
-        if (checked) {
-            setChecked(false)
-            dispatch(removeFromChecked(product))
-        } else {
-            setChecked(true)
-            dispatch(addToChecked({ ...product, howMany: value }))
-        }
-    }
-
-    const handleValueChange = async (value: any) => {
-        setValue(value)
-        dispatch(changeChecked({ ...product, howMany: value }))
+    const handleHowManyChange = async (howMany: number | undefined) => {
+        setHowMany(howMany)
+        onValueChange(howMany)
     }
 
     const handleDialogShowProduct = () => {
-        dispatch(setSelectedProduct(product))
-        dispatch(setIsDialogShowProduct(true))
+        // TODO
+        // dispatch(setSelectedProduct(product))
+        // dispatch(setIsDialogShowProduct(true))
     }
 
     return (
@@ -110,12 +92,20 @@ const BoxAddProduct = ({
                 </IconButton>
             </MoreInfo>
             <Value>
-                <TextField type="number" value={value} onChange={(e) => handleValueChange(e.target.value)} inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }} />
+                <TextField
+                    type="number"
+                    value={howMany}
+                    onChange={(e) => handleHowManyChange(e.target.value ? Number(e.target.value) : undefined)}
+                    inputProps={{
+                        inputMode: 'numeric',
+                        pattern: '[0-9]*',
+                    }}
+                />
             </Value>
-            <Submit onChange={handleCheck}>
+            <Submit onChange={onCheckClick}>
                 <Checkbox
                     data-testid="checked"
-                    checked={checked}
+                    checked={isChecked}
                     inputProps={{ 'aria-label': 'controlled' }}
                 />
             </Submit>

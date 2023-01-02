@@ -1,7 +1,8 @@
 import { useState } from 'react'
 
 const LOCAL_CACHE_KEYS = {
-    CHECKED_EXERCISES: 'juicify_checked_exercises',
+    CHECKED_PRODUCTS: 'checked_products',
+    CHECKED_EXERCISES: 'checked_exercises',
 } as const
 
 const useCache = <T>(key: keyof typeof LOCAL_CACHE_KEYS, defaultValue?: T): [data: T, handleSetData: (data: T) => void] => {

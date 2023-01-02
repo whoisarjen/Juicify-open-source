@@ -3,10 +3,9 @@ import IconButton from "@mui/material/IconButton";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 import { useMemo } from "react";
-import { useAppDispatch } from "@/hooks/useRedux";
-import { setIsDialogAddProducts, setMealToAdd } from "@/redux/features/dialogAddProducts.slice";
 import BoxMealItem from "@/containers/consumed/BoxMeal/BoxMealItem/BoxMealItem";
 import { sumMacroFromConsumed } from "@/utils/consumed.utils";
+import DialogAddProducts from "./DialogAddProducts/DialogAddProducts";
 
 const Grid = styled.div`
     width: calc(100% - 24px);
@@ -44,8 +43,7 @@ interface BoxMealProps {
 }
 
 const BoxMeal = ({ index, meal, isOwner }: BoxMealProps) => {
-    const { t } = useTranslation('nutrition-diary');
-    const dispatch = useAppDispatch()
+    const { t } = useTranslation('nutrition-diary')
 
     const {
         proteins,
@@ -54,25 +52,21 @@ const BoxMeal = ({ index, meal, isOwner }: BoxMealProps) => {
         calories,
     } = useMemo(() => sumMacroFromConsumed(meal), [meal])
 
-    const handleDialogAddProducts = () => {
-        dispatch(setMealToAdd(index))
-        dispatch(setIsDialogAddProducts(true))
-    }
-
     return (
         <Grid>
             <Bolded>{t('Meal')} {index + 1}</Bolded>
             <AddButtonContainer>
                 {isOwner
                     ?
-                    <IconButton
-                        onClick={handleDialogAddProducts}
-                        sx={{ margin: 'auto' }}
-                        aria-label="Add"
-                        color="primary"
-                    >
-                        <AddIcon fontSize="small" />
-                    </IconButton>
+                    <DialogAddProducts mealToAdd={index}>
+                        <IconButton
+                            sx={{ margin: 'auto' }}
+                            aria-label="Add"
+                            color="primary"
+                        >
+                            <AddIcon fontSize="small" />
+                        </IconButton>
+                    </DialogAddProducts>
                     :
                     <div />
                 }
