@@ -10,7 +10,6 @@ import useTranslation from 'next-translate/useTranslation';
 import BoxAddProduct from './BoxAddProduct/BoxAddProduct';
 import { useRouter } from 'next/router';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { cleanChecked, setIsDialogAddProducts, setMealToAdd } from '@/redux/features/dialogAddProducts.slice';
 import ButtonCloseDialog from '@/components/ButtonCloseDialog/ButtonCloseDialog';
 import DialogCreateProduct from '@/containers/DialogCreateProduct/DialogCreateProduct';
 import TabsAddDialog from '@/components/TabsAddDialog/TabsAddDialog';

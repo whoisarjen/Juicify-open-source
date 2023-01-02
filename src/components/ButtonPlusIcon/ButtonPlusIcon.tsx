@@ -13,7 +13,7 @@ const Button = styled.div`
 `
 
 interface ButtonPlusIconProps {
-    onClick: () => void
+    onClick?: () => void
     size?: "small" | "medium" | "large"
     icon?: ReactNode
 }

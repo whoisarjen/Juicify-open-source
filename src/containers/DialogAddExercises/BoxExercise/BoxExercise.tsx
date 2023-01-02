@@ -26,7 +26,7 @@ const Name = styled.div`
 interface BoxExerciseProps {
     exercise: Exercise
     isChecked: boolean
-    onCheck: (state: boolean) => void
+    onCheck: (state: boolean, exercise: Exercise) => void
 }
 
 const BoxExercise = ({ exercise, isChecked, onCheck }: BoxExerciseProps) => {
@@ -38,7 +38,7 @@ const BoxExercise = ({ exercise, isChecked, onCheck }: BoxExerciseProps) => {
                 {exercise.name}
             </Name>
             <div />
-            <div onChange={() => onCheck(!isChecked)}>
+            <div onChange={() => onCheck(!isChecked, exercise)}>
                 <Checkbox
                     data-testid="checkBox"
                     checked={isChecked}

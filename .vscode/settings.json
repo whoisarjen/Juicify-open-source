@@ -1,5 +1,6 @@
 {
     "yaml.schemas": {
         "https://json.schemastore.org/github-workflow.json": "file:///c%3A/Users/Kamil/Documents/GitHub/Juicify/.github/workflows/deploy.yml"
-    }
+    },
+    "compile-hero.disable-compile-files-on-did-save-code": true
 }
