@@ -1,11 +1,11 @@
 import { useAppDispatch } from "@/hooks/useRedux";
-import { setIsDialogEditConsumed, setSelectedConsumed } from "@/redux/features/dialogEditConsumed.slice";
 import { getCalories, multipleProductByHowMany } from "@/utils/consumed.utils";
 import EditIcon from "@mui/icons-material/Edit";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 import IconButton from '@mui/material/IconButton';
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
+import DialogEditConsumed from '@/containers/DialogEditConsumed/DialogEditConsumed'
 
 const Product = styled.div`
     width: 100%;
@@ -39,29 +39,23 @@ interface BoxMealItemProps {
 
 const BoxMealItem = ({ consumed, isOwner }: BoxMealItemProps) => {
     const { t } = useTranslation('nutrition-diary')
-    const dispatch = useAppDispatch()
-
     const { product } = multipleProductByHowMany(consumed)
-
-    const handleDialogEditConsumed = () => {
-        dispatch(setSelectedConsumed(consumed))
-        dispatch(setIsDialogEditConsumed(true))
-    }
 
     return (
         <Product>
-
             <EditButtonContainer>
                 {isOwner
-                    ? <IconButton aria-label="edit" onClick={handleDialogEditConsumed}>
-                        <EditIcon fontSize="small" />
-                    </IconButton>
+                    ?
+                    <DialogEditConsumed consumed={consumed}>
+                        <IconButton aria-label="edit">
+                            <EditIcon fontSize="small" />
+                        </IconButton>
+                    </DialogEditConsumed>
                     : <IconButton aria-label="edit">
                         <FastfoodIcon fontSize="small" />
                     </IconButton>
                 }
             </EditButtonContainer>
-
             <ProductContent>
                 <div>{product.name}</div>
                 <div>{getCalories(product)}kcal</div>
@@ -72,7 +66,6 @@ const BoxMealItem = ({ consumed, isOwner }: BoxMealItemProps) => {
                     <div>{Number(consumed.howMany) * 100}g/ml</div>
                 </>
             </ProductContent>
-
         </Product>
     )
 }

@@ -74,7 +74,7 @@ const BaseDialogEditMacronutrients = ({ isOwnMacro, close, t, proteins, setProte
             </DialogContent>
             <DialogActions>
                 <Button onClick={close}>{t('CLOSE')}</Button>
-                <DialogConfirm confirmed={handleConfirm}>
+                <DialogConfirm onConfirmed={handleConfirm}>
                     <Button onClick={() => setIsDialog(true)}>{t('CHANGE_ALL_DAYS')}</Button>
                 </DialogConfirm>
             </DialogActions>

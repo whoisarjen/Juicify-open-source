@@ -82,6 +82,7 @@ const BoxResult = ({
         }
         setRepsOptions(reps)
         loadWeight(value.weight.toString())
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
@@ -131,7 +132,7 @@ const BoxResult = ({
                 : <Box onClick={() => setOpen(true)}>
                     <div>
                         {isOwner &&
-                            <DialogConfirm confirmed={deleteResult}>
+                            <DialogConfirm onConfirmed={deleteResult}>
                                 <IconButton aria-label="delete">
                                     <DeleteIcon sx={{ fontSize: 20 }} />
                                 </IconButton>

@@ -101,7 +101,7 @@ const BaseBoxExercise = ({
             <Name>
                 <div>
                     {isOwner &&
-                        <DialogConfirm confirmed={deleteExerciseWithIndex}>
+                        <DialogConfirm onConfirmed={deleteExerciseWithIndex}>
                             <IconButton color="primary" component="span">
                                 <DeleteIcon sx={{ fontSize: 20 }} />
                             </IconButton>

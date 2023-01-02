@@ -5,7 +5,6 @@ import SidebarLeft from './SidebarLeft'
 import SidebarRight from './SidebarRight'
 import SidebarRightLoggouted from './SidebarRightLoggouted'
 import styled from 'styled-components'
-import DialogEditConsumed from '@/containers/DialogEditConsumed/DialogEditConsumed'
 import moment from 'moment'
 import { useSession } from 'next-auth/react'
 
@@ -92,28 +91,25 @@ const Layout = ({ children }: { children: any }) => {
 
     const isLoggoutedGrid = !data || notRequiredAuth.filter(route => route == router.pathname).length || router.pathname == '/'
 
+    if (!isAllowedLocation) {
+        return null
+    }
+
     return (
         <main>
-            {isAllowedLocation &&
-                <>
-                    {router.pathname.includes('blog') || router.pathname == '/'
-                        ? <>{children}</>
-                        : <Grid>
-                            <SidebarLeft />
-                            <Content>{children}</Content>
-                            {
-                                isLoggoutedGrid
-                                    ? <SidebarRightLoggouted />
-                                    : <SidebarRight />
-                            }
-                        </Grid>
+            {router.pathname.includes('blog') || router.pathname == '/'
+                ? <>{children}</>
+                : <Grid>
+                    <SidebarLeft />
+                    <Content>{children}</Content>
+                    {
+                        isLoggoutedGrid
+                            ? <SidebarRightLoggouted />
+                            : <SidebarRight />
                     }
-                    <Footer />
-                    {data &&
-                        <DialogEditConsumed />
-                    }
-                </>
+                </Grid>
             }
+            <Footer />
         </main>
     )
 }

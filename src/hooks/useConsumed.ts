@@ -1,7 +1,5 @@
 import { useRouter } from "next/router"
 import { useSession } from "next-auth/react"
-
-import { setIsDialogEditConsumed } from "@/redux/features/dialogEditConsumed.slice"
 import { trpc } from "@/utils/trpc"
 import { useAppDispatch } from "./useRedux"
 import { updateArray } from '@/utils/global.utils'

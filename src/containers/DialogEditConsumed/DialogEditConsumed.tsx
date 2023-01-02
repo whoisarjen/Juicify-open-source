@@ -10,18 +10,25 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import useTranslation from 'next-translate/useTranslation';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-
-import { setIsDialogEditConsumed } from '@/redux/features/dialogEditConsumed.slice';
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm';
-import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { type ConsumedSchema, consumedSchema } from '@/server/schema/consumed.schema';
-import useConsumed from '@/hooks/useConsumed';
+import useConsumed from '@/hooks/useConsumed'
+import { useState, type ReactNode } from 'react'
+import { useSession } from 'next-auth/react';
 
-const DialogEditConsumed = () => {
-    const dispatch = useAppDispatch()
+interface DialogEditConsumedProps {
+    children: ReactNode
+    consumed: Consumed
+}
+
+const DialogEditConsumed = ({
+    children,
+    consumed,
+}: DialogEditConsumedProps) => {
     const { t } = useTranslation('nutrition-diary')
-    const { isDialogEditConsumed, selectedConsumed } = useAppSelector(state => state.dialogEditConsumed)
-    const { updateConsumed, deleteConsumed, user } = useConsumed()
+    const { updateConsumed, deleteConsumed } = useConsumed()
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const { data: sessionData } = useSession()
 
     const {
         register,
@@ -31,16 +38,20 @@ const DialogEditConsumed = () => {
     } = useForm<ConsumedSchema>({ resolver: zodResolver(consumedSchema) })
 
     const handleUpdateConsumed = async (newConsumed: ConsumedSchema) =>
-        await updateConsumed.mutateAsync({ ...selectedConsumed, ...newConsumed })
+        await updateConsumed.mutateAsync({ ...consumed, ...newConsumed })
 
     useEffect(() => {
-        reset(selectedConsumed)
-    }, [reset, selectedConsumed])
+        reset({
+            ...consumed,
+            howMany: Number(consumed.howMany),
+        })
+    }, [reset, consumed])
 
     return (
         <form onSubmit={handleSubmit(handleUpdateConsumed)}>
+            <div onClick={() => setIsDialogOpen(true)}>{children}</div>
             <Dialog
-                open={isDialogEditConsumed}
+                open={isDialogOpen}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
@@ -52,10 +63,10 @@ const DialogEditConsumed = () => {
                         sx={{ width: '100%' }}
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        defaultValue={selectedConsumed.meal || 0}
+                        defaultValue={consumed.meal || 0}
                         {...register('meal')}
                     >
-                        {Array.from(Array(user?.numberOfMeals).keys()).map((x) =>
+                        {Array.from(Array(sessionData?.user?.numberOfMeals).keys()).map((x) =>
                             <MenuItem key={x} value={x}>{t('Meal')} {x + 1}</MenuItem>
                         )}
                     </Select>
@@ -70,10 +81,10 @@ const DialogEditConsumed = () => {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <DialogConfirm confirmed={async () => await deleteConsumed.mutateAsync({ id: selectedConsumed.id })}>
+                    <DialogConfirm onConfirmed={async () => await deleteConsumed.mutateAsync({ id: consumed.id })}>
                         <Button sx={{ color: 'red' }}>{t('Delete')}</Button>
                     </DialogConfirm>
-                    <Button onClick={() => dispatch(setIsDialogEditConsumed(false))}>{t('Deny')}</Button>
+                    <Button onClick={() => setIsDialogOpen(false)}>{t('Deny')}</Button>
                     <Button type="submit" onClick={handleSubmit(handleUpdateConsumed)}>{t('Confirm')}</Button>
                 </DialogActions>
             </Dialog>

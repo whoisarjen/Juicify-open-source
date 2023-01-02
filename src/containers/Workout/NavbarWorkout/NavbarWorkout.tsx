@@ -43,7 +43,7 @@ const NavbarWorkout = ({
             <div />
             {sessionData?.user?.username == router.query.login
                 ? <>
-                    <DialogConfirm confirmed={onDelete} isDisabled={isDisabled}>
+                    <DialogConfirm onConfirmed={onDelete} isDisabled={isDisabled}>
                         <IconButton disabled={isDisabled} aria-label="delete" sx={{ margin: 'auto' }}>
                             <DeleteIcon />
                         </IconButton>
