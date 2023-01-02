@@ -39,6 +39,7 @@ const DialogEditConsumed = ({
 
     const handleUpdateConsumed = async (newConsumed: ConsumedSchema) =>
         await updateConsumed.mutateAsync({ ...consumed, ...newConsumed })
+            .finally(() => setIsDialogOpen(false))
 
     useEffect(() => {
         reset({
@@ -81,7 +82,12 @@ const DialogEditConsumed = ({
                     />
                 </DialogContent>
                 <DialogActions>
-                    <DialogConfirm onConfirmed={async () => await deleteConsumed.mutateAsync({ id: consumed.id })}>
+                    <DialogConfirm
+                        onConfirmed={async () =>
+                            await deleteConsumed.mutateAsync({ id: consumed.id })
+                                .finally(() => setIsDialogOpen(false))
+                        }
+                    >
                         <Button sx={{ color: 'red' }}>{t('Delete')}</Button>
                     </DialogConfirm>
                     <Button onClick={() => setIsDialogOpen(false)}>{t('Deny')}</Button>

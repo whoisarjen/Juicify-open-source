@@ -5,7 +5,7 @@ import FastfoodIcon from "@mui/icons-material/Fastfood";
 import IconButton from '@mui/material/IconButton';
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
-import DialogEditConsumed from '@/containers/DialogEditConsumed/DialogEditConsumed'
+import DialogEditConsumed from '@/containers/consumed/BoxMeal/BoxMealItem/DialogEditConsumed/DialogEditConsumed'
 
 const Product = styled.div`
     width: 100%;

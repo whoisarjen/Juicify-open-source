@@ -46,11 +46,6 @@ interface BoxBurnedItemProps {
 const BoxBurnedItem = ({
     workoutResult,
 }: BoxBurnedItemProps) => {
-    // const handleDialogEditConsumed = () => {
-    //     dispatch(setSelectedConsumed(consumed))
-    //     dispatch(setIsDialogEditConsumed(true))
-    // }
-
     return (
         <Burned>
 
