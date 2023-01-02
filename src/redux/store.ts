@@ -1,11 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import dialogAddProduct from './features/dialogAddProduct.slice'
-import dialogShowProduct from './features/dialogShowProduct.slice'
 
 export const store = configureStore({
     reducer: {
         dialogAddProduct,
-        dialogShowProduct,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

@@ -7,6 +7,7 @@ import useTranslation from 'next-translate/useTranslation';
 import { useState } from 'react';
 import { useTheme } from '@/hooks/useTheme';
 import { getCalories } from '@/utils/consumed.utils';
+import DialogShowProduct from './DialogShowProduct/DialogShowProduct'
 
 const Grid = styled.div`
     display: grid;
@@ -54,6 +55,7 @@ interface BoxProductProps {
     isChecked: boolean
     onCheckClick: () => void
     onValueChange: (howMany: number | undefined) => void
+    mealToAdd: number
 }
 
 const BoxAddProduct = ({
@@ -61,6 +63,7 @@ const BoxAddProduct = ({
     isChecked,
     onCheckClick,
     onValueChange,
+    mealToAdd,
 }: BoxProductProps) => {
     const { t } = useTranslation('nutrition-diary');
     const [howMany, setHowMany] = useState<number | undefined>(product.howMany || 1.0)
@@ -69,12 +72,6 @@ const BoxAddProduct = ({
     const handleHowManyChange = async (howMany: number | undefined) => {
         setHowMany(howMany)
         onValueChange(howMany)
-    }
-
-    const handleDialogShowProduct = () => {
-        // TODO
-        // dispatch(setSelectedProduct(product))
-        // dispatch(setIsDialogShowProduct(true))
     }
 
     return (
@@ -86,11 +83,13 @@ const BoxAddProduct = ({
                 <>{(product.proteins || 0)}{t('P')} {(product.carbs || 0)}{t('C')} {(product.fats || 0)}{t('F')} {getCalories(product)}kcal</>
             </Description>
             <div />
-            <MoreInfo onClick={handleDialogShowProduct} data-testid="handleDialogShowProduct">
-                <IconButton color="primary">
-                    <InfoIcon fontSize="small" />
-                </IconButton>
-            </MoreInfo>
+            <DialogShowProduct product={product} mealToAdd={mealToAdd}>
+                <MoreInfo>
+                    <IconButton color="primary">
+                        <InfoIcon fontSize="small" />
+                    </IconButton>
+                </MoreInfo>
+            </DialogShowProduct>
             <Value>
                 <TextField
                     type="number"

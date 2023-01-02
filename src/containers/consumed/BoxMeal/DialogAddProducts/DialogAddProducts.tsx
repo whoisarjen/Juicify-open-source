@@ -21,7 +21,6 @@ import { range } from 'lodash';
 import moment from 'moment';
 import useCache from '@/hooks/useCache';
 import DialogAddProduct from '@/containers/DialogAddProduct/DialogAddProduct';
-import DialogShowProduct from '@/containers/DialogShowProduct/DialogShowProduct';
 
 const Grid = styled.div`
     width: 100%;
@@ -144,6 +143,7 @@ const DialogAddProducts = ({
                                 key={product.id}
                                 product={product}
                                 isChecked={isChecked}
+                                mealToAdd={meal}
                                 onCheckClick={() => isChecked
                                     ? setChecked(checked.filter(({ id }) => id !== product.id))
                                     : setChecked([...checked, product])
@@ -184,11 +184,6 @@ const DialogAddProducts = ({
                     <ButtonSubmitItems clicked={addProductsToDiary} showNumber={checked.length} />
 
                     <ButtonCloseDialog clicked={() => setIsDialogOpen(false)} />
-
-                    {/* TODO */}
-                    {/* <DialogShowProduct>
-                        <DialogAddProduct />
-                    </DialogShowProduct> */}
                 </Grid>
             </Dialog>
         </>
