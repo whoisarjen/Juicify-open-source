@@ -13,7 +13,6 @@ import { cloneElement, useState, type ReactElement } from 'react';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import { useSession } from 'next-auth/react';
-import useConsumed from '@/hooks/useConsumed';
 import { trpc } from '@/utils/trpc';
 
 interface DialogAddProductProps {
