@@ -175,7 +175,7 @@ const SettingsPage = () => {
                 error={typeof errors.twitter === 'undefined' ? false : true}
                 helperText={errors.twitter?.message && t(`notify:${errors.twitter.message || ''}`)}
             />
-            <Separator>{t('Logout')}</Separator>
+            <Separator>{t('LOGOUT')}</Separator>
             <Button color="error" onClick={() => signOut({ callbackUrl: '/', redirect: true })}>
                 Logout
             </Button>

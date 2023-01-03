@@ -134,7 +134,7 @@ const SidebarLeft = () => {
                                 <ListItemIcon>
                                     <LogoutIcon color="primary" />
                                 </ListItemIcon>
-                                <ListItemText primary={sessionData ? t('Logout') : t('Login')} />
+                                <ListItemText primary={sessionData ? t('LOGOUT') : t('LOGIN')} />
                             </ListItemButton>
                         </ListItem>
                     </List>

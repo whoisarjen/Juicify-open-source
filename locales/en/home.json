@@ -50,5 +50,7 @@
     "PICK_DATE": "Pick date",
     "WORKOUT_PLANS": "Plans",
     "WORKOUT_RESULTS": "Results",
-    "DATE": "Date"
+    "DATE": "Date",
+    "LOGOUT": "Logout",
+    "LOGIN": "Sign in"
 }

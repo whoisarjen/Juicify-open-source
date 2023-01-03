@@ -50,5 +50,7 @@
     "PICK_DATE": "Wybierz datę",
     "WORKOUT_PLANS": "Plany",
     "WORKOUT_RESULTS": "Wyniki",
-    "DATE": "Data"
+    "DATE": "Data",
+    "LOGOUT": "Wyloguj",
+    "LOGIN": "Zaloguj"
 }
