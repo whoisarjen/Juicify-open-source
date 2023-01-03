@@ -58,6 +58,8 @@ const SettingsPage = () => {
         reset(sessionData.user)
     }, [reset, sessionData?.user])
 
+    // TODO birth
+
     return (
         <Form onSubmit={handleSubmit(changeSettings)}>
             <Separator>{t('Preferences')}</Separator>
