@@ -1,7 +1,6 @@
 import styled from "styled-components";
 // @ts-ignore
 import Quagga from 'quagga';
-import { useAppSelector } from "@/hooks/useRedux";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 

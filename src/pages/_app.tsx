@@ -1,6 +1,4 @@
 import "../styles/global.css"
-import { store } from "../redux/store"
-import { Provider } from "react-redux"
 import Layout from "../layout/Layout"
 import MUI from "../layout/MUI"
 import ServiceWorker from "../layout/ServiceWorker"
@@ -16,13 +14,11 @@ const App: AppType<{ session: Session | null }> = ({
     return (
         <MUI>
             <SessionProvider session={session}>
-                <Provider store={store}>
-                    <ServiceWorker>
-                        <Layout>
-                            <Component {...pageProps} />
-                        </Layout>
-                    </ServiceWorker>
-                </Provider>
+                <ServiceWorker>
+                    <Layout>
+                        <Component {...pageProps} />
+                    </Layout>
+                </ServiceWorker>
             </SessionProvider>
         </MUI>
     )

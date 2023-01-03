@@ -1,7 +1,6 @@
 import Button from '@mui/material/Button';
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
-import { useAppSelector } from '../../hooks/useRedux';
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle';
 
 interface ChooseCaloriesSourcetProps {

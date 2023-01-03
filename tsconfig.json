@@ -24,7 +24,6 @@
       "@/containers/*": ["src/containers/*"],
       "@/generated/*": ["src/generated/*"],
       "@/hooks/*": ["src/hooks/*"],
-      "@/redux/*": ["src/redux/*"],
       "@/utils/*": ["src/utils/*"],
       "@/env/*": ["src/env/*"],
       "@/server/*": ["src/server/*"],

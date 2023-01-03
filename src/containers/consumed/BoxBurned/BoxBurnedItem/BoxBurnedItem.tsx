@@ -1,4 +1,3 @@
-import { useAppDispatch } from "@/hooks/useRedux";
 import IconButton from '@mui/material/IconButton';
 import styled from "styled-components";
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';

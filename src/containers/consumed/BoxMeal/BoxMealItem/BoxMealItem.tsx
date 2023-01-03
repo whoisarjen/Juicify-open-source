@@ -1,4 +1,3 @@
-import { useAppDispatch } from "@/hooks/useRedux";
 import { getCalories, multipleProductByHowMany } from "@/utils/consumed.utils";
 import EditIcon from "@mui/icons-material/Edit";
 import FastfoodIcon from "@mui/icons-material/Fastfood";

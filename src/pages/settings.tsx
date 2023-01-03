@@ -1,5 +1,4 @@
 import SelectLanguage from '@/containers/settings/SelectLanguage/SelectLanguage';
-import { useAppSelector } from '@/hooks/useRedux';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Button from '@mui/material/Button';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -64,7 +63,7 @@ const SettingsPage = () => {
             return
         }
 
-        reset(sessionData.user)
+        // reset(sessionData.user) // TODO
     }, [sessionData?.user?.id])
 
     return (

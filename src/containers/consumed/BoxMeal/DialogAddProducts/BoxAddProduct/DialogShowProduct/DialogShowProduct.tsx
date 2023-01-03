@@ -4,11 +4,12 @@ import styled from 'styled-components'
 import SlideUp from '@/transition/SlideUp';
 import { omit } from 'lodash';
 import useTranslation from 'next-translate/useTranslation';
-import { ReactNode, useState, cloneElement } from 'react';
+import { type ReactNode, useState, cloneElement, type ReactElement } from 'react';
 import ButtonCloseDialog from '@/components/ButtonCloseDialog/ButtonCloseDialog';
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm';
 import { useSession } from 'next-auth/react';
 import { trpc } from '@/utils/trpc';
+import DialogAddProduct from '@/containers/DialogAddProduct/DialogAddProduct'
 
 const Remove = styled.div`
     display: grid;
@@ -71,7 +72,7 @@ const PROPERTIES_TO_OMIT = [
 ]
 
 interface DialogShowProductProps {
-    children: ReactNode
+    children: ReactElement
     product: Product
     mealToAdd?: number
 }
@@ -91,13 +92,6 @@ const DialogShowProduct = ({
             setIsDialog(false)
         },
     })
-
-    const handleDialogAddProduct = () => {
-        // TODO
-        // dispatch(setMealToAdd(mealToAdd))
-        // dispatch(setSelectProduct(product))
-        // dispatch(setIsDialogAddProduct(true))
-    }
 
     const isOwner = sessionData?.user?.id == product?.userId
 
@@ -133,11 +127,13 @@ const DialogShowProduct = ({
                             </Remove>
                         </DialogConfirm>
                     }
-                    <Close onClick={handleDialogAddProduct}>
-                        <Button variant="contained">
-                            {t('ADD_TO_DIARY')}
-                        </Button>
-                    </Close>
+                    <DialogAddProduct product={product}>
+                        <Close>
+                            <Button variant="contained">
+                                {t('ADD_TO_DIARY')}
+                            </Button>
+                        </Close>
+                    </DialogAddProduct>
                     <ButtonCloseDialog clicked={() => setIsDialog(false)} />
                 </Grid>
             </Dialog>
