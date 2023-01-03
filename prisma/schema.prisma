@@ -79,11 +79,16 @@ model User {
   fatsDay6            Int             @default(0)
   fiber               Int             @default(0)
   carbsPercentAsSugar Int             @default(10)
-  nextCoach           DateTime?
-  goal                Float?
-  isCoachAnalyze      Boolean?        @default(false)
-  height              Int?
-  birth               DateTime?
+  nextCoach           DateTime        @default(now())
+  goal                Float           @default(0)
+  isCoachAnalyze      Boolean         @default(false)
+  height              Int             @default(0)
+  birth               DateTime        @default(now())
+  description         String          @default("")
+  website             String          @default("")
+  facebook            String          @default("")
+  instagram           String          @default("")
+  twitter             String          @default("")
   accounts            Account[]
   sessions            Session[]
   Exercise            Exercise[]

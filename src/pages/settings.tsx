@@ -1,14 +1,17 @@
 import SelectLanguage from '@/containers/settings/SelectLanguage/SelectLanguage';
+import { type UserSchema, userSchema } from '@/server/schema/user.schema';
+import { reloadSession } from '@/utils/global.utils';
+import { trpc } from '@/utils/trpc';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Button from '@mui/material/Button';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
+import moment from 'moment';
 import { signOut, useSession } from 'next-auth/react';
 import useTranslation from 'next-translate/useTranslation';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components'
-import { object, preprocess, number, string, array, TypeOf } from 'zod';
 
 const Form = styled.form`
     ${this} .MuiTextField-root {
@@ -23,48 +26,37 @@ const Separator = styled.div`
     margin-bottom: 12px;
 `
 
-const SettingsSchema = object({
-    meal_number: preprocess((val) => Number(val), number().min(1).max(10)).optional(),
-    fiber: preprocess((val) => Number(val), number().min(0).max(100)).optional(),
-    sugar_percent: preprocess((val) => Number(val), number().min(0).max(100)).optional(),
-    name: string().max(50).optional(),
-    surname: string().max(50).optional(),
-    birth: string().optional(),
-    height: preprocess((val) => Number(val), number().min(120).max(250)).optional(),
-    description: string().max(255).optional(),
-    website: string().max(150).optional(),
-    facebook: string().max(150).optional(),
-    instagram: string().max(150).optional(),
-    twitter: string().max(150).optional(),
-    macronutrients: array(object({ proteins: number(), carbs: number(), fats: number() })).optional(),
-})
-
-type SettingsSchemaProps = TypeOf<typeof SettingsSchema>
-
 const SettingsPage = () => {
     const { t } = useTranslation('settings')
     const { data: sessionData } = useSession()
 
-    const changeSettings = async (object: SettingsSchemaProps) => {
-        try {
-            // const response = await post({ object, url: '/auth/change' });
-            // await dispatchToken(response.data.token)
-        } catch (e: any) {
-            console.log(e)
+    const updateUser = trpc.user.update.useMutation({
+        onSuccess() {
+            reloadSession()
         }
+    })
+
+    const changeSettings = async (newUserSettings: UserSchema) => {
+        await updateUser.mutateAsync(newUserSettings)
     }
 
-    const { register, formState: { errors, isDirty }, handleSubmit, reset } = useForm<SettingsSchemaProps>({
-        resolver: zodResolver(SettingsSchema)
-    })
+    const {
+        register,
+        formState: {
+            errors,
+            isDirty,
+        },
+        handleSubmit,
+        reset,
+    } = useForm<UserSchema>({ resolver: zodResolver(userSchema) })
 
     useEffect(() => {
         if (!sessionData?.user) {
             return
         }
 
-        // reset(sessionData.user) // TODO
-    }, [sessionData?.user?.id])
+        reset(sessionData.user)
+    }, [reset, sessionData?.user])
 
     return (
         <Form onSubmit={handleSubmit(changeSettings)}>
@@ -75,9 +67,9 @@ const SettingsPage = () => {
                 variant="outlined"
                 label={t('Number of meals')}
                 type="number"
-                {...register('meal_number')}
-                error={typeof errors.meal_number === 'undefined' ? false : true}
-                helperText={errors.meal_number?.message && t(`notify:${errors.meal_number.message || ''}`)}
+                {...register('numberOfMeals')}
+                error={typeof errors.numberOfMeals === 'undefined' ? false : true}
+                helperText={errors.numberOfMeals?.message && t(`notify:${errors.numberOfMeals.message || ''}`)}
             />
             <TextField
                 label={t("Fiber")}
@@ -95,29 +87,16 @@ const SettingsPage = () => {
                 InputProps={{
                     endAdornment: <InputAdornment position="start">% / {t("Carbs")}</InputAdornment>
                 }}
-                {...register('sugar_percent')}
-                error={typeof errors.sugar_percent === 'undefined' ? false : true}
-                helperText={errors.sugar_percent?.message && t(`notify:${errors.sugar_percent.message || ''}`)}
+                {...register('carbsPercentAsSugar')}
+                error={typeof errors.carbsPercentAsSugar === 'undefined' ? false : true}
+                helperText={errors.carbsPercentAsSugar?.message && t(`notify:${errors.carbsPercentAsSugar.message || ''}`)}
             />
             <Separator>{t('Profile')}</Separator>
-            <TextField
-                label={t("Name")}
-                {...register('name')}
-                error={typeof errors.name === 'undefined' ? false : true}
-                helperText={errors.name?.message && t(`notify:${errors.name.message || ''}`)}
-            />
-            <TextField
-                label={t("Surname")}
-                variant="outlined"
-                {...register('surname')}
-                error={typeof errors.surname === 'undefined' ? false : true}
-                helperText={errors.surname?.message && t(`notify:${errors.surname.message || ''}`)}
-            />
             <TextField
                 label={t("Height")}
                 type="number"
                 InputProps={{
-                    endAdornment: <InputAdornment position="start">% / {t("Carbs")}</InputAdornment>
+                    endAdornment: <InputAdornment position="start">cm</InputAdornment>
                 }}
                 {...register('height')}
                 error={typeof errors.height === 'undefined' ? false : true}
@@ -179,10 +158,9 @@ const SettingsPage = () => {
             <Button color="error" onClick={() => signOut({ callbackUrl: '/', redirect: true })}>
                 Logout
             </Button>
-            {/* {
-                isDirty &&
-                <BottomFlyingButton clicked={() => handleSubmit(changeSettings)} />
-            } */}
+            {isDirty &&
+                <button onClick={() => handleSubmit(changeSettings)}>Submit</button>
+            }
         </Form>
     );
 };

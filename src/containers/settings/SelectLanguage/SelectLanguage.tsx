@@ -24,6 +24,7 @@ const SelectLanguage = () => {
                 autoWidth
                 onChange={(e) => setLanguage(e.target.value)}
                 label={t("Language")}
+                sx={{ marginBottom: '10px' }}
             >
                 {router.locales.map((locale: any) => (
                     <MenuItem key={locale} value={locale}>

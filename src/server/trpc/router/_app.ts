@@ -1,4 +1,5 @@
 import { router } from "../trpc";
+import { userRouter } from "./user";
 import { exerciseRouter } from "./exercise";
 import { productRouter } from "./product";
 import { consumedRouter } from "./consumed"
@@ -7,6 +8,7 @@ import { workoutResultRouter } from "./workoutResult"
 import { measurementRouter } from "./measurement"
 
 export const appRouter = router({
+    user: userRouter,
     exercise: exerciseRouter,
     workoutPlan: workoutPlanRouter,
     workoutResult: workoutResultRouter,

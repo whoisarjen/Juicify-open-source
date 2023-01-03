@@ -75,7 +75,7 @@ const Coach = () => {
 
     useEffect(() => {
         if (when && username) {
-            getDailyByWhenAndUsernameQuery()
+            // getDailyByWhenAndUsernameQuery()
             setStep(sessionData?.user?.isCoachAnalyze ? 'Standard' : 'Welcome')
         }
     }, [when, username])

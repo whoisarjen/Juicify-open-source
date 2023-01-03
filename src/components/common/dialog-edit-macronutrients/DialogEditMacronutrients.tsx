@@ -7,10 +7,51 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import SlideUp from '@/transition/SlideUp';
-import { useDialogEditMacronutrientsProps } from './useDialogEditMacronutrients';
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm';
+import { useSession } from 'next-auth/react';
+import useTranslation from 'next-translate/useTranslation';
+import { useState, useEffect } from 'react';
 
-const BaseDialogEditMacronutrients = ({ isOwnMacro, close, t, proteins, setProteins, carbs, setCarbs, fats, setFats, isDialog, setIsDialog, handleConfirm }: useDialogEditMacronutrientsProps) => {
+interface DialogEditMacronutrientsProps {
+    isOwnMacro: boolean
+    close: () => void
+}
+
+const DialogEditMacronutrients = ({
+    isOwnMacro,
+    close,
+}: DialogEditMacronutrientsProps) => {
+    const { data } = useSession()
+    const [isDialog, setIsDialog] = useState(false)
+    const [proteins, setProteins] = useState(0)
+    const [carbs, setCarbs] = useState(0)
+    const [fats, setFats] = useState(0)
+    // const { changeSettings } = useSettings()
+    const { t } = useTranslation('macronutrients')
+
+    const handleConfirm = async () => {
+        setIsDialog(false)
+        let macronutrients = []
+        for (let i = 1; i < 8; i++) {
+            macronutrients.push({
+                proteins,
+                carbs,
+                fats,
+                day: i
+            })
+        }
+        // await changeSettings({ macronutrients })
+        close()
+    }
+
+    useEffect(() => {
+        if (data?.user) {
+            // setProteins(data?.user.macronutrients[0].proteins)
+            // setCarbs(data?.user.macronutrients[0].carbs)
+            // setFats(data?.user.macronutrients[0].fats)
+        }
+    }, [data?.user?.id])
+
     return (
         <Dialog
             open={isOwnMacro}
@@ -82,4 +123,4 @@ const BaseDialogEditMacronutrients = ({ isOwnMacro, close, t, proteins, setProte
     )
 }
 
-export default BaseDialogEditMacronutrients;
+export default DialogEditMacronutrients;

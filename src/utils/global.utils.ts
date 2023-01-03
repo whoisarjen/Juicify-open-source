@@ -13,3 +13,8 @@ export const updateArray = <T>(array: (T & { id: number })[] = [], newObject: { 
 
         return object
     }) as unknown as T[]
+
+export const reloadSession = () => {
+    const event = new Event("visibilitychange");
+    document.dispatchEvent(event);
+}
