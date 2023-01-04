@@ -25,7 +25,6 @@ const WorkoutResultPage = () => {
     const router: any = useRouter()
     const { t } = useTranslation('workout')
     const { data: sessionData } = useSession()
-    const [when, setWhen] = useState<null | Date>(null)
     const [previousExercises, setPreviousExercises] = useState([])
 
     const id = parseInt(router.query.id || 0)
@@ -118,14 +117,6 @@ const WorkoutResultPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const onWhenChange = (newDate: Date | null) => {
-        if (newDate) {
-            setValue('whenAdded', newDate)
-        }
-
-        setWhen(newDate)
-    }
-
     const isLoading = isFetching || updateWorkoutResult.isLoading || deleteWorkoutResult.isLoading
 
     return (
@@ -151,8 +142,8 @@ const WorkoutResultPage = () => {
             />
 
             <DatePicker
-                when={when || data?.whenAdded || moment().toDate()}
-                onChange={onWhenChange}
+                defaultDate={data?.whenAdded || moment().toDate()}
+                onChange={newWhenAdded => setValue('whenAdded', newWhenAdded)}
                 sx={sxTextField}
                 register={register('whenAdded')}
                 focused

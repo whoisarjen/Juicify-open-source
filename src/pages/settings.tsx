@@ -30,7 +30,6 @@ const Separator = styled.div`
 const SettingsPage = () => {
     const { t } = useTranslation('settings')
     const { data: sessionData } = useSession()
-    const [birth, setBirth] = useState(moment().toDate())
 
     const updateUser = trpc.user.update.useMutation({
         onSuccess() {
@@ -51,12 +50,8 @@ const SettingsPage = () => {
         handleSubmit,
         reset,
         setValue,
+        getValues,
     } = useForm<UserSchema>({ resolver: zodResolver(userSchema) })
-
-    const onBirthChange = (birth: Date) => {
-        setValue('birth', birth, { shouldDirty: true })
-        setBirth(birth)
-    }
 
     useEffect(() => {
         if (!sessionData?.user) {
@@ -64,7 +59,6 @@ const SettingsPage = () => {
         }
 
         reset(sessionData.user)
-        setBirth(sessionData.user.birth)
     }, [reset, sessionData?.user])
 
     return (
@@ -113,9 +107,9 @@ const SettingsPage = () => {
             />
 
             <DatePicker
-                when={birth}
-                onChange={onBirthChange}
-                register={register('whenAdded')}
+                defaultDate={getValues().birth}
+                onChange={newBirth => setValue('birth', newBirth, { shouldDirty: true })}
+                register={register('birth')}
             />
 
             <TextField
