@@ -3,11 +3,12 @@ import NavbarProfile from "@/containers/profile/NavbarProfile/NavbarProfile";
 import { useTheme } from "@/hooks/useTheme";
 import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import moment from "moment";
-import { getCalories, multipleConsumedProductByHowMany } from "@/utils/consumed.utils";
+import { getCalories, multipleProductByHowMany } from "@/utils/consumed.utils";
 import StackedBarChart from "@/components/common/diagram-stacked-bar-chart";
 import styled from 'styled-components'
+import { trpc } from "@/utils/trpc";
 
 const Box = styled.div`
     width: 100%;
@@ -33,15 +34,21 @@ const ProfilePage = () => {
         { dataKey: t('Diffrent'), stroke: getTheme('PRIMARY') }
     ]
 
-    // const [{ data }, getDailiesByRangeAndUsername] = useDailiesByRangeAndUsernameQuery({
-    //     variables: {
-    //         username: router?.query?.login,
-    //         startDate: moment().add(-7, 'd').format('YYYY-MM-DD'),
-    //         endDate: moment().format('YYYY-MM-DD'),
-    //     }
-    // })
+    const username = router.query.login || ''
+    const startDate = moment().add(-7, 'd').format('YYYY-MM-DD')
+    const endDate = moment().format('YYYY-MM-DD')
 
-    const data: any = null // TODO
+    const [
+        { data: consumed },
+        { data: workoutResults },
+    ] = trpc.useQueries(t => [
+        t
+            .consumed
+            .getPeriod({ username, startDate, endDate }, { enabled: !!username }),
+        t
+            .workoutResult
+            .getPeriod({ username, startDate, endDate }, { enabled: !!username }),
+    ])
 
     const {
         dataCalories,
@@ -54,45 +61,46 @@ const ProfilePage = () => {
             [t('Burnt')]: 0,
             [t('Diffrent')]: 0
         }))
+
         const defaultMacro = [...Array(7)].map(() => ({
             [t('p')]: 0,
             [t('c')]: 0,
             [t('f')]: 0,
         }))
 
-        if (!data?.consumedByRangeAndUsername) {
+        if (!consumed || !workoutResults) {
             return {
                 dataCalories: defaultData.reverse(),
                 dataMacronutrients: defaultMacro,
             }
         }
 
-        data?.consumedByRangeAndUsername?.forEach((consumed: ConsumedFieldsFragment | null) => {
+        consumed.forEach(consumed => {
             if (consumed) {
-                const index = defaultData.findIndex(x => x.when == consumed?.when)
-                const multipledProduct = multipleConsumedProductByHowMany(consumed).product
+                const index = defaultData.findIndex(x =>
+                    moment(x.when).format('YYYY-MM-DD') === moment(consumed.whenAdded).format('YYYY-MM-DD'))
+                const { product } = multipleProductByHowMany(consumed)
+
                 defaultData[index] = {
                     ...defaultData[index],
-                    [t('Calories')]: defaultData[index][t('Calories')] as number + getCalories(
-                        multipledProduct
-                    ),
+                    [t('Calories')]: defaultData[index][t('Calories')] as number + getCalories(product),
                 }
                 defaultMacro[index] = {
                     ...defaultMacro[index],
-                    [t('p')]: defaultMacro[index][t('p')] + multipledProduct.proteins,
-                    [t('c')]: defaultMacro[index][t('c')] + multipledProduct.carbs,
-                    [t('f')]: defaultMacro[index][t('f')] + multipledProduct.fats,
+                    [t('p')]: defaultMacro[index][t('p')] + Number(product.proteins),
+                    [t('c')]: defaultMacro[index][t('c')] + Number(product.carbs),
+                    [t('f')]: defaultMacro[index][t('f')] + Number(product.fats),
                 }
             }
         })
 
-        data?.workoutResultsByRangeAndUsername?.forEach((workoutResult: WorkoutResultFieldsFragment | null) => {
-            if (workoutResult) {
-                const index = defaultData.findIndex(x => x.when == workoutResult?.when)
-                defaultData[index] = {
-                    ...defaultData[index],
-                    [t('Burnt')]: (defaultData[index]?.[t('Burnt')] || 0) as number + workoutResult.burnedCalories,
-                }
+        workoutResults.forEach(workoutResult => {
+            const index = defaultData.findIndex(x =>
+                moment(x.when).format('YYYY-MM-DD') === moment(workoutResult.whenAdded).format('YYYY-MM-DD'))
+
+            defaultData[index] = {
+                ...defaultData[index],
+                [t('Burnt')]: (defaultData[index]?.[t('Burnt')] || 0) as number + workoutResult.burnedCalories,
             }
         })
 
@@ -100,7 +108,7 @@ const ProfilePage = () => {
             dataCalories: defaultData.reverse(),
             dataMacronutrients: defaultMacro.reverse(),
         }
-    }, [data?.consumedByRangeAndUsername])
+    }, [consumed, t, workoutResults])
 
     return (
         <>

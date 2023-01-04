@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import ProfileTabs from '../ProfileTabs/ProfileTabs';
 import { useSession } from 'next-auth/react';
+import { trpc } from '@/utils/trpc'
 
 const Box = styled.div`
     width: 100%;
@@ -46,86 +47,84 @@ const Content = styled.div`
 const NavbarProfile = ({ tab }: { tab: number }) => {
     const router: any = useRouter()
     const { data: sessionData } = useSession()
-    // const [{ data }, getUserByUsername] = useUserByUsernameQuery({
-    //     variables: {
-    //         username: router?.query?.login,
-    //     },
-    //     pause: true,
-    // })
 
-    const data: any = null // TODO
+    const username = router.query.login || ''
+    const isOwner = username === sessionData?.user?.username
+
+    const {
+        data,
+    } = trpc
+        .user
+        .getByUsername
+        .useQuery({ username }, { enabled: !!username && !isOwner })
+
+    const user = isOwner ? sessionData?.user : data
 
     return (
         <>
-            {
-                data?.userByUsername?.username &&
-                <>
-                    <Box>
-                        <AvatarBox>
-                            <CustomAvatar
-                                id={data?.userByUsername?.id}
-                                username={data?.userByUsername?.username}
-                            />
-                        </AvatarBox>
-                        <Content>
-                            <div>
-                                <h2>{data?.userByUsername?.username}</h2>
-                                {
-                                    data?.userByUsername?.username == sessionData?.user?.username ?
-                                        <>
-                                            <ButtonShare />
-                                            <IconButton onClick={() => router.push('/settings')} sx={{ margin: 'auto' }} aria-label="settings" color="primary">
-                                                <SettingsIcon />
-                                            </IconButton>
-                                        </>
-                                        :
-                                        <>
-                                            <div />
-                                            <ButtonShare />
-                                        </>
-                                }
-                            </div>
-                            <div>{data?.userByUsername?.firstName} {data?.userByUsername?.lastName}</div>
-                            <div>{data?.userByUsername?.description}</div>
-                            <div>
-                                {data?.userByUsername?.facebook &&
-                                    <IconButton
-                                        onClick={() => window.open(`https://facebook.com/${data?.userByUsername?.facebook}`, '_blank')}
-                                        color="primary"
-                                    >
-                                        <FacebookIcon />
-                                    </IconButton>
-                                }
-                                {data?.userByUsername?.instagram &&
-                                    <IconButton
-                                        onClick={() => window.open(`https://instagram.com/${data?.userByUsername?.instagram}`, '_blank')}
-                                        color="primary"
-                                    >
-                                        <InstagramIcon />
-                                    </IconButton>
-                                }
-                                {data?.userByUsername?.twitter &&
-                                    <IconButton
-                                        onClick={() => window.open(`https://twitter.com/${data?.userByUsername?.twitter}`, '_blank')}
-                                        color="primary"
-                                    >
-                                        <TwitterIcon />
-                                    </IconButton>
-                                }
-                                {data?.userByUsername?.website &&
-                                    <IconButton
-                                        onClick={() => window.open(`${data?.userByUsername?.website}`, '_blank')}
-                                        color="primary"
-                                    >
-                                        <LinkIcon />
-                                    </IconButton>
-                                }
-                            </div>
-                        </Content>
-                    </Box>
-                    <ProfileTabs tab={tab} />
-                </>
-            }
+            <Box>
+                <AvatarBox>
+                    <CustomAvatar
+                        src={user?.image}
+                        username={user?.username}
+                    />
+                </AvatarBox>
+                <Content>
+                    <div>
+                        <h2>{user?.username}</h2>
+                        {isOwner ?
+                            <>
+                                <ButtonShare />
+                                <IconButton onClick={() => router.push('/settings')} sx={{ margin: 'auto' }} aria-label="settings" color="primary">
+                                    <SettingsIcon />
+                                </IconButton>
+                            </>
+                            :
+                            <>
+                                <div />
+                                <ButtonShare />
+                            </>
+                        }
+                    </div>
+                    {/* <div>{user?.firstName} {user?.lastName}</div> */}
+                    <div>{user?.description}</div>
+                    <div>
+                        {user?.facebook &&
+                            <IconButton
+                                onClick={() => window.open(`https://facebook.com/${user?.facebook}`, '_blank')}
+                                color="primary"
+                            >
+                                <FacebookIcon />
+                            </IconButton>
+                        }
+                        {user?.instagram &&
+                            <IconButton
+                                onClick={() => window.open(`https://instagram.com/${user?.instagram}`, '_blank')}
+                                color="primary"
+                            >
+                                <InstagramIcon />
+                            </IconButton>
+                        }
+                        {user?.twitter &&
+                            <IconButton
+                                onClick={() => window.open(`https://twitter.com/${user?.twitter}`, '_blank')}
+                                color="primary"
+                            >
+                                <TwitterIcon />
+                            </IconButton>
+                        }
+                        {user?.website &&
+                            <IconButton
+                                onClick={() => window.open(`${user?.website}`, '_blank')}
+                                color="primary"
+                            >
+                                <LinkIcon />
+                            </IconButton>
+                        }
+                    </div>
+                </Content>
+            </Box>
+            <ProfileTabs tab={tab} />
         </>
     )
 }

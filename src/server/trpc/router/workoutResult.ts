@@ -52,6 +52,30 @@ export const workoutResultRouter = router({
                 }
             }) as unknown as WorkoutResult[]
         }),
+    getPeriod: publicProcedure
+        .input(
+            z.object({
+                username: z.string(),
+                startDate: z.preprocess(whenAdded => moment(String(whenAdded)).toDate(), z.date()),
+                endDate: z.preprocess(whenAdded => moment(String(whenAdded)).toDate(), z.date()),
+            })
+        )
+        .query(async ({ ctx, input: { username, startDate, endDate } }) => {
+            return await ctx.prisma.workoutResult.findMany({
+                where: {
+                    whenAdded: {
+                        gte: moment(startDate).startOf('day').toDate(),
+                        lte: moment(endDate).endOf('day').toDate(),
+                    },
+                    user: {
+                        username,
+                    },
+                },
+                orderBy: {
+                    whenAdded: 'desc'
+                }
+            }) as unknown as WorkoutResult[]
+        }),
     getAll: publicProcedure
         .input(
             z.object({

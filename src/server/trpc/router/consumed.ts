@@ -39,6 +39,40 @@ export const consumedRouter = router({
                 },
             })
         }),
+    getPeriod: publicProcedure
+        .input(
+            z.object({
+                username: z.string(),
+                startDate: z.preprocess(whenAdded => moment(String(whenAdded)).toDate(), z.date()),
+                endDate: z.preprocess(whenAdded => moment(String(whenAdded)).toDate(), z.date()),
+            })
+        )
+        .query(async ({ ctx, input: { username, startDate, endDate } }) => {
+            return await ctx.prisma.consumed.findMany({
+                where: {
+                    user: {
+                        username,
+                    },
+                    whenAdded: {
+                        gte: moment(startDate).startOf('day').toDate(),
+                        lte: moment(endDate).endOf('day').toDate(),
+                    },
+                },
+                include: {
+                    product: true,
+                    user: {
+                        select: {
+                            id: true,
+                            username: true,
+                            image: true,
+                        }
+                    }
+                },
+                orderBy: {
+                    meal: 'asc',
+                },
+            })
+        }),
     create: protectedProcedure
         .input(createConsumedSchema)
         .mutation(async ({ ctx, input }) => {
