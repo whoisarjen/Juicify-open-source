@@ -15,20 +15,17 @@ import Tutorial_5 from "@/containers/coach/Tutorial_5";
 import Tutorial_6 from "@/containers/coach/Tutorial_6";
 import Tutorial_7 from "@/containers/coach/Tutorial_7";
 import Welcome from "@/containers/coach/Welcome";
+import { type CoachSchema } from "@/server/schema/coach.schema";
+import { trpc } from "@/utils/trpc";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
+import moment from 'moment'
 
-export interface PrepareObject {
-    goal: number
-    kindOfDiet: number
-    isSportActive: boolean
-    activityLevel: number
-}
+const whenAdded = moment().format('YYYY-MM-DD')
 
 const Coach = () => {
     const { data: sessionData } = useSession()
     const [step, setStep] = useState(sessionData?.user?.isCoachAnalyze ? 'Standard' : 'Welcome')
-    const when = new Date().toISOString().slice(0, 10)
     const username = sessionData?.user?.username || ''
     // const [{ data }, getDailyByWhenAndUsernameQuery] = useDailyByWhenAndUsernameQuery({
     //     variables: {
@@ -39,22 +36,32 @@ const Coach = () => {
     // })
     // const [{ data: createCoachData }, createCoach] = useCreateCoachMutation()
 
+    const {
+        data: measurement,
+    } = trpc
+        .measurement
+        .getDay
+        .useQuery({ username, whenAdded }, { enabled: !!username && !!whenAdded })
+
+    const createCoach = trpc.coach.create.useMutation({
+        onSuccess() {
+            // TODO refresh token
+            setStep('Result')
+        }
+    })
+
     const data: any = null // TODO
     const createCoachData: any = null // TODO
 
-    const prepareCreate = async (object: PrepareObject) => {
-        if (!data?.measurementByWhenAndUsername?.weight) {
-            return null
+    const prepareCreate = async (coach: CoachSchema) => {
+        if (!measurement) {
+            return
         }
 
-        // await createCoach({
-        //     id: uuidv4(),
-        //     user: sessionData?.user?.id,
-        //     weight: data.measurementByWhenAndUsername.weight,
-        //     ...object,
-        // })
-
-        setStep('Result')
+        await createCoach.mutateAsync({
+            ...coach,
+            data: measurement,
+        })
     }
 
     const prepareAnalize = async (isUseData: boolean) => {
@@ -74,92 +81,58 @@ const Coach = () => {
     const handlePreviousStep = () => setStep(sessionData?.user?.isCoachAnalyze ? 'Standard' : 'Welcome')
 
     useEffect(() => {
-        if (when && username) {
-            // getDailyByWhenAndUsernameQuery()
-            setStep(sessionData?.user?.isCoachAnalyze ? 'Standard' : 'Welcome')
+        if (!sessionData?.user) {
+            return
         }
-    }, [when, username])
+
+        setStep(sessionData?.user?.isCoachAnalyze ? 'Standard' : 'Welcome')
+    }, [sessionData?.user])
 
     return (
         <div className="coach">
-            {
-                step === 'Welcome' ?
-                    (
-                        <>
-                            <Welcome setStep={setStep} />
-                        </>
-                    ) : step === 'CheckingTodayData' ? (
-                        <>
-                            <CheckingTodayData setStep={setStep} weight={data?.measurementByWhenAndUsername?.weight || 0} />
-                        </>
-                    ) : step === 'ChooseDiet' ? (
-                        <>
-                            <ChooseDiet setStep={setStep} handlePreviousStep={handlePreviousStep} />
-                        </>
-                    ) : step === 'MuscleBuilding' ? (
-                        <>
-                            <MuscleBuilding prepareCreate={prepareCreate} handlePreviousStep={handlePreviousStep} />
-                        </>
-                    ) : step === 'Recomposition' ? (
-                        <>
-                            <Recomposition prepareCreate={prepareCreate} handlePreviousStep={handlePreviousStep} />
-                        </>
-                    ) : step === 'LosingWeight' ? (
-                        <>
-                            <LosingWeight prepareCreate={prepareCreate} handlePreviousStep={handlePreviousStep} />
-                        </>
-                    ) : step === 'Standard' ? (
-                        <>
-                            <Standard setStep={setStep} />
-                        </>
-                    ) : step === 'CheckingWeekData' ? (
-                        <>
-                            <CheckingWeekData setStep={setStep} />
-                        </>
-                    ) : step === 'ChooseCaloriesSource' ? (
-                        <>
-                            <ChooseCaloriesSource prepareAnalize={prepareAnalize} />
-                        </>
-                    ) : step === 'Result' ? (
-                        <>
-                            <Result setStep={setStep} data={createCoachData} />
-                        </>
-                    ) : step === 'Tutorial_1' ? (
-                        <>
-                            <Tutorial_1 setStep={setStep} handlePreviousStep={handlePreviousStep} />
-                        </>
-                    ) : step === 'Tutorial_2' ? (
-                        <>
-                            <Tutorial_2 setStep={setStep} />
-                        </>
-                    ) : step === 'Tutorial_3' ? (
-                        <>
-                            <Tutorial_3 setStep={setStep} />
-                        </>
-                    ) : step === 'Tutorial_4' ? (
-                        <>
-                            <Tutorial_4 setStep={setStep} />
-                        </>
-                    ) : step === 'Tutorial_5' ? (
-                        <>
-                            <Tutorial_5 setStep={setStep} />
-                        </>
-                    ) : step === 'Tutorial_6' ? (
-                        <>
-                            <Tutorial_6 setStep={setStep} />
-                        </>
-                    ) : step === 'Tutorial_7' ? (
-                        <>
-                            <Tutorial_7 setStep={setStep} handlePreviousStep={handlePreviousStep} />
-                        </>
-                    ) : (
-                        <>
-                            {"We didn't code anything like that :("}
-                            <button onClick={() => setStep('Welcome')}></button>
-                        </>
-                    )
+            {step === 'Welcome'
+                ? (
+                    <Welcome setStep={setStep} />
+                ) : step === 'CheckingTodayData' ? (
+                    <CheckingTodayData setStep={setStep} />
+                ) : step === 'ChooseDiet' ? (
+                    <ChooseDiet setStep={setStep} handlePreviousStep={handlePreviousStep} />
+                ) : step === 'MuscleBuilding' ? (
+                    <MuscleBuilding prepareCreate={prepareCreate} handlePreviousStep={handlePreviousStep} />
+                ) : step === 'Recomposition' ? (
+                    <Recomposition prepareCreate={prepareCreate} handlePreviousStep={handlePreviousStep} />
+                ) : step === 'LosingWeight' ? (
+                    <LosingWeight prepareCreate={prepareCreate} handlePreviousStep={handlePreviousStep} />
+                ) : step === 'Standard' ? (
+                    <Standard setStep={setStep} />
+                ) : step === 'CheckingWeekData' ? (
+                    <CheckingWeekData setStep={setStep} />
+                ) : step === 'ChooseCaloriesSource' ? (
+                    <ChooseCaloriesSource prepareAnalize={prepareAnalize} />
+                ) : step === 'Result' ? (
+                    <Result setStep={setStep} data={createCoachData} />
+                ) : step === 'Tutorial_1' ? (
+                    <Tutorial_1 setStep={setStep} handlePreviousStep={handlePreviousStep} />
+                ) : step === 'Tutorial_2' ? (
+                    <Tutorial_2 setStep={setStep} />
+                ) : step === 'Tutorial_3' ? (
+                    <Tutorial_3 setStep={setStep} />
+                ) : step === 'Tutorial_4' ? (
+                    <Tutorial_4 setStep={setStep} />
+                ) : step === 'Tutorial_5' ? (
+                    <Tutorial_5 setStep={setStep} />
+                ) : step === 'Tutorial_6' ? (
+                    <Tutorial_6 setStep={setStep} />
+                ) : step === 'Tutorial_7' ? (
+                    <Tutorial_7 setStep={setStep} handlePreviousStep={handlePreviousStep} />
+                ) : (
+                    <>
+                        {"We didn't code anything like that :("}
+                        < button onClick={() => setStep('Welcome')}></button>
+                    </>
+                )
             }
-        </div>
+        </div >
     );
 };
 

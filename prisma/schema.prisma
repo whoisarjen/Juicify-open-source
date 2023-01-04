@@ -13,7 +13,33 @@ datasource db {
 }
 
 // TODO adequate @db.Text
-// TODO enum goal for user
+
+enum kindOfDiets {
+  REGULAR
+  KETOGENIC
+}
+
+enum activityLevels {
+  ZERO
+  MINIMAL
+  AVERAGE
+  HIGH
+  EXTREME
+}
+
+enum goals {
+  MINUS_ONE_AND_HALF
+  MINUS_ONE_AND_QUARTER
+  MINUS_ONE
+  MINUS_THREE_QUARTERS
+  MINUS_HALF
+  ZERO
+  HALF
+  THREE_QUARTERS
+  ONE
+  ONE_AND_QUARTER
+  ONE_AND_HALF
+}
 
 model Account {
   id                Int      @id @default(autoincrement())
@@ -80,7 +106,6 @@ model User {
   fiber               Int             @default(0)
   carbsPercentAsSugar Int             @default(10)
   nextCoach           DateTime        @default(now())
-  goal                Float           @default(0)
   isCoachAnalyze      Boolean         @default(false)
   height              Int             @default(0)
   birth               DateTime        @default(now())
@@ -89,6 +114,11 @@ model User {
   facebook            String          @default("")
   instagram           String          @default("")
   twitter             String          @default("")
+  goal                goals           @default(ZERO)
+  kindOfDiet          kindOfDiets     @default(REGULAR)
+  isSportActive       Boolean         @default(false)
+  activityLevel       activityLevels  @default(AVERAGE)
+  sex                 Boolean         @default(true)
   accounts            Account[]
   sessions            Session[]
   Exercise            Exercise[]
@@ -97,6 +127,7 @@ model User {
   Product             Product[]
   Consumed            Consumed[]
   Measurement         Measurement[]
+  Coach               Coach[]
 }
 
 model VerificationToken {
@@ -204,10 +235,28 @@ model Measurement {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
   whenAdded DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   weight    Decimal  @default(0)
   userId    Int
 
   @@unique([id, userId])
+  @@index([userId])
+}
+
+model Coach {
+  id              Int            @id @default(autoincrement())
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @default(now()) @updatedAt
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          Int
+  goal            goals          @default(ZERO)
+  kindOfDiet      kindOfDiets    @default(REGULAR)
+  isSportActive   Boolean        @default(false)
+  activityLevel   activityLevels @default(AVERAGE)
+  countedProteins Int            @default(0)
+  countedCarbs    Int            @default(0)
+  countedFats     Int            @default(0)
+  data            Json
+
   @@index([userId])
 }

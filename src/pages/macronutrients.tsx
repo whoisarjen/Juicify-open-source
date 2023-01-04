@@ -61,7 +61,7 @@ const MacronutrientsPage = () => {
     const [changeObject, setChangeObject] = useState<any>({})
     const [isOwnMacro, setIsOwnMacro] = useState(false)
     const { t } = useTranslation('macronutrients')
-
+// TODO ALL!
     const updateUser = trpc.user.update.useMutation({
         onSuccess(data, variables, context) {
 

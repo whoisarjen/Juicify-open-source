@@ -11,11 +11,12 @@ import IconButton from '@mui/material/IconButton';
 import styled from "styled-components";
 import NavbarOnlyTitle from "@/components/NavbarOnlyTitle/NavbarOnlyTitle"
 import { DIET_ACTIVITY, DIET_KIND } from "./constants";
-import type { PrepareObject } from "pages/coach";
+import { goals, activityLevels, kindOfDiets } from "@prisma/client";
+import { type CoachSchema } from "@/server/schema/coach.schema";
 
 interface RecompositionProps {
-    prepareCreate: (arg0: PrepareObject) => void,
-    handlePreviousStep: (arg0: string) => void
+    prepareCreate: (coach: CoachSchema) => void,
+    handlePreviousStep: (step: string) => void
 }
 
 const Grid = styled.div`
@@ -41,7 +42,7 @@ const Recomposition = ({ prepareCreate, handlePreviousStep }: RecompositionProps
 
     const handleNextStep = () => {
         prepareCreate({
-            goal: 0,
+            goal: goals.ZERO,
             kindOfDiet,
             isSportActive: true,
             activityLevel,
@@ -66,7 +67,7 @@ const Recomposition = ({ prepareCreate, handlePreviousStep }: RecompositionProps
                         id="demo-simple-select"
                         value={activityLevel}
                         label={t('DIET_ACTIVITY_TITLE')}
-                        onChange={e => setActivityLevel(parseFloat(e.target.value.toString()))}
+                        onChange={e => setActivityLevel(e.target.value as unknown as keyof typeof activityLevels)}
                     >
                         {DIET_ACTIVITY.map(x =>
                             <MenuItem key={x.value} value={x.value}>{t(x.name)}</MenuItem>
@@ -82,7 +83,7 @@ const Recomposition = ({ prepareCreate, handlePreviousStep }: RecompositionProps
                         id="demo-simple-select"
                         value={kindOfDiet}
                         label={t('DIET_KIND_TITLE')}
-                        onChange={e => setKindOfDiet(parseInt(e.target.value.toString()))}
+                        onChange={e => setKindOfDiet(e.target.value as unknown as keyof typeof kindOfDiets)}
                     >
                         {DIET_KIND.map(x =>
                             <MenuItem key={x.value} value={x.value}>{t(x.name)}</MenuItem>

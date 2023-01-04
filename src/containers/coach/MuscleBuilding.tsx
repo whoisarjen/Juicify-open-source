@@ -10,12 +10,13 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import IconButton from '@mui/material/IconButton';
 import styled from "styled-components";
 import NavbarOnlyTitle from "@/components/NavbarOnlyTitle/NavbarOnlyTitle"
-import { DIET_ACTIVITY, DIET_EXTRA_PROTEINS, DIET_GOAL, DIET_KIND } from "./constants";
-import type { PrepareObject } from "pages/coach";
+import { DIET_ACTIVITY, DIET_EXTRA_PROTEINS, DIET_GOALS_SURPLUS, DIET_KIND } from "./constants";
+import { goals, activityLevels, kindOfDiets } from '@prisma/client'
+import { type CoachSchema } from "@/server/schema/coach.schema";
 
 interface MuscleBuildingProps {
-    prepareCreate: (arg0: PrepareObject) => void,
-    handlePreviousStep: (arg0: string) => void
+    prepareCreate: (coach: CoachSchema) => void,
+    handlePreviousStep: (step: string) => void
 }
 
 const Grid = styled.div`
@@ -36,7 +37,7 @@ const ArrowBack = styled.div`
 
 const MuscleBuilding = ({ prepareCreate, handlePreviousStep }: MuscleBuildingProps) => {
     const { t } = useTranslation('coach')
-    const [goal, setGoal] = useState(DIET_GOAL[0].value);
+    const [goal, setGoal] = useState(DIET_GOALS_SURPLUS[0].value);
     const [kindOfDiet, setKindOfDiet] = useState(DIET_KIND[0].value)
     const [isSportActive, setIsSportActive] = useState(true)
     const [activityLevel, setActivityLevel] = useState(DIET_ACTIVITY[0].value)
@@ -68,9 +69,9 @@ const MuscleBuilding = ({ prepareCreate, handlePreviousStep }: MuscleBuildingPro
                         id="demo-simple-select"
                         value={goal}
                         label={t('DIET_GOAL_TITLE')}
-                        onChange={e => setGoal(parseFloat(e.target.value.toString()))}
+                        onChange={e => setGoal(e.target.value as unknown as any)}
                     >
-                        {DIET_GOAL.map(x =>
+                        {DIET_GOALS_SURPLUS.map(x =>
                             <MenuItem key={x.value} value={x.value}>{t(x.name)}</MenuItem>
                         )}
                     </Select>
@@ -84,7 +85,7 @@ const MuscleBuilding = ({ prepareCreate, handlePreviousStep }: MuscleBuildingPro
                         id="demo-simple-select"
                         value={activityLevel}
                         label={t('DIET_ACTIVITY_TITLE')}
-                        onChange={e => setActivityLevel(parseFloat(e.target.value.toString()))}
+                        onChange={e => setActivityLevel(e.target.value as unknown as keyof typeof activityLevels)}
                     >
                         {DIET_ACTIVITY.map(x =>
                             <MenuItem key={x.value} value={x.value}>{t(x.name)}</MenuItem>
@@ -100,7 +101,7 @@ const MuscleBuilding = ({ prepareCreate, handlePreviousStep }: MuscleBuildingPro
                         id="demo-simple-select"
                         value={kindOfDiet}
                         label={t('DIET_KIND_TITLE')}
-                        onChange={e => setKindOfDiet(parseInt(e.target.value.toString()))}
+                        onChange={e => setKindOfDiet(e.target.value as unknown as keyof typeof kindOfDiets)}
                     >
                         {DIET_KIND.map(x =>
                             <MenuItem key={x.value} value={x.value}>{t(x.name)}</MenuItem>
