@@ -21,6 +21,7 @@ import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import moment from 'moment'
 import { type GetMacronutrientsReturn } from "@/utils/coach.utils";
+import { reloadSession } from '@/utils/global.utils'
 
 const whenAdded = moment().format('YYYY-MM-DD')
 
@@ -47,7 +48,7 @@ const Coach = () => {
 
     const createCoach = trpc.coach.create.useMutation({
         onSuccess(data) {
-            // TODO refresh token without changing step
+            reloadSession()
             setCreateCoachData(data)
             setStep('Result')
         }
@@ -82,7 +83,9 @@ const Coach = () => {
 
     useEffect(() => {
         setStep(sessionData?.user?.isCoachAnalyze ? 'Standard' : 'Welcome')
-    }, [sessionData?.user?.isCoachAnalyze])
+        // TODO verify if we don't need any dependencies as we don't want to lose step on token change
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <div className="coach">
