@@ -2,7 +2,7 @@ import { GOALS, ACTIVITY_LEVELS, getMacronutrients, updateMacronutrientsInUser }
 import moment from "moment";
 import { createCoachSchema } from "../../schema/coach.schema";
 import { router, protectedProcedure } from "../trpc";
-import { pick } from 'lodash'
+import { pick, omit } from 'lodash'
 
 export const coachRouter = router({
     create: protectedProcedure
@@ -29,7 +29,9 @@ export const coachRouter = router({
 
             await ctx.prisma.user.update({
                 data: {
+                    ...omit(input, ['data']),
                     ...updateMacronutrientsInUser(proteins, carbs, fats),
+                    isCoachAnalyze: true,
                 },
                 where: {
                     id,
