@@ -9,9 +9,10 @@ import TextField from '@mui/material/TextField';
 import moment from 'moment';
 import { signOut, useSession } from 'next-auth/react';
 import useTranslation from 'next-translate/useTranslation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components'
+import { DatePicker } from '@/components/DatePicker'
 
 const Form = styled.form`
     ${this} .MuiTextField-root {
@@ -29,6 +30,7 @@ const Separator = styled.div`
 const SettingsPage = () => {
     const { t } = useTranslation('settings')
     const { data: sessionData } = useSession()
+    const [birth, setBirth] = useState(moment().toDate())
 
     const updateUser = trpc.user.update.useMutation({
         onSuccess() {
@@ -48,7 +50,13 @@ const SettingsPage = () => {
         },
         handleSubmit,
         reset,
+        setValue,
     } = useForm<UserSchema>({ resolver: zodResolver(userSchema) })
+
+    const onBirthChange = (birth: Date) => {
+        setValue('birth', birth, { shouldDirty: true })
+        setBirth(birth)
+    }
 
     useEffect(() => {
         if (!sessionData?.user) {
@@ -56,9 +64,8 @@ const SettingsPage = () => {
         }
 
         reset(sessionData.user)
+        setBirth(sessionData.user.birth)
     }, [reset, sessionData?.user])
-
-    // TODO birth
 
     return (
         <Form onSubmit={handleSubmit(changeSettings)}>
@@ -104,6 +111,13 @@ const SettingsPage = () => {
                 error={typeof errors.height === 'undefined' ? false : true}
                 helperText={errors.height?.message && t(`notify:${errors.height.message || ''}`)}
             />
+
+            <DatePicker
+                when={birth}
+                onChange={onBirthChange}
+                register={register('whenAdded')}
+            />
+
             <TextField
                 label={t("Description")}
                 variant="outlined"
