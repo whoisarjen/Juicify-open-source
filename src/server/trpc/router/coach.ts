@@ -36,7 +36,7 @@ export const coachRouter = router({
                 }
             })
 
-            return await ctx.prisma.coach.create({
+            await ctx.prisma.coach.create({
                 data: {
                     ...input,
                     countedProteins: proteins,
@@ -46,5 +46,7 @@ export const coachRouter = router({
                     userId: id,
                 }
             })
+
+            return { proteins, carbs, fats }
         })
 });

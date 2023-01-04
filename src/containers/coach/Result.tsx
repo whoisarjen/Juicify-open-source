@@ -2,6 +2,7 @@ import Button from '@mui/material/Button';
 import useTranslation from "next-translate/useTranslation";
 import styled from 'styled-components';
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle';
+import { type GetMacronutrientsReturn } from "@/utils/coach.utils";
 
 const Box = styled.div`
     width: 100%;
@@ -29,8 +30,8 @@ const Box = styled.div`
 `
 
 interface Result {
-    setStep: (arg0: string) => void
-    data?: any // TODO
+    setStep: (step: string) => void
+    data: GetMacronutrientsReturn | null
 }
 
 const Result = ({
@@ -45,13 +46,13 @@ const Result = ({
             <table>
                 <tr>
                     <td>
-                        {data?.createCoach?.coach?.countedProteins || 0}g
+                        {data?.proteins}g
                     </td>
                     <td>
-                        {data?.createCoach?.coach?.countedCarbs || 0}g
+                        {data?.carbs}g
                     </td>
                     <td>
-                        {data?.createCoach?.coach?.countedFats || 0}g
+                        {data?.fats}g
                     </td>
                 </tr>
                 <tr>

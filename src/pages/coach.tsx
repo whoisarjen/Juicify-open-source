@@ -20,6 +20,7 @@ import { trpc } from "@/utils/trpc";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import moment from 'moment'
+import { type GetMacronutrientsReturn } from "@/utils/coach.utils";
 
 const whenAdded = moment().format('YYYY-MM-DD')
 
@@ -34,7 +35,6 @@ const Coach = () => {
     //     },
     //     pause: true,
     // })
-    // const [{ data: createCoachData }, createCoach] = useCreateCoachMutation()
 
     const {
         data: measurement,
@@ -43,15 +43,15 @@ const Coach = () => {
         .getDay
         .useQuery({ username, whenAdded }, { enabled: !!username && !!whenAdded })
 
+    const [createCoachData, setCreateCoachData] = useState<null | GetMacronutrientsReturn>(null)
+
     const createCoach = trpc.coach.create.useMutation({
-        onSuccess() {
-            // TODO refresh token
+        onSuccess(data) {
+            // TODO refresh token without changing step
+            setCreateCoachData(data)
             setStep('Result')
         }
     })
-
-    const data: any = null // TODO
-    const createCoachData: any = null // TODO
 
     const prepareCreate = async (coach: CoachSchema) => {
         if (!measurement) {
@@ -81,12 +81,8 @@ const Coach = () => {
     const handlePreviousStep = () => setStep(sessionData?.user?.isCoachAnalyze ? 'Standard' : 'Welcome')
 
     useEffect(() => {
-        if (!sessionData?.user) {
-            return
-        }
-
         setStep(sessionData?.user?.isCoachAnalyze ? 'Standard' : 'Welcome')
-    }, [sessionData?.user])
+    }, [sessionData?.user?.isCoachAnalyze])
 
     return (
         <div className="coach">

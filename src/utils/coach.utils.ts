@@ -54,7 +54,7 @@ type GetMacronutrients = {
     kindOfDiet: keyof typeof kindOfDiets
 }
 
-type GetMacronutrientsReturn = {
+export type GetMacronutrientsReturn = {
     proteins: number
     carbs: number
     fats: number
