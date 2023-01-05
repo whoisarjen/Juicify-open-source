@@ -9,8 +9,8 @@ import CustomSlider from '@/containers/macronutrients/CustomSlider/CustomSlider'
 import BarMacronutrients from '@/containers/macronutrients/BarMacronutrients/BarMacronutrients';
 import { useSession } from 'next-auth/react';
 import { trpc } from '@/utils/trpc';
-import DialogEditMacronutrients from '@/components/common/DialogEditMacronutrients/DialogEditMacronutrients';
 import { reloadSession } from '@/utils/global.utils'
+import DialogEditMacronutrients from '@/components/common/DialogEditMacronutrients/DialogEditMacronutrients';
 
 const Box = styled.div`
     display: grid;
