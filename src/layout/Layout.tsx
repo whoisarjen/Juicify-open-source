@@ -70,7 +70,7 @@ const getCookie = async (cookieName: string) => {
 const Layout = ({ children }: { children: any }) => {
     const router = useRouter()
     const [isAllowedLocation, setIsAllowedLocation] = useState(false)
-    const { data } = useSession()
+    const { data, status } = useSession()
 
     useEffect(() => {
         (async () => {
@@ -91,7 +91,7 @@ const Layout = ({ children }: { children: any }) => {
 
     const isLoggoutedGrid = !data || notRequiredAuth.filter(route => route == router.pathname).length || router.pathname == '/'
 
-    if (!isAllowedLocation) {
+    if (!isAllowedLocation || status === 'loading') {
         return null
     }
 

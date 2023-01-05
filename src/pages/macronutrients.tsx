@@ -70,7 +70,7 @@ const MacronutrientsPage = () => {
     })
 
     const changed = (newValue: any, key: string) => {
-        let newMacro = JSON.parse(JSON.stringify(macronutrients))
+        let newMacro = [...macronutrients]
         newMacro[changeObject.day][key] = newValue
 
         let value = newValue - changeObject[key]
@@ -127,7 +127,7 @@ const MacronutrientsPage = () => {
                 newMacroDB[`carbsDay${day}` as keyof typeof newMacroDB] = x.carbs
                 newMacroDB[`fatsDay${day}` as keyof typeof newMacroDB] = x.fats
             })
-            console.log({ newMacroDB })
+
             await updateUser.mutateAsync(newMacroDB)
         }
 
@@ -220,7 +220,12 @@ const MacronutrientsPage = () => {
                             </Grid__description>
                         }
                     </Grid>
-                    {changeObjectKeysLength > 0 && <ButtonSubmitItems isShowNumber={false} clicked={save} />}
+                    {changeObjectKeysLength > 0 &&
+                        <ButtonSubmitItems
+                            isShowNumber={false}
+                            clicked={save}
+                        />
+                    }
                 </div>
             </Box>
             <DialogEditMacronutrients
