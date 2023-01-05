@@ -10,7 +10,7 @@ import BarMacronutrients from '@/containers/macronutrients/BarMacronutrients/Bar
 import { useSession } from 'next-auth/react';
 import { trpc } from '@/utils/trpc';
 import { reloadSession } from '@/utils/global.utils'
-import DialogEditMacronutrients from '@/components/common/DialogEditMacronutrients/DialogEditMacronutrients';
+import DialogEditMacronutrients from '@/components/DialogEditMacronutrients/DialogEditMacronutrients';
 
 const Box = styled.div`
     display: grid;

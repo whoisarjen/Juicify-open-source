@@ -1,14 +1,15 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-interface SimpleLineChartProps {
+interface StackedBarChartProps {
     data: Array<any>,
     barNamesWithColor: Array<any>
 }
 
-const SimpleLineChart = ({ data, barNamesWithColor }: SimpleLineChartProps) => {
+export const StackedBarChart = ({ data, barNamesWithColor }: StackedBarChartProps) => {
+
     return (
         <ResponsiveContainer width="100%" height="100%">
-            <LineChart
+            <BarChart
                 data={data}
                 margin={{
                     top: 20,
@@ -22,12 +23,12 @@ const SimpleLineChart = ({ data, barNamesWithColor }: SimpleLineChartProps) => {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                {barNamesWithColor.map(bar =>
-                    <Line key={bar.dataKey} type="monotone" dataKey={bar.dataKey} stroke={bar.stroke} activeDot={{ r: 8 }} />
-                )}
-            </LineChart>
+                {
+                    barNamesWithColor.map(bar =>
+                        <Bar key={bar.dataKey} dataKey={bar.dataKey} stackId="a" fill={bar.fill} />
+                    )
+                }
+            </BarChart>
         </ResponsiveContainer>
     )
 }
-
-export default SimpleLineChart;

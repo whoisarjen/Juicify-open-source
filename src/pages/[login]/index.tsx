@@ -1,4 +1,3 @@
-import SimpleLineChart from "@/components/common/diagram-simple-line-chart";
 import NavbarProfile from "@/containers/profile/NavbarProfile/NavbarProfile";
 import { useTheme } from "@/hooks/useTheme";
 import useTranslation from "next-translate/useTranslation";
@@ -6,9 +5,10 @@ import { useRouter } from "next/router";
 import { useMemo } from "react";
 import moment from "moment";
 import { getCalories, multipleProductByHowMany } from "@/utils/consumed.utils";
-import StackedBarChart from "@/components/common/diagram-stacked-bar-chart";
 import styled from 'styled-components'
 import { trpc } from "@/utils/trpc";
+import { StackedBarChart } from '@/components/StackedBarChart'
+import { SimpleLineChart } from '@/components/SimpleLineChart'
 
 const Box = styled.div`
     width: 100%;
@@ -119,7 +119,10 @@ const ProfilePage = () => {
             </Box>
             <h3 style={{ color: getTheme('PRIMARY') }}>{t("Daily macronutrients")}</h3>
             <Box>
-                <StackedBarChart data={dataMacronutrients} barNamesWithColor={barNamesWithColor} />
+                <StackedBarChart
+                    data={dataMacronutrients}
+                    barNamesWithColor={barNamesWithColor}
+                />
             </Box>
         </>
     );
