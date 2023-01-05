@@ -10,9 +10,11 @@ import NavbarOnlyTitle from "@/components/NavbarOnlyTitle/NavbarOnlyTitle"
 import moment from 'moment'
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
+import { goals } from "@prisma/client";
+import { GOALS } from "@/utils/coach.utils";
 
 interface StandardProps {
-    setStep: (arg0: string) => void
+    setStep: (step: string) => void
 }
 
 const Grid = styled.div`
@@ -86,6 +88,10 @@ const Standard = ({ setStep }: StandardProps) => {
         }
     }, [sessionData?.user])
 
+    if (!sessionData?.user) {
+        return null
+    }
+
     return (
         <Grid>
             <Main>
@@ -109,17 +115,17 @@ const Standard = ({ setStep }: StandardProps) => {
                         <div>{t('HISTORY')}</div>
                     </div>
                 </TopButtons>
-                {sessionData?.user?.goal === 0
+                {sessionData.user.goal === goals.ZERO
                     ?
                     <NavbarOnlyTitle title="coach:RECOMPOSITION" />
                     :
-                    (sessionData?.user?.goal || 0) > 0
+                    !sessionData.user.goal.includes('MINUS')
                         ?
                         <NavbarOnlyTitle title="coach:MUSCLE_BUILDING" />
                         :
                         <NavbarOnlyTitle title="coach:LOSING_WEIGHT" />
                 }
-                <div>{sessionData?.user?.goal}% / {t('WEEK')}</div>
+                <div>{GOALS[sessionData.user.goal]}% / {t('WEEK')}</div>
                 <div>
                     {t('STANDARD_DESCRIPTION')}
                 </div>
@@ -148,29 +154,28 @@ const Standard = ({ setStep }: StandardProps) => {
                 <SecondInfo>
                     <div>
                         <div>{t('LAST_CHECK')}</div>
-                        <SecondBold>{moment(sessionData?.user?.nextCoach).add('days', -7).format('DD.MM.YYYY')}</SecondBold>
+                        <SecondBold>{moment(sessionData.user.nextCoach).add('days', -7).format('DD.MM.YYYY')}</SecondBold>
                     </div>
                     <div />
                     <div>
                         <div>{t('NEXT_CHECK')}</div>
-                        <SecondBold>{moment(sessionData?.user?.nextCoach).format('DD.MM.YYYY')}</SecondBold>
+                        <SecondBold>{moment(sessionData.user.nextCoach).format('DD.MM.YYYY')}</SecondBold>
                     </div>
                 </SecondInfo>
-                {
-                    daysToCoach > 0 ?
-                        <>
-                            <div>{daysToCoach} {t('DAYS_UNTIL_NEXT')}</div>
-                            <div>
-                                <Button disabled variant="contained">{t('STANDARD_BUTTON')}</Button>
-                            </div>
-                        </>
-                        :
-                        <>
-                            <div>It&apos;s time to check your progress!</div>
-                            <div>
-                                <Button variant="contained" color="error">Check progress</Button>
-                            </div>
-                        </>
+                {daysToCoach > 0 ?
+                    <>
+                        <div>{daysToCoach} {t('DAYS_UNTIL_NEXT')}</div>
+                        <div>
+                            <Button disabled variant="contained">{t('STANDARD_BUTTON')}</Button>
+                        </div>
+                    </>
+                    :
+                    <>
+                        <div>It&apos;s time to check your progress!</div>
+                        <div>
+                            <Button variant="contained" color="error">Check progress</Button>
+                        </div>
+                    </>
                 }
             </Second>
         </Grid>

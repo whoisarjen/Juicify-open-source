@@ -32,6 +32,7 @@ export const coachRouter = router({
                     ...omit(input, ['data']),
                     ...updateMacronutrientsInUser(proteins, carbs, fats),
                     isCoachAnalyze: true,
+                    nextCoach: moment().add(8, 'days').toDate(),
                 },
                 where: {
                     id,
