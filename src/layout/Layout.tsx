@@ -89,6 +89,17 @@ const Layout = ({ children }: { children: any }) => {
         })()
     }, [router, data])
 
+    // TODO do I need it?
+    useEffect(() => {
+        console.log({ router: router.asPath })
+        localStorage.setItem('asPath', router.asPath)
+    }, [router.asPath])
+
+    // TODO do I need it?
+    useEffect(() => {
+        router.push(localStorage.getItem('asPath') || '/')
+    }, [router])
+
     const isLoggoutedGrid = !data || notRequiredAuth.filter(route => route == router.pathname).length || router.pathname == '/'
 
     if (!isAllowedLocation || status === 'loading') {

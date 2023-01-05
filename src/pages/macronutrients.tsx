@@ -74,7 +74,8 @@ const MacronutrientsPage = () => {
         newMacro[changeObject.day][key] = newValue
 
         let value = newValue - changeObject[key]
-        let numberPossibleObjectChange = macronutrients.filter(x => !x.locked && x.day != changeObject.day).length
+        let numberPossibleObjectChange = macronutrients
+            .filter(x => !x.locked && x.day != changeObject.day).length
 
         newMacro.forEach((x: any) => {
             if (!x.locked && x.day != changeObject.day) {
@@ -104,7 +105,11 @@ const MacronutrientsPage = () => {
         }
 
         setMacronutrients(newMacro)
-        setChangeObject({ ...changeObject, ...{ [key]: newValue }, ...{ choosen: true } })
+        setChangeObject({
+            ...changeObject,
+            [key]: newValue,
+            choosen: true,
+        })
     }
 
     const save = async () => {
@@ -132,10 +137,10 @@ const MacronutrientsPage = () => {
         }
 
         setChangeObject({})
-        setMacronutrients(macronutrients.map(x => {
-            x.choosen = false
-            return x
-        }))
+        setMacronutrients(macronutrients.map(macronutrient => ({
+            ...macronutrient,
+            choosen: false,
+        })))
     }
 
     const onChange = (object: any, state: boolean) => {
