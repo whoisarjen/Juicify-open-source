@@ -9,7 +9,7 @@ import CustomSlider from '@/containers/macronutrients/CustomSlider/CustomSlider'
 import BarMacronutrients from '@/containers/macronutrients/BarMacronutrients/BarMacronutrients';
 import { useSession } from 'next-auth/react';
 import { trpc } from '@/utils/trpc';
-import DialogEditMacronutrients from '@/components/common/dialog-edit-macronutrients/DialogEditMacronutrients';
+import DialogEditMacronutrients from '@/components/common/DialogEditMacronutrients/DialogEditMacronutrients';
 import { reloadSession } from '@/utils/global.utils'
 
 const Box = styled.div`
@@ -159,7 +159,7 @@ const MacronutrientsPage = () => {
     }
 
     useEffect(() => {
-        if (!sessionData?.user?.id) {
+        if (!sessionData?.user) {
             return
         }
 
@@ -174,7 +174,7 @@ const MacronutrientsPage = () => {
         setMacronutrients(macro)
         setOryginalMacronutrients(macro)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sessionData?.user?.id])
+    }, [sessionData?.user])
 
     const changeObjectKeysLength = Object.keys(changeObject).length
 
@@ -230,7 +230,7 @@ const MacronutrientsPage = () => {
             </Box>
             <DialogEditMacronutrients
                 isOwnMacro={isOwnMacro}
-                close={() => setIsOwnMacro(false)}
+                onClose={() => setIsOwnMacro(false)}
             />
         </>
     )
