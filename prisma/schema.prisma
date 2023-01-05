@@ -103,7 +103,7 @@ model User {
   proteinsDay6        Int             @default(0)
   carbsDay6           Int             @default(0)
   fatsDay6            Int             @default(0)
-  fiber               Int             @default(0)
+  fiber               Int             @default(10)
   carbsPercentAsSugar Int             @default(10)
   nextCoach           DateTime        @default(now())
   isCoachAnalyze      Boolean         @default(false)
