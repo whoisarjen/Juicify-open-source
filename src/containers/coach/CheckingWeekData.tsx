@@ -50,6 +50,7 @@ const CheckingWeekData = ({ setStep }: ChooseDietProps) => {
     //     }
     // }, [data])
 
+    
     return (
         <Grid>
             {/* <NavbarOnlyTitle title="coach:CHECKING_TODAY_TITLE" />
