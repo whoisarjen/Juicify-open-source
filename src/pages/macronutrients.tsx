@@ -2,7 +2,6 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import Button from '@mui/material/Button';
 import styled from 'styled-components'
 import Header from '@/components/Header/Header';
-import DialogEditMacronutrients from '@/components/common/dialog-edit-macronutrients';
 import useTranslation from 'next-translate/useTranslation';
 import { useEffect, useState } from 'react';
 import ButtonSubmitItems from '@/components/ButtonSubmitItems/ButtonSubmitItems';
@@ -10,6 +9,8 @@ import CustomSlider from '@/containers/macronutrients/CustomSlider/CustomSlider'
 import BarMacronutrients from '@/containers/macronutrients/BarMacronutrients/BarMacronutrients';
 import { useSession } from 'next-auth/react';
 import { trpc } from '@/utils/trpc';
+import DialogEditMacronutrients from '@/components/common/dialog-edit-macronutrients/DialogEditMacronutrients';
+import { reloadSession } from '@/utils/global.utils'
 
 const Box = styled.div`
     display: grid;
@@ -61,10 +62,10 @@ const MacronutrientsPage = () => {
     const [changeObject, setChangeObject] = useState<any>({})
     const [isOwnMacro, setIsOwnMacro] = useState(false)
     const { t } = useTranslation('macronutrients')
-// TODO ALL!
+
     const updateUser = trpc.user.update.useMutation({
         onSuccess(data, variables, context) {
-
+            reloadSession()
         },
     })
 
@@ -158,25 +159,30 @@ const MacronutrientsPage = () => {
     }
 
     useEffect(() => {
-        if (sessionData?.user?.id) {
-            const macro = [...Array(7)].map((_: number, day: number) => ({
-                proteins: sessionData?.user?.[`proteinsDay${day}` as keyof typeof sessionData.user] as number,
-                carbs: sessionData?.user?.[`carbsDay${day}` as keyof typeof sessionData.user] as number,
-                fats: sessionData?.user?.[`fatsDay${day}` as keyof typeof sessionData.user] as number,
-                locked: false,
-                day,
-            }))
-            setMacronutrients(macro)
-            setOryginalMacronutrients(macro)
+        if (!sessionData?.user?.id) {
+            return
         }
+
+        const macro = [...Array(7)].map((_: number, day: number) => ({
+            proteins: sessionData?.user?.[`proteinsDay${day}` as keyof typeof sessionData.user] as number,
+            carbs: sessionData?.user?.[`carbsDay${day}` as keyof typeof sessionData.user] as number,
+            fats: sessionData?.user?.[`fatsDay${day}` as keyof typeof sessionData.user] as number,
+            locked: false,
+            day,
+        }))
+
+        setMacronutrients(macro)
+        setOryginalMacronutrients(macro)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sessionData?.user?.id])
+
+    const changeObjectKeysLength = Object.keys(changeObject).length
 
     return (
         <>
             <Box>
                 <div>
-                    {Object.keys(changeObject).length == 0 && <Header text={t("macronutrients:TITLE")} />}
+                    {changeObjectKeysLength == 0 && <Header text={t("macronutrients:TITLE")} />}
                     <Grid>
                         <Grid__bar>
                             {macronutrients.map((x: any, index: number) =>
@@ -189,33 +195,32 @@ const MacronutrientsPage = () => {
                                 />
                             )}
                         </Grid__bar>
-                        {Object.keys(changeObject).length > 0 ?
-                            (
-                                <Grid__slider>
-                                    {[...Object.keys(changeObject)].map(x =>
-                                        x != 'day' &&
-                                        x != 'locked' &&
-                                        x != 'choosen' &&
-                                        <CustomSlider
-                                            key={x}
-                                            day={changeObject['day'] + changeObject[x]}
-                                            title={x}
-                                            beginValue={changeObject[x]}
-                                            macro={macronutrients}
-                                            changed={(value: any) => changed(value, x)}
-                                        />
-                                    )}
-                                </Grid__slider>
-                            ) : (
-                                <Grid__description>
-                                    <div>
-                                        {t('DESCRIPTION')} <LockOpenIcon /> {t('DESCRIPTION_2')}
-                                    </div>
-                                    <Button variant="contained" onClick={() => setIsOwnMacro(true)}>{t('BUTTON')}</Button>
-                                </Grid__description>
-                            )}
+                        {changeObjectKeysLength > 0 ?
+                            <Grid__slider>
+                                {[...Object.keys(changeObject)].map(x =>
+                                    x != 'day' &&
+                                    x != 'locked' &&
+                                    x != 'choosen' &&
+                                    <CustomSlider
+                                        key={x.toString()}
+                                        day={changeObject['day'] + changeObject[x]}
+                                        title={x.toString()}
+                                        beginValue={changeObject[x]}
+                                        macro={macronutrients}
+                                        changed={(value: any) => changed(value, x.toString())}
+                                    />
+                                )}
+                            </Grid__slider>
+                            :
+                            <Grid__description>
+                                <div>
+                                    {t('DESCRIPTION')} <LockOpenIcon /> {t('DESCRIPTION_2')}
+                                </div>
+                                <Button variant="contained" onClick={() => setIsOwnMacro(true)}>{t('BUTTON')}</Button>
+                            </Grid__description>
+                        }
                     </Grid>
-                    {Object.keys(changeObject).length > 0 && <ButtonSubmitItems isShowNumber={false} clicked={save} />}
+                    {changeObjectKeysLength > 0 && <ButtonSubmitItems isShowNumber={false} clicked={save} />}
                 </div>
             </Box>
             <DialogEditMacronutrients

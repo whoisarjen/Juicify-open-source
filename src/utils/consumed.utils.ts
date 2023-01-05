@@ -50,15 +50,16 @@ export const getExpectedMacro = (user: User | null | undefined, whenAdded: strin
     const proteins = (user[`proteinsDay${moment(whenAdded).day()}` as keyof typeof user] || 0) as number
     const carbs = (user[`carbsDay${moment(whenAdded).day()}` as keyof typeof user] || 0) as number
     const fats = (user[`fatsDay${moment(whenAdded).day()}` as keyof typeof user] || 0) as number
+    const calories = getCalories({ proteins, carbs, fats })
 
     const { fiber, carbsPercentAsSugar } = user
 
     return {
         proteins,
         carbs,
-        sugar: carbsPercentAsSugar / 100 * carbs,
+        sugar: Math.round(carbsPercentAsSugar / 100 * carbs),
         fats,
-        fiber,
-        calories: getCalories({ proteins, carbs, fats }),
+        fiber: Math.round(calories / 1000 * fiber),
+        calories,
     }
 }

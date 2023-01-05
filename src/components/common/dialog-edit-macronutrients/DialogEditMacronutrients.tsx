@@ -44,13 +44,13 @@ const DialogEditMacronutrients = ({
         close()
     }
 
-    useEffect(() => {
-        if (data?.user) {
-            // setProteins(data?.user.macronutrients[0].proteins)
-            // setCarbs(data?.user.macronutrients[0].carbs)
-            // setFats(data?.user.macronutrients[0].fats)
-        }
-    }, [data?.user?.id])
+    // useEffect(() => {
+    //     if (data?.user) {
+    //         setProteins(data?.user.macronutrients[0].proteins)
+    //         setCarbs(data?.user.macronutrients[0].carbs)
+    //         setFats(data?.user.macronutrients[0].fats)
+    //     }
+    // }, [data?.user?.id])
 
     return (
         <Dialog
