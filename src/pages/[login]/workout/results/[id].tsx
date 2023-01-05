@@ -75,7 +75,6 @@ const WorkoutResultPage = () => {
         .workoutResult
         .get
         .useQuery({ id, username }, {
-            enabled: !!id && !!username,
             onSuccess(data) {
                 reset(data)
             },

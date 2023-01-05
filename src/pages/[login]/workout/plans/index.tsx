@@ -19,7 +19,7 @@ const WorkoutPlansPage = () => {
     const { data: workoutPlans } = trpc
         .workoutPlan
         .getAll
-        .useQuery({ username }, { enabled: !!username })
+        .useQuery({ username })
 
     const createWorkoutPlan = trpc.workoutPlan.create.useMutation({
         onSuccess: (data) => {

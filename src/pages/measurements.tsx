@@ -41,7 +41,7 @@ const MeasurementsPage = () => {
     } = trpc
         .measurement
         .getAll
-        .useQuery({ username }, { enabled: !!username })
+        .useQuery({ username })
 
     return (
         <Content>

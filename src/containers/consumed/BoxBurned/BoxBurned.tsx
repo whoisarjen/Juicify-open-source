@@ -46,10 +46,7 @@ const BoxBurned = () => {
     } = trpc
         .workoutResult
         .getDay
-        .useQuery({
-            username,
-            whenAdded,
-        }, { enabled: username == sessionData?.user?.username && !!username && !!whenAdded })
+        .useQuery({ username, whenAdded })
 
     if (!workoutResults.length) {
         return null

@@ -15,7 +15,7 @@ const useDaily = (overwriteWhenAdded?: string, overwriteUsername?: string) => {
     } = trpc
         .workoutResult
         .getDay
-        .useQuery({ whenAdded, username }, { enabled: !!(whenAdded && username) })
+        .useQuery({ whenAdded, username })
 
     const consumedMacro = sumMacroFromConsumed(consumed)
     const expectedMacro = getExpectedMacro(owner, whenAdded)

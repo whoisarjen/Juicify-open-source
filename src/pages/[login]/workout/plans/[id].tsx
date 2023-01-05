@@ -35,7 +35,6 @@ const WorkoutPlan = () => {
         .workoutPlan
         .get
         .useQuery({ id, username }, {
-            enabled: !!id && !!username,
             onSuccess(data) {
                 reset({
                     id: data.id,

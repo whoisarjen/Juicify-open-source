@@ -44,10 +44,10 @@ const ProfilePage = () => {
     ] = trpc.useQueries(t => [
         t
             .consumed
-            .getPeriod({ username, startDate, endDate }, { enabled: !!username }),
+            .getPeriod({ username, startDate, endDate }),
         t
             .workoutResult
-            .getPeriod({ username, startDate, endDate }, { enabled: !!username }),
+            .getPeriod({ username, startDate, endDate }),
     ])
 
     const {

@@ -42,7 +42,7 @@ const Coach = () => {
     } = trpc
         .measurement
         .getDay
-        .useQuery({ username, whenAdded }, { enabled: !!username && !!whenAdded })
+        .useQuery({ username, whenAdded })
 
     const [createCoachData, setCreateCoachData] = useState<null | GetMacronutrientsReturn>(null)
 

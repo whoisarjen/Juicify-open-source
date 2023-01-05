@@ -56,7 +56,7 @@ const DialogAddWorkoutResult = () => {
     } = trpc
         .workoutPlan
         .getAll
-        .useQuery({ username }, { enabled: !!username })
+        .useQuery({ username })
 
     const DialogAddWorkoutResult = () => {
         const workoutPlan = workoutPlans.find(workoutPlan => workoutPlan.id === choosenWorkoutPlan)
