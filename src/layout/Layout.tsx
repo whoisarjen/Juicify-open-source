@@ -91,8 +91,10 @@ const Layout = ({ children }: { children: any }) => {
 
     // TODO do I need it?
     useEffect(() => {
-        localStorage.setItem('asPath', router.asPath)
-    }, [router.asPath])
+        if (router?.asPath) {
+            localStorage.setItem('asPath', router.asPath)
+        }
+    }, [router?.asPath])
 
     // TODO do I need it?
     useEffect(() => {
@@ -100,7 +102,8 @@ const Layout = ({ children }: { children: any }) => {
         if (asPath) {
             router.push(asPath)
         }
-    }, [router])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const isLoggoutedGrid = !data || notRequiredAuth.filter(route => route == router.pathname).length || router.pathname == '/'
 
