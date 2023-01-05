@@ -18,7 +18,7 @@ const WorkoutResultsPage = () => {
     } = trpc
         .workoutResult
         .getAll
-        .useQuery({ username })
+        .useQuery({ username }, { enabled: !!username })
 
     const isOwner = sessionData?.user?.username == username
 

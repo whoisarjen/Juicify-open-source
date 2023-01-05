@@ -38,7 +38,7 @@ const CheckingTodayData = ({ setStep }: CheckingTodayDataProps) => {
     } = trpc
         .measurement
         .getDay
-        .useQuery({ username, whenAdded })
+        .useQuery({ username, whenAdded }, { enabled: !!username && !!whenAdded })
 
     const weight = measurement?.weight || 0
 

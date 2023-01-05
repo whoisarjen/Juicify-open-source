@@ -63,7 +63,7 @@ const SidebarRight = () => {
     } = trpc
         .measurement
         .getDay
-        .useQuery({ username, whenAdded })
+        .useQuery({ username, whenAdded }, { enabled: !!username && !!whenAdded })
 
     const weight = measurement?.weight || 0
     const coach = moment(whenAdded).diff(sessionData?.user?.nextCoach, 'days')

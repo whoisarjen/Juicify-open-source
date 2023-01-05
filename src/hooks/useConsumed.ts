@@ -19,7 +19,7 @@ const useConsumed = (overwriteWhenAdded?: string, overwriteUsername?: string) =>
     } = trpc
         .consumed
         .getDay
-        .useQuery({ username, whenAdded })
+        .useQuery({ username, whenAdded }, { enabled: !!(username && whenAdded) })
 
     const updateConsumed = trpc.consumed.update.useMutation({
         onSuccess(data) {

@@ -56,7 +56,7 @@ const NavbarProfile = ({ tab }: { tab: number }) => {
     } = trpc
         .user
         .getByUsername
-        .useQuery({ username })
+        .useQuery({ username }, { enabled: !!username && !isOwner })
 
     const user = isOwner ? sessionData?.user : data
 
