@@ -8,8 +8,8 @@ import ArrowRightAltOutlinedIcon from '@mui/icons-material/ArrowRightAltOutlined
 import styled from 'styled-components';
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm';
 import { useState, useEffect } from 'react';
-import { ExerciseResultSchemaProps } from '../workout.schema';
 import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon';
+import { type WorkoutResultExerciseResultSchema } from '@/server/schema/workoutResult.schema';
 
 const Box = styled.div`
     min-height: 36px;
@@ -32,9 +32,9 @@ const Connected = styled.div`
 `
 
 interface BoxResultProps {
-    value: ExerciseResultSchemaProps
+    value: WorkoutResultExerciseResultSchema
     index: number
-    changeResult: (result: ExerciseResultSchemaProps) => void
+    changeResult: (result: WorkoutResultExerciseResultSchema) => void
     deleteResult: () => void
     isOwner: boolean
     isLast: boolean

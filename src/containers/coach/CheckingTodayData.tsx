@@ -58,7 +58,7 @@ const CheckingTodayData = ({ setStep }: CheckingTodayDataProps) => {
                         <tbody>
                             <tr>
                                 <th>{t('WEIGHT')}:</th>
-                                <td>{weight}kg</td>
+                                <td>{`${weight}kg`}</td>
                             </tr>
                         </tbody>
                         <tbody>

@@ -35,7 +35,6 @@ export const DialogMeasurement = ({
     measurement,
     defaultWeight = 0,
 }: DialogMeasurementProps) => {
-    const [whenAdded, setWhenAdded] = useState(moment().toDate())
     const [open, setOpen] = useState(false)
     const { t } = useTranslation('home')
     const { data: sessionData } = useSession()
@@ -46,7 +45,8 @@ export const DialogMeasurement = ({
         handleSubmit,
         control,
         reset,
-        setValue
+        setValue,
+        getValues,
     } = useForm<CreateMeasurementSchema | MeasurementSchema>({
         resolver: zodResolver(measurement
             ? measurementSchema
@@ -60,7 +60,7 @@ export const DialogMeasurement = ({
 
     const handleClose = () => {
         setOpen(false)
-        reset({ whenAdded, weight: defaultWeight })
+        reset({ whenAdded: moment().toDate(), weight: defaultWeight })
     }
 
     const utils = trpc.useContext()
@@ -159,11 +159,6 @@ export const DialogMeasurement = ({
         },
     })
 
-    const onWhenChange = (newWhenAdded: Date) => {
-        setWhenAdded(newWhenAdded)
-        setValue('whenAdded', moment(newWhenAdded).toDate())
-    }
-
     const handleSubmitProxy = () => {
         if (measurement) {
             return handleSubmit(async (newMeasurement) =>
@@ -176,7 +171,7 @@ export const DialogMeasurement = ({
 
     useEffect(() => {
         if (!measurement) {
-            reset({ whenAdded })
+            reset({ whenAdded: moment().toDate() })
             return
         }
 
@@ -195,8 +190,8 @@ export const DialogMeasurement = ({
                 <DialogTitle>{t('home:ADD_WEIGHT')}</DialogTitle>
                 <DialogContent>
                     <DatePicker
-                        when={whenAdded}
-                        onChange={onWhenChange}
+                        defaultDate={getValues().whenAdded}
+                        onChange={newWhenAdded => setValue('whenAdded', moment(newWhenAdded).toDate())}
                         sx={{ marginTop: '8px' }}
                         register={register('whenAdded')}
                     />

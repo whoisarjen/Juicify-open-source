@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react'
 interface DatePickerProps {
     sx?: object
     register: object
-    defaultDate: Date
+    defaultDate?: Date
     onChange: (newDate: Date) => void
     focused?: boolean
 }
@@ -17,7 +17,7 @@ interface DatePickerProps {
 export const DatePicker = ({
     sx,
     register,
-    defaultDate,
+    defaultDate = moment().toDate(),
     onChange,
     focused = false,
 }: DatePickerProps) => {

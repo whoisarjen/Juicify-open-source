@@ -9,7 +9,7 @@ export const authOptions: NextAuthOptions = {
         async session({ session, user }) {
             return {
                 ...session,
-                user,
+                user: user as unknown as User | null,
             }
         },
     },

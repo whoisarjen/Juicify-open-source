@@ -26,7 +26,8 @@ const useConsumed = (overwriteWhenAdded?: string, overwriteUsername?: string) =>
             utils
                 .consumed
                 .getDay
-                .setData({ username, whenAdded }, currentData => updateArray<Consumed & { user: User }>(currentData, data))
+                .setData({ username, whenAdded }, currentData =>
+                    updateArray<Consumed & { user: Pick<User, 'id' | 'username' | 'image'> }>(currentData, data))
         },
     })
 

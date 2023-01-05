@@ -3,10 +3,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import styled from 'styled-components';
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm';
 import { useState, useEffect } from 'react';
-import { ExerciseSchemaProps, ExerciseResultSchemaProps } from '../workout.schema';
 import BoxResult from '../BoxResult/BoxResult';
 import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon';
 import { omit } from 'lodash';
+import { type WorkoutResultExerciseResultSchema, type WorkoutResultExerciseSchema } from '@/server/schema/workoutResult.schema';
 
 const Name = styled.div`
     min-height: 36px;
@@ -39,9 +39,9 @@ const Previous = styled.div`
 
 interface BoxExerciseProps {
     isOwner: boolean
-    exercise: ExerciseSchemaProps
-    previousExercise?: ExerciseSchemaProps
-    setNewValues: (arg0: ExerciseResultSchemaProps[]) => void
+    exercise: WorkoutResultExerciseSchema
+    previousExercise?: WorkoutResultExerciseSchema
+    setNewValues: (arg0: WorkoutResultExerciseResultSchema[]) => void
     deleteExerciseWithIndex: () => void
 }
 
@@ -52,9 +52,9 @@ const BaseBoxExercise = ({
     isOwner,
     deleteExerciseWithIndex,
 }: BoxExerciseProps) => {
-    const [values, setValues] = useState<ExerciseResultSchemaProps[]>(exercise.results as ExerciseResultSchemaProps[])
+    const [values, setValues] = useState<WorkoutResultExerciseResultSchema[]>(exercise.results as WorkoutResultExerciseResultSchema[])
 
-    const changeResult = (object: ExerciseResultSchemaProps, index: number) => {
+    const changeResult = (object: WorkoutResultExerciseResultSchema, index: number) => {
         let array = [...values]
         array[index] = { ...object }
         setNewValues(array)
@@ -68,7 +68,8 @@ const BaseBoxExercise = ({
 
     const openNewResult = (lastResult: { reps: number, weight: number } | null) => {
         if (lastResult) {
-            const previousValues = values.map((value: ExerciseResultSchemaProps) => omit(value, ['open']))
+            const previousValues = values.map((value: WorkoutResultExerciseResultSchema) => omit(value, ['open']))
+
             setNewValues([
                 ...previousValues.slice(0, previousValues.length - 1),
                 {
@@ -93,7 +94,7 @@ const BaseBoxExercise = ({
     }
 
     useEffect(() => {
-        setValues(exercise.results as ExerciseResultSchemaProps[])
+        setValues(exercise.results as WorkoutResultExerciseResultSchema[])
     }, [exercise])
 
     return (
@@ -114,7 +115,7 @@ const BaseBoxExercise = ({
             <Previous>
                 {previousExercise?.results?.map((result, index) => result.weight + "x" + result.reps + (index + 1 === previousExercise.results?.length ? '' : ', '))}
             </Previous>
-            {values.map((value: ExerciseResultSchemaProps, index: number) =>
+            {values.map((value: WorkoutResultExerciseResultSchema, index: number) =>
                 <BoxResult
                     key={index + ' ' + value.open}
                     value={value}

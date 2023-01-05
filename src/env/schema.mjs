@@ -32,7 +32,6 @@ export const clientSchema = z.object({
  * @type {{ [k in keyof z.infer<typeof clientSchema>]: z.infer<typeof clientSchema>[k] | undefined }}
  */
 export const clientEnv = {
-    // NEXT_PUBLIC_BAR: process.env.NEXT_PUBLIC_BAR,
-    NEXT_PUBLIC_SEARCH_MIN_NAME_LENGTH: process.env.NEXT_PUBLIC_SEARCH_MIN_NAME_LENGTH,
-    NEXT_PUBLIC_DEFAULT_NUMBER_OF_MEALS: process.env.NEXT_PUBLIC_DEFAULT_NUMBER_OF_MEALS,
+    NEXT_PUBLIC_SEARCH_MIN_NAME_LENGTH: Number(process.env.NEXT_PUBLIC_SEARCH_MIN_NAME_LENGTH),
+    NEXT_PUBLIC_DEFAULT_NUMBER_OF_MEALS: Number(process.env.NEXT_PUBLIC_DEFAULT_NUMBER_OF_MEALS),
 };

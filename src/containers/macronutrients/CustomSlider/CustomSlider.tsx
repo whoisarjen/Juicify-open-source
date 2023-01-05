@@ -38,6 +38,7 @@ const CustomSlider = ({ title, macro, beginValue, changed, day }: CustomSliderPr
         if (value > count) {
             setValue(count)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [macro, day])
 
     const handleChange = (_: Event, newValue: number | number[]) => {
@@ -66,6 +67,7 @@ const CustomSlider = ({ title, macro, beginValue, changed, day }: CustomSliderPr
             }, 500)
             setTimer(changeFunction(value))
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value])
 
     return (
