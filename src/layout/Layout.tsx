@@ -91,13 +91,15 @@ const Layout = ({ children }: { children: any }) => {
 
     // TODO do I need it?
     useEffect(() => {
-        console.log({ router: router.asPath })
         localStorage.setItem('asPath', router.asPath)
     }, [router.asPath])
 
     // TODO do I need it?
     useEffect(() => {
-        router.push(localStorage.getItem('asPath') || '/')
+        const asPath = localStorage.getItem('asPath')
+        if (asPath) {
+            router.push(asPath)
+        }
     }, [router])
 
     const isLoggoutedGrid = !data || notRequiredAuth.filter(route => route == router.pathname).length || router.pathname == '/'
