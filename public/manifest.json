@@ -3,7 +3,7 @@
   "background_color": "#121212",
   "display": "standalone",
   "scope": "/",
-  "start_url": "/login",
+  "start_url": "/",
   "name": "Juicify",
   "short_name": "Juicify",
   "icons": [
