@@ -1,4 +1,5 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
 import DiscordProvider from "next-auth/providers/discord";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "../../../env/server.mjs";
@@ -15,14 +16,33 @@ export const authOptions: NextAuthOptions = {
     },
     adapter: PrismaAdapter(prisma),
     providers: [
+        GoogleProvider({
+            clientId: env.GOOGLE_CLIENT_ID,
+            clientSecret: env.GOOGLE_CLIENT_SECRET,
+            authorization: {
+                params: {
+                    prompt: "consent",
+                    access_type: "offline",
+                    response_type: "code"
+                }
+            },
+            profile(profile) {
+                return {
+                    id: profile.sub,
+                    email: profile.email,
+                    emailVerified: profile.email_verified,
+                    image: profile.picture,
+                    locale: profile.locale,
+                    name: profile.given_name,
+                    surname: profile.family_name,
+                }
+            }
+        }),
         DiscordProvider({
             clientId: env.DISCORD_CLIENT_ID,
             clientSecret: env.DISCORD_CLIENT_SECRET,
             profile(profile) {
-                if (profile.avatar === null) {
-                    const defaultAvatarNumber = parseInt(profile.discriminator) % 5
-                    profile.image_url = `https://cdn.discordapp.com/embed/avatars/${defaultAvatarNumber}.png`
-                } else {
+                if (profile.avatar !== null) {
                     const format = profile.avatar.startsWith("a_") ? "gif" : "png"
                     profile.image_url = `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.${format}`
                 }
