@@ -194,7 +194,7 @@ model Product {
   updatedAt        DateTime   @default(now()) @updatedAt
   user             User?      @relation(fields: [userId], references: [id], onDelete: NoAction)
   userId           Int?
-  name             String     @db.VarChar(100)
+  name             String     @db.VarChar(255)
   nameLength       Int
   proteins         Decimal    @default(0) @db.Decimal(4, 1)
   carbs            Decimal    @default(0) @db.Decimal(4, 1)
