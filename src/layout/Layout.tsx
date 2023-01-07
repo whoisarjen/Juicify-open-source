@@ -123,9 +123,9 @@ const Layout = ({ children }: { children: any }) => {
                             ? <SidebarRightLoggouted />
                             : <SidebarRight />
                     }
+                    <Footer />
                 </Grid>
             }
-            <Footer />
         </main>
     )
 }
