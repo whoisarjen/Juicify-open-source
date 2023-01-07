@@ -27,7 +27,25 @@ export const workoutResultRouter = router({
                 },
             })
 
-            return workoutResult as unknown as WorkoutResult<typeof workoutResult>
+            const previousWorkoutResult = workoutResult.workoutPlanId
+                ? await ctx.prisma.workoutResult.findFirst({
+                    where: {
+                        whenAdded: {
+                            lt: workoutResult.whenAdded,
+                        },
+                        userId: workoutResult.userId,
+                        workoutPlanId: workoutResult.workoutPlanId,
+                    },
+                    orderBy: {
+                        whenAdded: 'desc',
+                    },
+                })
+                : undefined
+
+            return {
+                ...workoutResult,
+                previousWorkoutResult,
+            } as unknown as WorkoutResult<typeof workoutResult> & { previousWorkoutResult?: WorkoutResult<typeof workoutResult> }
         }),
     getDay: publicProcedure
         .input(

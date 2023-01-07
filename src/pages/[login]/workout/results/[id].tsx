@@ -25,7 +25,7 @@ const WorkoutResultPage = () => {
     const router: any = useRouter()
     const { t } = useTranslation('workout')
     const { data: sessionData } = useSession()
-    const [previousExercises, setPreviousExercises] = useState([])
+    const [previousExercises, setPreviousExercises] = useState<WorkoutResultExercise[]>([])
 
     const id = parseInt(router.query.id || 0)
     const username = router.query.login || ''
@@ -59,6 +59,8 @@ const WorkoutResultPage = () => {
                 .getDay
                 .setData({ username, whenAdded: today }, currentData => updateArray<WorkoutResult>(currentData, data))
 
+            // TODO update where workoutResult has value as previousWorkoutResult (before offline mode)
+
             utils
                 .workoutResult
                 .getAll
@@ -78,8 +80,12 @@ const WorkoutResultPage = () => {
             enabled: !!id && !!username,
             onSuccess(data) {
                 reset(data)
+                setPreviousExercises(data.previousWorkoutResult?.exercises || [])
             },
         })
+
+    const whenAdded = data?.whenAdded as unknown as Date
+    const workoutPlanId = data?.workoutPlanId as unknown as number
 
     const {
         register,
