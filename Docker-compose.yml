@@ -42,5 +42,6 @@ volumes:
     postgres-data:
 
 networks:
-    proxy:
-        external: true
+    juicify:
+        external:
+            name: traefik-net
