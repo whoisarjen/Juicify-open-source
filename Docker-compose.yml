@@ -14,6 +14,9 @@ services:
             - "5432"
         labels:
             - "traefik.enable=true"
+            - "traefik.http.routers.postgres.rule=Host(`juicify.app:5432`)"
+            - "traefik.http.routers.postgres.entrypoints=websecure"
+            - "traefik.http.routers.postgres.tls.certresolver=myresolver"
 
     nextjs:
         build:
