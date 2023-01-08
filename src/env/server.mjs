@@ -6,7 +6,18 @@
 import { serverSchema } from "./schema.mjs";
 import { env as clientEnv, formatErrors } from "./client.mjs";
 
-const _serverEnv = serverSchema.safeParse(process.env);
+const defaultServerEnv = {
+  NEXTAUTH_SECRET: "w@yYo%aJ;]#FXj{;j?@d`#48NHrC'eT]5DyLQD@Bv0LWkivPE)~X@sGB,v;ev/)",
+  DISCORD_CLIENT_ID: "1056593142381547630",
+  DISCORD_CLIENT_SECRET: "xO5xLnwaxH9y2e3O4egNNWfp4R0273fN",
+  GOOGLE_CLIENT_ID: "658821628417-vpspbk50qh0qb7cbg6d4h6hd2e9up3h2.apps.googleusercontent.com",
+  GOOGLE_CLIENT_SECRET: "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",
+}
+
+const _serverEnv = serverSchema.safeParse({
+  ...process.env,
+  ...defaultServerEnv,
+});
 
 if (_serverEnv.success === false) {
   console.error(
