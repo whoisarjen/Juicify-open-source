@@ -19,4 +19,3 @@ jobs:
           remote_path: '/home/arjen/juicify'
           args: '-o ConnectTimeout=5'
           delete_remote_files: true
-      # - run: docker-compose -f Docker-compose.yml up --build -d
