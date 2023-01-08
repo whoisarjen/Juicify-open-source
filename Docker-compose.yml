@@ -42,5 +42,4 @@ volumes:
     postgres-data:
 
 networks:
-    default:
-        external: true
+    external: true
