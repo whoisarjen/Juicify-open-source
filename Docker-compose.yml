@@ -12,9 +12,6 @@ services:
             - postgres-data:/var/lib/postgresql/data
         expose:
             - "5432"
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.postgres.rule=Host(`db.juicify.app`)"
 
     nextjs:
         build:
