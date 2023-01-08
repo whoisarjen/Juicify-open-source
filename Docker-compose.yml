@@ -31,7 +31,6 @@ services:
             - "3000"
         depends_on:
             - postgres
-            - traefik
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.whoami.rule=Host(`juicify.app`)"
