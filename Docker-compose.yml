@@ -14,8 +14,6 @@ services:
         #     - "5432:5432"
         expose:
             - "5432"
-        networks:
-            - juicify
 
     nextjs:
         build:
@@ -39,13 +37,11 @@ services:
             - "traefik.http.routers.whoami.entrypoints=websecure"
             - "traefik.http.routers.whoami.tls.certresolver=myresolver"
         command: npm run dev
-        networks:
-            - juicify
 
 volumes:
     postgres-data:
 
 networks:
-    juicify:
+    default:
         external:
             name: traefik-net
