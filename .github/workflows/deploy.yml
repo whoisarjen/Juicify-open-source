@@ -18,4 +18,5 @@ jobs:
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           remote_path: '/home/arjen/juicify'
           args: '-o ConnectTimeout=5'
+          delete_remote_files: true
       # - run: docker-compose -f Docker-compose.yml up --build -d
