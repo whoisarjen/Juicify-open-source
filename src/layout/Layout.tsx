@@ -111,6 +111,8 @@ const Layout = ({ children }: { children: any }) => {
         return null
     }
 
+    // TODO Dialog forcing to update data like birth, height, username, etc.
+
     return (
         <main>
             {router.pathname.includes('blog') || router.pathname == '/'

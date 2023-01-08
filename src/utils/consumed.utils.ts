@@ -11,7 +11,7 @@ export const DEFAULT_MACRO = {
 }
 
 export const getCalories = ({ proteins, carbs, fats }: { proteins: Decimal | number, carbs: Decimal | number, fats: Decimal | number }) =>
-    Number(proteins) * 4 + Number(carbs) * 4 + Number(fats) * 9
+    Math.round(Number(proteins) * 4 + Number(carbs) * 4 + Number(fats) * 9)
 
 export const sumMacroFromConsumed = (consumed: Consumed[]) =>
     consumed.reduce((previous, consumed) => {

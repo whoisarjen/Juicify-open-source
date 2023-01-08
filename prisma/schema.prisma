@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider     = "mysql"
+  provider     = "postgresql"
   // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
   // Further reading:
   // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
@@ -72,6 +72,7 @@ model Session {
   @@index([userId])
 }
 
+// TODO user can't be deleted as it will remove necessary data from other tables
 model User {
   id                  Int             @id @default(autoincrement())
   createdAt           DateTime        @default(now())
@@ -144,7 +145,7 @@ model Exercise {
   id         Int      @id @default(autoincrement())
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now()) @updatedAt
-  user       User?    @relation(fields: [userId], references: [id], onDelete: NoAction)
+  user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     Int?
   name       String   @db.VarChar(100)
   nameLength Int
@@ -194,7 +195,7 @@ model Product {
   id               Int        @id @default(autoincrement())
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @default(now()) @updatedAt
-  user             User?      @relation(fields: [userId], references: [id], onDelete: NoAction)
+  user             User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId           Int?
   name             String     @db.VarChar(255)
   nameLength       Int
@@ -212,6 +213,7 @@ model Product {
   Consumed         Consumed[]
 
   @@unique([id, userId])
+  @@unique([name, userId])
   @@index([userId])
 }
 

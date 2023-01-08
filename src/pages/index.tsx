@@ -31,11 +31,12 @@ const Home = () => {
 
     return (
         <Main>
+            {/* TODO buttons directly from providers and only logo */}
             <div>
                 <Logo size={175} />
             </div>
             <div>
-                <div>Juiciy.</div>
+                <div>Juicify.</div>
                 <div>Prawdziwy.</div>
                 <div>Game Changer.</div>
             </div>
