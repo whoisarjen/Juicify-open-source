@@ -1,0 +1,74 @@
+version: "3.8"
+services:
+    traefik:
+        image: traefik:v2.9.6
+        container_name: traefik
+        ports:
+            - "80:80"
+            - "443:443"
+            - "8080:8080"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ./traefik.yml:/traefik.yml:ro
+            - ./letsencrypt:/letsencrypt
+        command:
+            - --api.insecure=true
+            - --providers.docker
+            #- "--log.level=DEBUG"
+            - "--api.insecure=true"
+            - "--providers.docker=true"
+            - "--providers.docker.exposedbydefault=false"
+            - "--entrypoints.websecure.address=:443"
+            - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+            #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+            - "--certificatesresolvers.myresolver.acme.email=kamilow97@gmail.com"
+            - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+          
+
+    whoami:
+        image: "traefik/whoami"
+        container_name: "whoami"
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.whoami.rule=Host(`juicify.app`)"
+            - "traefik.http.routers.whoami.entrypoints=websecure"
+            - "traefik.http.routers.whoami.tls.certresolver=myresolver"
+
+#     postgres:
+#         image: postgres:15.1
+#         restart: unless-stopped
+#         container_name: postgres
+#         environment:
+#             POSTGRES_DB: juicify
+#             POSTGRES_USER: admin
+#             POSTGRES_PASSWORD: admin
+#         volumes:
+#             - postgres-data:/var/lib/postgresql/data
+#         ports:
+#             - "5432:5432"
+#         expose:
+#             - "5432"
+
+#     nextjs:
+#         build:
+#             context: .
+#             dockerfile: Dockerfile
+#         restart: unless-stopped
+#         container_name: nextjs
+#         environment:
+#             DATABASE_URL: postgres://admin:admin@postgres:5432/juicify
+#         volumes:
+#             - .:/usr/src/app
+#             - /usr/src/app/node_modules
+#             - /usr/src/app/.next
+#         expose:
+#             - "3000"
+#         depends_on:
+#             - postgres
+#             - traefik
+#         labels:
+#             - "traefik.http.routers.nextjs.rule=Host(`juicify.app`)"
+#         command: npm run dev
+
+# volumes:
+#     postgres-data:
