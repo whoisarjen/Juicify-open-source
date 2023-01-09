@@ -25,4 +25,4 @@ jobs:
       - name: Create .env file
         uses: ozaytsev86/create-env-file@v1
         with:
-          ${{ secrets.ENV_FILE }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
