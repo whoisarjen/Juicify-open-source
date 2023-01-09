@@ -6,7 +6,7 @@ import SidebarRight from './SidebarRight'
 import SidebarRightLoggouted from './SidebarRightLoggouted'
 import styled from 'styled-components'
 import moment from 'moment'
-import { useSession } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 import { DialogMissingSettings } from '@/components/DialogMissingSettings'
 
 const Grid = styled.div`
@@ -105,6 +105,12 @@ const Layout = ({ children }: { children: any }) => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    useEffect(() => {
+        if (sessionData?.user?.isBanned) {
+            signOut({ callbackUrl: '/' })
+        }
+    }, [sessionData?.user?.isBanned])
 
     const isLoggoutedGrid = !sessionData || notRequiredAuth.filter(route => route == router.pathname).length || router.pathname == '/'
 

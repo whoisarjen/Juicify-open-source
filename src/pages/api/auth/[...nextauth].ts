@@ -7,6 +7,13 @@ import { prisma } from "../../../server/db/client";
 
 export const authOptions: NextAuthOptions = {
     callbacks: {
+        async signIn({ user }) {
+            if ((user as unknown as User).isBanned) {
+                return false
+            }
+
+            return true
+        },
         async session({ session, user }) {
             return {
                 ...session,
