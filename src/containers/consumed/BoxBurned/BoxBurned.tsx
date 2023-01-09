@@ -57,7 +57,7 @@ const BoxBurned = () => {
 
     return (
         <Grid>
-            <Bolded>Burned calories</Bolded>
+            {/* <Bolded>Burned calories</Bolded> */}
             <AddButtonContainer>
                 {/* {isOwner
                     ? <IconButton
