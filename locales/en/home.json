@@ -52,5 +52,9 @@
     "WORKOUT_RESULTS": "Results",
     "DATE": "Date",
     "LOGOUT": "Logout",
-    "LOGIN": "Sign in"
+    "LOGIN": "Sign in",
+    "HEIGHT": "Height",
+    "MISSING_SETTINGS": "Missing settings",
+    "MISSING_SETTINGS_DESCRIPTION": "Juicify needs some extra data about you, to provide correct calculation of BMR and help you achieve expected results.",
+    "SAVE_AND_CLOSE": "Save and close"
 }

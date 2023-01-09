@@ -52,5 +52,9 @@
     "WORKOUT_RESULTS": "Wyniki",
     "DATE": "Data",
     "LOGOUT": "Wyloguj",
-    "LOGIN": "Zaloguj"
+    "LOGIN": "Zaloguj",
+    "HEIGHT": "Height",
+    "MISSING_SETTINGS": "Brakujące ustawienia",
+    "MISSING_SETTINGS_DESCRIPTION": "Juicify potrzebuje dodatkowych informacji na Twój temat, aby móc poprawnie obliczyć BMR i pomóc Ci osiągnąć wyznaczony cel sywletkowy.",
+    "SAVE_AND_CLOSE": "Zapisz i zamknij"
 }

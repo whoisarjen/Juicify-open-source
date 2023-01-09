@@ -18,7 +18,7 @@ import { DatePicker } from '@/components/DatePicker'
 import LoadingButton from '@mui/lab/LoadingButton';
 
 export const DialogMissingSettings = () => {
-    const { t } = useTranslation('settings')
+    const { t } = useTranslation()
     const { data: sessionData } = useSession()
 
     const updateUser = trpc.user.update.useMutation({
@@ -52,13 +52,13 @@ export const DialogMissingSettings = () => {
 
     return (
         <Dialog open={true}>
-            <DialogTitle>Missing settings</DialogTitle>
+            <DialogTitle>{t('home:MISSING_SETTINGS')}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Juicify needs some extra data about you, to provide correct calculation of BMR and help you achieve expected results.
+                    {t('home:MISSING_SETTINGS_DESCRIPTION')}
                 </DialogContentText>
                 <TextField
-                    label={t("Height")}
+                    label={t("HEIGHT")}
                     type="number"
                     InputProps={{
                         endAdornment: <InputAdornment position="start">cm</InputAdornment>
@@ -79,7 +79,7 @@ export const DialogMissingSettings = () => {
                 <LoadingButton
                     loading={updateUser.isLoading}
                     onClick={handleSubmit(changeSettings)}
-                >Save and close</LoadingButton>
+                >{t('home:SAVE_AND_CLOSE')}</LoadingButton>
             </DialogActions>
         </Dialog>
     );
