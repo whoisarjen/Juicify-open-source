@@ -65,8 +65,6 @@ const WorkoutResultPage = () => {
                 .workoutResult
                 .getAll
                 .setData({ username }, currentData => updateArray<WorkoutResult>(currentData, data))
-
-            router.push(`/${router.query?.login}/workout/results`)
         }
     })
 
@@ -103,14 +101,12 @@ const WorkoutResultPage = () => {
         update,
     } = useFieldArray({ control, name: "exercises", keyName: 'uuid' })
 
-    const handleOnSave = async (values: WorkoutResultSchema) => {
+    const handleOnSave = async (values: WorkoutResultSchema) =>
         await updateWorkoutResult.mutate(values)
-    }
 
-    const handleOnSaveWithRouter = useCallback(async (newWorkoutResult: WorkoutResultSchema) => {
+    const handleOnSaveWithRouter = async (newWorkoutResult: WorkoutResultSchema) =>
         await updateWorkoutResult.mutateAsync(newWorkoutResult)
             .then(() => router.push(`/${router.query?.login}/workout/results`))
-    }, [router, updateWorkoutResult])
 
     useEffect(() => {
         const handleSubmitProxy = () => handleSubmit(handleOnSave)()
