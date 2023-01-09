@@ -27,7 +27,7 @@ jobs:
       - name: ls -a via OPEN SSH Private Key
         uses: garygrossgarten/github-action-ssh@release
         with:
-          command: sudo docker-compose -f Docker-compose.yml up --build -d
+          command: docker-compose -f ./juicify/Docker-compose.yml up --build -d
           host: 194.59.158.13
           port: 22
           username: arjen
