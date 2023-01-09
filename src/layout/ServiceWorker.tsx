@@ -10,7 +10,12 @@ const ServiceWorker = ({ children }: { children: any }) => {
                     navigator.serviceWorker.getRegistrations().then(function (registrations) {
                         for (let registration of registrations) {
                             registration.unregister()
-                            localStorage.setItem('version', process.env.APP_VERSION || new Date().toISOString())
+                                .then(() => {
+                                    localStorage.setItem('version', process.env.APP_VERSION || new Date().toISOString())
+                                })
+                                .finally(() => {
+                                    window.location.reload()
+                                })
                         }
                     }).catch(function (err) {
                         console.log('Service Worker registration failed: ', err);
