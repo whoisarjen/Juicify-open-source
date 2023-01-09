@@ -20,6 +20,7 @@ jobs:
           args: '-o ConnectTimeout=5'
           delete_remote_files: true
   create-env:
+    needs: deploy-via-sftp
     runs-on: ubuntu-latest
     steps:
       - name: Create .env file
