@@ -122,6 +122,7 @@ model User {
   isSportActive       Boolean         @default(false)
   activityLevel       activityLevels  @default(AVERAGE)
   sex                 Boolean         @default(true)
+  isBanned            Boolean         @default(false) // TODO
   accounts            Account[]
   sessions            Session[]
   Exercise            Exercise[]
