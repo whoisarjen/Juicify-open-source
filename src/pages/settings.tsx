@@ -37,9 +37,8 @@ const SettingsPage = () => {
         }
     })
 
-    const changeSettings = async (newUserSettings: UserSchema) => {
+    const changeSettings = async (newUserSettings: UserSchema) =>
         await updateUser.mutateAsync(newUserSettings)
-    }
 
     const {
         register,

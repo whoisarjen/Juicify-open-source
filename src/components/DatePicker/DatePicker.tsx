@@ -12,7 +12,11 @@ interface DatePickerProps {
     defaultDate?: Date
     onChange: (newDate: Date) => void
     focused?: boolean
+    maxDateTime?: Date
+    minDateTime?: Date
 }
+
+const format = "YYYY/MM/DD hh:mm"
 
 export const DatePicker = ({
     sx,
@@ -20,17 +24,19 @@ export const DatePicker = ({
     defaultDate = moment().toDate(),
     onChange,
     focused = false,
+    maxDateTime = moment().add(-12, 'years').toDate(),
+    minDateTime = moment().add(-100, 'years').toDate(),
 }: DatePickerProps) => {
     const { t } = useTranslation('home')
-    const [date, setDate] = useState(defaultDate)
+    const [date, setDate] = useState(moment(defaultDate).format(format))
 
     const handleOnChange = (newDate: Date) => {
         onChange(newDate)
-        setDate(newDate)
+        setDate(moment(newDate).format(format))
     }
 
     useEffect(() => {
-        setDate(defaultDate)
+        setDate(moment(defaultDate).format(format))
     }, [defaultDate])
 
     return (
@@ -48,6 +54,9 @@ export const DatePicker = ({
                         {...register}
                     />
                 }
+                maxDateTime={moment(maxDateTime)}
+                minDateTime={moment(minDateTime)}
+                inputFormat={format}
             />
         </LocalizationProvider>
     )

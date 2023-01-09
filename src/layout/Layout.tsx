@@ -7,6 +7,7 @@ import SidebarRightLoggouted from './SidebarRightLoggouted'
 import styled from 'styled-components'
 import moment from 'moment'
 import { useSession } from 'next-auth/react'
+import { DialogMissingSettings } from '@/components/DialogMissingSettings'
 
 const Grid = styled.div`
     margin: auto;
@@ -70,7 +71,7 @@ const getCookie = async (cookieName: string) => {
 const Layout = ({ children }: { children: any }) => {
     const router = useRouter()
     const [isAllowedLocation, setIsAllowedLocation] = useState(false)
-    const { data, status } = useSession()
+    const { data: sessionData, status } = useSession()
 
     useEffect(() => {
         (async () => {
@@ -79,15 +80,15 @@ const Layout = ({ children }: { children: any }) => {
                 return router.push(router.asPath, router.asPath, { locale });
             }
 
-            if (data?.user?.username && notRequiredAuth.includes(router.pathname)) {
-                router.push(`/${data.user.username}/consumed/${moment().format('YYYY-MM-DD')}`);
-            } else if (!data && requiredAuth.includes(router.pathname)) {
+            if (sessionData?.user?.username && notRequiredAuth.includes(router.pathname)) {
+                router.push(`/${sessionData.user.username}/consumed/${moment().format('YYYY-MM-DD')}`);
+            } else if (!sessionData && requiredAuth.includes(router.pathname)) {
                 router.push('/')
             } else {
                 setIsAllowedLocation(true)
             }
         })()
-    }, [router, data])
+    }, [router, sessionData])
 
     // TODO do I need it?
     useEffect(() => {
@@ -105,13 +106,11 @@ const Layout = ({ children }: { children: any }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const isLoggoutedGrid = !data || notRequiredAuth.filter(route => route == router.pathname).length || router.pathname == '/'
+    const isLoggoutedGrid = !sessionData || notRequiredAuth.filter(route => route == router.pathname).length || router.pathname == '/'
 
     if (!isAllowedLocation || status === 'loading') {
         return null
     }
-
-    // TODO Dialog forcing to update data like birth, height, username, etc.
 
     return (
         <main>
@@ -128,6 +127,7 @@ const Layout = ({ children }: { children: any }) => {
                     <Footer />
                 </Grid>
             }
+            {sessionData?.user?.height === 0 && <DialogMissingSettings />}
         </main>
     )
 }
