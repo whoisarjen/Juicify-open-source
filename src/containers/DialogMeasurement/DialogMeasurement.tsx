@@ -194,6 +194,7 @@ export const DialogMeasurement = ({
                         onChange={newWhenAdded => setValue('whenAdded', moment(newWhenAdded).toDate())}
                         sx={{ marginTop: '8px' }}
                         register={register('whenAdded')}
+                        maxDateTime={moment().toDate()}
                     />
                     <TextField
                         fullWidth
