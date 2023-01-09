@@ -22,6 +22,7 @@ jobs:
   create-env:
     runs-on: ubuntu-latest
     steps:
-      - name: 'Create env file'
-        run: |
-          echo "${{ secrets.ENV_FILE }}" > .env
+      - name: Create .env file
+        uses: ozaytsev86/create-env-file@v1
+        with:
+          ${{ secrets.ENV_FILE }}
