@@ -26,9 +26,6 @@ services:
             dockerfile: Dockerfile
         restart: unless-stopped
         container_name: nextjs
-        environment:
-            DATABASE_URL: postgres://admin:admin@postgres:5432/juicify
-            NEXTAUTH_URL: https://juicify.app
         volumes:
             - .:/usr/src/app
             - /usr/src/app/node_modules

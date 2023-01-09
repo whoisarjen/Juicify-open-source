@@ -19,3 +19,6 @@ jobs:
           remote_path: '/home/arjen/juicify'
           args: '-o ConnectTimeout=5'
           delete_remote_files: true
+      - name: 'Create env file'
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
