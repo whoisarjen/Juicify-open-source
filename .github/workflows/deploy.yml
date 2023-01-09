@@ -23,8 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Create .env file
-        uses: SpicyPizza/create-envfile@v1.3
-        with:
+        env:
           directory: '../../home/arjen/juicify'
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
@@ -33,3 +32,22 @@ jobs:
           DISCORD_CLIENT_SECRET: ${{ secrets.DISCORD_CLIENT_SECRET }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+        run: |
+          touch .env
+          echo DATABASE_URL="$DATABASE_URL" >> .env
+          echo NEXTAUTH_URL="$NEXTAUTH_URL" >> .env
+          echo NEXTAUTH_SECRET="$NEXTAUTH_SECRET" >> .env
+          echo DISCORD_CLIENT_ID="$DISCORD_CLIENT_ID" >> .env
+          echo DISCORD_CLIENT_SECRET="$DISCORD_CLIENT_SECRET" >> .env
+          echo GOOGLE_CLIENT_ID="$GOOGLE_CLIENT_ID" >> .env
+          echo GOOGLE_CLIENT_SECRET="$GOOGLE_CLIENT_SECRET" >> .env
+
+          echo "cat .env"
+          cat .env
+
+          echo "ls -a ."
+          ls -a .
+
+          echo "ls -a ${{ github.workspace }}"
+          ls -a ${{ github.workspace }}
+        shell: bash
