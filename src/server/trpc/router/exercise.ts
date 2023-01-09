@@ -11,6 +11,8 @@ export const exerciseRouter = router({
             })
         )
         .query(async ({ ctx, input: { name } }) => {
+            const contains = name.trim()
+
             return await ctx.prisma.exercise.findMany({
                 take: 10,
                 where: {
@@ -19,19 +21,18 @@ export const exerciseRouter = router({
                             isDeleted: false,
                             userId: null,
                             name: {
-                                contains: name,
+                                contains,
+                                mode: 'insensitive',
                             },
                         },
-                        ...(ctx.session?.user?.id
-                            ? [{
-                                isDeleted: false,
-                                userId: ctx.session.user.id,
-                                name: {
-                                    contains: name,
-                                },
-                            }]
-                            : []
-                        )
+                        {
+                            isDeleted: false,
+                            userId: ctx.session?.user?.id || null,
+                            name: {
+                                contains,
+                                mode: 'insensitive',
+                            },
+                        },
                     ]
                 },
                 orderBy: {

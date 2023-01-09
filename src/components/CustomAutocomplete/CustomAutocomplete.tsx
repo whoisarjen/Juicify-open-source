@@ -27,7 +27,7 @@ const CustomAutocomplete = ({
             getOptionLabel={option => option ? option : ''}
             options={searchCache}
             loading={isLoading}
-            onInputChange={(e, value) => setFind(value.trim().toLowerCase())}
+            onInputChange={(e, value) => setFind(value)}
             renderInput={(params) => (
                 <TextField
                     {...params}
