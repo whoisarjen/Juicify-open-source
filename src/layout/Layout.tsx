@@ -108,7 +108,7 @@ const Layout = ({ children }: { children: any }) => {
 
     const isLoggoutedGrid = !sessionData || notRequiredAuth.filter(route => route == router.pathname).length || router.pathname == '/'
 
-    if (!isAllowedLocation || status === 'loading') {
+    if (!isAllowedLocation || status === 'loading' || (status === 'authenticated' && router.pathname == '/')) {
         return null
     }
 
