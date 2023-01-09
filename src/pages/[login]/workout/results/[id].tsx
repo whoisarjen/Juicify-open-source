@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { TextField } from "@mui/material"
 import useTranslation from "next-translate/useTranslation"
 import { useRouter } from "next/router"
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm, useFieldArray } from "react-hook-form"
 import InputAdornment from '@mui/material/InputAdornment';
 import ButtonMoreOptionsWorkoutResult from "@/containers/Workout/ButtonMoreOptionsWorkoutResult/ButtonMoreOptionsWorkoutResult"
