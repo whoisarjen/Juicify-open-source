@@ -6,11 +6,12 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 COPY package*.json /usr/src/app/
-COPY prisma /usr/src/app/prisma/
+COPY node_modules /usr/src/app/node_modules
 
 RUN npm install
-RUN npx prisma generate
 
 COPY . /usr/src/app
+
+RUN npx prisma generate
 
 EXPOSE 3000
