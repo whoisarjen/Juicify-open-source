@@ -90,14 +90,12 @@ const Layout = ({ children }: { children: any }) => {
         })()
     }, [router, sessionData])
 
-    // TODO do I need it?
     useEffect(() => {
         if (router?.asPath) {
             localStorage.setItem('asPath', router.asPath)
         }
     }, [router?.asPath])
 
-    // TODO do I need it?
     useEffect(() => {
         const asPath = localStorage.getItem('asPath')
         if (asPath) {
