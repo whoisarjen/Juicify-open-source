@@ -69,7 +69,8 @@ const SignInFloatingButton = styled.div`
     left: 50%;
     transform: translate(-50%, 0);
     ${this} > div {
-        width: 100%;
+        margin: 0 16px;
+        width: calc(100% - 32px);
     }
 `
 
@@ -144,19 +145,19 @@ const Layout = ({ children }: { children: any }) => {
                             : <SidebarRight />
                     }
                     <Footer />
-                    {!sessionData?.user &&
+                    {/* {!sessionData?.user && */}
                         <SignInFloatingButton>
                             <Button
-                                onClick={() => router.push('/')}
+                                component="div"
                                 color="primary"
                                 variant="contained"
                                 aria-label="authorization"
-                                component="div"
+                                onClick={() => router.push('/')}
                             >
                                 {t('I_ALSO_WANT_TO_CHANGE_MY_BODY')}
                             </Button>
                         </SignInFloatingButton>
-                    }
+                    {/* } */}
                 </Grid>
             }
             {sessionData?.user?.height === 0 && <DialogMissingSettings />}
