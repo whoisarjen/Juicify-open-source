@@ -35,7 +35,7 @@ const Content = styled.div`
     max-width: 702px;
     padding: 12px;
     display: grid;
-    min-height: calc(calc(100vh - calc(env(safe-area-inset-bottom) * 2)) - var(--BothNavHeightAndPadding));
+    min-height: calc(calc(100vh - env(safe-area-inset-bottom)) - var(--BothNavHeightAndPadding));
     padding-bottom: env(safe-area-inset-bottom);
     @media (max-width: 726px) {
         width: calc(100% - 24px);
