@@ -145,7 +145,7 @@ const Layout = ({ children }: { children: any }) => {
                             : <SidebarRight />
                     }
                     <Footer />
-                    {/* {!sessionData?.user && */}
+                    {!sessionData?.user &&
                         <SignInFloatingButton>
                             <Button
                                 component="div"
@@ -157,7 +157,7 @@ const Layout = ({ children }: { children: any }) => {
                                 {t('I_ALSO_WANT_TO_CHANGE_MY_BODY')}
                             </Button>
                         </SignInFloatingButton>
-                    {/* } */}
+                    }
                 </Grid>
             }
             {sessionData?.user?.height === 0 && <DialogMissingSettings />}
