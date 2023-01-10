@@ -6,9 +6,10 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 COPY package*.json /usr/src/app/
-COPY prisma ./prisma/
+COPY prisma /usr/src/app/prisma/
 
 RUN npm install
+RUN npx prisma generate
 
 COPY . /usr/src/app
 
