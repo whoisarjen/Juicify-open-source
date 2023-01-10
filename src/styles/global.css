@@ -42,7 +42,7 @@
 }
 
 :root {
-  --BothNavHeightAndPaddingDefault: 141px;
+  --BothNavHeightAndPaddingDefault: 44px; /* prev 141px */
   --BothNavHeightAndPadding: var(--BothNavHeightAndPaddingDefault);
   --theme-background: "#121212";
 }

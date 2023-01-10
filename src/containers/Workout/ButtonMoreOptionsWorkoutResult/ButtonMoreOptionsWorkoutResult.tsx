@@ -4,11 +4,22 @@ import SpeedDialAction from '@mui/material/SpeedDialAction';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import { useState } from 'react';
 import DialogAddExercises from '@/containers/DialogAddExercises/DialogAddExercises';
+import styled from 'styled-components';
 
 export interface ButtonMoreOptionsWorkoutResultProps {
     exercises: (WorkoutPlanExercise | WorkoutResultExercise)[],
     setExercises: (exercises: (WorkoutPlanExercise | WorkoutResultExercise)[]) => void
 }
+
+const Box = styled.div`
+    width: 100%;
+    max-width: 702px;
+    position: fixed;
+    bottom: var(--BothNavHeightAndPadding);
+    left: 50%;
+    transform: translate(-50%, 0);
+    height: 100px;
+`
 
 const ButtonMoreOptionsWorkoutResult = ({ exercises, setExercises }: ButtonMoreOptionsWorkoutResultProps) => {
     const [open, setOpen] = useState(false);
@@ -30,26 +41,28 @@ const ButtonMoreOptionsWorkoutResult = ({ exercises, setExercises }: ButtonMoreO
     ];
 
     return (
-        <SpeedDial
-            data-testid="ButtonMoreOptionsWorkoutResult"
-            ariaLabel="Manage result"
-            sx={{ position: 'fixed', bottom: 90, left: 16, }}
-            icon={<SpeedDialIcon />}
-            onClose={() => setOpen(false)}
-            onOpen={() => setOpen(true)}
-            open={open}
-        >
-            {actions.map((action) => (
-                <SpeedDialAction
-                    key={action.name}
-                    icon={action.icon}
-                    tooltipTitle={action.name}
-                    tooltipPlacement="right"
-                    tooltipOpen
-                    onClick={action.click}
-                />
-            ))}
-        </SpeedDial>
+        <Box>
+            <SpeedDial
+                data-testid="ButtonMoreOptionsWorkoutResult"
+                ariaLabel="Manage result"
+                sx={{ position: 'absolute', bottom: 22, left: 16, }}
+                icon={<SpeedDialIcon />}
+                onClose={() => setOpen(false)}
+                onOpen={() => setOpen(true)}
+                open={open}
+            >
+                {actions.map((action) => (
+                    <SpeedDialAction
+                        key={action.name}
+                        icon={action.icon}
+                        tooltipTitle={action.name}
+                        tooltipPlacement="right"
+                        tooltipOpen
+                        onClick={action.click}
+                    />
+                ))}
+            </SpeedDial>
+        </Box>
     );
 }
 
