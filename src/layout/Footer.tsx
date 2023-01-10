@@ -15,6 +15,7 @@ const Box = styled.footer`
     min-height: 43px;
     line-height: 43px;
     text-align: center;
+    z-index: 1051;
 `
 
 const Menu = styled.nav`
