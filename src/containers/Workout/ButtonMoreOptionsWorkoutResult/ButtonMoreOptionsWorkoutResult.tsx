@@ -15,7 +15,7 @@ const Box = styled.div`
     width: 100%;
     max-width: 702px;
     position: fixed;
-    bottom: var(--BothNavHeightAndPadding);
+    bottom: calc(var(--BothNavHeightAndPadding) + env(safe-area-inset-bottom));
     left: 50%;
     transform: translate(-50%, 0);
     height: 100px;
