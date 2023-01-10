@@ -27,7 +27,7 @@ jobs:
       - name: Restarting dockers related to deploy
         uses: garygrossgarten/github-action-ssh@release
         with:
-          command: cd juicify && npx prisma generate && docker-compose -f Docker-compose.yml up --build -d
+          command: cd juicify && npm i && npx prisma generate && docker-compose -f Docker-compose.yml up --build -d
           host: 194.59.158.13
           port: 22
           username: arjen
