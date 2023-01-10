@@ -8,6 +8,8 @@ import styled from 'styled-components'
 import moment from 'moment'
 import { useSession, signOut } from 'next-auth/react'
 import { DialogMissingSettings } from '@/components/DialogMissingSettings'
+import Button from '@mui/material/Button';
+import useTranslation from 'next-translate/useTranslation'
 
 const Grid = styled.div`
     margin: auto;
@@ -59,6 +61,18 @@ const notRequiredAuth = [
     '/reset-password'
 ]
 
+const SignInFloatingButton = styled.div`
+    width: 100%;
+    max-width: 702px;
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    ${this} > div {
+        width: 100%;
+    }
+`
+
 const getCookie = async (cookieName: string) => {
     let cookie: any = {};
     document.cookie.split(';').forEach(function (el) {
@@ -69,6 +83,7 @@ const getCookie = async (cookieName: string) => {
 }
 
 const Layout = ({ children }: { children: any }) => {
+    const { t } = useTranslation('home')
     const router = useRouter()
     const [isAllowedLocation, setIsAllowedLocation] = useState(false)
     const { data: sessionData, status } = useSession()
@@ -129,6 +144,19 @@ const Layout = ({ children }: { children: any }) => {
                             : <SidebarRight />
                     }
                     <Footer />
+                    {!sessionData?.user &&
+                        <SignInFloatingButton>
+                            <Button
+                                onClick={() => router.push('/')}
+                                color="primary"
+                                variant="contained"
+                                aria-label="authorization"
+                                component="div"
+                            >
+                                {t('I_ALSO_WANT_TO_CHANGE_MY_BODY')}
+                            </Button>
+                        </SignInFloatingButton>
+                    }
                 </Grid>
             }
             {sessionData?.user?.height === 0 && <DialogMissingSettings />}
