@@ -1,8 +1,9 @@
-import { GOALS, ACTIVITY_LEVELS, getMacronutrients, updateMacronutrientsInUser } from "@/utils/coach.utils";
 import moment from "moment";
-import { createCoachSchema } from "../../schema/coach.schema";
-import { router, protectedProcedure } from "../trpc";
 import { pick, omit } from 'lodash'
+
+import { router, protectedProcedure } from "../trpc";
+import { createCoachSchema } from "../../schema/coach.schema";
+import { GOALS, ACTIVITY_LEVELS, getMacronutrients, updateMacronutrientsInUser } from "@/utils/coach.utils";
 
 export const coachRouter = router({
     create: protectedProcedure
