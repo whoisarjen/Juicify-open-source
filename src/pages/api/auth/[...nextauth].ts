@@ -45,25 +45,25 @@ export const authOptions: NextAuthOptions = {
                 }
             }
         }),
-        DiscordProvider({
-            clientId: env.DISCORD_CLIENT_ID,
-            clientSecret: env.DISCORD_CLIENT_SECRET,
-            profile(profile) {
-                if (profile.avatar !== null) {
-                    const format = profile.avatar.startsWith("a_") ? "gif" : "png"
-                    profile.image_url = `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.${format}`
-                }
+        // DiscordProvider({
+        //     clientId: env.DISCORD_CLIENT_ID,
+        //     clientSecret: env.DISCORD_CLIENT_SECRET,
+        //     profile(profile) {
+        //         if (profile.avatar !== null) {
+        //             const format = profile.avatar.startsWith("a_") ? "gif" : "png"
+        //             profile.image_url = `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.${format}`
+        //         }
 
-                return {
-                    id: profile.id,
-                    username: profile.username,
-                    email: profile.email,
-                    emailVerified: new Date(),
-                    image: profile.image_url,
-                    locale: profile.locale,
-                }
-            },
-        }),
+        //         return {
+        //             id: profile.id,
+        //             username: profile.username,
+        //             email: profile.email,
+        //             emailVerified: new Date(),
+        //             image: profile.image_url,
+        //             locale: profile.locale,
+        //         }
+        //     },
+        // }),
     ],
     pages: {
         signIn: '/',
