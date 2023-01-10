@@ -66,7 +66,7 @@ const SidebarRight = () => {
         .useQuery({ username, whenAdded }, { enabled: !!username && !!whenAdded })
 
     const weight = measurement?.weight || 0
-    const coach = moment(whenAdded).diff(sessionData?.user?.nextCoach, 'days')
+    const coach = moment(sessionData?.user?.nextCoach).diff(whenAdded, 'days')
 
     const CIRCULAR_BOXES = [
         {
