@@ -40,7 +40,7 @@ const Home = () => {
                         <Button
                             variant="outlined"
                             key={provider.name}
-                            onClick={() => signIn(provider.id)}
+                            onClick={() => signIn(provider.id, { callbackUrl: '/me' })}
                         >
                             Sign in with {provider.name}
                         </Button>
