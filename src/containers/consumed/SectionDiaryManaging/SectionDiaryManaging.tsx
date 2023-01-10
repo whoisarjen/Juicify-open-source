@@ -15,32 +15,23 @@ const Buttons = styled.div`
     min-height: 36.5px
 `
 
-interface SectionDiaryManagingProps {
-    isOwner: boolean
-}
-
-const SectionDiaryManaging = ({
-    isOwner,
-}: SectionDiaryManagingProps) => {
-    const router: any = useRouter()
+const SectionDiaryManaging = () => {
+    const router = useRouter()
     const { t } = useTranslation('nutrition-diary')
 
     return (
         <Box>
             <Buttons>
-                {isOwner
-                    ? <Button
-                        onClick={() => router.push('/macronutrients')}
-                        color="primary"
-                        variant="outlined"
-                        aria-label="macronutrients"
-                        component="span"
-                        startIcon={<PieChartIcon />}
-                    >
-                        {t('Macronutrients')}
-                    </Button>
-                    : <div />
-                }
+                <Button
+                    onClick={() => router.push('/macronutrients')}
+                    color="primary"
+                    variant="outlined"
+                    aria-label="macronutrients"
+                    component="span"
+                    startIcon={<PieChartIcon />}
+                >
+                    {t('Macronutrients')}
+                </Button>
             </Buttons>
         </Box>
     )

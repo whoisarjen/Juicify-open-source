@@ -52,7 +52,7 @@ const Consumed = () => {
 
             <DiagramConsumedRemaining />
 
-            <SectionDiaryManaging isOwner={isOwner} />
+            {isOwner && <SectionDiaryManaging />}
 
             <BoxBurned />
 
