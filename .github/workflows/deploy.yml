@@ -27,7 +27,7 @@ jobs:
       - name: Regenerating prisma's types
         uses: garygrossgarten/github-action-ssh@release
         with:
-          command: npx prisma generate --prefix ./juicify
+          command: cd juicify && npx prisma generate
           host: 194.59.158.13
           port: 22
           username: arjen
