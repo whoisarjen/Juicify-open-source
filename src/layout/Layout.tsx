@@ -54,13 +54,6 @@ const requiredAuth = [
     '/barcode'
 ]
 
-const notRequiredAuth = [
-    '/',
-    '/login',
-    '/register',
-    '/reset-password'
-]
-
 const SignInFloatingButton = styled.div`
     width: 100%;
     max-width: 702px;
@@ -96,7 +89,7 @@ const Layout = ({ children }: { children: any }) => {
                 return router.push(router.asPath, router.asPath, { locale });
             }
 
-            if (sessionData?.user?.username && notRequiredAuth.includes(router.pathname)) {
+            if (sessionData?.user?.username && router.pathname == '/') {
                 router.push(`/${sessionData.user.username}/consumed/${moment().format('YYYY-MM-DD')}`);
             } else if (!sessionData && requiredAuth.includes(router.pathname)) {
                 router.push('/')
@@ -123,10 +116,15 @@ const Layout = ({ children }: { children: any }) => {
     useEffect(() => {
         if (sessionData?.user?.isBanned) {
             signOut({ callbackUrl: '/' })
+            return
         }
-    }, [sessionData?.user?.isBanned])
 
-    const isLoggoutedGrid = !sessionData || notRequiredAuth.filter(route => route == router.pathname).length || router.pathname == '/'
+        if (sessionData?.user && router.pathname == '/') {
+            router.push('/me')
+        }
+    }, [router, sessionData?.user])
+
+    const isLoggoutedGrid = !sessionData || router.pathname == '/'
 
     if (!isAllowedLocation || status === 'loading' || (status === 'authenticated' && router.pathname == '/')) {
         return null
@@ -139,10 +137,9 @@ const Layout = ({ children }: { children: any }) => {
                 : <Grid>
                     <SidebarLeft />
                     <Content>{children}</Content>
-                    {
-                        isLoggoutedGrid
-                            ? <SidebarRightLoggouted />
-                            : <SidebarRight />
+                    {isLoggoutedGrid
+                        ? <SidebarRightLoggouted />
+                        : <SidebarRight />
                     }
                     <Footer />
                     {!sessionData?.user &&
