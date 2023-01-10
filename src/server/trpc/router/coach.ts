@@ -47,6 +47,8 @@ export const coachRouter = router({
                     countedFats: fats,
                     data: pick(input.data, ['id', 'weight']),
                     userId: id,
+                    currentWeight: weight,
+                    changeInWeight: 0,
                 }
             })
 
