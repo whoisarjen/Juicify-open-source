@@ -21,7 +21,7 @@ jobs:
   
   restart-dockers:
     runs-on: ubuntu-latest
-    needs: prisma-generate
+    needs: deploy-via-sftp
 
     steps:
       - name: Restarting dockers related to deploy
