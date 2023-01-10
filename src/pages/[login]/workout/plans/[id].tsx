@@ -149,7 +149,7 @@ const WorkoutPlan = () => {
                 sx={{ width: '100%', marginTop: '10px' }}
                 type="text"
                 error={typeof errors.name === 'undefined' ? false : true}
-                helperText={errors.name?.message && t(`notify:${errors.name.message || ''}`)}
+                helperText={errors.name?.message}
             />
 
             <TextField
@@ -162,7 +162,7 @@ const WorkoutPlan = () => {
                 sx={{ marginTop: '10px' }}
                 {...register('burnedCalories')}
                 error={!!errors.burnedCalories}
-                helperText={errors.burnedCalories?.message && t(`notify:${errors.burnedCalories.message || ''}`)}
+                helperText={errors.burnedCalories?.message}
                 InputProps={{
                     endAdornment: <InputAdornment position="end">kcal</InputAdornment>,
                 }}
@@ -177,7 +177,7 @@ const WorkoutPlan = () => {
                 {...register('description')}
                 sx={{ width: '100%', marginTop: '10px' }}
                 error={typeof errors.description === 'undefined' ? false : true}
-                helperText={errors.description?.message && t(`notify:${errors.description.message || ''}`)}
+                helperText={errors.description?.message}
             />
             <DragDropContext onDragEnd={handleOnDragEnd}>
                 <Droppable droppableId="exercises">

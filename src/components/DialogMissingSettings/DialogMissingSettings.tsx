@@ -66,7 +66,7 @@ export const DialogMissingSettings = () => {
                     {...register('height')}
                     sx={{ width: '100%', margin: '12px 0' }}
                     error={typeof errors.height === 'undefined' ? false : true}
-                    helperText={errors.height?.message && t(`notify:${errors.height.message || ''}`)}
+                    helperText={errors.height?.message}
                 />
 
                 <DatePicker

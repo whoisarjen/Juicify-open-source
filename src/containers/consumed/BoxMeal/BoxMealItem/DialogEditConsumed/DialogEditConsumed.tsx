@@ -78,7 +78,7 @@ const DialogEditConsumed = ({
                         {...register('howMany')}
                         inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                         error={typeof errors.howMany === 'undefined' ? false : true}
-                        helperText={errors.howMany?.message && t(`notify:${errors.howMany.message || ''}`)}
+                        helperText={errors.howMany?.message}
                     />
                 </DialogContent>
                 <DialogActions>

@@ -140,7 +140,7 @@ const WorkoutResultPage = () => {
                 multiline
                 {...register('name')}
                 error={!!errors.name}
-                helperText={errors.name?.message && t(`notify:${errors.name.message || ''}`)}
+                helperText={errors.name?.message}
             />
 
             <DatePicker
@@ -159,7 +159,7 @@ const WorkoutResultPage = () => {
                 sx={sxTextField}
                 {...register('burnedCalories')}
                 error={!!errors.burnedCalories}
-                helperText={errors.burnedCalories?.message && t(`notify:${errors.burnedCalories.message || ''}`)}
+                helperText={errors.burnedCalories?.message}
                 InputProps={{
                     endAdornment: <InputAdornment position="end">kcal</InputAdornment>,
                 }}
@@ -174,7 +174,7 @@ const WorkoutResultPage = () => {
                 focused
                 {...register('note')}
                 error={!!errors.note}
-                helperText={errors.note?.message && t(`notify:${errors.note.message || ''}`)}
+                helperText={errors.note?.message}
             />
 
             {data?.workoutPlan?.description &&

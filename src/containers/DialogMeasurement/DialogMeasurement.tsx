@@ -205,7 +205,7 @@ export const DialogMeasurement = ({
                         defaultValue={defaultWeight}
                         {...register('weight')}
                         error={!!errors.weight}
-                        helperText={errors.weight?.message && t(`notify:${errors.weight.message || ''}`)}
+                        helperText={errors.weight?.message}
                         InputProps={{
                             endAdornment: <InputAdornment position="end">kg</InputAdornment>,
                         }}

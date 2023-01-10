@@ -56,7 +56,7 @@ const DialogCreateExercise = ({
                         <TextField
                             {...register('name')}
                             error={typeof errors.name === 'undefined' ? false : true}
-                            helperText={errors.name?.message && t(`notify:${errors.name.message || ''}`)}
+                            helperText={errors.name?.message}
                             required
                             autoFocus
                             margin="dense"

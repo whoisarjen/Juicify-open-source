@@ -70,7 +70,7 @@ const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProduct
                             label={t('Name of product')}
                             {...register('name')}
                             error={typeof errors.name === 'undefined' ? false : true}
-                            helperText={errors.name?.message && t(`notify:${errors.name.message || ''}`)}
+                            helperText={errors.name?.message}
                         />
                         <TextField
                             sx={{ marginTop: '12px' }}
@@ -81,7 +81,7 @@ const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProduct
                             label="Barcode"
                             {...register('barcode')}
                             error={!!errors.barcode}
-                            helperText={errors.barcode?.message && t(`notify:${errors.barcode.message || ''}`)}
+                            helperText={errors.barcode?.message}
                         />
                         <TextField
                             sx={{ marginTop: '12px' }}
@@ -90,7 +90,7 @@ const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProduct
                             label={t('Proteins')}
                             {...register('proteins')}
                             error={!!errors.proteins}
-                            helperText={errors.proteins?.message && t(`notify:${errors.proteins.message || ''}`)}
+                            helperText={errors.proteins?.message}
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">{t('g in 100g/ml')}</InputAdornment>,
                             }}
@@ -102,7 +102,7 @@ const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProduct
                             label={t('Carbs')}
                             {...register('carbs')}
                             error={!!errors.carbs}
-                            helperText={errors.carbs?.message && t(`notify:${errors.carbs.message || ''}`)}
+                            helperText={errors.carbs?.message}
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">{t('g in 100g/ml')}</InputAdornment>,
                             }}
@@ -114,7 +114,7 @@ const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProduct
                             label={t('Sugar')}
                             {...register('sugar')}
                             error={!!errors.sugar}
-                            helperText={errors.sugar?.message && t(`notify:${errors.sugar.message || ''}`)}
+                            helperText={errors.sugar?.message}
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">{t('g in 100g/ml')}</InputAdornment>,
                             }}
@@ -126,7 +126,7 @@ const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProduct
                             label={t('Fats')}
                             {...register('fats')}
                             error={!!errors.fats}
-                            helperText={errors.fats?.message && t(`notify:${errors.fats.message || ''}`)}
+                            helperText={errors.fats?.message}
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">{t('g in 100g/ml')}</InputAdornment>,
                             }}
@@ -138,7 +138,7 @@ const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProduct
                             label={t('Fiber')}
                             {...register('fiber')}
                             error={!!errors.fiber}
-                            helperText={errors.fiber?.message && t(`notify:${errors.fiber.message || ''}`)}
+                            helperText={errors.fiber?.message}
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">{t('g in 100g/ml')}</InputAdornment>,
                             }}
@@ -150,7 +150,7 @@ const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProduct
                             label={t('Salt')}
                             {...register('sodium')}
                             error={!!errors.sodium}
-                            helperText={errors.sodium?.message && t(`notify:${errors.sodium.message || ''}`)}
+                            helperText={errors.sodium?.message}
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">{t('g in 100g/ml')}</InputAdornment>,
                             }}
@@ -162,7 +162,7 @@ const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProduct
                             label={t('Ethanol')}
                             {...register('ethanol')}
                             error={!!errors.ethanol}
-                            helperText={errors.ethanol?.message && t(`notify:${errors.ethanol.message || ''}`)}
+                            helperText={errors.ethanol?.message}
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">{t('g in 100g/ml')}</InputAdornment>,
                             }}

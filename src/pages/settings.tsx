@@ -71,7 +71,7 @@ const SettingsPage = () => {
                 type="number"
                 {...register('numberOfMeals')}
                 error={typeof errors.numberOfMeals === 'undefined' ? false : true}
-                helperText={errors.numberOfMeals?.message && t(`notify:${errors.numberOfMeals.message || ''}`)}
+                helperText={errors.numberOfMeals?.message}
             />
             <TextField
                 label={t("Fiber")}
@@ -81,7 +81,7 @@ const SettingsPage = () => {
                 }}
                 {...register('fiber')}
                 error={typeof errors.fiber === 'undefined' ? false : true}
-                helperText={errors.fiber?.message && t(`notify:${errors.fiber.message || ''}`)}
+                helperText={errors.fiber?.message}
             />
             <TextField
                 label={t("Sugar")}
@@ -91,7 +91,7 @@ const SettingsPage = () => {
                 }}
                 {...register('carbsPercentAsSugar')}
                 error={typeof errors.carbsPercentAsSugar === 'undefined' ? false : true}
-                helperText={errors.carbsPercentAsSugar?.message && t(`notify:${errors.carbsPercentAsSugar.message || ''}`)}
+                helperText={errors.carbsPercentAsSugar?.message}
             />
             <Separator>{t('Profile')}</Separator>
             <TextField
@@ -102,7 +102,7 @@ const SettingsPage = () => {
                 }}
                 {...register('height')}
                 error={typeof errors.height === 'undefined' ? false : true}
-                helperText={errors.height?.message && t(`notify:${errors.height.message || ''}`)}
+                helperText={errors.height?.message}
             />
 
             <DatePicker
@@ -117,7 +117,7 @@ const SettingsPage = () => {
                 type="text"
                 {...register('description')}
                 error={typeof errors.description === 'undefined' ? false : true}
-                helperText={errors.description?.message && t(`notify:${errors.description.message || ''}`)}
+                helperText={errors.description?.message}
             />
             <TextField
                 label={t("Website")}
@@ -128,7 +128,7 @@ const SettingsPage = () => {
                 type="text"
                 {...register('website')}
                 error={typeof errors.website === 'undefined' ? false : true}
-                helperText={errors.website?.message && t(`notify:${errors.website.message || ''}`)}
+                helperText={errors.website?.message}
             />
             <TextField
                 label="Facebook"
@@ -139,7 +139,7 @@ const SettingsPage = () => {
                 type="text"
                 {...register('facebook')}
                 error={typeof errors.facebook === 'undefined' ? false : true}
-                helperText={errors.facebook?.message && t(`notify:${errors.facebook.message || ''}`)}
+                helperText={errors.facebook?.message}
             />
             <TextField
                 label="Instagram"
@@ -150,7 +150,7 @@ const SettingsPage = () => {
                 type="text"
                 {...register('instagram')}
                 error={typeof errors.instagram === 'undefined' ? false : true}
-                helperText={errors.instagram?.message && t(`notify:${errors.instagram.message || ''}`)}
+                helperText={errors.instagram?.message}
             />
             <TextField
                 label="Twitter"
@@ -161,7 +161,7 @@ const SettingsPage = () => {
                 type="text"
                 {...register('twitter')}
                 error={typeof errors.twitter === 'undefined' ? false : true}
-                helperText={errors.twitter?.message && t(`notify:${errors.twitter.message || ''}`)}
+                helperText={errors.twitter?.message}
             />
             <Separator>{t('LOGOUT')}</Separator>
             <Button color="error" onClick={() => signOut({ callbackUrl: '/', redirect: true })}>

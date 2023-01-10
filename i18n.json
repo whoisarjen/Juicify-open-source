@@ -2,7 +2,7 @@
     "locales": ["en", "pl"],
     "defaultLocale": "en",
     "pages": {
-        "*": ["home", "notify"],
+        "*": ["home"],
         "/barcode": ["nutrition-diary"],
         "/[login]/consumed/[date]": ["nutrition-diary"],
         "/[login]/workout": ["workout"],
