@@ -23,14 +23,20 @@ const ButtonHolder = styled.div`
 `
 
 interface DialogCreateProductProps {
-    children: ReactNode
+    children?: ReactNode
     created: (name: string) => void
     barcode?: string
+    defaultState?: boolean
 }
 
-const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProductProps) => {
+const DialogCreateProduct = ({
+    children,
+    created,
+    barcode,
+    defaultState = false,
+}: DialogCreateProductProps) => {
     const { t } = useTranslation('nutrition-diary')
-    const [isDialog, setIsDialog] = useState(false)
+    const [isDialog, setIsDialog] = useState(defaultState)
     const createProduct = trpc.product.create.useMutation({
         onSuccess(_, variables) {
             created(variables.name)
@@ -49,13 +55,13 @@ const DialogCreateProduct = ({ children, created, barcode }: DialogCreateProduct
         await createProduct.mutate(newProduct)
 
     useEffect(() => {
-        setValue('barcode', barcode)
+        setValue('barcode', Number(barcode) as unknown as string)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [barcode])
 
     return (
         <>
-            <ButtonHolder onClick={() => setIsDialog(true)}>{children}</ButtonHolder>
+            {children && <ButtonHolder onClick={() => setIsDialog(true)}>{children}</ButtonHolder>}
             <Dialog open={isDialog}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <DialogTitle>{t('Create product')}</DialogTitle>

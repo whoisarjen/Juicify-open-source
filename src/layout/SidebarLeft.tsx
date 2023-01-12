@@ -18,6 +18,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { useSession, signIn, signOut } from "next-auth/react"
 import Divider from '@mui/material/Divider';
 import NoteAltIcon from '@mui/icons-material/NoteAlt'
+import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 
 const Grid = styled.aside`
     padding: 12px;
@@ -33,6 +34,7 @@ const Grid = styled.aside`
 const getRouterPushOptions = (username: string) => ({
     profile: `/${username}`,
     diary: `/${username}/consumed/${moment().format('YYYY-MM-DD')}`,
+    barcode: `/barcode`,
     measurements: `/measurements`,
     results: `/${username}/workout/results`,
     plans: `/${username}/workout/plans`,
@@ -78,6 +80,14 @@ const SidebarLeft = () => {
                                     <BookIcon color="primary" />
                                 </ListItemIcon>
                                 <ListItemText primary={t('Diary')} />
+                            </ListItemButton>
+                        </ListItem>
+                        <ListItem disablePadding>
+                            <ListItemButton onClick={handleRouter('barcode')}>
+                                <ListItemIcon>
+                                    <PhotoCameraIcon color="primary" />
+                                </ListItemIcon>
+                                <ListItemText primary={t('Barcode')} />
                             </ListItemButton>
                         </ListItem>
                         <ListItem disablePadding>

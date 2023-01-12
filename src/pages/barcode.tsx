@@ -2,7 +2,9 @@ import styled from "styled-components";
 // @ts-ignore
 import Quagga from 'quagga';
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { trpc } from "@/utils/trpc";
+import DialogShowProduct from "@/containers/consumed/BoxMeal/DialogAddProducts/BoxAddProduct/DialogShowProduct/DialogShowProduct";
+import DialogCreateProduct from '@/containers/DialogCreateProduct/DialogCreateProduct';
 
 const Grid = styled.div`
     width: 100%;
@@ -26,31 +28,31 @@ const Grid = styled.div`
 `
 
 const BarcodeScannerPage = () => {
-    const [loadedBarcode, setLoadedBarcode] = useState(0)
-    const [loadedProduct, setLoadedProduct] = useState<any>(false)
-    const { data: sessionData } = useSession()
+    const [barcode, setBarcode] = useState('')
+    const [isDialogShowProduct, setIsDialogShowProduct] = useState(false)
+    const [isDialogCreateProduct, setIsDialogCreateProduct] = useState(false)
 
-    const _onDetected = async (res: any) => {
-        try {
-            setLoadedBarcode(0)
-            // const products = await getAllIndexedDB('product')
-            // const product = products.filter((x: any) => x.code == res.codeResult.code)
-            // if (product.length) {
-            //     const value = { ...product[0], code: res.codeResult.code }
-            //     setLoadedProduct(value)
-            // } else {
-            //     const response = await post({ object: { code: res.codeResult.code }, url: '/find/product' })
-            //     if (response.data) {
-            //         const value = { ...response.data, code: res.codeResult.code }
-            //         setLoadedProduct(value)
-            //     } else {
-            //         setLoadedBarcode(res.codeResult.code)
-            //     }
-            // }
-        } catch (e: any) {
-            console.log(e)
-        }
-    };
+    const {
+        data: product,
+        refetch,
+    } = trpc
+        .product
+        .getByBarcode
+        .useQuery({ barcode }, {
+            enabled: !!barcode,
+            onSuccess() {
+                setIsDialogShowProduct(true)
+            },
+            onError() {
+                setIsDialogCreateProduct(true)
+            },
+        })
+
+    const handleRefetch = () => {
+        setIsDialogShowProduct(false)
+        setIsDialogCreateProduct(false)
+        refetch()
+    }
 
     useEffect(() => {
         Quagga.init(
@@ -114,7 +116,7 @@ const BarcodeScannerPage = () => {
                 Quagga.start();
             }
         );
-        Quagga.onDetected(_onDetected);
+        Quagga.onDetected((res: any) => setBarcode(res?.codeResult?.code?.toString() || ''));
         Quagga.onProcessed((result: any) => {
             let drawingCtx = Quagga.canvas.ctx.overlay,
                 drawingCanvas = Quagga.canvas.dom.overlay;
@@ -156,8 +158,20 @@ const BarcodeScannerPage = () => {
                 <div id="scanner-container" />,
                 <span>Scan barcode code</span>
             </Grid>
-            {/* <DialogShowProductInformations handleClose={() => setLoadedProduct(false)} loadedProduct={loadedProduct} dailyMeasurement={data} /> */}
-            {/* {loadedBarcode > 0 && <DialogCreateProduct created={() => _onDetected(loadedBarcode)} defaultBarcode={loadedBarcode}><div /></DialogCreateProduct>} */}
+            {isDialogShowProduct && product &&
+                <DialogShowProduct
+                    defaultState={isDialogShowProduct}
+                    onClose={() => setIsDialogShowProduct(false)}
+                    product={product}
+                />
+            }
+            {isDialogCreateProduct && barcode &&
+                <DialogCreateProduct
+                    defaultState={isDialogCreateProduct}
+                    created={(_: string) => handleRefetch()}
+                    barcode={barcode}
+                />
+            }
         </>
     )
 }

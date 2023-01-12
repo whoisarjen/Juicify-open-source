@@ -72,24 +72,36 @@ const PROPERTIES_TO_OMIT = [
 ]
 
 interface DialogShowProductProps {
-    children: ReactElement
+    children?: ReactElement
     product: Product
     mealToAdd?: number
+    onClose?: () => void
+    defaultState?: boolean
 }
 
 const DialogShowProduct = ({
     children,
     product,
     mealToAdd = 0,
+    onClose,
+    defaultState = false,
 }: DialogShowProductProps) => {
     const { t } = useTranslation('nutrition-diary')
     const { data: sessionData } = useSession()
 
-    const [isDialog, setIsDialog] = useState(false)
+    const [isDialog, setIsDialog] = useState(defaultState)
+
+    const handleSetIsDialog = (state: boolean) => {
+        if (!state) {
+            onClose?.()
+        }
+
+        setIsDialog(state)
+    }
 
     const deleteProduct = trpc.product.delete.useMutation({
         onSuccess() {
-            setIsDialog(false)
+            handleSetIsDialog(false)
         },
     })
 
@@ -97,7 +109,7 @@ const DialogShowProduct = ({
 
     return (
         <>
-            {cloneElement(children, { onClick: () => setIsDialog(true) })}
+            {children && cloneElement(children, { onClick: () => handleSetIsDialog(true) })}
             <Dialog
                 fullScreen
                 open={isDialog}
@@ -134,7 +146,7 @@ const DialogShowProduct = ({
                             </Button>
                         </Close>
                     </DialogAddProduct>
-                    <ButtonCloseDialog clicked={() => setIsDialog(false)} />
+                    <ButtonCloseDialog clicked={() => handleSetIsDialog(false)} />
                 </Grid>
             </Dialog>
         </>

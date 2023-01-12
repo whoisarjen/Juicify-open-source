@@ -46,7 +46,7 @@ const DialogAddProduct = ({
 
     const addNewProduct = async () => {
         await createConsumed.mutateAsync({
-            whenAdded: moment(router.query.date).add(moment().format("hh:mm:ss")).toDate(),
+            whenAdded: moment(router.query.date).add(moment().format("hh:mm:ss")).toDate(), // TODO It has to be local date
             howMany: howMany || 1,
             productId: product.id,
             meal: mealToAdd || 0, // TODO should also get from props
