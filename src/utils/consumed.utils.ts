@@ -18,7 +18,7 @@ export const sumMacroFromConsumed = (consumed: Consumed[]) =>
         const { product } = multipleProductByHowMany(consumed)
         const { proteins, carbs, sugar, fats, fiber } = product
 
-        const macro = {
+        return {
             proteins: previous.proteins + Number(proteins),
             carbs: previous.carbs + Number(carbs),
             sugar: previous.sugar + Number(sugar),
@@ -26,11 +26,6 @@ export const sumMacroFromConsumed = (consumed: Consumed[]) =>
             fiber: previous.fiber + Number(fiber),
             calories: previous.calories + getCalories(product),
         }
-
-        return Object.keys(macro).reduce((prev, key) => ({
-            ...prev,
-            [key]: macro[key].toFixed(1),
-        }), {})
     }, DEFAULT_MACRO)
 
 export const multipleProductByHowMany = (consumed: Consumed) => {
