@@ -81,7 +81,7 @@ const DiagramConsumedRemaining = () => {
                             </tr>
                             <tr>
                                 <th>Sugar:</th>
-                                <td>{(consumedMacro.sugar / (consumedMacro.carbs === 0 ? 1 : consumedMacro.carbs) * 100)}g</td>
+                                <td>{consumedMacro.sugar}g</td>
                                 <td>{expectedMacro.sugar}g</td>
                             </tr>
                             <tr>
@@ -127,7 +127,7 @@ const DiagramConsumedRemaining = () => {
                             </tr>
                             <tr>
                                 <th>Sugar:</th>
-                                <td>{(expectedMacro.sugar - (consumedMacro.sugar / (consumedMacro.carbs === 0 ? 1 : consumedMacro.carbs) * 100))}g</td>
+                                <td>{expectedMacro.sugar}g</td>
                                 <td>{expectedMacro.sugar}g</td>
                             </tr>
                             <tr>
