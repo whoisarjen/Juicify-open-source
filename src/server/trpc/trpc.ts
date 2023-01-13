@@ -63,21 +63,14 @@ const spamProtectionMiddleware = t.middleware(async ({ path, type, ctx: { req },
     const start = Date.now();
     const result = await next();
     const durationMs = Date.now() - start;
-    result.ok
-        ? console.log('OK request timing:', {
-            path,
-            type,
-            durationMs,
-            userIp,
-            redis: await redis.get(userIp || ''),
-        })
-        : console.log('Non-OK request timing', {
-            path,
-            type,
-            durationMs,
-            userIp,
-            redis: await redis.get(userIp || ''),
-        });
+
+    console.log(`${result.ok ? 'OK' : 'Non-OK'} request timing:`, {
+        path,
+        type,
+        durationMs,
+        userIp,
+        redis: await redis.get(userIp || ''),
+    })
     return result;
 });
 

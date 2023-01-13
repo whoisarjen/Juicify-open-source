@@ -5,7 +5,7 @@ export const redis = createClient({
     url: env.REDIS_URL,
 });
 
-// Initialization of redis server
+// Initialization start of server for Redis
 (async () => await redis.connect())()
 
 redis.on('error', (err: any) => console.log('Redis Client Error', err))

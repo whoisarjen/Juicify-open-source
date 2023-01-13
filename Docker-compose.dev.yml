@@ -81,37 +81,8 @@ services:
     #         - /dev/kmsg
     #     privileged: true
 
-    # nextjs:
-    #     build:
-    #         context: .
-    #         dockerfile: Dockerfile
-    #     restart: unless-stopped
-    #     container_name: nextjs
-    #     volumes:
-    #         - .:/usr/src/app
-    #     ports:
-    #         - "80:80"
-    #     expose:
-    #         - "80"
-    #     depends_on:
-    #         - postgres
-    #         - redis
-    #     labels:
-    #         - "traefik.enable=true"
-    #         - "traefik.http.routers.nextjs.rule=Host(`juicify.app`)"
-    #         - "traefik.http.routers.nextjs.entrypoints=websecure"
-    #         - "traefik.http.routers.nextjs.tls.certresolver=myresolver"
-    #         - "traefik.tcp.routers.postgres.entrypoints=postgres"
-    #     command: npm run dev
-
 volumes:
     postgres-data:
     redis_data:
     # prometheus-data:
-    #     driver: local
     # grafana-data:
-    #     driver: local
-# networks:
-#     default:
-#         external:
-#             name: traefik-net
