@@ -90,7 +90,6 @@ services:
 
 volumes:
     postgres-data:
-        driver: local
     # prometheus-data:
     #     driver: local
     # grafana-data:
