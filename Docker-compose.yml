@@ -20,35 +20,35 @@ services:
             - "traefik.tcp.services.postgres.loadBalancer.server.port=5432"
             - "traefik.tcp.routers.postgres.service=postgres"
 
-    prometheus:
-        image: prom/prometheus:latest
-        restart: unless-stopped
-        container_name: prometheus
-        volumes:
-            - ./prometheus/:/etc/prometheus/
-            - prometheus-data:/prometheus
-        ports:
-            - "9090:9090"
-        command: "--config.file=/etc/prometheus/prometheus.yml"
+    # prometheus:
+    #     image: prom/prometheus:latest
+    #     restart: unless-stopped
+    #     container_name: prometheus
+    #     volumes:
+    #         - ./prometheus/:/etc/prometheus/
+    #         - prometheus-data:/prometheus
+    #     ports:
+    #         - "9090:9090"
+    #     command: "--config.file=/etc/prometheus/prometheus.yml"
 
-    grafana:
-        image: grafana/grafana-oss:latest
-        restart: unless-stopped
-        container_name: grafana
-        volumes:
-            - grafana-data:/var/lib/grafana
-        ports:
-            - "3000:3000"
+    # grafana:
+    #     image: grafana/grafana-oss:latest
+    #     restart: unless-stopped
+    #     container_name: grafana
+    #     volumes:
+    #         - grafana-data:/var/lib/grafana
+    #     ports:
+    #         - "3000:3000"
 
-    node_exporter:
-        image: quay.io/prometheus/node-exporter:latest
-        restart: unless-stopped
-        container_name: node_exporter
-        volumes:
-            - "/:/host:ro,rslave"
-        pid: host
-        command:
-            - "--path.rootfs=/host"
+    # node_exporter:
+    #     image: quay.io/prometheus/node-exporter:latest
+    #     restart: unless-stopped
+    #     container_name: node_exporter
+    #     volumes:
+    #         - "/:/host:ro,rslave"
+    #     pid: host
+    #     command:
+    #         - "--path.rootfs=/host"
 
     # cadvisor:
     #     # TODO: latest tag is not updated, check latest release https://github.com/google/cadvisor/releases
@@ -91,10 +91,10 @@ services:
 volumes:
     postgres-data:
         driver: local
-    prometheus-data:
-        driver: local
-    grafana-data:
-        driver: local
+    # prometheus-data:
+    #     driver: local
+    # grafana-data:
+    #     driver: local
 # networks:
 #     default:
 #         external:
