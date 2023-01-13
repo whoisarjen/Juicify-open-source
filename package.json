@@ -2,10 +2,10 @@
 	"name": "juicify",
 	"private": true,
 	"scripts": {
-		"dev": "next dev",
+		"dev": "next dev -p 80",
 		"build": "next build",
 		"prestart": "next build",
-		"start": "next start",
+		"start": "next start -p 80",
 		"lint": "next lint",
 		"test": "NODE_ENV=development jest --watch"
 	},

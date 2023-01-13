@@ -20,6 +20,55 @@ services:
             - "traefik.tcp.services.postgres.loadBalancer.server.port=5432"
             - "traefik.tcp.routers.postgres.service=postgres"
 
+    prometheus:
+        image: prom/prometheus:latest
+        restart: unless-stopped
+        container_name: prometheus
+        volumes:
+            - ./prometheus/:/etc/prometheus/
+            - prometheus-data:/prometheus
+        ports:
+            - "9090:9090"
+        command:
+            "--config.file=/etc/prometheus/prometheus.yml"
+
+    grafana:
+        image: grafana/grafana-oss:latest
+        restart: unless-stopped
+        container_name: grafana
+        volumes:
+            - grafana-data:/var/lib/grafana
+        ports:
+            - "3000:3000"
+
+    node_exporter:
+        image: quay.io/prometheus/node-exporter:latest
+        restart: unless-stopped
+        container_name: node_exporter
+        volumes:
+            - '/:/host:ro,rslave'
+        pid: host
+        command:
+            - '--path.rootfs=/host'
+
+    # cadvisor:
+    #     # TODO: latest tag is not updated, check latest release https://github.com/google/cadvisor/releases 
+    #     image: gcr.io/cadvisor/cadvisor:v0.45.0     
+    #     container_name: cadvisor
+    #     restart: unless-stopped
+    #     volumes:
+    #         - /:/rootfs:ro
+    #         - /var/run:/var/run:ro
+    #         - /sys:/sys:ro
+    #         - /var/lib/docker/:/var/lib/docker:ro
+    #         - /dev/disk/:/dev/disk:ro
+    #     ports:
+    #         - "8080:8080"
+    #     network_mode: host
+    #     devices:
+    #         - /dev/kmsg
+    #     privileged: true
+
     nextjs:
         build:
             context: .
@@ -29,7 +78,7 @@ services:
         volumes:
             - .:/usr/src/app
         expose:
-            - "3000"
+            - "80"
         depends_on:
             - postgres
         labels:
@@ -42,8 +91,12 @@ services:
 
 volumes:
     postgres-data:
+    prometheus-data:
+        driver: local
+    grafana-data:
+        driver: local
 
-networks:
-    default:
-        external:
-            name: traefik-net
+# networks:
+#     default:
+#         external:
+#             name: traefik-net

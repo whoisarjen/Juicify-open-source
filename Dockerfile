@@ -1,6 +1,6 @@
 FROM node:19-alpine3.16
 
-ENV PORT 3000
+ENV PORT 80
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
@@ -14,4 +14,4 @@ RUN npx prisma generate
 COPY . /usr/src/app
 
 
-EXPOSE 3000
+EXPOSE 80
