@@ -1,6 +1,7 @@
 import "../styles/global.css"
 import Layout from "../layout/Layout"
 import MUI from "../layout/MUI"
+import Header from "../layout/Header"
 import ServiceWorker from "../layout/ServiceWorker"
 import { trpc } from '../utils/trpc'
 import { SessionProvider } from "next-auth/react"
@@ -13,6 +14,7 @@ const App: AppType<{ session: Session | null }> = ({
 }) => {
     return (
         <MUI>
+            <Header />
             <SessionProvider session={session}>
                 <ServiceWorker>
                     <Layout>

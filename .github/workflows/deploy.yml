@@ -28,6 +28,7 @@ jobs:
         uses: garygrossgarten/github-action-ssh@release
         with:
           command: cd juicify && npm i && npx prisma generate && docker-compose -f Docker-compose.yml up --build -d --force-recreate && docker system prune --all --force --volumes
+          # command: cd juicify && npm i && npx prisma generate && docker-compose -f Docker-compose.yml up --build -d --force-recreate && docker system prune --volumes --force
           host: 194.59.158.13
           port: 22
           username: arjen

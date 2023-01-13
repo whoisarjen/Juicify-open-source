@@ -6,6 +6,7 @@ import { z } from "zod";
  * This way you can ensure the app isn't built with invalid env vars.
  */
 export const serverSchema = z.object({
+    REDIS_URL: z.string(),
     DATABASE_URL: z.string().url(),
     NODE_ENV: z.enum(["development", "test", "production"]),
     NEXTAUTH_SECRET: z.string(),
@@ -22,7 +23,6 @@ export const serverSchema = z.object({
  * To expose them to the client, prefix them with `NEXT_PUBLIC_`.
  */
 export const clientSchema = z.object({
-    // NEXT_PUBLIC_BAR: z.string(),
     NEXT_PUBLIC_SEARCH_MIN_NAME_LENGTH: z.number(),
     NEXT_PUBLIC_DEFAULT_NUMBER_OF_MEALS: z.number(),
 });

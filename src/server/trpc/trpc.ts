@@ -1,6 +1,7 @@
+import { redis } from "@/utils/redis.utils";
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
-
+import { getClientIp } from 'request-ip'
 import { type Context } from "./context";
 
 const t = initTRPC.context<Context>().create({
@@ -11,11 +12,6 @@ const t = initTRPC.context<Context>().create({
 });
 
 export const router = t.router;
-
-/**
- * Unprotected procedure
- **/
-export const publicProcedure = t.procedure;
 
 /**
  * Reusable middleware to ensure
@@ -33,7 +29,69 @@ const isAuthed = t.middleware(({ ctx, next }) => {
     });
 });
 
+const SPAM_PROTECTION_IP_TO_SKIP = [null, '127.0.0.1', '::1', '::ffff:127.0.0.1']
+const SPAM_PROTECTION_LIMIT_FOR_CALLS = {
+    NUMBER_OF_CALLS: 300,
+    DURATION: 300,
+}
+
+const spamProtectionMiddleware = t.middleware(async ({ path, type, ctx: { req }, next }) => {
+    const userIp = getClientIp(req)
+
+    if (userIp && !SPAM_PROTECTION_IP_TO_SKIP.some(ip => ip === userIp)) {
+        const currentStatusOfIp = await redis.get(userIp)
+
+        const updatedStatusOfIp = Number(currentStatusOfIp || 0) + 1
+
+        if (updatedStatusOfIp >= SPAM_PROTECTION_LIMIT_FOR_CALLS.NUMBER_OF_CALLS) {
+            await redis.set(
+                userIp,
+                updatedStatusOfIp,
+                { EX: SPAM_PROTECTION_LIMIT_FOR_CALLS.NUMBER_OF_CALLS },
+            )
+
+            throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+        }
+
+        await redis.set(
+            userIp,
+            updatedStatusOfIp,
+            { EX: SPAM_PROTECTION_LIMIT_FOR_CALLS.DURATION },
+        )
+    }
+
+    const start = Date.now();
+    const result = await next();
+    const durationMs = Date.now() - start;
+    result.ok
+        ? console.log('OK request timing:', {
+            path,
+            type,
+            durationMs,
+            userIp,
+            redis: await redis.get(userIp || ''),
+        })
+        : console.log('Non-OK request timing', {
+            path,
+            type,
+            durationMs,
+            userIp,
+            redis: await redis.get(userIp || ''),
+        });
+    return result;
+});
+
+/**
+ * Unprotected procedure
+ **/
+export const publicProcedure = t
+    .procedure
+    .use(spamProtectionMiddleware)
+
 /**
  * Protected procedure
  **/
-export const protectedProcedure = t.procedure.use(isAuthed);
+export const protectedProcedure = t
+    .procedure
+    .use(spamProtectionMiddleware)
+    .use(isAuthed);
