@@ -3,6 +3,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { getClientIp } from 'request-ip'
 import { type Context } from "./context";
+import { SPAM_PROTECTION_IPS_TO_SKIP, SPAM_PROTECTION_LIMIT_FOR_CALLS } from '@/utils/trpc.utils'
 
 const t = initTRPC.context<Context>().create({
     transformer: superjson,
@@ -29,16 +30,10 @@ const isAuthed = t.middleware(({ ctx, next }) => {
     });
 });
 
-const SPAM_PROTECTION_IP_TO_SKIP = [null, '127.0.0.1', '::1', '::ffff:127.0.0.1']
-const SPAM_PROTECTION_LIMIT_FOR_CALLS = {
-    NUMBER_OF_CALLS: 200,
-    DURATION: 300,
-}
-
 const spamProtectionMiddleware = t.middleware(async ({ path, type, ctx: { req }, next }) => {
     const userIp = getClientIp(req)
 
-    if (userIp && !SPAM_PROTECTION_IP_TO_SKIP.some(ip => ip === userIp)) {
+    if (userIp && !SPAM_PROTECTION_IPS_TO_SKIP.some(ip => ip === userIp)) {
         const currentStatusOfIp = await redis.get(userIp)
 
         const updatedStatusOfIp = Number(currentStatusOfIp || 0) + 1
