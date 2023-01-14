@@ -31,7 +31,7 @@ const isAuthed = t.middleware(({ ctx, next }) => {
 
 const SPAM_PROTECTION_IP_TO_SKIP = [null, '127.0.0.1', '::1', '::ffff:127.0.0.1']
 const SPAM_PROTECTION_LIMIT_FOR_CALLS = {
-    NUMBER_OF_CALLS: 300,
+    NUMBER_OF_CALLS: 200,
     DURATION: 300,
 }
 
