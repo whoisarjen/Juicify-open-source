@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import ProfileTabs from '../ProfileTabs/ProfileTabs';
 import { useSession } from 'next-auth/react';
-import { trpc } from '@/utils/trpc'
+import { trpc } from '@/utils/trpc.utils'
 
 const Box = styled.div`
     width: 100%;

@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { reloadSession } from '@/utils/global.utils';
-import { trpc } from '@/utils/trpc';
+import { trpc } from '@/utils/trpc.utils';
 import { type UserSchema, userSchema } from '@/server/schema/user.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSession } from 'next-auth/react';

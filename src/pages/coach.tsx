@@ -16,7 +16,7 @@ import Tutorial_6 from "@/containers/coach/Tutorial_6";
 import Tutorial_7 from "@/containers/coach/Tutorial_7";
 import Welcome from "@/containers/coach/Welcome";
 import { type CoachSchema } from "@/server/schema/coach.schema";
-import { trpc } from "@/utils/trpc";
+import { trpc } from "@/utils/trpc.utils";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import moment from 'moment'

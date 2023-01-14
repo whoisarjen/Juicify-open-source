@@ -5,7 +5,7 @@ import BoxWorkout from '@/containers/Workout/BoxWorkout/BoxWorkout'
 import NavbarProfile from '@/containers/profile/NavbarProfile/NavbarProfile'
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
 import { useSession } from 'next-auth/react'
-import { trpc } from '@/utils/trpc'
+import { trpc } from '@/utils/trpc.utils'
 
 const WorkoutResultsPage = () => {
     const router: any = useRouter()

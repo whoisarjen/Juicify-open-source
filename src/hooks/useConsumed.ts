@@ -1,6 +1,6 @@
 import { useRouter } from "next/router"
 import { useSession } from "next-auth/react"
-import { trpc } from "@/utils/trpc"
+import { trpc } from "@/utils/trpc.utils"
 import { updateArray } from '@/utils/global.utils'
 
 const useConsumed = (overwriteWhenAdded?: string, overwriteUsername?: string) => {

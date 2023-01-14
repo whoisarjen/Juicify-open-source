@@ -13,7 +13,7 @@ import { cloneElement, useState, type ReactElement } from 'react';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import { useSession } from 'next-auth/react';
-import { trpc } from '@/utils/trpc';
+import { trpc } from '@/utils/trpc.utils';
 
 interface DialogAddProductProps {
     children: ReactElement

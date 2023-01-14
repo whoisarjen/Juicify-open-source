@@ -13,7 +13,7 @@ import useTranslation from 'next-translate/useTranslation';
 import { useState, useEffect } from 'react';
 import { reloadSession } from '@/utils/global.utils';
 import { updateMacronutrientsInUser } from '@/utils/coach.utils';
-import { trpc } from '@/utils/trpc';
+import { trpc } from '@/utils/trpc.utils';
 
 interface DialogEditMacronutrientsProps {
     isOwnMacro: boolean

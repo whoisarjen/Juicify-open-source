@@ -5,7 +5,7 @@ import NoteAltIcon from '@mui/icons-material/NoteAlt'
 import BoxWorkout from '@/containers/Workout/BoxWorkout/BoxWorkout';
 import NavbarProfile from '@/containers/profile/NavbarProfile/NavbarProfile';
 import { useSession } from 'next-auth/react';
-import { trpc } from '@/utils/trpc';
+import { trpc } from '@/utils/trpc.utils';
 import { orderBy } from 'lodash'
 
 const WorkoutPlansPage = () => {

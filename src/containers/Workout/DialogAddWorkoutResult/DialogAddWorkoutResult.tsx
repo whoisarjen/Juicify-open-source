@@ -13,12 +13,12 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon'
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TextField } from "@mui/material"
 import LoadingButton from '@mui/lab/LoadingButton'
 import { useSession } from 'next-auth/react'
-import { trpc } from '@/utils/trpc'
+import { trpc } from '@/utils/trpc.utils'
 import { orderBy } from 'lodash'
 
 const DialogAddWorkoutResult = () => {
@@ -80,7 +80,7 @@ const DialogAddWorkoutResult = () => {
                 <DialogContent>
                     <DialogContentText sx={{ marginBottom: '12px' }}>{t('CREATE_RESULT_DESCRIPTION')}</DialogContentText>
 
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <LocalizationProvider dateAdapter={AdapterMoment}>
                         <MobileDatePicker
                             value={whenAdded}
                             onChange={value => value && setWhenAdded(value)}

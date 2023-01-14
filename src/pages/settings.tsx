@@ -1,7 +1,7 @@
 import SelectLanguage from '@/containers/settings/SelectLanguage/SelectLanguage';
 import { type UserSchema, userSchema } from '@/server/schema/user.schema';
 import { reloadSession } from '@/utils/global.utils';
-import { trpc } from '@/utils/trpc';
+import { trpc } from '@/utils/trpc.utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Button from '@mui/material/Button';
 import InputAdornment from '@mui/material/InputAdornment';

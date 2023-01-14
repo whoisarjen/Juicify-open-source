@@ -8,7 +8,7 @@ import ButtonSubmitItems from '@/components/ButtonSubmitItems/ButtonSubmitItems'
 import CustomSlider from '@/containers/macronutrients/CustomSlider/CustomSlider';
 import BarMacronutrients from '@/containers/macronutrients/BarMacronutrients/BarMacronutrients';
 import { useSession } from 'next-auth/react';
-import { trpc } from '@/utils/trpc';
+import { trpc } from '@/utils/trpc.utils';
 import { reloadSession } from '@/utils/global.utils'
 import DialogEditMacronutrients from '@/components/DialogEditMacronutrients/DialogEditMacronutrients';
 

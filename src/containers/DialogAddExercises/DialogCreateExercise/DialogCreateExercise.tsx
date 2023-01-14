@@ -11,7 +11,7 @@ import useTranslation from 'next-translate/useTranslation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSession } from 'next-auth/react';
-import { trpc } from '@/utils/trpc';
+import { trpc } from '@/utils/trpc.utils';
 import { type CreateExerciseSchema, createExerciseSchema } from '@/server/schema/exercise.schema';
 
 interface DialogCreateExerciseProps {

@@ -2,7 +2,7 @@ import styled from "styled-components";
 // @ts-ignore
 import Quagga from 'quagga';
 import { useState, useEffect } from "react";
-import { trpc } from "@/utils/trpc";
+import { trpc } from "@/utils/trpc.utils";
 import DialogShowProduct from "@/containers/consumed/BoxMeal/DialogAddProducts/BoxAddProduct/DialogShowProduct/DialogShowProduct";
 import DialogCreateProduct from '@/containers/DialogCreateProduct/DialogCreateProduct';
 

@@ -14,7 +14,7 @@ import NavbarWorkout from '@/containers/Workout/NavbarWorkout/NavbarWorkout'
 import DialogAddExercises from '@/containers/DialogAddExercises/DialogAddExercises'
 import InputAdornment from '@mui/material/InputAdornment';
 import { useSession } from 'next-auth/react'
-import { trpc } from '@/utils/trpc'
+import { trpc } from '@/utils/trpc.utils'
 import { type WorkoutPlanSchema, workoutPlanSchema, type WorkoutPlanExerciseSchema } from '@/server/schema/workoutPlan.schema'
 import { updateArray } from '@/utils/global.utils'
 

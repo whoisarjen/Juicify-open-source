@@ -15,7 +15,7 @@ import { useState, useEffect, ReactNode } from 'react';
 import { useForm } from 'react-hook-form';
 import { type CreateProductSchema, createProductSchema } from '@/server/schema/product.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { trpc } from '@/utils/trpc';
+import { trpc } from '@/utils/trpc.utils';
 
 const ButtonHolder = styled.div`
     width: 100%;

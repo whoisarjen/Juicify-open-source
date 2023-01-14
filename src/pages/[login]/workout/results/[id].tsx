@@ -11,7 +11,7 @@ import ButtonMoreOptionsWorkoutResult from "@/containers/Workout/ButtonMoreOptio
 import BoxResult from "@/containers/Workout/BoxExercise/BoxExercise"
 import { pick } from "lodash"
 import { useSession } from "next-auth/react"
-import { trpc } from '@/utils/trpc'
+import { trpc } from '@/utils/trpc.utils'
 import { workoutResultSchema, type WorkoutResultSchema } from "@/server/schema/workoutResult.schema"
 import { DatePicker } from '@/components/DatePicker'
 import { updateArray } from "@/utils/global.utils"

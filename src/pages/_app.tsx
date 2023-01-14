@@ -3,7 +3,7 @@ import Layout from "../layout/Layout"
 import MUI from "../layout/MUI"
 import Header from "../layout/Header"
 import ServiceWorker from "../layout/ServiceWorker"
-import { trpc } from '../utils/trpc'
+import { trpc } from '@/utils/trpc.utils'
 import { SessionProvider } from "next-auth/react"
 import { type AppType } from 'next/app'
 import { type Session } from "next-auth"

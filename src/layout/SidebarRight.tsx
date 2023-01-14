@@ -9,7 +9,7 @@ import moment from 'moment';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import useDaily from '@/hooks/useDaily'
-import { trpc } from '@/utils/trpc';
+import { trpc } from '@/utils/trpc.utils';
 
 const Box = styled.aside`
     padding: 12px;

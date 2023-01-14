@@ -1,5 +1,5 @@
 import { sumMacroFromConsumed, getExpectedMacro } from "@/utils/consumed.utils"
-import { trpc } from "@/utils/trpc"
+import { trpc } from "@/utils/trpc.utils"
 import useConsumed from "./useConsumed"
 
 const useDaily = (overwriteWhenAdded?: string, overwriteUsername?: string) => {

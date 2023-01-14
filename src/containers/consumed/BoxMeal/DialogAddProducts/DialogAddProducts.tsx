@@ -14,7 +14,7 @@ import DialogCreateProduct from '@/containers/DialogCreateProduct/DialogCreatePr
 import TabsAddDialog from '@/components/TabsAddDialog/TabsAddDialog';
 import ButtonSubmitItems from '@/components/ButtonSubmitItems/ButtonSubmitItems';
 import { useSession } from 'next-auth/react';
-import { trpc } from '@/utils/trpc';
+import { trpc } from '@/utils/trpc.utils';
 import { env } from '@/env/client.mjs';
 import CustomAutocomplete from '@/components/CustomAutocomplete/CustomAutocomplete';
 import { range } from 'lodash';

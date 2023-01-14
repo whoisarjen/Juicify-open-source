@@ -6,7 +6,7 @@ import { useMemo } from "react";
 import moment from "moment";
 import { getCalories, multipleProductByHowMany } from "@/utils/consumed.utils";
 import styled from 'styled-components'
-import { trpc } from "@/utils/trpc";
+import { trpc } from "@/utils/trpc.utils";
 import { StackedBarChart } from '@/components/StackedBarChart'
 import { SimpleLineChart } from '@/components/SimpleLineChart'
 

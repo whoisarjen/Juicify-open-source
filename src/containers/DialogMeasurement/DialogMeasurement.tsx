@@ -18,7 +18,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import InputAdornment from '@mui/material/InputAdornment';
-import { trpc } from "@/utils/trpc"
+import { trpc } from "@/utils/trpc.utils"
 import { orderBy } from 'lodash'
 import { useSession } from "next-auth/react"
 import DialogConfirm from "@/components/DialogConfirm/DialogConfirm"

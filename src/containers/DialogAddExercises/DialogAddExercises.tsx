@@ -11,7 +11,7 @@ import BoxExercise from '@/containers/DialogAddExercises/BoxExercise/BoxExercise
 import DialogCreateExercise from '@/containers/DialogAddExercises/DialogCreateExercise/DialogCreateExercise';
 import TabsAddDialog from '@/components/TabsAddDialog/TabsAddDialog';
 import ButtonSubmitItems from '@/components/ButtonSubmitItems/ButtonSubmitItems';
-import { trpc } from '@/utils/trpc';
+import { trpc } from '@/utils/trpc.utils';
 import { env } from '@/env/client.mjs';
 import { type Exercise } from '@prisma/client';
 import CustomAutocomplete from '@/components/CustomAutocomplete/CustomAutocomplete';

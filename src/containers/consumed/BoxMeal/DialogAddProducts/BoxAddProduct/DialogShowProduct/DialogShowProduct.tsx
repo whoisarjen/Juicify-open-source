@@ -8,7 +8,7 @@ import { type ReactNode, useState, cloneElement, type ReactElement } from 'react
 import ButtonCloseDialog from '@/components/ButtonCloseDialog/ButtonCloseDialog';
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm';
 import { useSession } from 'next-auth/react';
-import { trpc } from '@/utils/trpc';
+import { trpc } from '@/utils/trpc.utils';
 import DialogAddProduct from '@/containers/DialogAddProduct/DialogAddProduct'
 
 const Remove = styled.div`

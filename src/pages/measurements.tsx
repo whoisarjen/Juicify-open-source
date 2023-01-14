@@ -11,7 +11,7 @@ import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import Header from "@/components/Header/Header"
 import moment from 'moment'
 import { useSession } from "next-auth/react";
-import { trpc } from "@/utils/trpc";
+import { trpc } from "@/utils/trpc.utils";
 import { DialogMeasurement } from '@/containers/DialogMeasurement'
 
 const Content = styled.div`
