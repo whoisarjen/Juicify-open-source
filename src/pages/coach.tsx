@@ -1,5 +1,5 @@
 import CheckingTodayData from "@/containers/coach/CheckingTodayData";
-import CheckingWeekData from "@/containers/coach/CheckingWeekData";
+import ChooseAnalyzeSource from "@/containers/coach/ChooseAnalyzeSource";
 import ChooseCaloriesSource from "@/containers/coach/ChooseCaloriesSource";
 import ChooseDiet from "@/containers/coach/ChooseDiet";
 import LosingWeight from "@/containers/coach/LosingWeight";
@@ -54,6 +54,14 @@ const Coach = () => {
         }
     })
 
+    const analyzeCoach = trpc.coach.analyze.useMutation({
+        onSuccess(data) {
+            reloadSession()
+            setCreateCoachData(data)
+            setStep('Result')
+        }
+    })
+
     const prepareCreate = async (coach: CoachSchema) => {
         if (!measurement) {
             return
@@ -83,7 +91,6 @@ const Coach = () => {
 
     useEffect(() => {
         setStep(sessionData?.user?.isCoachAnalyze ? 'Standard' : 'Welcome')
-        // TODO verify if we don't need any dependencies as we don't want to lose step on token change
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -104,8 +111,8 @@ const Coach = () => {
                     <LosingWeight prepareCreate={prepareCreate} handlePreviousStep={handlePreviousStep} />
                 ) : step === 'Standard' ? (
                     <Standard setStep={setStep} />
-                ) : step === 'CheckingWeekData' ? (
-                    <CheckingWeekData setStep={setStep} />
+                ) : step === 'ChooseAnalyzeSource' ? (
+                    <ChooseAnalyzeSource analyze={async (isDataInJuicify) => await analyzeCoach.mutate({ isDataInJuicify })} />
                 ) : step === 'ChooseCaloriesSource' ? (
                     <ChooseCaloriesSource prepareAnalize={prepareAnalize} />
                 ) : step === 'Result' ? (

@@ -5,10 +5,10 @@ import superjson from "superjson";
 
 import { type AppRouter } from "@/server/trpc/router/_app";
 
-export const SPAM_PROTECTION_IPS_TO_SKIP = [null, '127.0.0.1', '::1', '::ffff:127.0.0.1']
 export const SPAM_PROTECTION_LIMIT_FOR_CALLS = {
     NUMBER_OF_CALLS: 200,
     DURATION: 300,
+    BAN_DURATION: 900,
 }
 
 const getBaseUrl = () => {

@@ -3,7 +3,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { getClientIp } from 'request-ip'
 import { type Context } from "./context";
-import { SPAM_PROTECTION_IPS_TO_SKIP, SPAM_PROTECTION_LIMIT_FOR_CALLS } from '@/utils/trpc.utils'
+import { SPAM_PROTECTION_LIMIT_FOR_CALLS } from '@/utils/trpc.utils'
 
 const t = initTRPC.context<Context>().create({
     transformer: superjson,
@@ -33,7 +33,7 @@ const isAuthed = t.middleware(({ ctx, next }) => {
 const spamProtectionMiddleware = t.middleware(async ({ path, type, ctx: { req }, next }) => {
     const userIp = getClientIp(req)
 
-    if (userIp && !SPAM_PROTECTION_IPS_TO_SKIP.some(ip => ip === userIp)) {
+    if (userIp) {
         const currentStatusOfIp = await redis.get(userIp)
 
         const updatedStatusOfIp = Number(currentStatusOfIp || 0) + 1
@@ -41,8 +41,8 @@ const spamProtectionMiddleware = t.middleware(async ({ path, type, ctx: { req },
         if (updatedStatusOfIp >= SPAM_PROTECTION_LIMIT_FOR_CALLS.NUMBER_OF_CALLS) {
             await redis.set(
                 userIp,
-                updatedStatusOfIp,
-                { EX: SPAM_PROTECTION_LIMIT_FOR_CALLS.NUMBER_OF_CALLS },
+                SPAM_PROTECTION_LIMIT_FOR_CALLS.NUMBER_OF_CALLS,
+                { EX: SPAM_PROTECTION_LIMIT_FOR_CALLS.BAN_DURATION },
             )
 
             throw new TRPCError({ code: "TOO_MANY_REQUESTS" });

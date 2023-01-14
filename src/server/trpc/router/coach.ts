@@ -4,8 +4,30 @@ import { pick, omit } from 'lodash'
 import { router, protectedProcedure } from "../trpc";
 import { createCoachSchema } from "../../schema/coach.schema";
 import { GOALS, ACTIVITY_LEVELS, getMacronutrients, updateMacronutrientsInUser } from "@/utils/coach.utils";
+import { z } from 'zod'
+import { type PrismaClient } from "@prisma/client";
+import { getCalories, sumMacroFromConsumed } from "@/utils/consumed.utils";
+
+const getLastCoachByUserId = async (prisma: PrismaClient, userId: number) =>
+    await prisma.coach.findFirstOrThrow({
+        where: {
+            userId,
+        },
+        orderBy: {
+            id: 'asc',
+        },
+    })
 
 export const coachRouter = router({
+    getLastByUserId: protectedProcedure
+        .input(
+            z.object({
+                userId: z.number(),
+            })
+        )
+        .query(async ({ ctx, input: { userId } }) => {
+            return await getLastCoachByUserId(ctx.prisma, userId)
+        }),
     create: protectedProcedure
         .input(createCoachSchema)
         .mutation(async ({ ctx, input }) => {
@@ -46,10 +68,105 @@ export const coachRouter = router({
                     countedProteins: proteins,
                     countedCarbs: carbs,
                     countedFats: fats,
-                    data: pick(input.data, ['id', 'weight']),
+                    countedCalories: calories,
+                    data: pick({
+                        ...input.data,
+                        BMR,
+                    }, ['id', 'weight']),
                     userId: id,
                     currentWeight: weight,
                     changeInWeight: 0,
+                }
+            })
+
+            return { proteins, carbs, fats }
+        }),
+    analyze: protectedProcedure
+        .input(
+            z.object({
+                isDataInJuicify: z.boolean(),
+            })
+        )
+        .mutation(async ({ ctx, input: { isDataInJuicify } }) => {
+            const { id, birth, activityLevel, goal, isSportActive, kindOfDiet } = ctx.session.user
+            const previousCoach = await getLastCoachByUserId(ctx.prisma, id)
+
+            const age = moment().diff(birth, 'years')
+
+            const findManyQuery = {
+                where: {
+                    userId: id,
+                    whenAdded: {
+                        gte: moment().add(-8, 'days').startOf('day').toDate(),
+                        lte: moment().endOf('day').toDate(),
+                    },
+                }
+            }
+
+            const averageDailyConsumedCalories = isDataInJuicify
+                ? getCalories(
+                    sumMacroFromConsumed(
+                        await ctx.prisma.consumed.findMany({
+                            ...findManyQuery,
+                            include: {
+                                product: true,
+                            },
+                        })
+                    )
+                )
+                : getCalories({
+                    proteins: previousCoach.countedProteins,
+                    carbs: previousCoach.countedCarbs,
+                    fats: previousCoach.countedFats,
+                })
+
+            const measurements = await ctx.prisma.measurement.findMany(findManyQuery)
+
+            const averageWeight = measurements.length
+                ? measurements.reduce((previous, current) => previous + Number(current.weight), 0) / measurements.length
+                : Number(previousCoach.currentWeight)
+
+            const changeInWeight = averageWeight - Number(previousCoach.currentWeight)
+
+            const BMR = averageDailyConsumedCalories - (changeInWeight * 7800 / 7)
+
+            const calories = Math.round(BMR + (GOALS[goal] / 100 * averageWeight) * 7800 / 30)
+
+            const { proteins, carbs, fats } = getMacronutrients({
+                age,
+                weight: averageWeight,
+                calories,
+                kindOfDiet,
+                isExtraProteins: isSportActive,
+            })
+
+            await ctx.prisma.user.update({
+                data: {
+                    ...updateMacronutrientsInUser(proteins, carbs, fats),
+                    isCoachAnalyze: true,
+                    nextCoach: moment().add(8, 'days').toDate(),
+                },
+                where: {
+                    id,
+                }
+            })
+
+            await ctx.prisma.coach.create({
+                data: {
+                    countedProteins: proteins,
+                    countedCarbs: carbs,
+                    countedFats: fats,
+                    countedCalories: calories,
+                    data: {
+                        averageWeight,
+                        changeInWeight,
+                        BMR,
+                        averageDailyConsumedCalories,
+                    },
+                    userId: id,
+                    currentWeight: averageWeight,
+                    changeInWeight,
+                    isDataInJuicify,
                 }
             })
 

@@ -255,8 +255,10 @@ model Coach {
   countedProteins Int            @default(0)
   countedCarbs    Int            @default(0)
   countedFats     Int            @default(0)
+  countedCalories Int            @default(0)
   currentWeight   Decimal        @db.Decimal(4, 1)
   changeInWeight  Decimal        @db.Decimal(4, 1)
+  isDataInJuicify Boolean        @default(false)
   data            Json
 
   @@index([userId])

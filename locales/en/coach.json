@@ -76,5 +76,6 @@
     "WEIGHT_SELF": "Weight self",
     "EXTRA_ACTIVITY": "Extra activity",
     "THATS_ALL": "That's all",
-    "DAY": "day"
+    "DAY": "day",
+    "STANDARD_TIME_TO_CHECK_PROGRESS": "It's time to checkout your progress!"
 }
