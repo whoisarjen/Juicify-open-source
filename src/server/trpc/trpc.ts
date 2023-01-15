@@ -110,5 +110,5 @@ export const protectedProcedure = t
     .procedure
     .use(prometheusRestResponseMiddleware)
     .use(spamProtectionMiddleware)
-    .use(isAuthed)
     .use(prometheusDBResponseMiddleware)
+    .use(isAuthed)
