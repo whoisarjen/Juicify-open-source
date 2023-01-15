@@ -8,6 +8,8 @@ import { z } from 'zod'
 import { type PrismaClient } from "@prisma/client";
 import { getCalories, sumMacroFromConsumed } from "@/utils/consumed.utils";
 
+const NUMBER_OF_DAYS_BETWEEN_COACHES = 7
+
 const getLastCoachByUserId = async (prisma: PrismaClient, userId: number) =>
     await prisma.coach.findFirstOrThrow({
         where: {
@@ -55,7 +57,7 @@ export const coachRouter = router({
                     ...omit(input, ['data']),
                     ...updateMacronutrientsInUser(proteins, carbs, fats),
                     isCoachAnalyze: true,
-                    nextCoach: moment().add(8, 'days').toDate(),
+                    nextCoach: moment().add(NUMBER_OF_DAYS_BETWEEN_COACHES + 1, 'days').toDate(),
                 },
                 where: {
                     id,
@@ -97,7 +99,7 @@ export const coachRouter = router({
                 where: {
                     userId: id,
                     whenAdded: {
-                        gte: moment().add(-8, 'days').startOf('day').toDate(),
+                        gte: moment().add(-NUMBER_OF_DAYS_BETWEEN_COACHES, 'days').startOf('day').toDate(),
                         lte: moment().endOf('day').toDate(),
                     },
                 }
@@ -113,7 +115,7 @@ export const coachRouter = router({
                             },
                         })
                     )
-                )
+                ) / NUMBER_OF_DAYS_BETWEEN_COACHES
                 : getCalories({
                     proteins: previousCoach.countedProteins,
                     carbs: previousCoach.countedCarbs,

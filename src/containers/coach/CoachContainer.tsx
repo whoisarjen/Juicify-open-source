@@ -12,7 +12,7 @@ const CoachContainerWrapper = styled.div`
     width: 100%;
     padding: 12px;
     box-sizing: border-box;
-    height: calc(100vh - var(--BothNavHeightAndPadding));
+    height: calc(calc(100vh - var(--BothNavHeightAndPadding)) - env(safe-area-inset-bottom));
     display: flex;
     flex-direction: column;
     flex: 1;
