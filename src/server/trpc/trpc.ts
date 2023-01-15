@@ -4,6 +4,21 @@ import superjson from "superjson";
 import { getClientIp } from 'request-ip'
 import { type Context } from "./context";
 import { SPAM_PROTECTION_LIMIT_FOR_CALLS } from '@/utils/trpc.utils'
+import { Histogram, register } from "prom-client"
+
+register.clear();
+
+const restResponseTimeHistogram = new Histogram({
+    name: 'rest_response_time_duration_milliseconds',
+    help: 'Rest response time of API calls in milliseconds',
+    labelNames: ['ip', 'path', 'type', 'status'],
+})
+
+const dbResponseTimeHistogram = new Histogram({
+    name: 'db_response_time_duration_milliseconds',
+    help: 'DB response time of API calls in milliseconds',
+    labelNames: ['ip', 'path', 'type', 'status'],
+})
 
 const t = initTRPC.context<Context>().create({
     transformer: superjson,
@@ -14,10 +29,6 @@ const t = initTRPC.context<Context>().create({
 
 export const router = t.router;
 
-/**
- * Reusable middleware to ensure
- * users are logged in
- */
 const isAuthed = t.middleware(({ ctx, next }) => {
     if (!ctx.session || !ctx.session.user) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
@@ -30,12 +41,11 @@ const isAuthed = t.middleware(({ ctx, next }) => {
     });
 });
 
-const spamProtectionMiddleware = t.middleware(async ({ path, type, ctx: { req }, next }) => {
+const spamProtectionMiddleware = t.middleware(async ({ ctx: { req }, next }) => {
     const userIp = getClientIp(req)
 
     if (userIp) {
         const currentStatusOfIp = await redis.get(userIp)
-
         const updatedStatusOfIp = Number(currentStatusOfIp || 0) + 1
 
         if (updatedStatusOfIp >= SPAM_PROTECTION_LIMIT_FOR_CALLS.NUMBER_OF_CALLS) {
@@ -55,31 +65,50 @@ const spamProtectionMiddleware = t.middleware(async ({ path, type, ctx: { req },
         )
     }
 
+    return await next();
+});
+
+const prometheusRestResponseMiddleware = t.middleware(async ({ path, type, ctx: { req }, next }) => {
+    const ip = getClientIp(req) || ''
     const start = Date.now();
     const result = await next();
     const durationMs = Date.now() - start;
 
-    console.log(`${result.ok ? 'OK' : 'Non-OK'} request timing:`, {
+    restResponseTimeHistogram.observe({
+        ip,
         path,
         type,
-        durationMs,
-        userIp,
-        redis: await redis.get(userIp || ''),
-    })
+        status: result.ok ? 'OK' : 'Non-OK',
+    }, durationMs)
+
     return result;
 });
 
-/**
- * Unprotected procedure
- **/
+const prometheusDBResponseMiddleware = t.middleware(async ({ path, type, ctx: { req }, next }) => {
+    const ip = getClientIp(req) || ''
+    const start = Date.now();
+    const result = await next();
+    const durationMs = Date.now() - start;
+
+    dbResponseTimeHistogram.observe({
+        ip,
+        path,
+        type,
+        status: result.ok ? 'OK' : 'Non-OK',
+    }, durationMs)
+
+    return result;
+});
+
 export const publicProcedure = t
     .procedure
+    .use(prometheusRestResponseMiddleware)
     .use(spamProtectionMiddleware)
+    .use(prometheusDBResponseMiddleware)
 
-/**
- * Protected procedure
- **/
 export const protectedProcedure = t
     .procedure
+    .use(prometheusRestResponseMiddleware)
     .use(spamProtectionMiddleware)
-    .use(isAuthed);
+    .use(isAuthed)
+    .use(prometheusDBResponseMiddleware)

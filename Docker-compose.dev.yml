@@ -33,56 +33,57 @@ services:
         volumes:
             - redis_data:/data
 
-    # prometheus:
-    #     image: prom/prometheus:latest
-    #     restart: unless-stopped
-    #     container_name: prometheus
-    #     volumes:
-    #         - ./prometheus/:/etc/prometheus/
-    #         - prometheus-data:/prometheus
-    #     ports:
-    #         - "9090:9090"
-    #     command: "--config.file=/etc/prometheus/prometheus.yml"
+    cadvisor:
+        image: gcr.io/cadvisor/cadvisor:v0.47.0
+        container_name: cadvisor
+        restart: unless-stopped
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+            - /etc/timezone:/etc/timezone:ro
+            - /:/rootfs:ro
+            - /var/run:/var/run:ro
+            - /sys:/sys:ro
+            - /var/lib/docker/:/var/lib/docker:ro
+            - /dev/disk/:/dev/disk:ro
+        devices:
+            - /dev/kmsg
+        privileged: true
 
-    # grafana:
-    #     image: grafana/grafana-oss:latest
-    #     restart: unless-stopped
-    #     container_name: grafana
-    #     volumes:
-    #         - grafana-data:/var/lib/grafana
-    #     ports:
-    #         - "3000:3000"
+    prometheus:
+        image: prom/prometheus:latest
+        restart: unless-stopped
+        container_name: prometheus
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+            - /etc/timezone:/etc/timezone:ro
+            - ./prometheus/:/etc/prometheus/
+            - prometheus-data:/prometheus
+        ports:
+            - "9090:9090"
+        expose:
+            - "9090"
+        command: "--config.file=/etc/prometheus/prometheus.yml"
 
-    # node_exporter:
-    #     image: quay.io/prometheus/node-exporter:latest
-    #     restart: unless-stopped
-    #     container_name: node_exporter
-    #     volumes:
-    #         - "/:/host:ro,rslave"
-    #     pid: host
-    #     command:
-    #         - "--path.rootfs=/host"
-
-    # cadvisor:
-    #     # TODO: latest tag is not updated, check latest release https://github.com/google/cadvisor/releases
-    #     image: gcr.io/cadvisor/cadvisor:v0.45.0
-    #     container_name: cadvisor
-    #     restart: unless-stopped
-    #     volumes:
-    #         - /:/rootfs:ro
-    #         - /var/run:/var/run:ro
-    #         - /sys:/sys:ro
-    #         - /var/lib/docker/:/var/lib/docker:ro
-    #         - /dev/disk/:/dev/disk:ro
-    #     ports:
-    #         - "8080:8080"
-    #     network_mode: host
-    #     devices:
-    #         - /dev/kmsg
-    #     privileged: true
+    grafana:
+        image: grafana/grafana-oss:latest
+        restart: unless-stopped
+        container_name: grafana
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+            - /etc/timezone:/etc/timezone:ro
+            - ./grafana/grafana.ini:/etc/grafana/grafana.ini
+            - ./grafana/provisioning:/etc/grafana/provisioning
+            - ./grafana/data:/var/lib/grafana
+        user: "1000"
+        depends_on:
+            - prometheus
+        ports:
+            - "3001:3001"
+        expose:
+            - "3001"
 
 volumes:
     postgres-data:
     redis_data:
-    # prometheus-data:
-    # grafana-data:
+    prometheus-data:
+    grafana-data:
