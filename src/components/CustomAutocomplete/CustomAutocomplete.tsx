@@ -2,12 +2,15 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 import useTranslation from 'next-translate/useTranslation';
+import { debounce } from 'lodash';
+import { useCallback } from 'react'
 
 interface CustomAutocompleteProps {
     find: string | null,
     setFind: (arg0: string) => void,
     isLoading: boolean,
     searchCache?: string[]
+    debounceDuration?: number
 }
 
 const CustomAutocomplete = ({
@@ -15,8 +18,12 @@ const CustomAutocomplete = ({
     setFind,
     isLoading,
     searchCache = [],
+    debounceDuration = 1000,
 }: CustomAutocompleteProps) => {
     const { t } = useTranslation()
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const handleSetFind = useCallback(debounce(newFind => setFind(newFind), debounceDuration), []);
 
     return (
         <Autocomplete
@@ -27,7 +34,7 @@ const CustomAutocomplete = ({
             getOptionLabel={option => option ? option : ''}
             options={searchCache}
             loading={isLoading}
-            onInputChange={(e, value) => setFind(value)}
+            onInputChange={(e, value) => handleSetFind(value)}
             renderInput={(params) => (
                 <TextField
                     {...params}

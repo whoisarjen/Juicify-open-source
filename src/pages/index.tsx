@@ -34,6 +34,7 @@ const Home = () => {
             <div>
                 <Logo size={175} />
             </div>
+            {/* TODO ACCEPT RULES + TRANSLATE WHOLE SITE (NEED TO CHECK WHERE) */}
             <div>
                 <Stack spacing={2} direction="column">
                     {providers && Object.values(providers).map((provider) => (
