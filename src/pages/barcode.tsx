@@ -110,9 +110,6 @@ const BarcodeScannerPage = () => {
                 }
             },
             (err: any) => {
-                if (err) {
-                    return console.log(err);
-                }
                 Quagga.start();
             }
         );

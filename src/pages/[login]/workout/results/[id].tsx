@@ -82,9 +82,6 @@ const WorkoutResultPage = () => {
             },
         })
 
-    const whenAdded = data?.whenAdded as unknown as Date
-    const workoutPlanId = data?.workoutPlanId as unknown as number
-console.log({ data })
     const {
         register,
         formState: { errors },

@@ -8,4 +8,4 @@ export const redis = createClient({
 // Initialization start of server for Redis
 (async () => await redis.connect())()
 
-redis.on('error', (err: any) => console.log('Redis Client Error', err))
+redis.on('error', (err: any) => console.error('Redis Client Error', err))

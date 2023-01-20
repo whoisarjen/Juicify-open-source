@@ -31,7 +31,7 @@ export const productRouter = router({
                 },
             })
         }),
-    getAll: publicProcedure // TODO need to more natural language for name here and also exercise
+    getAll: publicProcedure // TODO need to more natural language for name
         .input(
             z.object({
                 name: z.string(),

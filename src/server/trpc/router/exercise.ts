@@ -4,7 +4,7 @@ import { z } from "zod"
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 
 export const exerciseRouter = router({
-    getAll: publicProcedure
+    getAll: publicProcedure // TODO need to more natural language for name
         .input(
             z.object({
                 name: z.string(),

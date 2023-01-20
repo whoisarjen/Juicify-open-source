@@ -216,8 +216,6 @@ const WorkoutPlan = () => {
                 helperText={errors.description?.message}
             />
 
-            {/* TODO suggest workout after ... default null */}
-
             <DragDropContext onDragEnd={handleOnDragEnd}>
                 <Droppable droppableId="exercises">
                     {(provided: any) => (

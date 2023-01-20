@@ -206,7 +206,6 @@ model Product {
   isDeleted        Boolean?   @default(false)
   isExpectingCheck Boolean?   @default(false)
   Consumed         Consumed[]
-  // TODO mapping = diffrent API | mappingId => those data has to be hidden for user
 
   @@unique([id, userId])
   @@unique([name, userId])
