@@ -146,7 +146,7 @@ const WorkoutResultPage = () => {
                 sx={sxTextField}
                 register={register('whenAdded')}
                 focused
-                maxDateTime={moment().toDate()}
+                maxDateTime={moment().add(2, 'hour').toDate()}
             />
 
             <TextField
