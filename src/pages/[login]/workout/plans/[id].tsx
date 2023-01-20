@@ -51,7 +51,7 @@ const ExerciseBox = styled.div`
 
 const SERIES = range(1, 11)
 const REPS = range(1, 101)
-const RIR = range(1, 6, 0.5)
+const RIR = range(0, 6, 0.5)
 
 const WorkoutPlan = () => {
     const router: any = useRouter()
@@ -242,7 +242,7 @@ const WorkoutPlan = () => {
                                                     onChange={(_, series) => update(i, { ...exercise, series })}
                                                     disableClearable
                                                     disabled={!isOwner}
-                                                    getOptionLabel={option => option ? option.toString() : ""}
+                                                    getOptionLabel={option => option.toString()}
                                                     renderInput={params => <TextField {...params} label="Series" />}
                                                 />
                                                 <Autocomplete
@@ -253,7 +253,7 @@ const WorkoutPlan = () => {
                                                     onChange={(_, reps) => update(i, { ...exercise, reps })}
                                                     disableClearable
                                                     disabled={!isOwner}
-                                                    getOptionLabel={option => option ? option.toString() : ""}
+                                                    getOptionLabel={option => option.toString()}
                                                     renderInput={params => <TextField {...params} label="Reps" />}
                                                 />
                                                 <Autocomplete
@@ -264,7 +264,7 @@ const WorkoutPlan = () => {
                                                     onChange={(_, rir) => update(i, { ...exercise, rir })}
                                                     disableClearable
                                                     disabled={!isOwner}
-                                                    getOptionLabel={option => option ? option.toString() : ""}
+                                                    getOptionLabel={option => option.toString()}
                                                     renderInput={params => <TextField {...params} label="RIR" />}
                                                 />
                                             </div>
