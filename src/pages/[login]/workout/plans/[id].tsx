@@ -20,6 +20,7 @@ import styled from 'styled-components'
 import Autocomplete from '@mui/material/Autocomplete';
 import { range } from 'lodash'
 import { CustomTextField } from '@/components/CustomTextField'
+import DialogConfirm from '@/components/DialogConfirm/DialogConfirm'
 
 const Form = styled.form`
     margin-bottom: 10px;
@@ -231,7 +232,9 @@ const WorkoutPlan = () => {
                                             <div>
                                                 <SwapVertIcon />
                                                 <div>{`${i + 1}. ${exercise.name}`}</div>
-                                                <DeleteIcon fontSize='small' onClick={() => remove(i)} />
+                                                <DialogConfirm onConfirmed={() => remove(i)} isDisabled={!isOwner}>
+                                                    <DeleteIcon fontSize='small' />
+                                                </DialogConfirm>
                                             </div>
                                             <div>
                                                 <Autocomplete
