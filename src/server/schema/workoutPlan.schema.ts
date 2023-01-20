@@ -2,8 +2,11 @@ import { z } from "zod";
 
 import { exerciseSchema } from "./exercise.schema";
 
-export const workoutPlanExerciseSchema = exerciseSchema
-    .pick({ id: true, name: true })
+export const workoutPlanExerciseSchema = z.object({
+    series: z.number().min(1).max(10).optional(),
+    reps: z.number().min(1).max(100).optional(),
+    rir: z.number().min(1).max(5).optional(),
+}).merge(exerciseSchema.pick({ id: true, name: true }))
 
 export type WorkoutPlanExerciseSchema = z.infer<typeof workoutPlanExerciseSchema>
 

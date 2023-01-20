@@ -41,6 +41,7 @@ interface BoxExerciseProps {
     isOwner: boolean
     exercise: WorkoutResultExerciseSchema
     previousExercise?: WorkoutResultExerciseSchema
+    exerciseFromWorkoutPlan?: WorkoutPlanExercise
     setNewValues: (arg0: WorkoutResultExerciseResultSchema[]) => void
     deleteExerciseWithIndex: () => void
 }
@@ -48,6 +49,7 @@ interface BoxExerciseProps {
 const BaseBoxExercise = ({
     exercise,
     previousExercise,
+    exerciseFromWorkoutPlan,
     setNewValues,
     isOwner,
     deleteExerciseWithIndex,
@@ -109,8 +111,8 @@ const BaseBoxExercise = ({
                         </DialogConfirm>
                     }
                 </div>
-                <div>{exercise.name}</div>
-                <div />
+                <div>{exercise.name} ({exerciseFromWorkoutPlan?.series || 1}x{exerciseFromWorkoutPlan?.reps || 1})</div>
+                <div>{exerciseFromWorkoutPlan?.rir || 1} RIR</div>
             </Name>
             <Previous>
                 {previousExercise?.results?.map((result, index) => result.weight + "x" + result.reps + (index + 1 === previousExercise.results?.length ? '' : ', '))}

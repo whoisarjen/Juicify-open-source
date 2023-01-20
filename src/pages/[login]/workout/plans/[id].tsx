@@ -7,7 +7,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
 import { zodResolver } from '@hookform/resolvers/zod'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
 import BottomFlyingGuestBanner from '@/components/BottomFlyingGuestBanner/BottomFlyingGuestBanner'
 import NavbarWorkout from '@/containers/Workout/NavbarWorkout/NavbarWorkout'
@@ -15,8 +15,43 @@ import DialogAddExercises from '@/containers/DialogAddExercises/DialogAddExercis
 import InputAdornment from '@mui/material/InputAdornment';
 import { useSession } from 'next-auth/react'
 import { trpc } from '@/utils/trpc.utils'
-import { type WorkoutPlanSchema, workoutPlanSchema, type WorkoutPlanExerciseSchema } from '@/server/schema/workoutPlan.schema'
+import { type WorkoutPlanSchema, workoutPlanSchema } from '@/server/schema/workoutPlan.schema'
 import { updateArray } from '@/utils/global.utils'
+import styled from 'styled-components'
+import Autocomplete from '@mui/material/Autocomplete';
+import { range } from 'lodash'
+
+const Form = styled.form`
+    margin-bottom: 10px;
+`
+
+const ExerciseBox = styled.div`
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 14px;
+    ${this} > div:nth-child(1) {
+        color: #fff;
+        background: #90caf9;
+        border-radius: 4px;
+        padding: 8px;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        text-align: center;
+        align-items: center;
+    }
+    ${this} > div:nth-child(2) {
+        display: flex;
+        width: 100%;
+        gap: 8px;
+        ${this} > div {
+            flex: 1;
+        }
+    }
+`
+
+const SERIES = range(1, 11)
+const REPS = range(1, 101)
+const RIR = range(1, 6)
 
 const WorkoutPlan = () => {
     const router: any = useRouter()
@@ -48,7 +83,7 @@ const WorkoutPlan = () => {
         })
 
     const updateWorkoutPlan = trpc.workoutPlan.update.useMutation({
-        onSuccess(data, variables, context) {
+        onSuccess(data) {
             utils
                 .workoutPlan
                 .get
@@ -98,6 +133,7 @@ const WorkoutPlan = () => {
         append,
         remove,
         move,
+        update,
     } = useFieldArray({ control, name: "exercises", keyName: 'uuid' })
 
     const handleOnSave = async (newWorkoutPlan: WorkoutPlanSchema) => {
@@ -133,7 +169,7 @@ const WorkoutPlan = () => {
     const isOwner = sessionData?.user?.id == data?.userId
 
     return (
-        <form>
+        <Form>
             <NavbarWorkout
                 isDisabled={isLoading || !data?.id}
                 isLoading={isLoading}
@@ -179,31 +215,60 @@ const WorkoutPlan = () => {
                 error={typeof errors.description === 'undefined' ? false : true}
                 helperText={errors.description?.message}
             />
+
+            {/* TODO suggest workout after ... default null */}
+
             <DragDropContext onDragEnd={handleOnDragEnd}>
                 <Droppable droppableId="exercises">
                     {(provided: any) => (
-                        <Stack direction="column" spacing={1} {...provided.droppableProps} ref={provided.innerRef}>
+                        <Stack direction="column" spacing={1} marginTop="10px" {...provided.droppableProps} ref={provided.innerRef}>
                             {fields.map((exercise, i: number) =>
                                 <Draggable key={exercise.id} draggableId={exercise.uuid} index={i}>
                                     {(provided: any) => (
-                                        <Chip
+                                        <ExerciseBox
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
                                             ref={provided.innerRef}
-                                            disabled={!isOwner}
-                                            label={`${i + 1}. ${exercise?.name}`}
-                                            onDelete={() => remove(i)}
-                                            avatar={<SwapVertIcon />}
-                                            deleteIcon={<DeleteIcon />}
-                                            sx={{
-                                                width: '100%',
-                                                display: 'grid',
-                                                gridTemplateColumns: 'auto 1fr auto',
-                                                padding: '0 5px',
-                                                height: '44px',
-                                                marginTop: '10px'
-                                            }}
-                                        />
+                                            disabled={!isOwner} // TODO
+                                        >
+                                            <div>
+                                                <SwapVertIcon />
+                                                <div>{`${i + 1}. ${exercise.name}`}</div>
+                                                <DeleteIcon fontSize='small' onClick={() => remove(i)} />
+                                            </div>
+                                            <div>
+                                                <Autocomplete
+                                                    sx={{ marginTop: '8px' }}
+                                                    disablePortal
+                                                    value={exercise.series || 1}
+                                                    options={SERIES}
+                                                    onChange={(_, series) => update(i, { ...exercise, series })}
+                                                    disableClearable
+                                                    getOptionLabel={option => option ? option.toString() : ""}
+                                                    renderInput={params => <TextField {...params} label="Series" />}
+                                                />
+                                                <Autocomplete
+                                                    sx={{ marginTop: '8px' }}
+                                                    disablePortal
+                                                    value={exercise.reps || 1}
+                                                    options={REPS}
+                                                    onChange={(_, reps) => update(i, { ...exercise, reps })}
+                                                    disableClearable
+                                                    getOptionLabel={option => option ? option.toString() : ""}
+                                                    renderInput={params => <TextField {...params} label="Reps" />}
+                                                />
+                                                <Autocomplete
+                                                    sx={{ marginTop: '8px' }}
+                                                    disablePortal
+                                                    value={exercise.rir || 1}
+                                                    options={RIR}
+                                                    onChange={(_, rir) => update(i, { ...exercise, rir })}
+                                                    disableClearable
+                                                    getOptionLabel={option => option ? option.toString() : ""}
+                                                    renderInput={params => <TextField {...params} label="RIR" />}
+                                                />
+                                            </div>
+                                        </ExerciseBox>
                                     )}
                                 </Draggable>
                             )}
@@ -224,7 +289,7 @@ const WorkoutPlan = () => {
                     username={data.user.username}
                 />
             }
-        </form>
+        </Form>
     )
 }
 

@@ -84,7 +84,7 @@ const WorkoutResultPage = () => {
 
     const whenAdded = data?.whenAdded as unknown as Date
     const workoutPlanId = data?.workoutPlanId as unknown as number
-
+console.log({ data })
     const {
         register,
         formState: { errors },
@@ -195,7 +195,8 @@ const WorkoutResultPage = () => {
                     <BoxResult
                         key={exercise.uuid}
                         exercise={exercise}
-                        previousExercise={previousExercises.find((previousExercise: WorkoutResultExercise) => previousExercise?.id === exercise.id)}
+                        previousExercise={previousExercises.find((previousExercise: WorkoutResultExercise) => previousExercise.id === exercise.id)}
+                        exerciseFromWorkoutPlan={data?.workoutPlan?.exercises?.find(exerciseFromWorkoutPlan => exerciseFromWorkoutPlan.id === exercise.id)}
                         isOwner={sessionData?.user?.username == data?.user?.username}
                         setNewValues={(results: WorkoutResultExerciseResult[]) => update(index, { ...exercise, results })}
                         deleteExerciseWithIndex={() => remove(index)}

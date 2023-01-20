@@ -45,7 +45,7 @@ export const workoutResultRouter = router({
             return {
                 ...workoutResult,
                 previousWorkoutResult,
-            } as unknown as WorkoutResult<typeof workoutResult> & { previousWorkoutResult?: WorkoutResult<typeof workoutResult> }
+            } as unknown as Omit<WorkoutResult<typeof workoutResult>, 'workoutPlan'> & { workoutPlan?: WorkoutPlan } & { previousWorkoutResult?: WorkoutResult<typeof workoutResult> }
         }),
     getDay: publicProcedure
         .input(
