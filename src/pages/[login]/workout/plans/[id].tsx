@@ -1,4 +1,3 @@
-import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -20,6 +19,7 @@ import { updateArray } from '@/utils/global.utils'
 import styled from 'styled-components'
 import Autocomplete from '@mui/material/Autocomplete';
 import { range } from 'lodash'
+import { CustomTextField } from '@/components/CustomTextField'
 
 const Form = styled.form`
     margin-bottom: 10px;
@@ -268,6 +268,16 @@ const WorkoutPlan = () => {
                                                     renderInput={params => <TextField {...params} label="RIR" />}
                                                 />
                                             </div>
+
+                                            <CustomTextField
+                                                multiline
+                                                disabled={!isOwner}
+                                                label={t('Notes')}
+                                                type="text"
+                                                sx={{ width: '100%', marginTop: '8px' }}
+                                                defaultValue={exercise.note}
+                                                onChange={note => update(i, { ...exercise, note })}
+                                            />
                                         </ExerciseBox>
                                     )}
                                 </Draggable>

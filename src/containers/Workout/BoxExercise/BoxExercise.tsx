@@ -19,6 +19,7 @@ const Name = styled.div`
     border-radius: 4px;
     display: grid;
     grid-template-columns: 44px auto 44px;
+    font-size: 14px;
     ${this} div {
         margin: auto;
         display: grid;
@@ -34,7 +35,7 @@ const Name = styled.div`
 const Previous = styled.div`
     width: 100%;
     text-align: center;
-    margin-top: 12px;
+    margin-top: 8px;
 `
 
 interface BoxExerciseProps {
@@ -114,6 +115,9 @@ const BaseBoxExercise = ({
                 <div>{exercise.name} ({exerciseFromWorkoutPlan?.series || 1}x{exerciseFromWorkoutPlan?.reps || 1})</div>
                 <div>{exerciseFromWorkoutPlan?.rir || 1} RIR</div>
             </Name>
+            <Previous>
+                {exerciseFromWorkoutPlan?.note}
+            </Previous>
             <Previous>
                 {previousExercise?.results?.map((result, index) => result.weight + "x" + result.reps + (index + 1 === previousExercise.results?.length ? '' : ', '))}
             </Previous>
