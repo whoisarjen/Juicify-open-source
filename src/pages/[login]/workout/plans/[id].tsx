@@ -223,13 +223,12 @@ const WorkoutPlan = () => {
                     {(provided: any) => (
                         <Stack direction="column" spacing={1} marginTop="10px" {...provided.droppableProps} ref={provided.innerRef}>
                             {fields.map((exercise, i: number) =>
-                                <Draggable key={exercise.id} draggableId={exercise.uuid} index={i}>
+                                <Draggable key={exercise.id} draggableId={exercise.uuid} index={i} isDragDisabled={!isOwner}>
                                     {(provided: any) => (
                                         <ExerciseBox
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
                                             ref={provided.innerRef}
-                                            disabled={!isOwner} // TODO
                                         >
                                             <div>
                                                 <SwapVertIcon />
@@ -244,6 +243,7 @@ const WorkoutPlan = () => {
                                                     options={SERIES}
                                                     onChange={(_, series) => update(i, { ...exercise, series })}
                                                     disableClearable
+                                                    disabled={!isOwner}
                                                     getOptionLabel={option => option ? option.toString() : ""}
                                                     renderInput={params => <TextField {...params} label="Series" />}
                                                 />
@@ -254,6 +254,7 @@ const WorkoutPlan = () => {
                                                     options={REPS}
                                                     onChange={(_, reps) => update(i, { ...exercise, reps })}
                                                     disableClearable
+                                                    disabled={!isOwner}
                                                     getOptionLabel={option => option ? option.toString() : ""}
                                                     renderInput={params => <TextField {...params} label="Reps" />}
                                                 />
@@ -264,6 +265,7 @@ const WorkoutPlan = () => {
                                                     options={RIR}
                                                     onChange={(_, rir) => update(i, { ...exercise, rir })}
                                                     disableClearable
+                                                    disabled={!isOwner}
                                                     getOptionLabel={option => option ? option.toString() : ""}
                                                     renderInput={params => <TextField {...params} label="RIR" />}
                                                 />
