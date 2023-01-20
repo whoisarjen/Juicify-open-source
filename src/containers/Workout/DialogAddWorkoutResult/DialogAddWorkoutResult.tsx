@@ -85,7 +85,7 @@ const DialogAddWorkoutResult = () => {
                             value={whenAdded}
                             onChange={value => value && setWhenAdded(value)}
                             label={t("Date")}
-                            inputFormat="dd.MM.yyyy"
+                            inputFormat="DD.MM.YYYY"
                             renderInput={(params: any) =>
                                 <TextField
                                     sx={{ width: '100%' }}

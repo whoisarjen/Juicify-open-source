@@ -115,7 +115,7 @@ const BoxResult = ({
                         options={weightOptions}
                         onChange={(_, value) => changeResult({ reps: parseInt(reps), weight: parseFloat(value || '0'), open })}
                         onInputChange={(_, valueLocally) => loadWeight(valueLocally)}
-                        getOptionLabel={option => option ? option.toString() : ""}
+                        getOptionLabel={option => option.toString()}
                         renderInput={params => <TextField {...params} label="Weight" />}
                     />
                     <Autocomplete
@@ -125,7 +125,7 @@ const BoxResult = ({
                         options={repsOptions}
                         onChange={(_, value) => changeResult({ reps: parseInt(value || '0'), weight: parseFloat(weight), open })}
                         onInputChange={(_, valueLocally) => setReps(valueLocally)}
-                        getOptionLabel={option => option ? option.toString() : ""}
+                        getOptionLabel={option => option.toString()}
                         renderInput={params => <TextField {...params} label="Reps" />}
                     />
                 </>
