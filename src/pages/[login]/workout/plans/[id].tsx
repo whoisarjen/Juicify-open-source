@@ -51,7 +51,7 @@ const ExerciseBox = styled.div`
 
 const SERIES = range(1, 11)
 const REPS = range(1, 101)
-const RIR = range(1, 6)
+const RIR = range(1, 6, 0.5)
 
 const WorkoutPlan = () => {
     const router: any = useRouter()
