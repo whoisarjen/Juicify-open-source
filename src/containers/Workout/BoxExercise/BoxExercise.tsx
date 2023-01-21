@@ -112,8 +112,8 @@ const BaseBoxExercise = ({
                         </DialogConfirm>
                     }
                 </div>
-                <div>{exercise.name} ({exerciseFromWorkoutPlan?.series || 1}x{exerciseFromWorkoutPlan?.reps || 1})</div>
-                <div>{exerciseFromWorkoutPlan?.rir || 1} RIR</div>
+                <div>{exercise.name} ({exerciseFromWorkoutPlan?.series ?? 1}x{exerciseFromWorkoutPlan?.reps ?? 1})</div>
+                <div>{exerciseFromWorkoutPlan?.rir ?? 1} RIR</div>
             </Name>
             <Previous>
                 {exerciseFromWorkoutPlan?.note}

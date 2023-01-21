@@ -240,7 +240,7 @@ const WorkoutPlan = () => {
                                                 <Autocomplete
                                                     sx={{ marginTop: '8px' }}
                                                     disablePortal
-                                                    value={exercise.series || 1}
+                                                    value={exercise.series ?? 1}
                                                     options={SERIES}
                                                     onChange={(_, series) => update(i, { ...exercise, series })}
                                                     disableClearable
@@ -251,7 +251,7 @@ const WorkoutPlan = () => {
                                                 <Autocomplete
                                                     sx={{ marginTop: '8px' }}
                                                     disablePortal
-                                                    value={exercise.reps || 1}
+                                                    value={exercise.reps ?? 1}
                                                     options={REPS}
                                                     onChange={(_, reps) => update(i, { ...exercise, reps })}
                                                     disableClearable
@@ -262,7 +262,7 @@ const WorkoutPlan = () => {
                                                 <Autocomplete
                                                     sx={{ marginTop: '8px' }}
                                                     disablePortal
-                                                    value={exercise.rir || 1}
+                                                    value={exercise.rir ?? 1}
                                                     options={RIR}
                                                     onChange={(_, rir) => update(i, { ...exercise, rir })}
                                                     disableClearable

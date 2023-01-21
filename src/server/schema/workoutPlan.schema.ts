@@ -5,7 +5,7 @@ import { exerciseSchema } from "./exercise.schema";
 export const workoutPlanExerciseSchema = z.object({
     series: z.number().min(1).max(10).optional(),
     reps: z.number().min(1).max(100).optional(),
-    rir: z.number().min(1).max(5).optional(),
+    rir: z.number().min(0).max(5).optional(),
     note: z.string().max(255).optional(),
 }).merge(exerciseSchema.pick({ id: true, name: true }))
 
