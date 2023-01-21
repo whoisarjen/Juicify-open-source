@@ -5,7 +5,6 @@ import SidebarLeft from './SidebarLeft'
 import SidebarRight from './SidebarRight'
 import SidebarRightLoggouted from './SidebarRightLoggouted'
 import styled from 'styled-components'
-import moment from 'moment'
 import { useSession, signOut } from 'next-auth/react'
 import { DialogMissingSettings } from '@/components/DialogMissingSettings'
 import Button from '@mui/material/Button';
@@ -91,28 +90,29 @@ const Layout = ({ children }: { children: any }) => {
                 return
             }
 
+            if (status === 'loading') {
+                return
+            }
+
             if (status === 'unauthenticated' && requiredAuth.includes(router.pathname)) {
                 router.push('/')
                 return
             }
 
+            const asPath = localStorage.getItem('asPath')
+            if (asPath && router.pathname !== asPath) {
+                router.push(asPath)
+            }
+
             setIsAllowedLocation(true)
         })()
-    }, [status, router, router.pathname, router.locale])
+    }, [status, router])
 
     useEffect(() => {
         if (router?.asPath) {
             localStorage.setItem('asPath', router.asPath)
         }
     }, [router?.asPath])
-
-    useEffect(() => {
-        const asPath = localStorage.getItem('asPath')
-        if (asPath) {
-            router.push(asPath)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
 
     useEffect(() => {
         if (sessionData?.user?.isBanned) {
