@@ -79,7 +79,7 @@ const getCookie = async (cookieName: string) => {
 const Layout = ({ children }: { children: any }) => {
     const { t } = useTranslation('home')
     const router = useRouter()
-    const [isAllowedLocation, setIsAllowedLocation] = useState(false)
+    const [isAllowedLocation, setIsAllowedLocation] = useState(true)
     const { data: sessionData, status } = useSession()
 
     useEffect(() => {
@@ -118,17 +118,17 @@ const Layout = ({ children }: { children: any }) => {
             signOut({ callbackUrl: '/' })
             return
         }
-    }, [router, sessionData?.user])
+    }, [router, sessionData?.user?.isBanned])
 
-    const isLoggoutedGrid = !sessionData || router.pathname == '/'
+    const isLoggoutedGrid = !sessionData || router.pathname === '/'
 
-    if (!isAllowedLocation || status === 'loading' || (status === 'authenticated' && router.pathname == '/')) {
+    if (!isAllowedLocation || status === 'loading' || (status === 'authenticated' && router.pathname === '/')) {
         return null
     }
 
     return (
         <main>
-            {router.pathname.includes('blog') || router.pathname == '/'
+            {router.pathname.includes('blog') || router.pathname === '/'
                 ? <>{children}</>
                 : <Grid>
                     <SidebarLeft />
