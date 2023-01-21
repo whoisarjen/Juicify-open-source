@@ -1,7 +1,6 @@
 import { useEffect } from "react"
 import { useRouter } from "next/router"
 import { useSession } from "next-auth/react";
-import moment from 'moment'
 
 const Me = () => {
     const { data: sessionData } = useSession()
@@ -9,13 +8,9 @@ const Me = () => {
 
     useEffect(() => {
         if (sessionData?.user?.username) {
-            router.push(
-                !sessionData.user.isCoachAnalyze
-                    ? `/coach`
-                    : `/${sessionData.user.username}/consumed/${moment().format('YYYY-MM-DD')}`
-            )
+            router.push('/coach')
         }
-    }, [router, sessionData?.user?.isCoachAnalyze, sessionData?.user?.username])
+    }, [router, sessionData?.user?.username])
 
     return null
 }
