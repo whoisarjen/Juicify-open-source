@@ -6,6 +6,7 @@ import NavbarProfile from '@/containers/profile/NavbarProfile/NavbarProfile'
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
 import { useSession } from 'next-auth/react'
 import { trpc } from '@/utils/trpc.utils'
+import { BoxWorkoutLoader } from '@/containers/Workout/BoxWorkoutLoader'
 
 const WorkoutResultsPage = () => {
     const router: any = useRouter()
@@ -14,7 +15,8 @@ const WorkoutResultsPage = () => {
     const username = router.query.login || ''
 
     const {
-        data: workoutResults,
+        data: workoutResults = [],
+        isFetching,
     } = trpc
         .workoutResult
         .getAll
@@ -31,16 +33,20 @@ const WorkoutResultsPage = () => {
                 </>
                 : <NavbarProfile tab={2} />
             }
-            {workoutResults?.map(workoutResult =>
-                <BoxWorkout
-                    whenAdded={workoutResult.whenAdded}
-                    title={workoutResult.name}
-                    description={workoutResult.note || ''}
-                    route={`/${username}/workout/results/${workoutResult.id}`}
-                    icon={<FitnessCenterIcon />}
-                    key={workoutResult.id}
-                />
-            )}
+            <BoxWorkoutLoader isLoading={isFetching}>
+                <div>
+                    {workoutResults?.map(workoutResult =>
+                        <BoxWorkout
+                            whenAdded={workoutResult.whenAdded}
+                            title={workoutResult.name}
+                            description={workoutResult.note || ''}
+                            route={`/${username}/workout/results/${workoutResult.id}`}
+                            icon={<FitnessCenterIcon />}
+                            key={workoutResult.id}
+                        />
+                    )}
+                </div>
+            </BoxWorkoutLoader>
         </div>
     )
 }

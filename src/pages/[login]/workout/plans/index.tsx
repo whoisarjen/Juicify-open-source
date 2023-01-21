@@ -7,6 +7,7 @@ import NavbarProfile from '@/containers/profile/NavbarProfile/NavbarProfile';
 import { useSession } from 'next-auth/react';
 import { trpc } from '@/utils/trpc.utils';
 import { orderBy } from 'lodash'
+import { BoxWorkoutLoader } from '@/containers/Workout/BoxWorkoutLoader';
 
 const WorkoutPlansPage = () => {
     const router: any = useRouter()
@@ -16,7 +17,10 @@ const WorkoutPlansPage = () => {
 
     const utils = trpc.useContext()
 
-    const { data: workoutPlans } = trpc
+    const {
+        data: workoutPlans = [],
+        isFetching,
+    } = trpc
         .workoutPlan
         .getAll
         .useQuery({ username }, { enabled: !!username })
@@ -49,15 +53,19 @@ const WorkoutPlansPage = () => {
             {isOwner && <NavbarOnlyTitle title="workout:WORKOUT_PLANS" />}
             {isOwner && <ButtonPlusIcon onClick={handleCreateWorkoutPlan} />}
             {!isOwner && <NavbarProfile tab={3} />}
-            {workoutPlans?.map(workoutPlan =>
-                <BoxWorkout
-                    title={workoutPlan.name || ''}
-                    description={workoutPlan.description || ''}
-                    route={`/${router.query.login}/workout/plans/${workoutPlan.id}`}
-                    icon={<NoteAltIcon />}
-                    key={workoutPlan?.id}
-                />
-            )}
+            <BoxWorkoutLoader isLoading={isFetching}>
+                <div>
+                    {workoutPlans?.map(workoutPlan =>
+                        <BoxWorkout
+                            title={workoutPlan.name || ''}
+                            description={workoutPlan.description || ''}
+                            route={`/${router.query.login}/workout/plans/${workoutPlan.id}`}
+                            icon={<NoteAltIcon />}
+                            key={workoutPlan?.id}
+                        />
+                    )}
+                </div>
+            </BoxWorkoutLoader>
         </div>
     );
 }
