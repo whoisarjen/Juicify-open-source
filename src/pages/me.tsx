@@ -9,9 +9,13 @@ const Me = () => {
 
     useEffect(() => {
         if (sessionData?.user?.username) {
-            router.push(`/${sessionData?.user?.username}/consumed/${moment().format('YYYY-MM-DD')}`)
+            router.push(
+                !sessionData.user.isCoachAnalyze
+                    ? `/coach`
+                    : `/${sessionData.user.username}/consumed/${moment().format('YYYY-MM-DD')}`
+            )
         }
-    }, [router, sessionData?.user?.username])
+    }, [router, sessionData?.user?.isCoachAnalyze, sessionData?.user?.username])
 
     return null
 }
