@@ -79,25 +79,26 @@ const getCookie = async (cookieName: string) => {
 const Layout = ({ children }: { children: any }) => {
     const { t } = useTranslation('home')
     const router = useRouter()
-    const [isAllowedLocation, setIsAllowedLocation] = useState(true)
+    const [isAllowedLocation, setIsAllowedLocation] = useState(false)
     const { data: sessionData, status } = useSession()
 
     useEffect(() => {
         (async () => {
             const locale = await getCookie('NEXT_LOCALE') // Redirect for PWA's scope
+
             if (locale && router.locale != locale) {
-                return router.push(router.asPath, router.asPath, { locale });
+                router.push(router.asPath, router.asPath, { locale });
+                return
             }
 
-            if (sessionData?.user?.username && router.pathname === '/') {
-                router.push(`/${sessionData.user.username}/consumed/${moment().format('YYYY-MM-DD')}`);
-            } else if (!sessionData && requiredAuth.includes(router.pathname)) {
+            if (status === 'unauthenticated' && requiredAuth.includes(router.pathname)) {
                 router.push('/')
-            } else {
-                setIsAllowedLocation(true)
+                return
             }
+
+            setIsAllowedLocation(true)
         })()
-    }, [router, router.pathname, router.locale, sessionData, sessionData?.user?.username])
+    }, [status, router, router.pathname, router.locale])
 
     useEffect(() => {
         if (router?.asPath) {
