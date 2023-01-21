@@ -29,12 +29,12 @@ const Form = styled.form`
 const ExerciseBox = styled.div`
     width: 100%;
     box-sizing: border-box;
-    font-size: 14px;
+    font-size: 15px;
     ${this} > div:nth-child(1) {
         color: #fff;
         background: #90caf9;
         border-radius: 4px;
-        padding: 8px;
+        padding: 10px;
         display: grid;
         grid-template-columns: auto 1fr auto;
         text-align: center;
@@ -43,7 +43,7 @@ const ExerciseBox = styled.div`
     ${this} > div:nth-child(2) {
         display: flex;
         width: 100%;
-        gap: 8px;
+        gap: 10px;
         ${this} > div {
             flex: 1;
         }
@@ -238,7 +238,7 @@ const WorkoutPlan = () => {
                                             </div>
                                             <div>
                                                 <Autocomplete
-                                                    sx={{ marginTop: '8px' }}
+                                                    sx={{ marginTop: '10px' }}
                                                     disablePortal
                                                     value={exercise.series ?? 1}
                                                     options={SERIES}
@@ -249,7 +249,7 @@ const WorkoutPlan = () => {
                                                     renderInput={params => <TextField {...params} label="Series" />}
                                                 />
                                                 <Autocomplete
-                                                    sx={{ marginTop: '8px' }}
+                                                    sx={{ marginTop: '10px' }}
                                                     disablePortal
                                                     value={exercise.reps ?? 1}
                                                     options={REPS}
@@ -260,7 +260,7 @@ const WorkoutPlan = () => {
                                                     renderInput={params => <TextField {...params} label="Reps" />}
                                                 />
                                                 <Autocomplete
-                                                    sx={{ marginTop: '8px' }}
+                                                    sx={{ marginTop: '10px' }}
                                                     disablePortal
                                                     value={exercise.rir ?? 1}
                                                     options={RIR}
@@ -277,7 +277,7 @@ const WorkoutPlan = () => {
                                                 disabled={!isOwner}
                                                 label={t('Notes')}
                                                 type="text"
-                                                sx={{ width: '100%', marginTop: '8px' }}
+                                                sx={{ width: '100%', marginTop: '10px' }}
                                                 defaultValue={exercise.note}
                                                 onChange={note => update(i, { ...exercise, note })}
                                             />
