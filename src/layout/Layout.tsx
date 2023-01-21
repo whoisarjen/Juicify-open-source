@@ -43,16 +43,6 @@ const Content = styled.div`
     }
 `
 
-const requiredAuth = [
-    '',
-    '/settings',
-    '/workout',
-    '/statistics',
-    '/macronutrients',
-    '/coach',
-    '/barcode'
-]
-
 const SignInFloatingButton = styled.div`
     width: 100%;
     max-width: 702px;
@@ -65,6 +55,18 @@ const SignInFloatingButton = styled.div`
         width: calc(100% - 32px);
     }
 `
+
+const SIGN_IN_PATH = '/'
+
+const REQUIRED_AUTH_PATHS = [
+    '',
+    '/settings',
+    '/workout',
+    '/statistics',
+    '/macronutrients',
+    '/coach',
+    '/barcode'
+]
 
 const getCookie = async (cookieName: string) => {
     let cookie: any = {};
@@ -94,13 +96,13 @@ const Layout = ({ children }: { children: any }) => {
                 return
             }
 
-            if (status === 'unauthenticated' && requiredAuth.includes(router.pathname)) {
-                router.push('/')
+            if (status === 'unauthenticated' && REQUIRED_AUTH_PATHS.includes(router.pathname)) {
+                router.push(SIGN_IN_PATH)
                 return
             }
 
             const asPath = localStorage.getItem('asPath')
-            if (status === 'authenticated' && router.pathname === '/') {
+            if (status === 'authenticated' && router.pathname === SIGN_IN_PATH) {
                 router.push(asPath || '/coach')
             }
 
@@ -109,27 +111,27 @@ const Layout = ({ children }: { children: any }) => {
     }, [status, router])
 
     useEffect(() => {
-        if (router?.asPath) {
+        if (router?.asPath && router.asPath !== SIGN_IN_PATH) {
             localStorage.setItem('asPath', router.asPath)
         }
     }, [router?.asPath])
 
     useEffect(() => {
         if (sessionData?.user?.isBanned) {
-            signOut({ callbackUrl: '/' })
+            signOut({ callbackUrl: SIGN_IN_PATH })
             return
         }
     }, [router, sessionData?.user?.isBanned])
 
-    const isLoggoutedGrid = !sessionData || router.pathname === '/'
+    const isLoggoutedGrid = !sessionData || router.pathname === SIGN_IN_PATH
 
-    if (!isAllowedLocation || status === 'loading' || (status === 'authenticated' && router.pathname === '/')) {
+    if (!isAllowedLocation || status === 'loading' || (status === 'authenticated' && router.pathname === SIGN_IN_PATH)) {
         return null
     }
 
     return (
         <main>
-            {router.pathname.includes('blog') || router.pathname === '/'
+            {router.pathname.includes('blog') || router.pathname === SIGN_IN_PATH
                 ? <>{children}</>
                 : <Grid>
                     <SidebarLeft />
@@ -146,7 +148,7 @@ const Layout = ({ children }: { children: any }) => {
                                 color="primary"
                                 variant="contained"
                                 aria-label="authorization"
-                                onClick={() => router.push('/')}
+                                onClick={() => router.push(SIGN_IN_PATH)}
                             >
                                 {t('I_ALSO_WANT_TO_CHANGE_MY_BODY')}
                             </Button>
