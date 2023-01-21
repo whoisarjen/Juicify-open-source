@@ -97,7 +97,7 @@ const Layout = ({ children }: { children: any }) => {
                 setIsAllowedLocation(true)
             }
         })()
-    }, [router, sessionData])
+    }, [router, sessionData, sessionData?.user?.username])
 
     useEffect(() => {
         if (router?.asPath) {
@@ -117,10 +117,6 @@ const Layout = ({ children }: { children: any }) => {
         if (sessionData?.user?.isBanned) {
             signOut({ callbackUrl: '/' })
             return
-        }
-
-        if (sessionData?.user && router.pathname == '/') {
-            router.push('/me')
         }
     }, [router, sessionData?.user])
 
