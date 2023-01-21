@@ -31,14 +31,15 @@ export const productRouter = router({
                 },
             })
         }),
-    getAll: publicProcedure // TODO need to more natural language for name
+    getAll: publicProcedure
         .input(
             z.object({
                 name: z.string(),
             })
         )
         .query(async ({ ctx, input: { name } }) => {
-            const contains = name.trim()
+            const preparedName = name.trim()
+            const contains = preparedName.substring(0, preparedName.length - 1)
 
             return await ctx.prisma.product.findMany({
                 take: 10,
