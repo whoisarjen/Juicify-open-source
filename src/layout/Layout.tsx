@@ -100,8 +100,8 @@ const Layout = ({ children }: { children: any }) => {
             }
 
             const asPath = localStorage.getItem('asPath')
-            if (asPath && router.pathname === '/') {
-                router.push(asPath)
+            if (status === 'authenticated' && router.pathname === '/') {
+                router.push(asPath || '/coach')
             }
 
             setIsAllowedLocation(true)
