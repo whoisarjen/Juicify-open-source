@@ -28,7 +28,7 @@ const WorkoutResultsPage = () => {
         <div>
             {isOwner
                 ? <>
-                    <NavbarOnlyTitle title="workout:WORKOUT_RESULTS" />
+                    <NavbarOnlyTitle title="home:WORKOUT_RESULTS" />
                     <DialogAddWorkoutResult />
                 </>
                 : <NavbarProfile tab={2} />
