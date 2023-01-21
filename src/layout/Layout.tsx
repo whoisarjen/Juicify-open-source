@@ -100,7 +100,7 @@ const Layout = ({ children }: { children: any }) => {
             }
 
             const asPath = localStorage.getItem('asPath')
-            if (asPath && router.pathname !== asPath) {
+            if (asPath && router.pathname === '/') {
                 router.push(asPath)
             }
 
