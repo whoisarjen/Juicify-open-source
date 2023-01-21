@@ -89,7 +89,7 @@ const Layout = ({ children }: { children: any }) => {
                 return router.push(router.asPath, router.asPath, { locale });
             }
 
-            if (sessionData?.user?.username && router.pathname == '/') {
+            if (sessionData?.user?.username && router.pathname === '/') {
                 router.push(`/${sessionData.user.username}/consumed/${moment().format('YYYY-MM-DD')}`);
             } else if (!sessionData && requiredAuth.includes(router.pathname)) {
                 router.push('/')
@@ -97,7 +97,7 @@ const Layout = ({ children }: { children: any }) => {
                 setIsAllowedLocation(true)
             }
         })()
-    }, [router, sessionData, sessionData?.user?.username])
+    }, [router, router.pathname, router.locale, sessionData, sessionData?.user?.username])
 
     useEffect(() => {
         if (router?.asPath) {
