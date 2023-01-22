@@ -59,7 +59,6 @@ const SignInFloatingButton = styled.div`
 const SIGN_IN_PATH = '/'
 
 const REQUIRED_AUTH_PATHS = [
-    '',
     '/settings',
     '/workout',
     '/statistics',
