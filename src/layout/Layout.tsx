@@ -105,6 +105,7 @@ const Layout = ({ children }: { children: any }) => {
                 const asPath = localStorage.getItem('asPath')
                 const redirectTo = asPath && asPath !== SIGN_IN_PATH ? asPath : '/coach'
                 router.push(redirectTo)
+                return
             }
 
             setIsAllowedLocation(true)
@@ -126,7 +127,7 @@ const Layout = ({ children }: { children: any }) => {
 
     const isLoggoutedGrid = !sessionData || router.pathname === SIGN_IN_PATH
 
-    if (!isAllowedLocation || status === 'loading' || (status === 'authenticated' && router.pathname === SIGN_IN_PATH)) {
+    if (!isAllowedLocation) {
         return null
     }
 
