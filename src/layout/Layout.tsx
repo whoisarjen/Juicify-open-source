@@ -101,9 +101,10 @@ const Layout = ({ children }: { children: any }) => {
                 return
             }
 
-            const asPath = localStorage.getItem('asPath')
             if (status === 'authenticated' && router.pathname === SIGN_IN_PATH) {
-                router.push(asPath || '/coach')
+                const asPath = localStorage.getItem('asPath')
+                const redirectTo = asPath && asPath !== SIGN_IN_PATH ? asPath : '/coach'
+                router.push(redirectTo)
             }
 
             setIsAllowedLocation(true)
