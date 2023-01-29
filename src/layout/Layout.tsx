@@ -114,13 +114,13 @@ const Layout = ({ children }: { children: any }) => {
     }, [status, router])
 
     useEffect(() => {
-        if (router?.asPath && router.asPath !== SIGN_IN_PATH) {
+        if (router?.asPath && router.asPath !== SIGN_IN_PATH && !router.asPath.includes('callback')) {
             localStorage.setItem('asPath', router.asPath.includes(`${sessionData?.user?.username}/consumed`)
                 ? router.asPath.slice(0, router.asPath.length - 10) + moment().format('YYYY-MM-DD')
                 : router.asPath
             )
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router?.asPath])
 
     useEffect(() => {
