@@ -22,6 +22,15 @@ const nextConfig = {
     reactStrictMode: false, // react-beautiful-dnd is not working, when true
     env,
     ...nextTranslate(),
+    async redirects() {
+        return [
+            {
+                source: '/sitemap.xml',
+                destination: '/api/sitemap',
+                permanent: true,
+            },
+        ]
+    },
 }
 
 module.exports = withPWA(nextConfig);
