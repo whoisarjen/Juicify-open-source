@@ -1,5 +1,6 @@
 import CheckingTodayData from "@/containers/coach/CheckingTodayData";
 import ChooseAnalyzeSource from "@/containers/coach/ChooseAnalyzeSource";
+import ChooseCaloriesSource from "@/containers/coach/ChooseCaloriesSource";
 import ChooseDiet from "@/containers/coach/ChooseDiet";
 import LosingWeight from "@/containers/coach/LosingWeight";
 import MuscleBuilding from "@/containers/coach/MuscleBuilding";
@@ -26,8 +27,15 @@ const whenAdded = moment().format('YYYY-MM-DD')
 
 const Coach = () => {
     const { data: sessionData } = useSession()
-    const [step, setStep] = useState('')
+    const [step, setStep] = useState(sessionData?.user?.isCoachAnalyze ? 'Standard' : 'Welcome')
     const username = sessionData?.user?.username || ''
+    // const [{ data }, getDailyByWhenAndUsernameQuery] = useDailyByWhenAndUsernameQuery({
+    //     variables: {
+    //         when,
+    //         username,
+    //     },
+    //     pause: true,
+    // })
 
     const {
         data: measurement,
@@ -65,14 +73,26 @@ const Coach = () => {
         })
     }
 
+    const prepareAnalize = async (isUseData: boolean) => {
+        //     const response = await post({
+        //         url: '/coach/analyze',
+        //         object: {
+        //             isUseData,
+        //             today: getShortDate(),
+        //             age: getAge(token.birth),
+        //             // data: await loadMissingDays(await getAllIndexedDB('daily_measurement'), token._id, 15, getShortDate())
+        //         }
+        //     })
+        //     // await dispatchToken(response.data)
+        //     setStep('Result')
+    }
+
     const handlePreviousStep = () => setStep(sessionData?.user?.isCoachAnalyze ? 'Standard' : 'Welcome')
 
     useEffect(() => {
-        if (sessionData?.user) {
-            setStep(sessionData?.user?.isCoachAnalyze ? 'Standard' : 'Welcome')
-        }
+        setStep(sessionData?.user?.isCoachAnalyze ? 'Standard' : 'Welcome')
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [!!sessionData?.user])
+    }, [])
 
     return (
         <div className="coach">
@@ -93,6 +113,8 @@ const Coach = () => {
                     <Standard setStep={setStep} />
                 ) : step === 'ChooseAnalyzeSource' ? (
                     <ChooseAnalyzeSource analyze={async (isDataInJuicify) => await analyzeCoach.mutate({ isDataInJuicify })} />
+                ) : step === 'ChooseCaloriesSource' ? (
+                    <ChooseCaloriesSource prepareAnalize={prepareAnalize} />
                 ) : step === 'Result' ? (
                     <Result setStep={setStep} data={createCoachData} />
                 ) : step === 'Tutorial_1' ? (
@@ -109,7 +131,12 @@ const Coach = () => {
                     <Tutorial_6 setStep={setStep} />
                 ) : step === 'Tutorial_7' ? (
                     <Tutorial_7 setStep={setStep} handlePreviousStep={handlePreviousStep} />
-                ) : null
+                ) : (
+                    <>
+                        {"We didn't code anything like that :("}
+                        < button onClick={() => setStep('Welcome')}></button>
+                    </>
+                )
             }
         </div >
     );

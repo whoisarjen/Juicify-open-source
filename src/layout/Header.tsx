@@ -3,7 +3,7 @@ import Head from 'next/head'
 const Header = () => {
     return (
         <Head>
-            <link rel="manifest" href="/api/manifest" />
+            <link rel="manifest" href="/manifest.json" />
             <link rel="icon" type="image/png" sizes="196x196" href="/icons/favicon-196.png" />
             <meta name="msapplication-square70x70logo" content="icons/mstile-icon-128.png" />
             <meta name="msapplication-square150x150logo" content="icons/mstile-icon-270.png" />

@@ -90,7 +90,7 @@ export const coachRouter = router({
             })
         )
         .mutation(async ({ ctx, input: { isDataInJuicify } }) => {
-            const { id, birth, goal, isSportActive, kindOfDiet } = ctx.session.user
+            const { id, birth, activityLevel, goal, isSportActive, kindOfDiet } = ctx.session.user
             const previousCoach = await getLastCoachByUserId(ctx.prisma, id)
 
             const age = moment().diff(birth, 'years')
@@ -120,7 +120,7 @@ export const coachRouter = router({
                     proteins: previousCoach.countedProteins,
                     carbs: previousCoach.countedCarbs,
                     fats: previousCoach.countedFats,
-                }) // TODO fix missing activity burned calories
+                })
 
             const measurements = await ctx.prisma.measurement.findMany(findManyQuery)
 

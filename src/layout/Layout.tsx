@@ -1,6 +1,6 @@
 import Footer from './Footer'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import SidebarLeft from './SidebarLeft'
 import SidebarRight from './SidebarRight'
 import SidebarRightLoggouted from './SidebarRightLoggouted'
@@ -9,6 +9,7 @@ import { useSession, signOut } from 'next-auth/react'
 import { DialogMissingSettings } from '@/components/DialogMissingSettings'
 import Button from '@mui/material/Button';
 import useTranslation from 'next-translate/useTranslation'
+import moment from 'moment'
 
 const Grid = styled.div`
     margin: auto;
@@ -56,7 +57,16 @@ const SignInFloatingButton = styled.div`
     }
 `
 
-export const SIGN_IN_PATH = '/'
+const SIGN_IN_PATH = '/'
+
+const REQUIRED_AUTH_PATHS = [
+    '/settings',
+    '/workout',
+    '/statistics',
+    '/macronutrients',
+    '/coach',
+    '/barcode'
+]
 
 const getCookie = async (cookieName: string) => {
     let cookie: any = {};
@@ -70,18 +80,47 @@ const getCookie = async (cookieName: string) => {
 const Layout = ({ children }: { children: any }) => {
     const { t } = useTranslation('home')
     const router = useRouter()
-    const { data: sessionData } = useSession()
+    const [isAllowedLocation, setIsAllowedLocation] = useState(false)
+    const { data: sessionData, status } = useSession()
 
-    // useEffect(() => {
-    //     (async () => {
-    //         const locale = await getCookie('NEXT_LOCALE') // Redirect for PWA's scope
+    useEffect(() => {
+        (async () => {
+            const locale = await getCookie('NEXT_LOCALE') // Redirect for PWA's scope
 
-    //         if (locale && router.locale != locale) {
-    //             router.push(router.asPath, router.asPath, { locale });
-    //             return
-    //         }
-    //     })()
-    // }, [status, router])
+            if (locale && router.locale != locale) {
+                router.push(router.asPath, router.asPath, { locale });
+                return
+            }
+
+            if (status === 'loading') {
+                return
+            }
+
+            if (status === 'unauthenticated' && REQUIRED_AUTH_PATHS.includes(router.pathname)) {
+                router.push(SIGN_IN_PATH)
+                return
+            }
+
+            if (status === 'authenticated' && router.pathname === SIGN_IN_PATH) {
+                const asPath = localStorage.getItem('asPath')
+                const redirectTo = asPath && asPath !== SIGN_IN_PATH ? asPath : '/coach'
+                router.push(redirectTo)
+                return
+            }
+
+            setIsAllowedLocation(true)
+        })()
+    }, [status, router])
+
+    useEffect(() => {
+        if (router?.asPath && router.asPath !== SIGN_IN_PATH) {
+            localStorage.setItem('asPath', router.asPath.includes(`${sessionData?.user?.username}/consumed`)
+                ? router.asPath.slice(0, router.asPath.length - 10) + moment().format('YYYY-MM-DD')
+                : router.asPath
+            )
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [router?.asPath])
 
     useEffect(() => {
         if (sessionData?.user?.isBanned) {
@@ -91,6 +130,10 @@ const Layout = ({ children }: { children: any }) => {
     }, [router, sessionData?.user?.isBanned])
 
     const isLoggoutedGrid = !sessionData || router.pathname === SIGN_IN_PATH
+
+    if (!isAllowedLocation) {
+        return null
+    }
 
     return (
         <main>
