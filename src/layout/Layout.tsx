@@ -9,6 +9,7 @@ import { useSession, signOut } from 'next-auth/react'
 import { DialogMissingSettings } from '@/components/DialogMissingSettings'
 import Button from '@mui/material/Button';
 import useTranslation from 'next-translate/useTranslation'
+import moment from 'moment'
 
 const Grid = styled.div`
     margin: auto;
@@ -113,8 +114,12 @@ const Layout = ({ children }: { children: any }) => {
 
     useEffect(() => {
         if (router?.asPath && router.asPath !== SIGN_IN_PATH) {
-            localStorage.setItem('asPath', router.asPath)
+            localStorage.setItem('asPath', router.asPath.includes(`${sessionData?.user?.username}/consumed`)
+                ? router.asPath.slice(0, router.asPath.length - 10) + moment().format('YYYY-MM-DD')
+                : router.asPath
+            )
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router?.asPath])
 
     useEffect(() => {
