@@ -106,7 +106,7 @@ export const coachRouter = router({
             }
 
             const averageDailyConsumedCalories = isDataInJuicify
-                ? getCalories(
+                ? (getCalories(
                     sumMacroFromConsumed(
                         await ctx.prisma.consumed.findMany({
                             ...findManyQuery,
@@ -115,7 +115,7 @@ export const coachRouter = router({
                             },
                         })
                     )
-                ) / NUMBER_OF_DAYS_BETWEEN_COACHES
+                ) - await (await ctx.prisma.workoutResult.findMany(findManyQuery)).reduce((previous, workoutResult) => previous + workoutResult.burnedCalories, 0)) / NUMBER_OF_DAYS_BETWEEN_COACHES
                 : getCalories({
                     proteins: previousCoach.countedProteins,
                     carbs: previousCoach.countedCarbs,
