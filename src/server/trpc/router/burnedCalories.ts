@@ -1,11 +1,11 @@
-import { z } from "zod"
+import { createBurnedCaloriesSchema, burnedCaloriesSchema } from "@/server/schema/burnedCalories.schema";
+import { omit } from "lodash";
 import moment from "moment";
+import { z } from "zod"
 
 import { router, publicProcedure, protectedProcedure } from "../trpc";
-import { consumedSchema, createConsumedSchema } from '@/server/schema/consumed.schema'
-import { omit } from "lodash";
 
-export const consumedRouter = router({
+export const burnedCaloriesRouter = router({
     getPeriod: publicProcedure
         .input(
             z.object({
@@ -15,35 +15,25 @@ export const consumedRouter = router({
             })
         )
         .query(async ({ ctx, input: { username, startDate, endDate } }) => {
-            return await ctx.prisma.consumed.findMany({
+            return await ctx.prisma.burnedCalories.findMany({
                 where: {
-                    user: {
-                        username,
-                    },
                     whenAdded: {
                         gte: moment(startDate).startOf('day').toDate(),
                         lte: moment(endDate).endOf('day').toDate(),
                     },
-                },
-                include: {
-                    product: true,
                     user: {
-                        select: {
-                            id: true,
-                            username: true,
-                            image: true,
-                        }
-                    }
+                        username,
+                    },
                 },
                 orderBy: {
-                    meal: 'asc',
+                    createdAt: 'asc',
                 },
             })
         }),
     create: protectedProcedure
-        .input(createConsumedSchema)
+        .input(createBurnedCaloriesSchema)
         .mutation(async ({ ctx, input }) => {
-            return await ctx.prisma.consumed.create({
+            return await ctx.prisma.burnedCalories.create({
                 data: {
                     ...input,
                     userId: ctx.session.user.id,
@@ -51,9 +41,9 @@ export const consumedRouter = router({
             })
         }),
     update: protectedProcedure
-        .input(consumedSchema)
+        .input(burnedCaloriesSchema)
         .mutation(async ({ ctx, input }) => {
-            return await ctx.prisma.consumed.update({
+            return await ctx.prisma.burnedCalories.update({
                 data: {
                     ...omit(input, ['id']),
                 },
@@ -72,7 +62,7 @@ export const consumedRouter = router({
             })
         )
         .mutation(async ({ ctx, input: { id } }) => {
-            return await ctx.prisma.consumed.delete({
+            return await ctx.prisma.burnedCalories.delete({
                 where: {
                     id_userId: {
                         id,
@@ -81,4 +71,4 @@ export const consumedRouter = router({
                 }
             })
         }),
-})
+});

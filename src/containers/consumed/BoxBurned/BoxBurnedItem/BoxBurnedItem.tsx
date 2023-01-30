@@ -2,6 +2,8 @@ import IconButton from '@mui/material/IconButton';
 import styled from "styled-components";
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import EditIcon from "@mui/icons-material/Edit";
+import { type ReactNode } from 'react';
+import { DialogEditBurnedCalories } from '../DialogEditBurnedCalories';
 
 const Burned = styled.div`
     width: 100%;
@@ -35,39 +37,45 @@ const FireIcon = styled.div`
     display: grid;
     margin: auto;
     grid-row: 1 / 2;
-    color: red;
+    color: #fff;
 `
 
 interface BoxBurnedItemProps {
-    workoutResult: WorkoutResult
+    name: string
+    burnedCalories: number
+    isEditable?: boolean
+    icon?: ReactNode
+    id: number
+    whenAdded: Date
 }
 
 const BoxBurnedItem = ({
-    workoutResult,
+    name,
+    burnedCalories,
+    isEditable,
+    icon,
+    id,
+    whenAdded,
 }: BoxBurnedItemProps) => {
     return (
         <Burned>
-
             <EditButtonContainer>
-                {/* <IconButton aria-label="edit">
-                    <EditIcon fontSize="small" />
-                </IconButton> */}
                 <FireIcon>
-                    <LocalFireDepartmentIcon fontSize="small" />
+                    {isEditable
+                        ? <DialogEditBurnedCalories burnedCalories={{ name, burnedCalories, id, whenAdded }}>
+                            <IconButton aria-label="edit">
+                                <EditIcon fontSize="small" />
+                            </IconButton>
+                        </DialogEditBurnedCalories>
+                        : icon || <LocalFireDepartmentIcon fontSize="small" sx={{ color: 'red' }} />
+                    }
                 </FireIcon>
             </EditButtonContainer>
-
             <Content>
-                <div>{workoutResult.name}</div>
-                <div>{workoutResult.burnedCalories}kcal</div>
+                <div>{name}</div>
+                <div>{burnedCalories}kcal</div>
             </Content>
-
-            <Content>
-                {/* <FireIcon>
-                    <LocalFireDepartmentIcon fontSize="small" />
-                </FireIcon> */}
-            </Content>
-
+            <Content />
         </Burned>
     )
 }

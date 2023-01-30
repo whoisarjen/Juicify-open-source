@@ -75,7 +75,7 @@ const DialogAddProducts = ({
 
             utils
                 .consumed
-                .getDay
+                .getPeriod
                 .refetch() // TODO
         },
     })

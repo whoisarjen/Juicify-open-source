@@ -10,7 +10,7 @@ import SlideUp from '@/transition/SlideUp';
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm';
 import { useSession } from 'next-auth/react';
 import useTranslation from 'next-translate/useTranslation';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { reloadSession } from '@/utils/global.utils';
 import { updateMacronutrientsInUser } from '@/utils/coach.utils';
 import { trpc } from '@/utils/trpc.utils';
@@ -25,7 +25,7 @@ const DialogEditMacronutrients = ({
     onClose,
 }: DialogEditMacronutrientsProps) => {
     const { data } = useSession()
-    const [isDialog, setIsDialog] = useState(false)
+    const [isDialog, setIsDialog] = useState(false) // TODO
     const [proteins, setProteins] = useState(0)
     const [carbs, setCarbs] = useState(0)
     const [fats, setFats] = useState(0)

@@ -15,6 +15,8 @@ import { type ConsumedSchema, consumedSchema } from '@/server/schema/consumed.sc
 import useConsumed from '@/hooks/useConsumed'
 import { useState, type ReactNode } from 'react'
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import { range } from 'lodash';
 
 interface DialogEditConsumedProps {
     children: ReactNode
@@ -26,7 +28,12 @@ const DialogEditConsumed = ({
     consumed,
 }: DialogEditConsumedProps) => {
     const { t } = useTranslation('nutrition-diary')
-    const { updateConsumed, deleteConsumed } = useConsumed()
+    const router = useRouter()
+    
+    const username = router.query.login as string
+    const whenAdded = router.query.date as string
+
+    const { updateConsumed, deleteConsumed } = useConsumed({ username, startDate: whenAdded, endDate: whenAdded })
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const { data: sessionData } = useSession()
 
@@ -67,7 +74,7 @@ const DialogEditConsumed = ({
                         defaultValue={consumed.meal || 0}
                         {...register('meal')}
                     >
-                        {Array.from(Array(sessionData?.user?.numberOfMeals).keys()).map((x) =>
+                        {range(sessionData?.user?.numberOfMeals || 0).map((x) =>
                             <MenuItem key={x} value={x}>{t('Meal')} {x + 1}</MenuItem>
                         )}
                     </Select>

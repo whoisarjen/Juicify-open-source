@@ -68,55 +68,55 @@ model Session {
 }
 
 model User {
-  id                  Int             @id @default(autoincrement())
-  createdAt           DateTime        @default(now())
-  updatedAt           DateTime        @default(now()) @updatedAt
-  username            String          @unique @default(uuid())
+  id                  Int              @id @default(autoincrement())
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @default(now()) @updatedAt
+  username            String           @unique @default(uuid())
   name                String?
   surname             String?
-  email               String          @unique
+  email               String           @unique
   emailVerified       DateTime?
   image               String?
-  locale              String          @default("en") @db.Char(2)
-  numberOfMeals       Int             @default(5)
-  proteinsDay0        Int             @default(0)
-  carbsDay0           Int             @default(0)
-  fatsDay0            Int             @default(0)
-  proteinsDay1        Int             @default(0)
-  carbsDay1           Int             @default(0)
-  fatsDay1            Int             @default(0)
-  proteinsDay2        Int             @default(0)
-  carbsDay2           Int             @default(0)
-  fatsDay2            Int             @default(0)
-  proteinsDay3        Int             @default(0)
-  carbsDay3           Int             @default(0)
-  fatsDay3            Int             @default(0)
-  proteinsDay4        Int             @default(0)
-  carbsDay4           Int             @default(0)
-  fatsDay4            Int             @default(0)
-  proteinsDay5        Int             @default(0)
-  carbsDay5           Int             @default(0)
-  fatsDay5            Int             @default(0)
-  proteinsDay6        Int             @default(0)
-  carbsDay6           Int             @default(0)
-  fatsDay6            Int             @default(0)
-  fiber               Int             @default(10)
-  carbsPercentAsSugar Int             @default(10)
-  nextCoach           DateTime        @default(now())
-  isCoachAnalyze      Boolean         @default(false)
-  height              Int             @default(0)
-  birth               DateTime        @default(now())
-  description         String          @default("")
-  website             String          @default("")
-  facebook            String          @default("")
-  instagram           String          @default("")
-  twitter             String          @default("")
-  goal                goals           @default(ZERO)
-  kindOfDiet          kindOfDiets     @default(REGULAR)
-  isSportActive       Boolean         @default(false)
-  activityLevel       activityLevels  @default(AVERAGE)
-  sex                 Boolean         @default(true)
-  isBanned            Boolean         @default(false)
+  locale              String           @default("en") @db.Char(2)
+  numberOfMeals       Int              @default(5)
+  proteinsDay0        Int              @default(0)
+  carbsDay0           Int              @default(0)
+  fatsDay0            Int              @default(0)
+  proteinsDay1        Int              @default(0)
+  carbsDay1           Int              @default(0)
+  fatsDay1            Int              @default(0)
+  proteinsDay2        Int              @default(0)
+  carbsDay2           Int              @default(0)
+  fatsDay2            Int              @default(0)
+  proteinsDay3        Int              @default(0)
+  carbsDay3           Int              @default(0)
+  fatsDay3            Int              @default(0)
+  proteinsDay4        Int              @default(0)
+  carbsDay4           Int              @default(0)
+  fatsDay4            Int              @default(0)
+  proteinsDay5        Int              @default(0)
+  carbsDay5           Int              @default(0)
+  fatsDay5            Int              @default(0)
+  proteinsDay6        Int              @default(0)
+  carbsDay6           Int              @default(0)
+  fatsDay6            Int              @default(0)
+  fiber               Int              @default(10)
+  carbsPercentAsSugar Int              @default(10)
+  nextCoach           DateTime         @default(now())
+  isCoachAnalyze      Boolean          @default(false)
+  height              Int              @default(0)
+  birth               DateTime         @default(now())
+  description         String           @default("")
+  website             String           @default("")
+  facebook            String           @default("")
+  instagram           String           @default("")
+  twitter             String           @default("")
+  goal                goals            @default(ZERO)
+  kindOfDiet          kindOfDiets      @default(REGULAR)
+  isSportActive       Boolean          @default(false)
+  activityLevel       activityLevels   @default(AVERAGE)
+  sex                 Boolean          @default(true)
+  isBanned            Boolean          @default(false)
   accounts            Account[]
   sessions            Session[]
   Exercise            Exercise[]
@@ -126,6 +126,7 @@ model User {
   Consumed            Consumed[]
   Measurement         Measurement[]
   Coach               Coach[]
+  BurnedCalories      BurnedCalories[]
 }
 
 model VerificationToken {
@@ -261,5 +262,19 @@ model Coach {
   isDataInJuicify Boolean        @default(false)
   data            Json
 
+  @@index([userId])
+}
+
+model BurnedCalories {
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+  whenAdded      DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         Int
+  name           String   @db.VarChar(255)
+  burnedCalories Int
+
+  @@unique([id, userId])
   @@index([userId])
 }

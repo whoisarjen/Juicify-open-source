@@ -1,26 +1,30 @@
 import { sumMacroFromConsumed, getExpectedMacro } from "@/utils/consumed.utils"
-import { trpc } from "@/utils/trpc.utils"
+import { useSession } from "next-auth/react"
+import useBurned from "./useBurned"
 import useConsumed from "./useConsumed"
 
-const useDaily = (overwriteWhenAdded?: string, overwriteUsername?: string) => {
+interface useDailyProps {
+    username: string
+    startDate: string
+    endDate: string
+}
+
+const useDaily = (props: useDailyProps) => {
+    const { data: sessionData } = useSession()
     const {
         data: consumed,
-        username,
-        whenAdded,
-        owner,
-    } = useConsumed(overwriteWhenAdded, overwriteUsername)
+    } = useConsumed(props)
 
+    const { username, startDate } = props
+    
     const {
-        data: workoutResults = [],
-    } = trpc
-        .workoutResult
-        .getDay
-        .useQuery({ whenAdded, username }, { enabled: !!(whenAdded && username) })
+        burnedCalories,
+        workoutResults,
+        burnedCaloriesSum,
+    } = useBurned(props)
 
     const consumedMacro = sumMacroFromConsumed(consumed)
-    const expectedMacro = getExpectedMacro(owner, whenAdded)
-    const burnedCalories = workoutResults
-        .reduce((previous, { burnedCalories }) => previous + burnedCalories, 0)
+    const expectedMacro = getExpectedMacro(username == sessionData?.user?.username ? sessionData?.user : null, startDate)
 
     return {
         consumed,
@@ -28,6 +32,7 @@ const useDaily = (overwriteWhenAdded?: string, overwriteUsername?: string) => {
         expectedMacro,
         burnedCalories,
         workoutResults,
+        burnedCaloriesSum,
     }
 }
 

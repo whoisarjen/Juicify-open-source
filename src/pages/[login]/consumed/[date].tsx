@@ -13,6 +13,7 @@ import BoxBurned from "@/containers/consumed/BoxBurned/BoxBurned";
 import { env } from "@/env/client.mjs";
 import useConsumed from "@/hooks/useConsumed";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const Box = styled.div`
     width: 100%;
@@ -25,8 +26,14 @@ const Box = styled.div`
 
 const Consumed = () => {
     const { t } = useTranslation('nutrition-diary')
-    const { data, isOwner } = useConsumed()
+    const router = useRouter()
     const { data: sessionData } = useSession()
+
+    const username = router.query.login as unknown as string
+    const whenAdded = router.query.date as unknown as string
+    const isOwner = username == sessionData?.user?.username
+
+    const { data } = useConsumed({ username, startDate: whenAdded, endDate: whenAdded })
 
     const lastMeal = data.at(-1)
 
@@ -50,7 +57,11 @@ const Consumed = () => {
 
             <DateChangerFast />
 
-            <DiagramConsumedRemaining />
+            <DiagramConsumedRemaining
+                username={username}
+                startDate={whenAdded}
+                endDate={whenAdded}
+            />
 
             {isOwner && <SectionDiaryManaging />}
 

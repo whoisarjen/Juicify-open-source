@@ -20,14 +20,20 @@ const Table = styled.table`
     }
 `
 
-const DiagramConsumedRemaining = () => {
+interface DiagramConsumedRemainingProps {
+    username: string
+    startDate: string
+    endDate: string
+}
+
+const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
     const [value, setValue] = useState('1')
     const { t } = useTranslation('nutrition-diary')
     const {
         consumedMacro,
         expectedMacro,
-        burnedCalories,
-    } = useDaily()
+        burnedCaloriesSum,
+    } = useDaily(props)
 
     return (
         <Box
@@ -62,8 +68,8 @@ const DiagramConsumedRemaining = () => {
                 >
                     <div>
                         <DiagramCircular
-                            text={`${(consumedMacro.calories - burnedCalories)}${t('Kcal')}`}
-                            value={(consumedMacro.calories - burnedCalories) / expectedMacro.calories * 100}
+                            text={`${(consumedMacro.calories - burnedCaloriesSum)}${t('Kcal')}`}
+                            value={(consumedMacro.calories - burnedCaloriesSum) / expectedMacro.calories * 100}
                         />
                     </div>
                     <div />
@@ -108,8 +114,8 @@ const DiagramConsumedRemaining = () => {
                 >
                     <div>
                         <DiagramCircular
-                            text={`${expectedMacro.calories - consumedMacro.calories + burnedCalories}${t('Kcal')}`}
-                            value={(expectedMacro.calories - consumedMacro.calories + burnedCalories) / expectedMacro.calories * 100}
+                            text={`${expectedMacro.calories - consumedMacro.calories + burnedCaloriesSum}${t('Kcal')}`}
+                            value={(expectedMacro.calories - consumedMacro.calories + burnedCaloriesSum) / expectedMacro.calories * 100}
                         />
                     </div>
                     <div />

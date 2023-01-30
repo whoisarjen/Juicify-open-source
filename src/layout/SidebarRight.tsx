@@ -46,9 +46,9 @@ const SidebarRight = () => {
     const {
         consumedMacro,
         expectedMacro,
-        burnedCalories,
         workoutResults,
-    } = useDaily(whenAdded, username)
+        burnedCaloriesSum,
+    } = useDaily({ username, startDate: whenAdded, endDate: whenAdded })
 
     const styles = buildStyles({
         textSize: '15px',
@@ -78,8 +78,8 @@ const SidebarRight = () => {
         },
         {
             href: `/${username}/consumed/${whenAdded}`,
-            value: (consumedMacro.calories - burnedCalories) / expectedMacro.calories * 100,
-            text: `${(consumedMacro.calories - burnedCalories)}Kcal`,
+            value: (consumedMacro.calories - burnedCaloriesSum) / expectedMacro.calories * 100,
+            text: `${(consumedMacro.calories - burnedCaloriesSum)}Kcal`,
             label: t('Calories'),
         },
         {

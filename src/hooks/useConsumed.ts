@@ -1,32 +1,31 @@
-import { useRouter } from "next/router"
-import { useSession } from "next-auth/react"
 import { trpc } from "@/utils/trpc.utils"
 import { updateArray } from '@/utils/global.utils'
 
-const useConsumed = (overwriteWhenAdded?: string, overwriteUsername?: string) => {
-    const router = useRouter()
-    const { data: sessionData } = useSession()
+interface useConsumedProps {
+    username: string
+    startDate: string
+    endDate: string
+}
 
-    const username = overwriteUsername || router.query.login as unknown as string
-    const whenAdded = overwriteWhenAdded || router.query.date as unknown as string
-
+const useConsumed = ({
+    username,
+    startDate,
+    endDate,
+}: useConsumedProps) => {
     const utils = trpc.useContext()
 
     const {
         data = [],
         isFetching,
         isLoading,
-    } = trpc
-        .consumed
-        .getDay
-        .useQuery({ username, whenAdded }, { enabled: !!(username && whenAdded) })
+    } = trpc.consumed.getPeriod.useQuery({ username, startDate, endDate }, { enabled: !!username && !!startDate && !!endDate })
 
     const updateConsumed = trpc.consumed.update.useMutation({
         onSuccess(data) {
             utils
                 .consumed
-                .getDay
-                .setData({ username, whenAdded }, currentData =>
+                .getPeriod
+                .setData({ username, startDate, endDate }, currentData =>
                     updateArray<Consumed & { user: Pick<User, 'id' | 'username' | 'image'> }>(currentData, data))
         },
     })
@@ -35,23 +34,17 @@ const useConsumed = (overwriteWhenAdded?: string, overwriteUsername?: string) =>
         onSuccess(_, variables) {
             utils
                 .consumed
-                .getDay
-                .setData({ username, whenAdded }, currentData => currentData
+                .getPeriod
+                .setData({ username, startDate, endDate }, currentData => currentData
                     ?.filter(consumed => consumed.id !== variables.id))
         }
     })
-
-    const isOwner = sessionData?.user?.username == username
 
     return {
         data,
         isLoading: isFetching || isLoading || updateConsumed.isLoading || deleteConsumed.isLoading,
         updateConsumed,
         deleteConsumed,
-        username,
-        whenAdded,
-        isOwner,
-        owner: isOwner ? sessionData?.user : null,
     }
 }
 
