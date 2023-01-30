@@ -10,6 +10,7 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import useDaily from '@/hooks/useDaily'
 import { trpc } from '@/utils/trpc.utils';
+import { LastJoinedUsersList } from '@/components/LastJoinedUsersList';
 
 const Box = styled.aside`
     padding: 12px;
@@ -95,34 +96,44 @@ const SidebarRight = () => {
         },
     ]
 
+    const SidebarElements = () => {
+        if (sessionData) {
+            return (
+                <List
+                    sx={{
+                        width: '100%',
+                        bgcolor: 'background.paper'
+                    }}
+                    subheader={
+                        <ListSubheader component='div' id='nested-list-subheader'>
+                            {t('Data for')} {moment(whenAdded).format('DD.MM.YYYY')}:
+                        </ListSubheader>
+                    }
+                >
+                    {CIRCULAR_BOXES.map(({ href, text, value, label }) =>
+                        <Link href={href} key={text}>
+                            <ListItemButton>
+                                <CircularBox>
+                                    <CircularProgressbar
+                                        value={value}
+                                        text={text}
+                                        styles={styles}
+                                    />
+                                    <div>{label}</div>
+                                </CircularBox>
+                            </ListItemButton>
+                        </Link>
+                    )}
+                </List>
+            )
+        }
+
+        return <LastJoinedUsersList />
+    }
+
     return (
         <Box>
-            <List
-                sx={{
-                    width: '100%',
-                    bgcolor: 'background.paper'
-                }}
-                subheader={
-                    <ListSubheader component='div' id='nested-list-subheader'>
-                        {t('Data for')} {moment(whenAdded).format('DD.MM.YYYY')}:
-                    </ListSubheader>
-                }
-            >
-                {CIRCULAR_BOXES.map(({ href, text, value, label }) =>
-                    <Link href={href} key={text}>
-                        <ListItemButton>
-                            <CircularBox>
-                                <CircularProgressbar
-                                    value={value}
-                                    text={text}
-                                    styles={styles}
-                                />
-                                <div>{label}</div>
-                            </CircularBox>
-                        </ListItemButton>
-                    </Link>
-                )}
-            </List>
+            {SidebarElements()}
         </Box>
     )
 }

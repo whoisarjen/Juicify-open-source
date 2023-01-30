@@ -65,17 +65,14 @@ const BlogPage = () => {
             <h1>{t('LATEST_NEWS')}</h1>
             <Grid>
                 {t('POSTS_COMMING_SOON')}
-                {
-                    posts?.length > 0 &&
-                    posts.map((post: any) =>
-                        <Link href={`/blog/${post.url}`} key={post.url}>
-                            <article>
-                                <Image src="/images/logo_big.png" width="515" height="290" alt={post.title} />
-                                <h3>{post.title}</h3>
-                            </article>
-                        </Link>
-                    )
-                }
+                {posts.map((post: any) =>
+                    <Link href={`/blog/${post.url}`} key={post.url}>
+                        <article>
+                            <Image src="/images/logo_big.png" width="515" height="290" alt={post.title} />
+                            <h3>{post.title}</h3>
+                        </article>
+                    </Link>
+                )}
             </Grid>
         </Box>
     );

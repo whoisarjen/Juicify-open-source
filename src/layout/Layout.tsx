@@ -3,7 +3,6 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import SidebarLeft from './SidebarLeft'
 import SidebarRight from './SidebarRight'
-import SidebarRightLoggouted from './SidebarRightLoggouted'
 import styled from 'styled-components'
 import { useSession, signOut } from 'next-auth/react'
 import { DialogMissingSettings } from '@/components/DialogMissingSettings'
@@ -130,39 +129,33 @@ const Layout = ({ children }: { children: any }) => {
         }
     }, [router, sessionData?.user?.isBanned])
 
-    const isLoggoutedGrid = !sessionData || router.pathname === SIGN_IN_PATH
-
     if (!isAllowedLocation) {
         return null
     }
 
+    const isNeutralPath = router.pathname.includes('blog') || router.pathname === SIGN_IN_PATH
+
     return (
         <main>
-            {router.pathname.includes('blog') || router.pathname === SIGN_IN_PATH
-                ? <>{children}</>
-                : <Grid>
-                    <SidebarLeft />
-                    <Content>{children}</Content>
-                    {isLoggoutedGrid
-                        ? <SidebarRightLoggouted />
-                        : <SidebarRight />
-                    }
-                    <Footer />
-                    {!sessionData?.user &&
-                        <SignInFloatingButton>
-                            <Button
-                                component="div"
-                                color="primary"
-                                variant="contained"
-                                aria-label="authorization"
-                                onClick={() => router.push(SIGN_IN_PATH)}
-                            >
-                                {t('I_ALSO_WANT_TO_CHANGE_MY_BODY')}
-                            </Button>
-                        </SignInFloatingButton>
-                    }
-                </Grid>
-            }
+            <Grid>
+                <SidebarLeft />
+                <Content>{children}</Content>
+                <SidebarRight />
+                <Footer />
+                {!sessionData?.user && !isNeutralPath &&
+                    <SignInFloatingButton>
+                        <Button
+                            component="div"
+                            color="primary"
+                            variant="contained"
+                            aria-label="authorization"
+                            onClick={() => router.push(SIGN_IN_PATH)}
+                        >
+                            {t('I_ALSO_WANT_TO_CHANGE_MY_BODY')}
+                        </Button>
+                    </SignInFloatingButton>
+                }
+            </Grid>
             {sessionData?.user?.height === 0 && <DialogMissingSettings />}
         </main>
     )

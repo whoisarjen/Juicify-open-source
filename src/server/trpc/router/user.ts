@@ -20,6 +20,20 @@ export const userRouter = router({
 
             return omit(user, ['email'])
         }),
+    getAll: publicProcedure
+        .input(
+            z.object({
+                take: z.number(),
+            })
+        )
+        .query(async ({ ctx, input: { take } }) => {
+            return await ctx.prisma.user.findMany({
+                take,
+                orderBy: {
+                    id: 'desc',
+                },
+            })
+        }),
     update: protectedProcedure
         .input(userSchema)
         .mutation(async ({ ctx, input }) => {

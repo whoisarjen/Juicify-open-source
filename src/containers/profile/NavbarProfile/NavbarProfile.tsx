@@ -71,7 +71,7 @@ const NavbarProfile = ({ tab }: { tab: number }) => {
                 </AvatarBox>
                 <Content>
                     <div>
-                        <h2>{user?.username}</h2>
+                        <h2>{user?.name || '-'}</h2> {/* TODO after making possible to change username, it should show username */}
                         {isOwner ?
                             <>
                                 <ButtonShare />

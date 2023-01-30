@@ -6,6 +6,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
+import SchoolIcon from "@mui/icons-material/School";
 import BookIcon from "@mui/icons-material/Book";
 import { useRouter } from "next/router";
 import Settings from "@mui/icons-material/Settings";
@@ -19,6 +20,8 @@ import { useSession, signIn, signOut } from "next-auth/react"
 import Divider from '@mui/material/Divider';
 import NoteAltIcon from '@mui/icons-material/NoteAlt'
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+import { type Translate } from 'next-translate';
+import { type Session } from 'next-auth';
 
 const Grid = styled.aside`
     padding: 12px;
@@ -31,114 +34,91 @@ const Grid = styled.aside`
     }
 `
 
-const getRouterPushOptions = (username: string) => ({
-    profile: `/${username}`,
-    diary: `/${username}/consumed/${moment().format('YYYY-MM-DD')}`,
-    barcode: `/barcode`,
-    measurements: `/measurements`,
-    results: `/${username}/workout/results`,
-    plans: `/${username}/workout/plans`,
-    coach: `/coach`,
-    settings: `/settings`,
-    blog: `/blog`,
-})
+const getRouterPushOptions = (sessionData: Session | null, t: Translate) => {
+    const username = sessionData?.user?.username
+
+    return {
+        profile: {
+            link: `/${username}`,
+            text: t('Profile'),
+            children: <CustomAvatar
+                src={sessionData?.user?.image}
+                username={username}
+                size="28px"
+                margin="auto auto auto 0"
+            />,
+        },
+        diary: {
+            link: `/${username}/consumed/${moment().format('YYYY-MM-DD')}`,
+            text: t('Diary'),
+            children: <BookIcon color="primary" />,
+        },
+        barcode: {
+            link: `/barcode`,
+            text: t('Barcode'),
+            children: <PhotoCameraIcon color="primary" />,
+        },
+        measurements: {
+            link: `/measurements`,
+            text: t('Measurements'),
+            children: <EmojiEventsIcon color="primary" />,
+        },
+        results: {
+            link: `/${username}/workout/results`,
+            text: t('WORKOUT_RESULTS'),
+            children: <FitnessCenterIcon color="primary" />,
+        },
+        plans: {
+            link: `/${username}/workout/plans`,
+            text: t('WORKOUT_PLANS'),
+            children: <NoteAltIcon color="primary" />,
+        },
+        coach: {
+            link: `/coach`,
+            text: t('Coach'),
+            children: <SmartToyIcon color="primary" />,
+        },
+        settings: {
+            link: `/settings`,
+            text: t('Settings'),
+            children: <Settings color="primary" />,
+        },
+    }
+}
 
 const SidebarLeft = () => {
     const router = useRouter()
     const { t } = useTranslation('home')
     const { data: sessionData } = useSession()
 
-    const handleRouter = (where: keyof ReturnType<typeof getRouterPushOptions>) => () => {
-        if (!sessionData?.user) {
-            return signIn()
-        }
-
-        router.push(getRouterPushOptions(sessionData.user.username)[where])
-    }
-
     return (
         <Grid>
             <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
                 <nav>
                     <List>
-                        <ListItem disablePadding>
-                            <ListItemButton onClick={handleRouter("profile")}>
-                                <ListItemIcon>
-                                    <CustomAvatar
-                                        src={sessionData?.user?.image}
-                                        username={sessionData?.user?.username}
-                                        size="28px"
-                                        margin="auto auto auto 0"
-                                    />
-                                </ListItemIcon>
-                                <ListItemText primary="Profile" />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem disablePadding>
-                            <ListItemButton onClick={handleRouter('diary')}>
-                                <ListItemIcon>
-                                    <BookIcon color="primary" />
-                                </ListItemIcon>
-                                <ListItemText primary={t('Diary')} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem disablePadding>
-                            <ListItemButton onClick={handleRouter('barcode')}>
-                                <ListItemIcon>
-                                    <PhotoCameraIcon color="primary" />
-                                </ListItemIcon>
-                                <ListItemText primary={t('Barcode')} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem disablePadding>
-                            <ListItemButton onClick={handleRouter('measurements')}>
-                                <ListItemIcon>
-                                    <EmojiEventsIcon color="primary" />
-                                </ListItemIcon>
-                                <ListItemText primary={t('Measurements')} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem disablePadding>
-                            <ListItemButton onClick={handleRouter('results')}>
-                                <ListItemIcon>
-                                    <FitnessCenterIcon color="primary" />
-                                </ListItemIcon>
-                                <ListItemText primary={t('WORKOUT_RESULTS')} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem disablePadding>
-                            <ListItemButton onClick={handleRouter('plans')}>
-                                <ListItemIcon>
-                                    <NoteAltIcon color="primary" />
-                                </ListItemIcon>
-                                <ListItemText primary={t('WORKOUT_PLANS')} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem disablePadding>
-                            <ListItemButton onClick={handleRouter('coach')}>
-                                <ListItemIcon>
-                                    <SmartToyIcon color="primary" />
-                                </ListItemIcon>
-                                <ListItemText primary={t('Coach')} />
-                            </ListItemButton>
-                        </ListItem>
-                        {/* <ListItem disablePadding>
-                                <ListItemButton onClick={handleRouter('blog')}>
-                                    <ListItemIcon>
-                                        <SchoolIcon color="primary" />
-                                    </ListItemIcon>
-                                    <ListItemText primary={t('Blog')} />
-                                </ListItemButton>
-                            </ListItem> */}
-                        <ListItem disablePadding>
-                            <ListItemButton onClick={handleRouter('settings')}>
-                                <ListItemIcon>
-                                    <Settings color="primary" />
-                                </ListItemIcon>
-                                <ListItemText primary={t('Settings')} />
-                            </ListItemButton>
-                        </ListItem>
+                        {Object.keys(getRouterPushOptions(sessionData, t)).map(key => {
+                            const { link, children, text } = getRouterPushOptions(sessionData, t)[key]
+
+                            return (
+                                <ListItem disablePadding key={key}>
+                                    <ListItemButton onClick={() => sessionData?.user ? router.push(link) : signIn()}>
+                                        <ListItemIcon>
+                                            {children}
+                                        </ListItemIcon>
+                                        <ListItemText primary={text} />
+                                    </ListItemButton>
+                                </ListItem>
+                            )
+                        })}
                         <Divider />
+                        <ListItem disablePadding>
+                            <ListItemButton onClick={() => router.push('/blog')}>
+                                <ListItemIcon>
+                                    <SchoolIcon color="primary" />
+                                </ListItemIcon>
+                                <ListItemText primary={t('Blog')} />
+                            </ListItemButton>
+                        </ListItem>
                         <ListItem disablePadding>
                             <ListItemButton onClick={() => sessionData ? signOut({ callbackUrl: '/', redirect: true }) : signIn()}>
                                 <ListItemIcon>
