@@ -46,7 +46,7 @@ export const DialogAddBurnedCalories = ({
             .finally(() => setIsDialogOpen(false))
 
     useEffect(() => {
-        reset({ whenAdded: moment(router.query.date).toDate(), burnedCalories: 0, name: 'Cardio' })
+        reset({ whenAdded: moment(router.query.date).add(moment().format("hh:mm:ss")).toDate(), burnedCalories: 0, name: 'Cardio' })
     }, [reset, router.query.date])
 
     return (
