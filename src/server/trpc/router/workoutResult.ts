@@ -59,7 +59,7 @@ export const workoutResultRouter = router({
                 where: {
                     whenAdded: {
                         gte: moment(whenAdded).startOf('day').toDate(),
-                        lt: moment(whenAdded).endOf('day').toDate(),
+                        lte: moment(whenAdded).endOf('day').toDate(),
                     },
                     user: {
                         username,
@@ -83,7 +83,7 @@ export const workoutResultRouter = router({
                 where: {
                     whenAdded: {
                         gte: moment(startDate).startOf('day').toDate(),
-                        lt: moment(endDate).endOf('day').toDate(),
+                        lte: moment(endDate).endOf('day').toDate(),
                     },
                     user: {
                         username,

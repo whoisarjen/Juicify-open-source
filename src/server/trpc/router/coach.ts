@@ -100,7 +100,7 @@ export const coachRouter = router({
                     userId: id,
                     whenAdded: {
                         gte: moment().add(-NUMBER_OF_DAYS_BETWEEN_COACHES, 'days').startOf('day').toDate(),
-                        lt: moment().endOf('day').toDate(),
+                        lte: moment().endOf('day').toDate(),
                     },
                 }
             }
