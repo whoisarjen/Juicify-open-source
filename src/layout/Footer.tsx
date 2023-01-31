@@ -29,6 +29,7 @@ const Menu = styled.nav`
     background: var(--theme-background);
     position: fixed;
     bottom: 0;
+    left: 0;
     padding-bottom: env(safe-area-inset-bottom);
     @media(min-width: 1468px) {
         display: none;
