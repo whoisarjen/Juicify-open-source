@@ -19,7 +19,7 @@ export const burnedCaloriesRouter = router({
                 where: {
                     whenAdded: {
                         gte: moment(startDate).startOf('day').toDate(),
-                        lte: moment(endDate).endOf('day').toDate(),
+                        lt: moment(endDate).endOf('day').toDate(),
                     },
                     user: {
                         username,

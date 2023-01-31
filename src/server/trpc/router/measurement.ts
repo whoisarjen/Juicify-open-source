@@ -21,7 +21,7 @@ export const measurementRouter = router({
                     },
                     whenAdded: {
                         gte: moment(whenAdded).startOf('day').toDate(),
-                        lte: moment(whenAdded).endOf('day').toDate(),
+                        lt: moment(whenAdded).endOf('day').toDate(),
                     },
                     user: {
                         username,
