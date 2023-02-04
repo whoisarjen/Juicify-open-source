@@ -144,7 +144,7 @@ const Layout = ({ children }: { children: any }) => {
             )
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [router?.asPath])
+    }, [router?.asPath, sessionData?.user?.username])
 
     useEffect(() => {
         if (sessionData?.user?.isBanned) {
