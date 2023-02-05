@@ -10,6 +10,7 @@ import Button from '@mui/material/Button';
 import useTranslation from 'next-translate/useTranslation'
 import moment from 'moment'
 import { trpc } from '@/utils/trpc.utils';
+import { hasPermissionToPath, DASHBOARD_PATH } from '@/utils/user.utils'
 
 const Grid = styled.div`
     margin: auto;
@@ -132,8 +133,14 @@ const Layout = ({ children }: { children: any }) => {
                 return
             }
 
+            if (router.asPath === DASHBOARD_PATH && !hasPermissionToPath(sessionData, DASHBOARD_PATH)) {
+                router.push('/403')
+                return
+            }
+
             setIsAllowedLocation(true)
         })()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [status, router])
 
     useEffect(() => {

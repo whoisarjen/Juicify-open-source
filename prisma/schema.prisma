@@ -67,6 +67,15 @@ model Session {
   @@index([userId])
 }
 
+model Permission {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+  name        String
+  description String?
+  users       User[]
+}
+
 model User {
   id                  Int              @id @default(autoincrement())
   createdAt           DateTime         @default(now())
@@ -117,6 +126,7 @@ model User {
   activityLevel       activityLevels   @default(AVERAGE)
   sex                 Boolean          @default(true)
   isBanned            Boolean          @default(false)
+  permissions         Permission[]
   accounts            Account[]
   sessions            Session[]
   Exercise            Exercise[]
