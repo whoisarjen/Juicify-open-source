@@ -95,7 +95,7 @@ const SidebarLeft = () => {
 
     return (
         <Grid>
-            <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
+            <Box sx={{ width: '100%', bgcolor: 'background.paper', position: 'sticky', top: 12 }}>
                 <nav>
                     <List>
                         {Object.keys(getRouterPushOptions(sessionData, t)).map(key => {

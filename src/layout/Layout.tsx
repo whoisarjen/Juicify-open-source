@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 import useTranslation from 'next-translate/useTranslation'
 import moment from 'moment'
 import { trpc } from '@/utils/trpc.utils';
-import { hasPermissionToPath, DASHBOARD_PATH, handleSignOut } from '@/utils/user.utils'
+import { hasPermissionToPath, handleSignOut } from '@/utils/user.utils'
 
 const Grid = styled.div`
     margin: auto;
@@ -36,6 +36,38 @@ const Content = styled.div`
     width: 100%;
     margin: 0 auto;
     max-width: 702px;
+    padding: 12px;
+    display: grid;
+    min-height: calc(calc(100vh - env(safe-area-inset-bottom)) - var(--BothNavHeightAndPadding));
+    padding-bottom: env(safe-area-inset-bottom);
+    @media (max-width: 726px) {
+        width: calc(100% - 24px);
+    }
+`
+
+const GridWithoutSidebar = styled.div`
+    margin: auto;
+    display: grid;
+    width: 100%;
+    max-width: 1226px;
+    grid-template-columns: 250px 1fr;
+    @media (max-width: 1468px) {
+        max-width: 976px;
+        grid-template-columns: 1fr;
+    }
+    @media (max-width: 1105px) {
+        max-width: 726px;
+        grid-template-columns: 726px;
+    }
+    @media (max-width: 726px) {
+        max-width: 100%;
+        grid-template-columns: 1fr;
+    }
+`
+
+const ContentWithoutSidebar = styled.div`
+    width: 100%;
+    margin: 0 auto;
     padding: 12px;
     display: grid;
     min-height: calc(calc(100vh - env(safe-area-inset-bottom)) - var(--BothNavHeightAndPadding));
@@ -133,7 +165,7 @@ const Layout = ({ children }: { children: any }) => {
                 return
             }
 
-            if (router.asPath === DASHBOARD_PATH && !hasPermissionToPath(sessionData, DASHBOARD_PATH)) {
+            if (!hasPermissionToPath(sessionData, router.asPath)) {
                 router.push('/403')
                 return
             }
@@ -163,29 +195,33 @@ const Layout = ({ children }: { children: any }) => {
         return null
     }
 
-    const isNeutralPath = router.pathname.includes('blog') || router.pathname === SIGN_IN_PATH
+    const isBlog = router.pathname.includes('blog')
+    const isNeutralPath = isBlog || router.pathname === SIGN_IN_PATH
+
+    const isSidebarGrid = !isBlog
+    const SelectedGrid = isSidebarGrid ? Grid : GridWithoutSidebar
+    const SelectedContent = isSidebarGrid ? Content : ContentWithoutSidebar
 
     return (
         <main>
-            <Grid>
-                <SidebarLeft />
-                <Content>{children}</Content>
-                <SidebarRight />
-                <Footer />
-                {!sessionData?.user && !isNeutralPath &&
-                    <SignInFloatingButton>
-                        <Button
-                            component="div"
-                            color="primary"
-                            variant="contained"
-                            aria-label="authorization"
-                            onClick={() => router.push(SIGN_IN_PATH)}
-                        >
-                            {t('I_ALSO_WANT_TO_CHANGE_MY_BODY')}
-                        </Button>
-                    </SignInFloatingButton>
-                }
-            </Grid>
+        <SelectedGrid>
+            <SidebarLeft />
+            <SelectedContent>{children}</SelectedContent>
+            <Footer />
+            {!sessionData?.user && !isNeutralPath &&
+                <SignInFloatingButton>
+                    <Button
+                        component="div"
+                        color="primary"
+                        variant="contained"
+                        aria-label="authorization"
+                        onClick={() => router.push(SIGN_IN_PATH)}
+                    >
+                        {t('I_ALSO_WANT_TO_CHANGE_MY_BODY')}
+                    </Button>
+                </SignInFloatingButton>
+            }
+        </SelectedGrid>
             {sessionData?.user?.height === 0 && <DialogMissingSettings />}
         </main>
     )
