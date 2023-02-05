@@ -6,13 +6,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Button from '@mui/material/Button';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
-import moment from 'moment';
-import { signOut, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import useTranslation from 'next-translate/useTranslation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components'
 import { DatePicker } from '@/components/DatePicker'
+import { handleSignOut } from '@/utils/user.utils';
 
 const Form = styled.form`
     ${this} .MuiTextField-root {
@@ -164,7 +164,7 @@ const SettingsPage = () => {
                 helperText={errors.twitter?.message}
             />
             <Separator>{t('LOGOUT')}</Separator>
-            <Button color="error" onClick={() => signOut({ callbackUrl: '/', redirect: true })}>
+            <Button color="error" onClick={() => handleSignOut()}>
                 Logout
             </Button>
             {isDirty &&

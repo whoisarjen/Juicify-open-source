@@ -16,14 +16,14 @@ import CustomAvatar from '@/components/CustomAvatar/CustomAvatar';
 import moment from 'moment';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useSession, signIn } from "next-auth/react"
 import Divider from '@mui/material/Divider';
 import NoteAltIcon from '@mui/icons-material/NoteAlt'
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import { type Translate } from 'next-translate';
 import { type Session } from 'next-auth';
-import { DASHBOARD_PATH, hasPermissionToPath } from '@/utils/user.utils';
+import { DASHBOARD_PATH, handleSignOut, hasPermissionToPath } from '@/utils/user.utils';
 
 const Grid = styled.aside`
     padding: 12px;
@@ -132,7 +132,7 @@ const SidebarLeft = () => {
                             </ListItemButton>
                         </ListItem>
                         <ListItem disablePadding>
-                            <ListItemButton onClick={() => sessionData ? signOut({ callbackUrl: '/', redirect: true }) : signIn()}>
+                            <ListItemButton onClick={() => sessionData ? handleSignOut() : signIn()}>
                                 <ListItemIcon>
                                     <LogoutIcon color="primary" />
                                 </ListItemIcon>

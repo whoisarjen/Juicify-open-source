@@ -1,4 +1,5 @@
 import { type Session } from "next-auth"
+import { signOut } from "next-auth/react"
 
 const PERMISSION_ADMIN = 'Administration'
 
@@ -16,4 +17,9 @@ const hasPermission = (sessionData: Session | null, permissionNames: PermissionN
 export const hasPermissionToPath = (sessionData: Session | null, path: keyof typeof PROTECTED_PATHS_REQUIRED_PERMISSIONS) => {
     const nameOfPermissions = PROTECTED_PATHS_REQUIRED_PERMISSIONS[path] as PermissionName[]
     return hasPermission(sessionData, nameOfPermissions)
+}
+
+export const handleSignOut = () => {
+    localStorage.clear()
+    signOut()
 }

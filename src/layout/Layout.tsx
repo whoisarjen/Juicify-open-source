@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react'
 import SidebarLeft from './SidebarLeft'
 import SidebarRight from './SidebarRight'
 import styled from 'styled-components'
-import { useSession, signOut } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import { DialogMissingSettings } from '@/components/DialogMissingSettings'
 import Button from '@mui/material/Button';
 import useTranslation from 'next-translate/useTranslation'
 import moment from 'moment'
 import { trpc } from '@/utils/trpc.utils';
-import { hasPermissionToPath, DASHBOARD_PATH } from '@/utils/user.utils'
+import { hasPermissionToPath, DASHBOARD_PATH, handleSignOut } from '@/utils/user.utils'
 
 const Grid = styled.div`
     margin: auto;
@@ -144,7 +144,7 @@ const Layout = ({ children }: { children: any }) => {
     }, [status, router])
 
     useEffect(() => {
-        if (router?.asPath && router.asPath !== SIGN_IN_PATH && !router.asPath.includes('callback')) {
+        if (router?.asPath && router.asPath !== SIGN_IN_PATH && !router.asPath.includes('callback') && sessionData) {
             localStorage.setItem('asPath', router.asPath.includes(`${sessionData?.user?.username}/consumed`)
                 ? router.asPath.slice(0, router.asPath.length - 10) + moment().format('YYYY-MM-DD')
                 : router.asPath
@@ -155,8 +155,7 @@ const Layout = ({ children }: { children: any }) => {
 
     useEffect(() => {
         if (sessionData?.user?.isBanned) {
-            signOut({ callbackUrl: SIGN_IN_PATH })
-            return
+            handleSignOut()
         }
     }, [router, sessionData?.user?.isBanned])
 
