@@ -12,7 +12,7 @@ export const PROTECTED_PATHS_REQUIRED_PERMISSIONS = {
 export const hasPermissionToPath = (sessionData: Session | null, path: string) => {
     const expectedPermissions = PROTECTED_PATHS_REQUIRED_PERMISSIONS[path as keyof typeof PROTECTED_PATHS_REQUIRED_PERMISSIONS]
 
-    if (!expectedPermissions) {
+    if (!expectedPermissions || !expectedPermissions.length) {
         return true
     }
 

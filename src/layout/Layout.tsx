@@ -204,24 +204,25 @@ const Layout = ({ children }: { children: any }) => {
 
     return (
         <main>
-        <SelectedGrid>
-            <SidebarLeft />
-            <SelectedContent>{children}</SelectedContent>
-            <Footer />
-            {!sessionData?.user && !isNeutralPath &&
-                <SignInFloatingButton>
-                    <Button
-                        component="div"
-                        color="primary"
-                        variant="contained"
-                        aria-label="authorization"
-                        onClick={() => router.push(SIGN_IN_PATH)}
-                    >
-                        {t('I_ALSO_WANT_TO_CHANGE_MY_BODY')}
-                    </Button>
-                </SignInFloatingButton>
-            }
-        </SelectedGrid>
+            <SelectedGrid>
+                <SidebarLeft />
+                <SelectedContent>{children}</SelectedContent>
+                {isSidebarGrid && <SidebarRight />}
+                <Footer />
+                {!sessionData?.user && !isNeutralPath &&
+                    <SignInFloatingButton>
+                        <Button
+                            component="div"
+                            color="primary"
+                            variant="contained"
+                            aria-label="authorization"
+                            onClick={() => router.push(SIGN_IN_PATH)}
+                        >
+                            {t('I_ALSO_WANT_TO_CHANGE_MY_BODY')}
+                        </Button>
+                    </SignInFloatingButton>
+                }
+            </SelectedGrid>
             {sessionData?.user?.height === 0 && <DialogMissingSettings />}
         </main>
     )

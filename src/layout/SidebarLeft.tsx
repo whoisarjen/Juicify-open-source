@@ -50,7 +50,7 @@ const getRouterPushOptions = (sessionData: Session | null, t: Translate) => {
                 margin="auto auto auto 0"
             />,
         },
-        settings: {
+        blog: {
             link: `/blog`,
             text: t('Blog'),
             children: <SchoolIcon color="primary" />,
