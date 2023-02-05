@@ -20,8 +20,10 @@ import { useSession, signIn, signOut } from "next-auth/react"
 import Divider from '@mui/material/Divider';
 import NoteAltIcon from '@mui/icons-material/NoteAlt'
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import { type Translate } from 'next-translate';
 import { type Session } from 'next-auth';
+import { DASHBOARD_PATH, hasPermissionToPath } from '@/utils/user.utils';
 
 const Grid = styled.aside`
     padding: 12px;
@@ -47,6 +49,11 @@ const getRouterPushOptions = (sessionData: Session | null, t: Translate) => {
                 size="28px"
                 margin="auto auto auto 0"
             />,
+        },
+        settings: {
+            link: `/blog`,
+            text: t('Blog'),
+            children: <SchoolIcon color="primary" />,
         },
         diary: {
             link: `/${username}/consumed/${moment().format('YYYY-MM-DD')}`,
@@ -78,11 +85,6 @@ const getRouterPushOptions = (sessionData: Session | null, t: Translate) => {
             text: t('Coach'),
             children: <SmartToyIcon color="primary" />,
         },
-        settings: {
-            link: `/settings`,
-            text: t('Settings'),
-            children: <Settings color="primary" />,
-        },
     }
 }
 
@@ -111,12 +113,22 @@ const SidebarLeft = () => {
                             )
                         })}
                         <Divider />
+                        {hasPermissionToPath(sessionData, DASHBOARD_PATH) &&
+                            <ListItem disablePadding>
+                                <ListItemButton onClick={() => router.push('/dashboard')}>
+                                    <ListItemIcon>
+                                        <DashboardIcon color="primary" />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Dashboard" />
+                                </ListItemButton>
+                            </ListItem>
+                        }
                         <ListItem disablePadding>
-                            <ListItemButton onClick={() => router.push('/blog')}>
+                            <ListItemButton onClick={() => router.push('/settings')}>
                                 <ListItemIcon>
-                                    <SchoolIcon color="primary" />
+                                    <Settings color="primary" />
                                 </ListItemIcon>
-                                <ListItemText primary={t('Blog')} />
+                                <ListItemText primary={t('Settings')} />
                             </ListItemButton>
                         </ListItem>
                         <ListItem disablePadding>
