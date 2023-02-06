@@ -1,4 +1,4 @@
-import { type ClientSafeProvider, getProviders, LiteralUnion, signIn } from 'next-auth/react';
+import { type ClientSafeProvider, getProviders, LiteralUnion, signIn, useSession } from 'next-auth/react';
 import styled from 'styled-components'
 import Logo from '@/components/Logo/Logo';
 import { useEffect, useState } from 'react'
@@ -21,6 +21,7 @@ const Main = styled.main`
 `
 
 const Home = () => {
+    const { data: sessionData } = useSession()
     const [providers, setProviders] = useState<Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider> | null>(null)
 
     useEffect(() => {
@@ -28,6 +29,12 @@ const Home = () => {
             setProviders(await getProviders())
         })()
     }, [setProviders])
+
+    useEffect(() => {
+        if (sessionData) {
+            window.location.reload()
+        }
+    }, [sessionData])
 
     return (
         <Main>

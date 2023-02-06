@@ -181,7 +181,7 @@ const Layout = ({ children }: { children: any }) => {
                 : router.asPath
             )
         }
-    }, [router.asPath, sessionData, sessionData?.user?.username])
+    }, [router.asPath, sessionData])
 
     useEffect(() => {
         if (sessionData?.user?.isBanned) {
