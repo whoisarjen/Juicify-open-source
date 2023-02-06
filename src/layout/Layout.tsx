@@ -172,8 +172,7 @@ const Layout = ({ children }: { children: any }) => {
 
             setIsAllowedLocation(true)
         })()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [status, router])
+    }, [status, router, sessionData])
 
     useEffect(() => {
         if (router?.asPath && router.asPath !== SIGN_IN_PATH && !router.asPath.includes('callback') && sessionData) {
@@ -182,8 +181,7 @@ const Layout = ({ children }: { children: any }) => {
                 : router.asPath
             )
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [router?.asPath, sessionData?.user?.username])
+    }, [router.asPath, sessionData, sessionData?.user?.username])
 
     useEffect(() => {
         if (sessionData?.user?.isBanned) {
