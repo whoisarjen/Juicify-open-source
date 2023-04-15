@@ -1,6 +1,5 @@
 import styled from "styled-components";
-// @ts-ignore
-import Quagga from 'quagga';
+import Quagga from '@ericblade/quagga2'
 import { useState, useEffect } from "react";
 import { trpc } from "@/utils/trpc.utils";
 import DialogShowProduct from "@/containers/consumed/BoxMeal/DialogAddProducts/BoxAddProduct/DialogShowProduct/DialogShowProduct";
@@ -59,7 +58,7 @@ const BarcodeScannerPage = () => {
             {
                 inputStream: {
                     type: 'LiveStream',
-                    target: document.querySelector('#scanner-container'),
+                    target: document.querySelector('#scanner-container') || undefined,
                     constraints: {
                         facingMode: 'environment' // or user
                     }
@@ -67,13 +66,6 @@ const BarcodeScannerPage = () => {
                 numOfWorkers: navigator.hardwareConcurrency,
                 locate: true,
                 frequency: 1,
-                debug: {
-                    drawBoundingBox: true,
-                    showFrequency: true,
-                    drawScanline: true,
-                    showPattern: true
-                },
-                multiple: false,
                 locator: {
                     halfSample: false,
                     patchSize: 'large', // x-small, small, medium, large, x-large
@@ -123,8 +115,8 @@ const BarcodeScannerPage = () => {
                     drawingCtx.clearRect(
                         0,
                         0,
-                        parseInt(drawingCanvas.getAttribute('width')),
-                        parseInt(drawingCanvas.getAttribute('height'))
+                        Number(drawingCanvas.getAttribute('width')),
+                        Number(drawingCanvas.getAttribute('height'))
                     );
                     result.boxes.filter((box: any) => box !== result.box).forEach((box: any) => {
                         Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, {
