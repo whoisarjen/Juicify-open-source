@@ -10,7 +10,7 @@ const ButtonShare = () => {
     }
 
     return (
-        <div style={{ margin: 'auto' }} data-testid="ButtonShare" onClick={shareLocation}>
+        <div onClick={shareLocation}>
             <IconButton>
                 <ShareIcon color="primary" />
             </IconButton>

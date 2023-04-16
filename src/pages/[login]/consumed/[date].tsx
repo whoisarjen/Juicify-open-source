@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import BottomFlyingGuestBanner from "@/components/BottomFlyingGuestBanner/BottomFlyingGuestBanner";
 import DiagramConsumedRemaining from "@/containers/consumed/DiagramConsumedRemaining/DiagramConsumedRemaining";
 import SectionDiaryManaging from "@/containers/consumed/SectionDiaryManaging/SectionDiaryManaging";
@@ -7,22 +6,12 @@ import ButtonShare from '@/components/ButtonShare/ButtonShare';
 import { max, range } from 'lodash';
 import DateChanger from '@/containers/consumed/DateChanger/DateChanger';
 import DateChangerFast from "@/containers/consumed/DateChangerFast/DateChangerFast";
-import Header from "@/components/Header/Header";
 import useTranslation from "next-translate/useTranslation";
 import BoxBurned from "@/containers/consumed/BoxBurned/BoxBurned";
 import { env } from "@/env/client.mjs";
 import useConsumed from "@/hooks/useConsumed";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-
-const Box = styled.div`
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 36px 36px;
-    ${this} button {
-        margin: auto;
-    }
-`
 
 const Consumed = () => {
     const { t } = useTranslation('nutrition-diary')
@@ -48,12 +37,12 @@ const Consumed = () => {
             .filter(({ meal }) => meal === index))
 
     return (
-        <>
-            <Box>
-                <Header text={t('title')} />
+        <div className="flex flex-col gap-4 flex-1">
+            <div className="w-full flex items-center justify-center">
+                <div className="flex-1 text-3xl font-bold">{t('title')}</div>
                 <ButtonShare />
                 <DateChanger />
-            </Box>
+            </div>
 
             <DateChangerFast />
 
@@ -82,7 +71,7 @@ const Consumed = () => {
                     username={lastMeal.user.username}
                 />
             }
-        </>
+        </div>
     );
 };
 

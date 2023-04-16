@@ -10,7 +10,7 @@ interface CustomAvatarProps {
 const CustomAvatar = ({
     src,
     username,
-    size = '110px',
+    size = '128px',
     margin = 'auto'
 }: CustomAvatarProps) => {
     if (!src) {

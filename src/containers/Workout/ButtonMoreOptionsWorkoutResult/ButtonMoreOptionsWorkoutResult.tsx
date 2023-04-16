@@ -4,22 +4,11 @@ import SpeedDialAction from '@mui/material/SpeedDialAction';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import { useState } from 'react';
 import DialogAddExercises from '@/containers/DialogAddExercises/DialogAddExercises';
-import styled from 'styled-components';
 
 export interface ButtonMoreOptionsWorkoutResultProps {
     exercises: (WorkoutPlanExercise | WorkoutResultExercise)[],
     setExercises: (exercises: (WorkoutPlanExercise | WorkoutResultExercise)[]) => void
 }
-
-const Box = styled.div`
-    width: 100%;
-    max-width: 702px;
-    position: fixed;
-    bottom: var(--BothNavHeightAndPadding);
-    left: 50%;
-    transform: translate(-50%, 0);
-    height: 100px;
-`
 
 const ButtonMoreOptionsWorkoutResult = ({ exercises, setExercises }: ButtonMoreOptionsWorkoutResultProps) => {
     const [open, setOpen] = useState(false);
@@ -41,7 +30,7 @@ const ButtonMoreOptionsWorkoutResult = ({ exercises, setExercises }: ButtonMoreO
     ];
 
     return (
-        <Box>
+        <div className="fixed bottom-12 w-full max-w-3xl left-1/2 -translate-x-2/4 z-10">
             <SpeedDial
                 data-testid="ButtonMoreOptionsWorkoutResult"
                 ariaLabel="Manage result"
@@ -62,7 +51,7 @@ const ButtonMoreOptionsWorkoutResult = ({ exercises, setExercises }: ButtonMoreO
                     />
                 ))}
             </SpeedDial>
-        </Box>
+        </div>
     );
 }
 

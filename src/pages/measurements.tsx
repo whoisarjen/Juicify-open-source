@@ -1,6 +1,5 @@
 import useTranslation from "next-translate/useTranslation"
 import { useState } from "react"
-import styled from "styled-components"
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
@@ -8,25 +7,11 @@ import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
-import Header from "@/components/Header/Header"
 import moment from 'moment'
 import { useSession } from "next-auth/react";
 import { trpc } from "@/utils/trpc.utils";
 import { DialogMeasurement } from '@/containers/DialogMeasurement'
-
-const Content = styled.div`
-    width: 100%;
-    margin: 0 auto;
-    max-width: 702px;
-    display: grid;
-    grid-template-rows: auto auto auto 1fr;
-    min-height: calc(100vh - var(--BothNavHeightAndPadding));
-`
-
-const Description = styled.div`
-    font-size: 0.9rem;
-    margin: auto 0;
-`
+import NavbarOnlyTitle from "@/components/NavbarOnlyTitle/NavbarOnlyTitle";
 
 const MeasurementsPage = () => {
     const { t } = useTranslation('home')
@@ -44,11 +29,11 @@ const MeasurementsPage = () => {
         .useQuery({ username }, { enabled: !!username })
 
     return (
-        <Content>
-            <Header text={t('home:ADD_WEIGHT')} />
-            <Description>
+        <div className="flex flex-col gap-4 flex-1">
+            <NavbarOnlyTitle title="home:ADD_WEIGHT" />
+            <div>
                 {t('Add weight description')}
-            </Description>
+            </div>
             <DialogMeasurement
                 measurement={selectedMeasurement}
                 defaultWeight={Number(measurements[0]?.weight)}
@@ -75,7 +60,7 @@ const MeasurementsPage = () => {
                     </TimelineItem>
                 )}
             </Timeline>
-        </Content>
+        </div>
     )
 }
 

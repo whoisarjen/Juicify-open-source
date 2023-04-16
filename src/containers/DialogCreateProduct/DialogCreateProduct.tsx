@@ -1,26 +1,23 @@
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import LoadingButton from '@mui/lab/LoadingButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import styled from 'styled-components'
-import useTranslation from 'next-translate/useTranslation';
-import { useState, useEffect, ReactNode } from 'react';
-import { useForm } from 'react-hook-form';
-import { type CreateProductSchema, createProductSchema } from '@/server/schema/product.schema';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { trpc } from '@/utils/trpc.utils';
-
-const ButtonHolder = styled.div`
-    width: 100%;
-    display: grid;
-`
+import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
+import Dialog from '@mui/material/Dialog'
+import Switch from '@mui/material/Switch'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
+import LoadingButton from '@mui/lab/LoadingButton'
+import InputAdornment from '@mui/material/InputAdornment'
+import useTranslation from 'next-translate/useTranslation'
+import { useState, useEffect, ReactNode } from 'react'
+import { useForm } from 'react-hook-form'
+import {
+    type CreateProductSchema,
+    createProductSchema,
+} from '@/server/schema/product.schema'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { trpc } from '@/utils/trpc.utils'
 
 interface DialogCreateProductProps {
     children?: ReactNode
@@ -49,7 +46,9 @@ const DialogCreateProduct = ({
         formState: { errors },
         handleSubmit,
         setValue,
-    } = useForm<CreateProductSchema>({ resolver: zodResolver(createProductSchema) })
+    } = useForm<CreateProductSchema>({
+        resolver: zodResolver(createProductSchema),
+    })
 
     const onSubmit = async (newProduct: CreateProductSchema) =>
         await createProduct.mutate(newProduct)
@@ -61,7 +60,11 @@ const DialogCreateProduct = ({
 
     return (
         <>
-            {children && <ButtonHolder onClick={() => setIsDialog(true)}>{children}</ButtonHolder>}
+            {children && (
+                <div className="flex" onClick={() => setIsDialog(true)}>
+                    {children}
+                </div>
+            )}
             <Dialog open={isDialog}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <DialogTitle>{t('Create product')}</DialogTitle>
@@ -75,13 +78,20 @@ const DialogCreateProduct = ({
                             variant="standard"
                             label={t('Name of product')}
                             {...register('name')}
-                            error={typeof errors.name === 'undefined' ? false : true}
+                            error={
+                                typeof errors.name === 'undefined'
+                                    ? false
+                                    : true
+                            }
                             helperText={errors.name?.message}
                         />
                         <TextField
                             sx={{ marginTop: '12px' }}
                             type="number"
-                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                            inputProps={{
+                                inputMode: 'numeric',
+                                pattern: '[0-9]*',
+                            }}
                             fullWidth
                             variant="standard"
                             label="Barcode"
@@ -98,7 +108,11 @@ const DialogCreateProduct = ({
                             error={!!errors.proteins}
                             helperText={errors.proteins?.message}
                             InputProps={{
-                                endAdornment: <InputAdornment position="end">{t('g in 100g/ml')}</InputAdornment>,
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        {t('g in 100g/ml')}
+                                    </InputAdornment>
+                                ),
                             }}
                         />
                         <TextField
@@ -110,7 +124,11 @@ const DialogCreateProduct = ({
                             error={!!errors.carbs}
                             helperText={errors.carbs?.message}
                             InputProps={{
-                                endAdornment: <InputAdornment position="end">{t('g in 100g/ml')}</InputAdornment>,
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        {t('g in 100g/ml')}
+                                    </InputAdornment>
+                                ),
                             }}
                         />
                         <TextField
@@ -122,7 +140,11 @@ const DialogCreateProduct = ({
                             error={!!errors.sugar}
                             helperText={errors.sugar?.message}
                             InputProps={{
-                                endAdornment: <InputAdornment position="end">{t('g in 100g/ml')}</InputAdornment>,
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        {t('g in 100g/ml')}
+                                    </InputAdornment>
+                                ),
                             }}
                         />
                         <TextField
@@ -134,7 +156,11 @@ const DialogCreateProduct = ({
                             error={!!errors.fats}
                             helperText={errors.fats?.message}
                             InputProps={{
-                                endAdornment: <InputAdornment position="end">{t('g in 100g/ml')}</InputAdornment>,
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        {t('g in 100g/ml')}
+                                    </InputAdornment>
+                                ),
                             }}
                         />
                         <TextField
@@ -146,7 +172,11 @@ const DialogCreateProduct = ({
                             error={!!errors.fiber}
                             helperText={errors.fiber?.message}
                             InputProps={{
-                                endAdornment: <InputAdornment position="end">{t('g in 100g/ml')}</InputAdornment>,
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        {t('g in 100g/ml')}
+                                    </InputAdornment>
+                                ),
                             }}
                         />
                         <TextField
@@ -158,7 +188,11 @@ const DialogCreateProduct = ({
                             error={!!errors.sodium}
                             helperText={errors.sodium?.message}
                             InputProps={{
-                                endAdornment: <InputAdornment position="end">{t('g in 100g/ml')}</InputAdornment>,
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        {t('g in 100g/ml')}
+                                    </InputAdornment>
+                                ),
                             }}
                         />
                         <TextField
@@ -170,20 +204,24 @@ const DialogCreateProduct = ({
                             error={!!errors.ethanol}
                             helperText={errors.ethanol?.message}
                             InputProps={{
-                                endAdornment: <InputAdornment position="end">{t('g in 100g/ml')}</InputAdornment>,
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        {t('g in 100g/ml')}
+                                    </InputAdornment>
+                                ),
                             }}
                         />
                         <FormControlLabel
                             control={
-                                <Switch
-                                    {...register('isExpectingCheck')}
-                                />
+                                <Switch {...register('isExpectingCheck')} />
                             }
                             label={t('Should be available for all?')}
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => setIsDialog(false)}>{t('Cancel')}</Button>
+                        <Button onClick={() => setIsDialog(false)}>
+                            {t('Cancel')}
+                        </Button>
                         <LoadingButton
                             loading={createProduct.isLoading}
                             variant="contained"
@@ -195,7 +233,7 @@ const DialogCreateProduct = ({
                 </form>
             </Dialog>
         </>
-    );
+    )
 }
 
-export default DialogCreateProduct;
+export default DialogCreateProduct

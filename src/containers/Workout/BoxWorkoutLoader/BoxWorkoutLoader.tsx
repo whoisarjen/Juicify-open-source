@@ -21,7 +21,6 @@ export const BoxWorkoutLoader = ({
                         key={index}
                         height={160}
                         variant="rounded"
-                        sx={{ marginTop: '10px' }}
                     />
                 ))}
             </div>

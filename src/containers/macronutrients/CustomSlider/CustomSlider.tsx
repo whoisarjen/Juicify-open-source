@@ -2,13 +2,8 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Slider from '@mui/material/Slider';
 import MuiInput from '@mui/material/Input';
-import { styled } from '@mui/material/styles';
 import useTranslation from 'next-translate/useTranslation';
 import { useState, useEffect, ChangeEvent } from 'react';
-
-const Input = styled(MuiInput)`
-    width: 42px;
-`;
 
 interface CustomSliderProps {
     title: string,
@@ -86,7 +81,7 @@ const CustomSlider = ({ title, macro, beginValue, changed, day }: CustomSliderPr
                     />
                 </Grid>
                 <Grid item>
-                    <Input
+                    <MuiInput
                         value={value}
                         size="small"
                         onChange={handleInputChange}

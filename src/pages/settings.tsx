@@ -1,31 +1,17 @@
-import SelectLanguage from '@/containers/settings/SelectLanguage/SelectLanguage';
-import { type UserSchema, userSchema } from '@/server/schema/user.schema';
-import { reloadSession } from '@/utils/global.utils';
-import { trpc } from '@/utils/trpc.utils';
-import { zodResolver } from '@hookform/resolvers/zod';
-import Button from '@mui/material/Button';
-import InputAdornment from '@mui/material/InputAdornment';
-import TextField from '@mui/material/TextField';
-import { useSession } from 'next-auth/react';
-import useTranslation from 'next-translate/useTranslation';
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import styled from 'styled-components'
+import SelectLanguage from '@/containers/settings/SelectLanguage/SelectLanguage'
+import { type UserSchema, userSchema } from '@/server/schema/user.schema'
+import { reloadSession } from '@/utils/global.utils'
+import { trpc } from '@/utils/trpc.utils'
+import { zodResolver } from '@hookform/resolvers/zod'
+import Button from '@mui/material/Button'
+import InputAdornment from '@mui/material/InputAdornment'
+import TextField from '@mui/material/TextField'
+import { useSession } from 'next-auth/react'
+import useTranslation from 'next-translate/useTranslation'
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
 import { DatePicker } from '@/components/DatePicker'
-import { handleSignOut } from '@/utils/user.utils';
-
-const Form = styled.form`
-    ${this} .MuiTextField-root {
-        width: 100%;
-        margin-bottom: 12px;
-    }
-`
-
-const Separator = styled.div`
-    font-size: 0.785rem;
-    font-weight: bold;
-    margin-bottom: 12px;
-`
+import { handleSignOut } from '@/utils/user.utils'
 
 const SettingsPage = () => {
     const { t } = useTranslation('settings')
@@ -34,7 +20,7 @@ const SettingsPage = () => {
     const updateUser = trpc.user.update.useMutation({
         onSuccess() {
             reloadSession()
-        }
+        },
     })
 
     const changeSettings = async (newUserSettings: UserSchema) =>
@@ -42,10 +28,7 @@ const SettingsPage = () => {
 
     const {
         register,
-        formState: {
-            errors,
-            isDirty,
-        },
+        formState: { errors, isDirty },
         handleSubmit,
         reset,
         setValue,
@@ -61,44 +44,63 @@ const SettingsPage = () => {
     }, [reset, sessionData?.user])
 
     return (
-        <Form onSubmit={handleSubmit(changeSettings)}>
-            <Separator>{t('Preferences')}</Separator>
+        <form
+            onSubmit={handleSubmit(changeSettings)}
+            className="flex flex-col gap-3"
+        >
+            <div>{t('Preferences')}</div>
             <SelectLanguage />
-            <Separator>{t('Diary')}</Separator>
+            <div>{t('Diary')}</div>
             <TextField
                 variant="outlined"
                 label={t('Number of meals')}
                 type="number"
                 {...register('numberOfMeals')}
-                error={typeof errors.numberOfMeals === 'undefined' ? false : true}
+                error={
+                    typeof errors.numberOfMeals === 'undefined' ? false : true
+                }
                 helperText={errors.numberOfMeals?.message}
             />
             <TextField
-                label={t("Fiber")}
+                label={t('Fiber')}
                 type="number"
                 InputProps={{
-                    endAdornment: <InputAdornment position="start">g / 1000 kcal</InputAdornment>
+                    endAdornment: (
+                        <InputAdornment position="start">
+                            g / 1000 kcal
+                        </InputAdornment>
+                    ),
                 }}
                 {...register('fiber')}
                 error={typeof errors.fiber === 'undefined' ? false : true}
                 helperText={errors.fiber?.message}
             />
             <TextField
-                label={t("Sugar")}
+                label={t('Sugar')}
                 type="number"
                 InputProps={{
-                    endAdornment: <InputAdornment position="start">% / {t("Carbs")}</InputAdornment>
+                    endAdornment: (
+                        <InputAdornment position="start">
+                            % / {t('Carbs')}
+                        </InputAdornment>
+                    ),
                 }}
                 {...register('carbsPercentAsSugar')}
-                error={typeof errors.carbsPercentAsSugar === 'undefined' ? false : true}
+                error={
+                    typeof errors.carbsPercentAsSugar === 'undefined'
+                        ? false
+                        : true
+                }
                 helperText={errors.carbsPercentAsSugar?.message}
             />
-            <Separator>{t('Profile')}</Separator>
+            <div>{t('Profile')}</div>
             <TextField
-                label={t("Height")}
+                label={t('Height')}
                 type="number"
                 InputProps={{
-                    endAdornment: <InputAdornment position="start">cm</InputAdornment>
+                    endAdornment: (
+                        <InputAdornment position="start">cm</InputAdornment>
+                    ),
                 }}
                 {...register('height')}
                 error={typeof errors.height === 'undefined' ? false : true}
@@ -107,12 +109,14 @@ const SettingsPage = () => {
 
             <DatePicker
                 defaultDate={getValues().birth}
-                onChange={newBirth => setValue('birth', newBirth, { shouldDirty: true })}
+                onChange={(newBirth) =>
+                    setValue('birth', newBirth, { shouldDirty: true })
+                }
                 register={register('birth')}
             />
 
             <TextField
-                label={t("Description")}
+                label={t('Description')}
                 variant="outlined"
                 type="text"
                 {...register('description')}
@@ -120,10 +124,14 @@ const SettingsPage = () => {
                 helperText={errors.description?.message}
             />
             <TextField
-                label={t("Website")}
+                label={t('Website')}
                 variant="outlined"
                 InputProps={{
-                    startAdornment: <InputAdornment position="start">https://</InputAdornment>
+                    startAdornment: (
+                        <InputAdornment position="start">
+                            https://
+                        </InputAdornment>
+                    ),
                 }}
                 type="text"
                 {...register('website')}
@@ -134,7 +142,11 @@ const SettingsPage = () => {
                 label="Facebook"
                 variant="outlined"
                 InputProps={{
-                    startAdornment: <InputAdornment position="start">https://facebook.com/</InputAdornment>
+                    startAdornment: (
+                        <InputAdornment position="start">
+                            https://facebook.com/
+                        </InputAdornment>
+                    ),
                 }}
                 type="text"
                 {...register('facebook')}
@@ -145,7 +157,11 @@ const SettingsPage = () => {
                 label="Instagram"
                 variant="outlined"
                 InputProps={{
-                    startAdornment: <InputAdornment position="start">https://instagram.com/</InputAdornment>
+                    startAdornment: (
+                        <InputAdornment position="start">
+                            https://instagram.com/
+                        </InputAdornment>
+                    ),
                 }}
                 type="text"
                 {...register('instagram')}
@@ -156,22 +172,27 @@ const SettingsPage = () => {
                 label="Twitter"
                 variant="outlined"
                 InputProps={{
-                    startAdornment: <InputAdornment position="start">https://twitter.com/</InputAdornment>
+                    startAdornment: (
+                        <InputAdornment position="start">
+                            https://twitter.com/
+                        </InputAdornment>
+                    ),
                 }}
                 type="text"
                 {...register('twitter')}
                 error={typeof errors.twitter === 'undefined' ? false : true}
                 helperText={errors.twitter?.message}
             />
-            <Separator>{t('LOGOUT')}</Separator>
             <Button color="error" onClick={() => handleSignOut()}>
-                Logout
+                {t('LOGOUT')}
             </Button>
-            {isDirty &&
-                <button onClick={() => handleSubmit(changeSettings)}>Submit</button>
-            }
-        </Form>
-    );
-};
+            {isDirty && (
+                <button onClick={() => handleSubmit(changeSettings)}>
+                    Submit
+                </button>
+            )}
+        </form>
+    )
+}
 
-export default SettingsPage;
+export default SettingsPage

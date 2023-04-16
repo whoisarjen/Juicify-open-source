@@ -1,44 +1,8 @@
-import IconButton from '@mui/material/IconButton';
-import styled from "styled-components";
-import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
-import EditIcon from "@mui/icons-material/Edit";
-import { type ReactNode } from 'react';
-import { DialogEditBurnedCalories } from '../DialogEditBurnedCalories';
-
-const Burned = styled.div`
-    width: 100%;
-    min-height: 50px;
-    border-top: 1px solid #e4e4e4;
-    margin-top: 10px;
-    padding: 15px 0 5px;
-    display: grid;
-    grid-template-columns: 44px auto 44px;
-    grid-column: 1 / 3;
-`
-
-const EditButtonContainer = styled.div`
-    margin: auto;
-    grid-row: 1 / 2;
-`
-
-const Content = styled.div`
-    width: 100%;
-    display: grid;
-    ${this} div:nth-child(1) {
-        font-weight: bold;
-        margin-top: auto;
-    }
-    ${this} div:nth-child(2) {
-        margin-bottom: auto;
-    }
-`
-
-const FireIcon = styled.div`
-    display: grid;
-    margin: auto;
-    grid-row: 1 / 2;
-    color: #fff;
-`
+import IconButton from '@mui/material/IconButton'
+import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment'
+import EditIcon from '@mui/icons-material/Edit'
+import { type ReactNode } from 'react'
+import { DialogEditBurnedCalories } from '../DialogEditBurnedCalories'
 
 interface BoxBurnedItemProps {
     name: string
@@ -58,26 +22,36 @@ const BoxBurnedItem = ({
     whenAdded,
 }: BoxBurnedItemProps) => {
     return (
-        <Burned>
-            <EditButtonContainer>
-                <FireIcon>
-                    {isEditable
-                        ? <DialogEditBurnedCalories burnedCalories={{ name, burnedCalories, id, whenAdded }}>
-                            <IconButton aria-label="edit">
-                                <EditIcon fontSize="small" />
-                            </IconButton>
-                        </DialogEditBurnedCalories>
-                        : icon || <LocalFireDepartmentIcon fontSize="small" sx={{ color: 'red' }} />
-                    }
-                </FireIcon>
-            </EditButtonContainer>
-            <Content>
-                <div>{name}</div>
+        <div className="flex w-full items-center justify-center gap-2">
+            <div className="flex items-center justify-center">
+                {isEditable ? (
+                    <DialogEditBurnedCalories
+                        burnedCalories={{
+                            name,
+                            burnedCalories,
+                            id,
+                            whenAdded,
+                        }}
+                    >
+                        <IconButton aria-label="edit">
+                            <EditIcon fontSize="small" />
+                        </IconButton>
+                    </DialogEditBurnedCalories>
+                ) : (
+                    icon || (
+                        <LocalFireDepartmentIcon
+                            fontSize="small"
+                            sx={{ color: 'red', margin: '4px 4px 4px 6px' }}
+                        />
+                    )
+                )}
+            </div>
+            <div className="flex-1">
+                <div className="font-bold">{name}</div>
                 <div>{burnedCalories}kcal</div>
-            </Content>
-            <Content />
-        </Burned>
+            </div>
+        </div>
     )
 }
 
-export default BoxBurnedItem;
+export default BoxBurnedItem

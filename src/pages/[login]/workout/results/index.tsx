@@ -14,28 +14,27 @@ const WorkoutResultsPage = () => {
 
     const username = router.query.login || ''
 
-    const {
-        data: workoutResults = [],
-        isFetching,
-    } = trpc
-        .workoutResult
-        .getAll
-        .useQuery({ username }, { enabled: !!username })
+    const { data: workoutResults = [], isFetching } =
+        trpc.workoutResult.getAll.useQuery(
+            { username },
+            { enabled: !!username }
+        )
 
     const isOwner = sessionData?.user?.username == username
 
     return (
-        <div>
-            {isOwner
-                ? <>
+        <div className="flex flex-1 flex-col gap-4">
+            {isOwner ? (
+                <>
                     <NavbarOnlyTitle title="home:WORKOUT_RESULTS" />
                     <DialogAddWorkoutResult />
                 </>
-                : <NavbarProfile tab={2} />
-            }
+            ) : (
+                <NavbarProfile tab={2} />
+            )}
             <BoxWorkoutLoader isLoading={isFetching}>
-                <div>
-                    {workoutResults?.map(workoutResult =>
+                <>
+                    {workoutResults?.map((workoutResult) => (
                         <BoxWorkout
                             whenAdded={workoutResult.whenAdded}
                             title={workoutResult.name}
@@ -44,11 +43,11 @@ const WorkoutResultsPage = () => {
                             icon={<FitnessCenterIcon />}
                             key={workoutResult.id}
                         />
-                    )}
-                </div>
+                    ))}
+                </>
             </BoxWorkoutLoader>
         </div>
     )
 }
 
-export default WorkoutResultsPage;
+export default WorkoutResultsPage

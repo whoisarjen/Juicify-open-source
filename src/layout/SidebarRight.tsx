@@ -1,70 +1,30 @@
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListSubheader from '@mui/material/ListSubheader';
-import useTranslation from 'next-translate/useTranslation';
-import { useTheme } from '../hooks/useTheme';
-import styled from 'styled-components'
-import moment from 'moment';
-import { useSession } from 'next-auth/react';
-import Link from 'next/link';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
+import List from '@mui/material/List'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListSubheader from '@mui/material/ListSubheader'
+import useTranslation from 'next-translate/useTranslation'
+import moment from 'moment'
+import { useSession } from 'next-auth/react'
+import Link from 'next/link'
 import useDaily from '@/hooks/useDaily'
-import { trpc } from '@/utils/trpc.utils';
-import { LastJoinedUsersList } from '@/components/LastJoinedUsersList';
-
-const Box = styled.aside`
-    padding: 12px;
-    @media (max-width: 1105px) {
-        display: none;
-    }
-`
-
-const CircularBox = styled.aside`
-    padding: 6px;
-    display: grid;
-    grid-template-columns: 80px auto;
-    height: 80px;
-    ${this} div {
-        margin: auto 12px;
-    }
-    ${this} .CircularProgressbar-text {
-        dominant-baseline: middle !important;
-        text-anchor: middle !important;
-        font-size: 15px !important;
-    }
-`
+import { trpc } from '@/utils/trpc.utils'
+import { LastJoinedUsersList } from '@/components/LastJoinedUsersList'
 
 const whenAdded = moment().format('YYYY-MM-DD')
 
 const SidebarRight = () => {
     const { t } = useTranslation('home')
     const { data: sessionData } = useSession()
-    const { getTheme } = useTheme()
 
     const username = sessionData?.user?.username || ''
 
-    const {
-        consumedMacro,
-        expectedMacro,
-        workoutResults,
-        burnedCaloriesSum,
-    } = useDaily({ username, startDate: whenAdded, endDate: whenAdded })
+    const { consumedMacro, expectedMacro, workoutResults, burnedCaloriesSum } =
+        useDaily({ username, startDate: whenAdded, endDate: whenAdded })
 
-    const styles = buildStyles({
-        textSize: '15px',
-        pathTransitionDuration: 0.5,
-        pathColor: getTheme('PRIMARY'),
-        textColor: 'rgba(122, 122, 122, 1',
-        trailColor: '#d6d6d6',
-        backgroundColor: getTheme('PRIMARY')
-    })
-
-    const {
-        data: measurement,
-    } = trpc
-        .measurement
-        .getDay
-        .useQuery({ username, whenAdded }, { enabled: !!username && !!whenAdded })
+    const { data: measurement } = trpc.measurement.getDay.useQuery(
+        { username, whenAdded },
+        { enabled: !!username && !!whenAdded }
+    )
 
     const weight = measurement?.weight || 0
     const coach = moment(sessionData?.user?.nextCoach).diff(whenAdded, 'days')
@@ -78,8 +38,11 @@ const SidebarRight = () => {
         },
         {
             href: `/${username}/consumed/${whenAdded}`,
-            value: (consumedMacro.calories - burnedCaloriesSum) / expectedMacro.calories * 100,
-            text: `${(consumedMacro.calories - burnedCaloriesSum)}Kcal`,
+            value:
+                ((consumedMacro.calories - burnedCaloriesSum) /
+                    expectedMacro.calories) *
+                100,
+            text: `${consumedMacro.calories - burnedCaloriesSum}Kcal`,
             label: t('Calories'),
         },
         {
@@ -90,7 +53,7 @@ const SidebarRight = () => {
         },
         {
             href: `/coach`,
-            value: (7 - coach) / 7 * 100,
+            value: ((7 - coach) / 7) * 100,
             text: `${coach >= 0 ? coach : 0}days`,
             label: t('Coach'),
         },
@@ -102,28 +65,42 @@ const SidebarRight = () => {
                 <List
                     sx={{
                         width: '100%',
-                        bgcolor: 'background.paper'
+                        bgcolor: 'background.paper',
                     }}
                     subheader={
-                        <ListSubheader component='div' id='nested-list-subheader'>
-                            {t('Data for')} {moment(whenAdded).format('DD.MM.YYYY')}:
+                        <ListSubheader
+                            component="div"
+                            id="nested-list-subheader"
+                        >
+                            {t('Data for')}{' '}
+                            {moment(whenAdded).format('DD.MM.YYYY')}:
                         </ListSubheader>
                     }
                 >
-                    {CIRCULAR_BOXES.map(({ href, text, value, label }) =>
+                    {CIRCULAR_BOXES.map(({ href, text, value, label }) => (
                         <Link href={href} key={text}>
                             <ListItemButton>
-                                <CircularBox>
-                                    <CircularProgressbar
-                                        value={value}
-                                        text={text}
-                                        styles={styles}
-                                    />
+                                <div className="flex items-center justify-center gap-3">
+                                    <div className="center-progress-bar-label max-h-[80px] min-h-[80px] min-w-[80px] max-w-[80px]">
+                                        <CircularProgressbar
+                                            value={value}
+                                            text={text}
+                                            styles={buildStyles({
+                                                textSize: 15,
+                                                pathTransitionDuration: 0.5,
+                                                pathColor: '#90caf9',
+                                                textColor:
+                                                    'rgba(122, 122, 122, 1',
+                                                trailColor: '#d6d6d6',
+                                                backgroundColor: '#90caf9',
+                                            })}
+                                        />
+                                    </div>
                                     <div>{label}</div>
-                                </CircularBox>
+                                </div>
                             </ListItemButton>
                         </Link>
-                    )}
+                    ))}
                 </List>
             )
         }
@@ -131,11 +108,7 @@ const SidebarRight = () => {
         return <LastJoinedUsersList />
     }
 
-    return (
-        <Box>
-            {SidebarElements()}
-        </Box>
-    )
+    return SidebarElements()
 }
 
-export default SidebarRight;
+export default SidebarRight

@@ -9,7 +9,7 @@ const Workout = () => {
     const router: any = useRouter()
 
     return (
-        <div>
+        <div className="flex flex-col gap-4">
             <BoxWorkout
                 title={t('WORKOUT_RESULTS')}
                 description={t('WORKOUT_RESULTS_DESCRIPTION')}

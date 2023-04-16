@@ -1,12 +1,4 @@
-import styled from 'styled-components'
-import Button from '@mui/material/Button';
-
-const ButtonWrapper = styled.div`
-    width: 100%;
-    max-width: 305px;
-    padding: 0 12px;
-    border-size: border-box;
-`
+import Button from '@mui/material/Button'
 
 interface CoachButtonProps {
     onClick?: () => void
@@ -18,9 +10,9 @@ interface CoachButtonProps {
 
 const CoachButton = (props: CoachButtonProps) => {
     return (
-        <ButtonWrapper>
+        <div className="w-full max-w-sm">
             <Button {...props} fullWidth />
-        </ButtonWrapper>
+        </div>
     )
 }
 

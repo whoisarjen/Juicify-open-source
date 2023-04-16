@@ -1,13 +1,7 @@
 import Button from '@mui/material/Button';
-import styled from 'styled-components'
 import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
 import CustomAvatar from '../CustomAvatar/CustomAvatar';
-
-const Placeholder = styled.div`
-    height: 36.5px;
-    width: 100%;
-`
 
 interface BottomFlyingGuestBannerProps {
     src?: string | null
@@ -24,7 +18,7 @@ const BottomFlyingGuestBanner = ({ src, username }: BottomFlyingGuestBannerProps
 
     return (
         <>
-            <Placeholder />
+            <div className="w-full h-9" />
             <Button
                 data-testid="BottomFlyingGuestBanner"
                 onClick={() => router.push(`/${router.query.login}`)}

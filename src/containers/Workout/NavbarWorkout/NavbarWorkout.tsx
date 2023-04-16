@@ -3,18 +3,10 @@ import IconButton from '@mui/material/IconButton'
 import LoadingButton from '@mui/lab/LoadingButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
-import styled from 'styled-components'
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
-
-const Grid = styled.div`
-    width: 100%;
-    display: grid;
-    grid-template-columns: 44px 1fr 44px auto;
-    margin: auto;
-`
 
 interface NavbarWorkoutProp {
     isDisabled: boolean
@@ -36,11 +28,11 @@ const NavbarWorkout = ({
     const { data: sessionData } = useSession()
 
     return (
-        <Grid>
+        <div className="flex w-full">
             <IconButton aria-label="route" onClick={onArrowBack} sx={{ margin: 'auto' }}>
                 <KeyboardBackspaceIcon />
             </IconButton>
-            <div />
+            <div className="flex-1" />
             {sessionData?.user?.username == router.query.login
                 ? <>
                     <DialogConfirm onConfirmed={onDelete} isDisabled={isDisabled}>
@@ -64,7 +56,7 @@ const NavbarWorkout = ({
                     <div />
                 </>
             }
-        </Grid>
+        </div>
     );
 }
 

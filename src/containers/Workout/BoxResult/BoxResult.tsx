@@ -1,35 +1,14 @@
-import IconButton from '@mui/material/IconButton';
+import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
-import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
-import ArrowRightAltOutlinedIcon from '@mui/icons-material/ArrowRightAltOutlined';
-import styled from 'styled-components';
-import DialogConfirm from '@/components/DialogConfirm/DialogConfirm';
-import { useState, useEffect } from 'react';
-import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon';
-import { type WorkoutResultExerciseResultSchema } from '@/server/schema/workoutResult.schema';
-
-const Box = styled.div`
-    min-height: 36px;
-    width: 100%;
-    padding: 8px 0;
-    margin-top: 12px;
-    border-radius: 4px;
-    border: 1px solid #eee;
-    font-size: 0.875rem;
-    text-align: center;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    ${this} div {
-        margin: auto;
-    }
-`
-
-const Connected = styled.div`
-    grid-column: 1 / 3;
-`
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined'
+import TextField from '@mui/material/TextField'
+import Autocomplete from '@mui/material/Autocomplete'
+import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined'
+import ArrowRightAltOutlinedIcon from '@mui/icons-material/ArrowRightAltOutlined'
+import DialogConfirm from '@/components/DialogConfirm/DialogConfirm'
+import { useState, useEffect } from 'react'
+import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon'
+import { type WorkoutResultExerciseResultSchema } from '@/server/schema/workoutResult.schema'
 
 interface BoxResultProps {
     value: WorkoutResultExerciseResultSchema
@@ -38,7 +17,7 @@ interface BoxResultProps {
     deleteResult: () => void
     isOwner: boolean
     isLast: boolean
-    openNewResult: (lastResult: { reps: number, weight: number }) => void
+    openNewResult: (lastResult: { reps: number; weight: number }) => void
 }
 
 const BoxResult = ({
@@ -64,7 +43,7 @@ const BoxResult = ({
                 weights.push(choosenWeight)
             }
             for (let i = 1; i <= 4; i++) {
-                weights.push((choosenWeightLocally + (i / 4)).toString())
+                weights.push((choosenWeightLocally + i / 4).toString())
             }
         } else {
             for (let i = 1; i <= 40; i++) {
@@ -87,73 +66,113 @@ const BoxResult = ({
 
     return (
         <>
-            {open && isOwner
-                ? <>
-                    <Box
+            {open && isOwner ? (
+                <>
+                    <div
+                        className="flex flex-row border p-2 rounded items-center justify-center"
                         onClick={() => {
                             setOpen(false)
-                            changeResult({ reps: parseInt(reps), weight: parseFloat(weight), open: false })
+                            changeResult({
+                                reps: parseInt(reps),
+                                weight: parseFloat(weight),
+                                open: false,
+                            })
                         }}
                     >
-                        <Connected><div>Click to save</div></Connected>
-                        <div><div>#{index + 1}</div></div>
-                        <div>
+                        <div className="flex-1">Click to save</div>
+                        <div className="flex-1">#{index + 1}</div>
+                        <div className="flex-1">
                             <IconButton aria-label="arrow">
-                                <ArrowRightAltOutlinedIcon sx={{ fontSize: 20 }} />
+                                <ArrowRightAltOutlinedIcon
+                                    sx={{ fontSize: 20 }}
+                                />
                             </IconButton>
                         </div>
-                        <div>
+                        <div className="flex-1">
                             <IconButton aria-label="save">
                                 <CircleOutlinedIcon sx={{ fontSize: 20 }} />
                             </IconButton>
                         </div>
-                    </Box>
+                    </div>
                     <Autocomplete
                         sx={{ marginTop: '8px' }}
                         disablePortal
                         value={weight}
                         options={weightOptions}
-                        onChange={(_, value) => changeResult({ reps: parseInt(reps), weight: parseFloat(value || '0'), open })}
-                        onInputChange={(_, valueLocally) => loadWeight(valueLocally)}
-                        getOptionLabel={option => option.toString()}
-                        renderInput={params => <TextField {...params} label="Weight" />}
+                        onChange={(_, value) =>
+                            changeResult({
+                                reps: parseInt(reps),
+                                weight: parseFloat(value || '0'),
+                                open,
+                            })
+                        }
+                        onInputChange={(_, valueLocally) =>
+                            loadWeight(valueLocally)
+                        }
+                        getOptionLabel={(option) => option.toString()}
+                        renderInput={(params) => (
+                            <TextField {...params} label="Weight" />
+                        )}
                     />
                     <Autocomplete
                         sx={{ marginTop: '8px' }}
                         disablePortal
                         value={reps}
                         options={repsOptions}
-                        onChange={(_, value) => changeResult({ reps: parseInt(value || '0'), weight: parseFloat(weight), open })}
-                        onInputChange={(_, valueLocally) => setReps(valueLocally)}
-                        getOptionLabel={option => option.toString()}
-                        renderInput={params => <TextField {...params} label="Reps" />}
+                        onChange={(_, value) =>
+                            changeResult({
+                                reps: parseInt(value || '0'),
+                                weight: parseFloat(weight),
+                                open,
+                            })
+                        }
+                        onInputChange={(_, valueLocally) =>
+                            setReps(valueLocally)
+                        }
+                        getOptionLabel={(option) => option.toString()}
+                        renderInput={(params) => (
+                            <TextField {...params} label="Reps" />
+                        )}
                     />
                 </>
-                : <Box onClick={() => setOpen(true)}>
-                    <div>
-                        {isOwner &&
+            ) : (
+                <div onClick={() => setOpen(true)} className="flex flex-row border p-2 rounded items-center justify-center">
+                    <div className="flex-1">
+                        {isOwner && (
                             <DialogConfirm onConfirmed={deleteResult}>
                                 <IconButton aria-label="delete">
                                     <DeleteIcon sx={{ fontSize: 20 }} />
                                 </IconButton>
                             </DialogConfirm>
-                        }
+                        )}
                     </div>
-                    <div><div>{weight}kg</div></div>
-                    <div><div>#{index + 1}</div></div>
-                    <div><div>{reps}r.</div></div>
-                    <div>
-                        {isOwner &&
+                    <div className="flex-1">{weight}kg</div>
+                    <div className="flex-1">#{index + 1}</div>
+                    <div className="flex-1">{reps}r.</div>
+                    <div className="flex-1">
+                        {isOwner && (
                             <IconButton aria-label="save">
-                                <CheckCircleOutlinedIcon sx={{ fontSize: 20 }} />
+                                <CheckCircleOutlinedIcon
+                                    sx={{ fontSize: 20 }}
+                                />
                             </IconButton>
-                        }
+                        )}
                     </div>
-                </Box>
-            }
-            {isOwner && isLast && <ButtonPlusIcon size="small" onClick={() => openNewResult({ reps: parseInt(reps), weight: parseFloat(weight) })} />}
+                </div>
+            )}
+            {isOwner && isLast && (
+                <ButtonPlusIcon
+                    size="small"
+                    onClick={() =>
+                        openNewResult({
+                            reps: parseInt(reps),
+                            weight: parseFloat(weight),
+                        })
+                    }
+                />
+            )}
         </>
-    );
+    )
 }
 
-export default BoxResult;
+export default BoxResult

@@ -1,31 +1,25 @@
-import { type ClientSafeProvider, getProviders, LiteralUnion, signIn, useSession } from 'next-auth/react';
-import styled from 'styled-components'
-import Logo from '@/components/Logo/Logo';
+import {
+    type ClientSafeProvider,
+    getProviders,
+    LiteralUnion,
+    signIn,
+    useSession,
+} from 'next-auth/react'
+import Logo from '@/components/Logo/Logo'
 import { useEffect, useState } from 'react'
-import { type BuiltInProviderType } from 'next-auth/providers';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-
-const Main = styled.main`
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    ${this} > div {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-`
+import { type BuiltInProviderType } from 'next-auth/providers'
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
 
 const Home = () => {
     const { data: sessionData } = useSession()
-    const [providers, setProviders] = useState<Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider> | null>(null)
+    const [providers, setProviders] = useState<Record<
+        LiteralUnion<BuiltInProviderType, string>,
+        ClientSafeProvider
+    > | null>(null)
 
     useEffect(() => {
-        (async () => {
+        ;(async () => {
             setProviders(await getProviders())
         })()
     }, [setProviders])
@@ -37,26 +31,25 @@ const Home = () => {
     }, [sessionData])
 
     return (
-        <Main>
-            <div>
-                <Logo size={175} />
-            </div>
+        <div className="flex flex-col items-center justify-around flex-1">
+            <Logo size={175} />
             {/* TODO ACCEPT RULES + TRANSLATE WHOLE SITE (NEED TO CHECK WHERE) */}
-            <div>
-                <Stack spacing={2} direction="column">
-                    {providers && Object.values(providers).map((provider) => (
+            <Stack spacing={2} direction="column">
+                {providers &&
+                    Object.values(providers).map((provider) => (
                         <Button
                             variant="outlined"
                             key={provider.name}
-                            onClick={() => signIn(provider.id, { redirect: false })}
+                            onClick={() =>
+                                signIn(provider.id, { redirect: false })
+                            }
                         >
                             Sign in with {provider.name}
                         </Button>
                     ))}
-                </Stack>
-            </div>
-        </Main>
-    );
+            </Stack>
+        </div>
+    )
 }
 
-export default Home;
+export default Home

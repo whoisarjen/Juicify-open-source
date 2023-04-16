@@ -1,43 +1,17 @@
-import styled from "styled-components";
 import Quagga from '@ericblade/quagga2'
-import { useState, useEffect } from "react";
-import { trpc } from "@/utils/trpc.utils";
-import DialogShowProduct from "@/containers/consumed/BoxMeal/DialogAddProducts/BoxAddProduct/DialogShowProduct/DialogShowProduct";
-import DialogCreateProduct from '@/containers/DialogCreateProduct/DialogCreateProduct';
-
-const Grid = styled.div`
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-rows: auto auto;
-    text-align: center;
-    ${this} #scanner-container {
-      position: relative;
-      width: 100% !important;
-    }
-    ${this} #scanner-container video,
-    ${this} #scanner-container canvas {
-      width: 100% !important;
-    }
-    ${this} .drawingBuffer {
-      position: absolute;
-      left: 0;
-      top: 0;
-    }
-`
+import { useState, useEffect } from 'react'
+import { trpc } from '@/utils/trpc.utils'
+import DialogShowProduct from '@/containers/consumed/BoxMeal/DialogAddProducts/BoxAddProduct/DialogShowProduct/DialogShowProduct'
+import DialogCreateProduct from '@/containers/DialogCreateProduct/DialogCreateProduct'
 
 const BarcodeScannerPage = () => {
     const [barcode, setBarcode] = useState('')
     const [isDialogShowProduct, setIsDialogShowProduct] = useState(false)
     const [isDialogCreateProduct, setIsDialogCreateProduct] = useState(false)
 
-    const {
-        data: product,
-        refetch,
-    } = trpc
-        .product
-        .getByBarcode
-        .useQuery({ barcode }, {
+    const { data: product, refetch } = trpc.product.getByBarcode.useQuery(
+        { barcode },
+        {
             enabled: !!barcode,
             onSuccess() {
                 setIsDialogShowProduct(true)
@@ -45,7 +19,8 @@ const BarcodeScannerPage = () => {
             onError() {
                 setIsDialogCreateProduct(true)
             },
-        })
+        }
+    )
 
     const handleRefetch = () => {
         setIsDialogShowProduct(false)
@@ -58,10 +33,12 @@ const BarcodeScannerPage = () => {
             {
                 inputStream: {
                     type: 'LiveStream',
-                    target: document.querySelector('#scanner-container') || undefined,
+                    target:
+                        document.querySelector('#scanner-container') ||
+                        undefined,
                     constraints: {
-                        facingMode: 'environment' // or user
-                    }
+                        facingMode: 'environment', // or user
+                    },
                 },
                 numOfWorkers: navigator.hardwareConcurrency,
                 locate: true,
@@ -80,9 +57,9 @@ const BarcodeScannerPage = () => {
                         boxFromPatches: {
                             showTransformed: false,
                             showTransformedBox: false,
-                            showBB: false
-                        }
-                    }
+                            showBB: false,
+                        },
+                    },
                 },
                 decoder: {
                     readers: [
@@ -97,18 +74,20 @@ const BarcodeScannerPage = () => {
                         'i2of5_reader',
                         'i2of5_reader',
                         '2of5_reader',
-                        'code_93_reader'
-                    ]
-                }
+                        'code_93_reader',
+                    ],
+                },
             },
             (err: any) => {
-                Quagga.start();
+                Quagga.start()
             }
-        );
-        Quagga.onDetected((res: any) => setBarcode(res?.codeResult?.code?.toString() || ''));
+        )
+        Quagga.onDetected((res: any) =>
+            setBarcode(res?.codeResult?.code?.toString() || '')
+        )
         Quagga.onProcessed((result: any) => {
             let drawingCtx = Quagga.canvas.ctx.overlay,
-                drawingCanvas = Quagga.canvas.dom.overlay;
+                drawingCanvas = Quagga.canvas.dom.overlay
 
             if (result) {
                 if (result.boxes) {
@@ -117,24 +96,41 @@ const BarcodeScannerPage = () => {
                         0,
                         Number(drawingCanvas.getAttribute('width')),
                         Number(drawingCanvas.getAttribute('height'))
-                    );
-                    result.boxes.filter((box: any) => box !== result.box).forEach((box: any) => {
-                        Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, {
-                            color: 'green',
-                            lineWidth: 2
-                        });
-                    });
+                    )
+                    result.boxes
+                        .filter((box: any) => box !== result.box)
+                        .forEach((box: any) => {
+                            Quagga.ImageDebug.drawPath(
+                                box,
+                                { x: 0, y: 1 },
+                                drawingCtx,
+                                {
+                                    color: 'green',
+                                    lineWidth: 2,
+                                }
+                            )
+                        })
                 }
 
                 if (result.box) {
-                    Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingCtx, { color: '#00F', lineWidth: 2 });
+                    Quagga.ImageDebug.drawPath(
+                        result.box,
+                        { x: 0, y: 1 },
+                        drawingCtx,
+                        { color: '#00F', lineWidth: 2 }
+                    )
                 }
 
                 if (result.codeResult && result.codeResult.code) {
-                    Quagga.ImageDebug.drawPath(result.line, { x: 'x', y: 'y' }, drawingCtx, { color: 'red', lineWidth: 3 });
+                    Quagga.ImageDebug.drawPath(
+                        result.line,
+                        { x: 'x', y: 'y' },
+                        drawingCtx,
+                        { color: 'red', lineWidth: 3 }
+                    )
                 }
             }
-        });
+        })
 
         return () => {
             Quagga.stop()
@@ -142,27 +138,27 @@ const BarcodeScannerPage = () => {
     }, [])
 
     return (
-        <>
-            <Grid>
-                <div id="scanner-container" />,
-                <span>Scan barcode code</span>
-            </Grid>
-            {isDialogShowProduct && product &&
+        <div className="flex flex-1 flex-col">
+            <div className="flex h-full w-full flex-col items-center justify-center">
+                <div id="scanner-container" className="flex-1" />
+                <div className="min-h-8 text-center">Scan barcode code</div>
+            </div>
+            {isDialogShowProduct && product && (
                 <DialogShowProduct
                     defaultState={isDialogShowProduct}
                     onClose={() => setIsDialogShowProduct(false)}
                     product={product}
                 />
-            }
-            {isDialogCreateProduct && barcode &&
+            )}
+            {isDialogCreateProduct && barcode && (
                 <DialogCreateProduct
                     defaultState={isDialogCreateProduct}
                     created={(_: string) => handleRefetch()}
                     barcode={barcode}
                 />
-            }
-        </>
+            )}
+        </div>
     )
 }
 
-export default BarcodeScannerPage;
+export default BarcodeScannerPage

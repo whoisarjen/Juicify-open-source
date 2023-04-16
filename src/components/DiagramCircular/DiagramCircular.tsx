@@ -1,55 +1,32 @@
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
-import styled from "styled-components";
-import { useTheme } from '@/hooks/useTheme';
-
-const Grid = styled.div`
-    width: 100%;
-    height: 100%;
-    display: grid;
-`
-
-const CircularBox = styled.div`
-    max-width: 110px;
-    max-height: 110px;
-    margin: auto;
-    ${this} .CircularProgressbar-text {
-        dominant-baseline: middle !important;
-        text-anchor: middle !important;
-        font-size: 15px !important;
-    }
-`
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
+import 'react-circular-progressbar/dist/styles.css'
 
 interface DiagramCircularProps {
     text: string
     value: number
 }
 
-const DiagramCircular = ({
-    text,
-    value,
-}: DiagramCircularProps) => {
-    const { getTheme } = useTheme()
-
+const DiagramCircular = ({ text, value }: DiagramCircularProps) => {
     const styles = buildStyles({
         pathTransitionDuration: 0.5,
-        pathColor: getTheme('PRIMARY'),
+        pathColor: '#90caf9',
         textColor: 'rgba(122, 122, 122, 1',
         trailColor: '#d6d6d6',
-        backgroundColor: getTheme('PRIMARY'),
+        backgroundColor: '#90caf9',
+        textSize: 15,
     })
 
     return (
-        <Grid>
-            <CircularBox>
+        <div className="flex flex-1 items-center justify-center">
+            <div className="max-h-[110px] max-w-[110px] center-progress-bar-label">
                 <CircularProgressbar
                     value={value}
                     text={text}
                     styles={styles}
                 />
-            </CircularBox>
-        </Grid>
+            </div>
+        </div>
     )
 }
 
-export default DiagramCircular;
+export default DiagramCircular

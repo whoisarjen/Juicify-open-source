@@ -1,13 +1,13 @@
-import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon';
-import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle';
-import { useRouter } from 'next/router';
+import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon'
+import { useRouter } from 'next/router'
 import NoteAltIcon from '@mui/icons-material/NoteAlt'
-import BoxWorkout from '@/containers/Workout/BoxWorkout/BoxWorkout';
-import NavbarProfile from '@/containers/profile/NavbarProfile/NavbarProfile';
-import { useSession } from 'next-auth/react';
-import { trpc } from '@/utils/trpc.utils';
+import BoxWorkout from '@/containers/Workout/BoxWorkout/BoxWorkout'
+import NavbarProfile from '@/containers/profile/NavbarProfile/NavbarProfile'
+import { useSession } from 'next-auth/react'
+import { trpc } from '@/utils/trpc.utils'
 import { orderBy } from 'lodash'
-import { BoxWorkoutLoader } from '@/containers/Workout/BoxWorkoutLoader';
+import { BoxWorkoutLoader } from '@/containers/Workout/BoxWorkoutLoader'
+import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
 
 const WorkoutPlansPage = () => {
     const router: any = useRouter()
@@ -17,29 +17,21 @@ const WorkoutPlansPage = () => {
 
     const utils = trpc.useContext()
 
-    const {
-        data: workoutPlans = [],
-        isFetching,
-    } = trpc
-        .workoutPlan
-        .getAll
-        .useQuery({ username }, { enabled: !!username })
+    const { data: workoutPlans = [], isFetching } =
+        trpc.workoutPlan.getAll.useQuery({ username }, { enabled: !!username })
 
     const createWorkoutPlan = trpc.workoutPlan.create.useMutation({
         onSuccess: (data) => {
-            utils
-                .workoutPlan
-                .getAll
-                .setData({ username }, currentData =>
-                    orderBy(
-                        [...(currentData || []), data as unknown as WorkoutPlan],
-                        ['name'],
-                        ['desc'],
-                    )
+            utils.workoutPlan.getAll.setData({ username }, (currentData) =>
+                orderBy(
+                    [...(currentData || []), data as unknown as WorkoutPlan],
+                    ['name'],
+                    ['desc']
                 )
+            )
 
             router.push(`/${username}/workout/plans/${data.id}`)
-        }
+        },
     })
 
     const handleCreateWorkoutPlan = async () => {
@@ -49,13 +41,13 @@ const WorkoutPlansPage = () => {
     const isOwner = router.query.login == sessionData?.user?.username
 
     return (
-        <div>
+        <div className="flex flex-1 flex-col gap-4">
             {isOwner && <NavbarOnlyTitle title="workout:WORKOUT_PLANS" />}
             {isOwner && <ButtonPlusIcon onClick={handleCreateWorkoutPlan} />}
             {!isOwner && <NavbarProfile tab={3} />}
             <BoxWorkoutLoader isLoading={isFetching}>
-                <div>
-                    {workoutPlans?.map(workoutPlan =>
+                <>
+                    {workoutPlans?.map((workoutPlan) => (
                         <BoxWorkout
                             title={workoutPlan.name || ''}
                             description={workoutPlan.description || ''}
@@ -63,11 +55,11 @@ const WorkoutPlansPage = () => {
                             icon={<NoteAltIcon />}
                             key={workoutPlan?.id}
                         />
-                    )}
-                </div>
+                    ))}
+                </>
             </BoxWorkoutLoader>
         </div>
-    );
+    )
 }
 
-export default WorkoutPlansPage;
+export default WorkoutPlansPage

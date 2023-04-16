@@ -1,5 +1,4 @@
 import { trpc } from '@/utils/trpc.utils';
-import useTranslation from "next-translate/useTranslation";
 import CoachContainer from './CoachContainer'
 import { getCalories } from '@/utils/consumed.utils'
 import { useSession } from 'next-auth/react';
@@ -13,7 +12,6 @@ interface ChooseAnalyzeSourceProps {
 const ChooseAnalyzeSource = ({
     analyze,
 }: ChooseAnalyzeSourceProps) => {
-    const { t } = useTranslation('coach')
     const { data: sessionData } = useSession()
     const router = useRouter()
 

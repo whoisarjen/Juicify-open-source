@@ -1,77 +1,48 @@
-import Button from '@mui/material/Button';
-import useTranslation from "next-translate/useTranslation";
-import styled from 'styled-components';
-import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle';
-import { type GetMacronutrientsReturn } from "@/utils/coach.utils";
-
-const Box = styled.div`
-    width: 100%;
-    height: calc(100vh - var(--BothNavHeightAndPadding));
-    display: grid;
-    grid-template-rows: 2fr 1fr 3fr auto auto;
-    grid-gap: 5px;
-    text-align: center;
-    ${this} table {
-        width: 50%;
-        min-width: 300px;
-        margin: auto;
-        text-align: center;
-    }
-    ${this} table tr:nth-child(1) {
-        font-weight: bold;
-    }
-    ${this} table tr:nth-child(2) {
-        font-size: 0.785rem;
-        text-transform: uppercase;
-    }
-    ${this} div {
-        margin: auto;
-    }
-`
+import Button from '@mui/material/Button'
+import useTranslation from 'next-translate/useTranslation'
+import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
+import { type GetMacronutrientsReturn } from '@/utils/coach.utils'
 
 interface Result {
     setStep: (step: string) => void
     data: GetMacronutrientsReturn | null
 }
 
-const Result = ({
-    setStep,
-    data,
-}: Result) => {
+const Result = ({ setStep, data }: Result) => {
     const { t } = useTranslation('coach')
 
     return (
-        <Box>
+        <div className="flex h-full flex-col gap-4">
             <NavbarOnlyTitle title="coach:RESULT_TITLE" />
-            <table>
-                <tr>
-                    <td>
-                        {data?.proteins}g
-                    </td>
-                    <td>
-                        {data?.carbs}g
-                    </td>
-                    <td>
-                        {data?.fats}g
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        {t('PROTEINS')}
-                    </td>
-                    <td>
-                        {t('CARBS')}
-                    </td>
-                    <td>
-                        {t('FATS')}
-                    </td>
-                </tr>
-            </table>
-            <div>{t('RESULT_TITLE_DESCIPRION')}</div>
-            <Button variant="contained" color="error" onClick={() => setStep('Tutorial_1')}>{t('DONT_GET_IT')}</Button>
-            <Button variant="contained" onClick={() => setStep('Standard')}>{t('GOT_IT')}</Button>
-        </Box>
+            <div className="flex flex-1 items-center justify-center text-center">
+                <table className="flex-1">
+                    <tr>
+                        <td>{data?.proteins}g</td>
+                        <td>{data?.carbs}g</td>
+                        <td>{data?.fats}g</td>
+                    </tr>
+                    <tr>
+                        <td>{t('PROTEINS')}</td>
+                        <td>{t('CARBS')}</td>
+                        <td>{t('FATS')}</td>
+                    </tr>
+                </table>
+            </div>
+            <div className="flex flex-1 items-center justify-center text-center">
+                {t('RESULT_TITLE_DESCIPRION')}
+            </div>
+            <Button
+                variant="contained"
+                color="error"
+                onClick={() => setStep('Tutorial_1')}
+            >
+                {t('DONT_GET_IT')}
+            </Button>
+            <Button variant="contained" onClick={() => setStep('Standard')}>
+                {t('GOT_IT')}
+            </Button>
+        </div>
     )
 }
 
-export default Result;
+export default Result

@@ -3,22 +3,10 @@ import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
-import styled from "styled-components"
 import useTranslation from 'next-translate/useTranslation'
 import { useState } from 'react'
 import DiagramCircular from '../../../components/DiagramCircular/DiagramCircular'
 import useDaily from '@/hooks/useDaily'
-
-const Table = styled.table`
-    font-size: 0.875rem;
-    text-align: left;
-    ${this} td{
-        text-align: right;
-    }
-    ${this} tr td:first-of-type{
-        font-weight: bold;
-    }
-`
 
 interface DiagramConsumedRemainingProps {
     username: string
@@ -29,18 +17,13 @@ interface DiagramConsumedRemainingProps {
 const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
     const [value, setValue] = useState('1')
     const { t } = useTranslation('nutrition-diary')
-    const {
-        consumedMacro,
-        expectedMacro,
-        burnedCaloriesSum,
-    } = useDaily(props)
+    const { consumedMacro, expectedMacro, burnedCaloriesSum } = useDaily(props)
 
     return (
         <Box
             sx={{
                 width: '100%',
                 display: 'grid',
-                marginBottom: '24px',
             }}
         >
             <TabContext value={value}>
@@ -61,93 +44,143 @@ const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
                     value="1"
                     sx={{
                         width: '100%',
-                        display: 'grid',
+                        display: 'flex',
                         padding: '0 !important',
-                        gridTemplateColumns: 'calc(50% - 12px) 12px auto',
                     }}
                 >
-                    <div>
-                        <DiagramCircular
-                            text={`${(consumedMacro.calories - burnedCaloriesSum)}${t('Kcal')}`}
-                            value={(consumedMacro.calories - burnedCaloriesSum) / expectedMacro.calories * 100}
-                        />
-                    </div>
-                    <div />
-                    <Table>
-                        <tbody>
-                            <tr>
-                                <th>Proteins:</th>
-                                <td>{(consumedMacro.proteins)}g</td>
-                                <td>{expectedMacro.proteins}g</td>
+                    <DiagramCircular
+                        text={`${consumedMacro.calories - burnedCaloriesSum}${t(
+                            'Kcal'
+                        )}`}
+                        value={
+                            ((consumedMacro.calories - burnedCaloriesSum) /
+                                expectedMacro.calories) *
+                            100
+                        }
+                    />
+                    <div className="flex w-full flex-1 text-sm">
+                        <tbody className="flex w-full flex-1 flex-col">
+                            <tr className="flex">
+                                <th className="flex-1 text-left">Proteins:</th>
+                                <td className="w-12 text-right font-bold">
+                                    {consumedMacro.proteins}g
+                                </td>
+                                <td className="flex-1 text-right">
+                                    {expectedMacro.proteins}g
+                                </td>
                             </tr>
-                            <tr>
-                                <th>Carbs:</th>
-                                <td>{(consumedMacro.carbs)}g</td>
-                                <td>{expectedMacro.carbs}g</td>
+                            <tr className="flex">
+                                <th className="flex-1 text-left">Carbs:</th>
+                                <td className="w-12 text-right font-bold">
+                                    {consumedMacro.carbs}g
+                                </td>
+                                <td className="flex-1 text-right">
+                                    {expectedMacro.carbs}g
+                                </td>
                             </tr>
-                            <tr>
-                                <th>Sugar:</th>
-                                <td>{consumedMacro.sugar}g</td>
-                                <td>{expectedMacro.sugar}g</td>
+                            <tr className="flex">
+                                <th className="flex-1 text-left">Sugar:</th>
+                                <td className="w-12 text-right font-bold">
+                                    {consumedMacro.sugar}g
+                                </td>
+                                <td className="flex-1 text-right">
+                                    {expectedMacro.sugar}g
+                                </td>
                             </tr>
-                            <tr>
-                                <th>Fats:</th>
-                                <td>{(consumedMacro.fats)}g</td>
-                                <td>{expectedMacro.fats}g</td>
+                            <tr className="flex">
+                                <th className="flex-1 text-left">Fats:</th>
+                                <td className="w-12 text-right font-bold">
+                                    {consumedMacro.fats}g
+                                </td>
+                                <td className="flex-1 text-right">
+                                    {expectedMacro.fats}g
+                                </td>
                             </tr>
-                            <tr>
-                                <th>Fiber:</th>
-                                <td>{(consumedMacro.fiber)}g</td>
-                                <td>{expectedMacro.fiber}g</td>
+                            <tr className="flex">
+                                <th className="flex-1 text-left">Fiber:</th>
+                                <td className="w-12 text-right font-bold">
+                                    {consumedMacro.fiber}g
+                                </td>
+                                <td className="flex-1 text-right">
+                                    {expectedMacro.fiber}g
+                                </td>
                             </tr>
                         </tbody>
-                    </Table>
+                    </div>
                 </TabPanel>
                 <TabPanel
                     value="2"
                     sx={{
                         width: '100%',
-                        display: 'grid',
+                        display: 'flex',
                         padding: '0 !important',
-                        gridTemplateColumns: 'calc(50% - 12px) 12px auto',
                     }}
                 >
-                    <div>
-                        <DiagramCircular
-                            text={`${expectedMacro.calories - consumedMacro.calories + burnedCaloriesSum}${t('Kcal')}`}
-                            value={(expectedMacro.calories - consumedMacro.calories + burnedCaloriesSum) / expectedMacro.calories * 100}
-                        />
-                    </div>
-                    <div />
-                    <Table>
-                        <tbody>
-                            <tr>
-                                <th>Proteins:</th>
-                                <td>{(expectedMacro.proteins - consumedMacro.proteins)}g</td>
-                                <td>{expectedMacro.proteins}g</td>
+                    <DiagramCircular
+                        text={`${
+                            expectedMacro.calories -
+                            consumedMacro.calories +
+                            burnedCaloriesSum
+                        }${t('Kcal')}`}
+                        value={
+                            ((expectedMacro.calories -
+                                consumedMacro.calories +
+                                burnedCaloriesSum) /
+                                expectedMacro.calories) *
+                            100
+                        }
+                    />
+                    <div className="flex w-full flex-1 text-sm">
+                        <tbody className="flex w-full flex-1 flex-col">
+                            <tr className="flex">
+                                <th className="flex-1 text-left">Proteins:</th>
+                                <td className="w-12 text-right font-bold">
+                                    {expectedMacro.proteins -
+                                        consumedMacro.proteins}
+                                    g
+                                </td>
+                                <td className="flex-1 text-right">
+                                    {expectedMacro.proteins}g
+                                </td>
                             </tr>
-                            <tr>
-                                <th>Carbs:</th>
-                                <td>{(expectedMacro.carbs - consumedMacro.carbs)}g</td>
-                                <td>{expectedMacro.carbs}g</td>
+                            <tr className="flex">
+                                <th className="flex-1 text-left">Carbs:</th>
+                                <td className="w-12 text-right font-bold">
+                                    {expectedMacro.carbs - consumedMacro.carbs}g
+                                </td>
+                                <td className="flex-1 text-right">
+                                    {expectedMacro.carbs}g
+                                </td>
                             </tr>
-                            <tr>
-                                <th>Sugar:</th>
-                                <td>{expectedMacro.sugar}g</td>
-                                <td>{expectedMacro.sugar}g</td>
+                            <tr className="flex">
+                                <th className="flex-1 text-left">Sugar:</th>
+                                <td className="w-12 text-right font-bold">
+                                    {expectedMacro.sugar}g
+                                </td>
+                                <td className="flex-1 text-right">
+                                    {expectedMacro.sugar}g
+                                </td>
                             </tr>
-                            <tr>
-                                <th>Fats:</th>
-                                <td>{(expectedMacro.fats - consumedMacro.fats)}g</td>
-                                <td>{expectedMacro.fats}g</td>
+                            <tr className="flex">
+                                <th className="flex-1 text-left">Fats:</th>
+                                <td className="w-12 text-right font-bold">
+                                    {expectedMacro.fats - consumedMacro.fats}g
+                                </td>
+                                <td className="flex-1 text-right">
+                                    {expectedMacro.fats}g
+                                </td>
                             </tr>
-                            <tr>
-                                <th>Fiber:</th>
-                                <td>{(expectedMacro.fiber - consumedMacro.fiber)}g</td>
-                                <td>{expectedMacro.fiber}g</td>
+                            <tr className="flex">
+                                <th className="flex-1 text-left">Fiber:</th>
+                                <td className="w-12 text-right font-bold">
+                                    {expectedMacro.fiber - consumedMacro.fiber}g
+                                </td>
+                                <td className="flex-1 text-right">
+                                    {expectedMacro.fiber}g
+                                </td>
                             </tr>
                         </tbody>
-                    </Table>
+                    </div>
                 </TabPanel>
             </TabContext>
         </Box>

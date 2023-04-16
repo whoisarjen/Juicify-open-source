@@ -1,58 +1,49 @@
 import moment from "moment";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import styled from 'styled-components'
-
-const Box = styled.div`
-    width: 100%;
-    display: grid;
-    grid-template-columns: 47.5px 47.5px auto 47.5px 47.5px;
-    grid-gap: 12px;
-    margin: 12px 0;
-    text-align: center;
-    ${this} a {
-        width: 100%;
-        margin: auto;
-    }
-    ${this} div{
-        width: calc( 100% - 16px );
-        background: #f0f1f6;
-        margin: auto;
-        text-align: center;
-        border-radius: 4px;
-        padding: 11.75px 8px;
-    }
-    ${this} div:nth-child(3) {
-        background: #333;
-        color: #fff;
-        padding: 20px 8px;
-    }
-`
 
 const DateChangerFast = () => {
-    const router: any = useRouter()
+    const router: any = useRouter();
 
     return (
-        <Box>
+        <div className="flex w-full items-center gap-3 text-center">
             <Link
-                href={`/${router.query.login}/consumed/${moment(router.query.date).add(-2, 'days').format('YYYY-MM-DD')}`}>
-                <div>{moment(router.query.date).add(-2, 'days').format('DD')}</div>
+                className="flex h-12 w-12 items-center justify-center rounded bg-gray-100"
+                href={`/${router.query.login}/consumed/${moment(router.query.date)
+                    .add(-2, "days")
+                    .format("YYYY-MM-DD")}`}
+            >
+                {moment(router.query.date).add(-2, "days").format("DD")}
             </Link>
             <Link
-                href={`/${router.query.login}/consumed/${moment(router.query.date).add(-1, 'days').format('YYYY-MM-DD')}`}>
-                <div>{moment(router.query.date).add(-1, 'days').format('DD')}</div>
+                className="flex h-12 w-12 items-center justify-center rounded bg-gray-100"
+                href={`/${router.query.login}/consumed/${moment(router.query.date)
+                    .add(-1, "days")
+                    .format("YYYY-MM-DD")}`}
+            >
+                {moment(router.query.date).add(-1, "days").format("DD")}
             </Link>
-            <div>{moment(router.query.date).format('DD.MM.YYYY')}</div>
+            <div className="flex h-16 flex-1 items-center justify-center rounded bg-blue-300 text-white">
+                {moment(router.query.date).format("DD.MM.YYYY")}
+            </div>
             <Link
-                href={`/${router.query.login}/consumed/${moment(router.query.date).add(1, 'days').format('YYYY-MM-DD')}`}>
-                <div>{moment(router.query.date).add(1, 'days').format('DD')}</div>
+                className="flex h-12 w-12 items-center justify-center rounded bg-gray-100"
+                href={`/${router.query.login}/consumed/${moment(router.query.date)
+                    .add(1, "days")
+                    .format("YYYY-MM-DD")}`}
+            >
+                {moment(router.query.date).add(1, "days").format("DD")}
             </Link>
             <Link
-                href={`/${router.query.login}/consumed/${moment(router.query.date).add(2, 'days').format('YYYY-MM-DD')}`}>
-                <div>{moment(router.query.date).add(2, 'days').format('DD')}</div>
+                className="flex h-12 w-12 items-center justify-center rounded bg-gray-100"
+                href={`/${router.query.login}/consumed/${moment(router.query.date)
+                    .add(2, "days")
+                    .format("YYYY-MM-DD")}`}
+            >
+                {moment(router.query.date).add(2, "days").format("DD")}
             </Link>
-        </Box>
-    )
-}
+        </div>
+    );
+};
 
 export default DateChangerFast;

@@ -1,29 +1,9 @@
-import styled from "styled-components";
-import useTranslation from "next-translate/useTranslation";
-
-const Grid = styled.div`
-    text-align: center;
-    width: 100%;
-    height: 100%;
-    display: grid;
-`
-
-const Box = styled.div`
-    width: 100%;
-    margin: auto;
-`
-
 const Error403 = () => {
-    const { t } = useTranslation('error')
-
     return (
-        <Grid>
-            <Box>
-                <h1>403</h1>
-                <h2>{t('ERROR_403')}</h2>
-            </Box>
-        </Grid>
-    );
-};
+        <div className="flex flex-1 items-center justify-center">
+            <h1>403</h1>
+        </div>
+    )
+}
 
-export default Error403;
+export default Error403
