@@ -10,10 +10,10 @@ const { title, img_url, content } = {
 
 const PostPage = () => {
     return (
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-1 flex-col gap-8">
             <Image src={img_url} alt="Juicify" width="970" height="545" />
-            <div className="flex gap-8">
-                <div className="flex flex-1 flex-col gap-4">
+            <div className="flex gap-8 flex-row">
+                <div className="flex flex-1 flex-col gap-3">
                     <h1 className="text-4xl font-bold">{title}</h1>
                     {range(5).map((x) => (
                         <p key={x}>{content}</p>
@@ -31,7 +31,9 @@ const PostPage = () => {
                         <p key={x}>{content}</p>
                     ))}
                 </div>
-                <SidebarRight />
+                <div className="flex">
+                    <SidebarRight />
+                </div>
             </div>
         </div>
     )

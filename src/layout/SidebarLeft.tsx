@@ -93,6 +93,7 @@ const SidebarLeft = () => {
                 width: '100%',
                 bgcolor: 'background.paper',
                 position: 'sticky',
+                top: 0,
             }}
         >
             <nav>

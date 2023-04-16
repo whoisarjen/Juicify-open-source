@@ -66,6 +66,8 @@ const SidebarRight = () => {
                     sx={{
                         width: '100%',
                         bgcolor: 'background.paper',
+                        position: 'sticky',
+                        top: 0,
                     }}
                     subheader={
                         <ListSubheader
