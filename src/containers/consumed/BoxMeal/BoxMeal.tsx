@@ -28,10 +28,10 @@ const BoxMeal = ({ index, meal, isOwner }: BoxMealProps) => {
                         {t('Meal')} {index + 1}
                     </div>
                     <div>
-                        {proteins}
-                        {t('P')} {carbs}
-                        {t('C')} {fats}
-                        {t('F')} {calories}Kcal
+                        {proteins.toFixed(1)}
+                        {t('P')} {carbs.toFixed(1)}
+                        {t('C')} {fats.toFixed(1)}
+                        {t('F')} {calories.toFixed(1)}Kcal
                     </div>
                 </div>
                 <div>
