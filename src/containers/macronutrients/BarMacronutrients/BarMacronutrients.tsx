@@ -33,8 +33,8 @@ const BarMacronutrients = ({
             <div
                 className={
                     object.choosen
-                        ? 'my-4 flex-1 scale-105  transition-all'
-                        : 'my-4 flex-1'
+                        ? 'my-4 flex-1 scale-105  transition'
+                        : 'my-4 flex-1 transition hover:scale-105'
                 }
                 onClick={onClick}
             >
