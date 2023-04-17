@@ -15,7 +15,7 @@ const Footer = () => {
     return (
         <div className="h-[44px] w-full">
             {sessionData?.user?.username && (
-                <div className="pb-safe fixed bottom-0 left-0 z-50 flex h-[44px] w-full items-center justify-evenly bg-gray-200 shadow dark:bg-black xl:hidden">
+                <div className="footer fixed bottom-0 left-0 z-50 flex w-full items-center justify-evenly bg-gray-200 shadow dark:bg-black xl:hidden">
                     <Link href="/coach">
                         <IconButton color="primary">
                             <SmartToyIcon color="primary" />
