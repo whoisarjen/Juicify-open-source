@@ -145,8 +145,8 @@ const Layout = ({ children }: { children: any }) => {
 
     return (
         <main className="pb-safe dark container flex h-screen max-w-7xl flex-col">
-            <div className="flex flex-1 flex-row gap-4 p-4">
-                <div className="w-64 max-xl:hidden relative">
+            <div className="pb-safe flex flex-1 flex-row gap-4 p-4">
+                <div className="relative w-64 max-xl:hidden">
                     <SidebarLeft />
                 </div>
                 <div className="flex flex-1 items-stretch">{children}</div>
