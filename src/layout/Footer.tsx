@@ -13,7 +13,7 @@ const Footer = () => {
     const { data: sessionData } = useSession()
 
     return (
-        <div className="h-[44px] w-full">
+        <div className="footer w-full">
             {sessionData?.user?.username && (
                 <div className="footer fixed bottom-0 left-0 z-50 flex w-full items-center justify-evenly bg-gray-200 shadow dark:bg-black xl:hidden">
                     <Link href="/coach">
