@@ -25,6 +25,7 @@ export const serverSchema = z.object({
 export const clientSchema = z.object({
     NEXT_PUBLIC_SEARCH_MIN_NAME_LENGTH: z.number(),
     NEXT_PUBLIC_DEFAULT_NUMBER_OF_MEALS: z.number(),
+    NEXT_PUBLIC_NODE_ENV: z.enum(["development", "test", "production"]),
 });
 
 /**
@@ -36,4 +37,5 @@ export const clientSchema = z.object({
 export const clientEnv = {
     NEXT_PUBLIC_SEARCH_MIN_NAME_LENGTH: Number(process.env.NEXT_PUBLIC_SEARCH_MIN_NAME_LENGTH),
     NEXT_PUBLIC_DEFAULT_NUMBER_OF_MEALS: Number(process.env.NEXT_PUBLIC_DEFAULT_NUMBER_OF_MEALS),
+    NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
 };
