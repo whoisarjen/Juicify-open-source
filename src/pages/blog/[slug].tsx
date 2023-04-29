@@ -1,35 +1,26 @@
-import { range } from 'lodash'
+import ReactMarkdown from 'react-markdown'
+import { trpc } from '@/utils/trpc.utils'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import SidebarRight from 'src/layout/SidebarRight'
 
-const { title, img_url, content } = {
-    title: 'The Witcher: Ronin has arrived on Kickstarter!',
-    content: `The Witcher: Ronin is an original comic, created and published by CD PROJEKT RED, which translates the dark fantasy world of The Witcher into a feudal Japanese setting. The story focuses on monster slayer Geralt, who must venture across Yokai - infested lands while attempting to track down the mysterious Lady of Snow Yuki Onna.`,
-    img_url: '/images/witcher.jpg',
-}
-
 const PostPage = () => {
+    const router = useRouter()
+    const slug = router.query.slug as string
+    const postId = slug.substring(0, slug.indexOf('--'))
+    const { data } = trpc.post.getById.useQuery({ id: Number(postId) })
+
+    if (!data) {
+        return null
+    }
+
     return (
         <div className="flex flex-1 flex-col gap-8">
-            <Image src={img_url} alt="Juicify" width="970" height="545" />
+            <Image src="/images/logo_big.png" alt="Juicify" width={545} height={545} className="mx-auto" />
             <div className="flex gap-8 flex-row">
-                <div className="flex flex-1 flex-col gap-3">
-                    <h1 className="text-4xl font-bold">{title}</h1>
-                    {range(5).map((x) => (
-                        <p key={x}>{content}</p>
-                    ))}
-                    <h2 className="text-3xl font-bold">asddassadasasas</h2>
-                    {range(5).map((x) => (
-                        <p key={x}>{content}</p>
-                    ))}
-                    <h3 className="text-2xl font-bold">zxcxzcxzczxzcx</h3>
-                    {range(5).map((x) => (
-                        <p key={x}>{content}</p>
-                    ))}
-                    <h2 className="text-3xl font-bold">asddassadasasas</h2>
-                    {range(5).map((x) => (
-                        <p key={x}>{content}</p>
-                    ))}
+                <div className="flex flex-1 flex-col gap-3 prose dark:prose-invert">
+                    <h1>{data.title}</h1>
+                    <ReactMarkdown>{data.content.replaceAll('. ', '.\n ').replaceAll(' #', ' \n#')}</ReactMarkdown>
                 </div>
                 <div className="flex">
                     <SidebarRight />

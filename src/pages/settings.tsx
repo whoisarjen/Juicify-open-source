@@ -46,7 +46,7 @@ const SettingsPage = () => {
     return (
         <form
             onSubmit={handleSubmit(changeSettings)}
-            className="flex flex-col gap-3"
+            className="flex flex-col gap-3 flex-1"
         >
             <div>{t('Preferences')}</div>
             <SelectLanguage />
