@@ -18,7 +18,7 @@ jobs:
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           remote_path: '/home/arjen/juicify'
           args: '-o ConnectTimeout=5'
-  
+
   restart-dockers:
     runs-on: ubuntu-latest
     needs: deploy-via-sftp
