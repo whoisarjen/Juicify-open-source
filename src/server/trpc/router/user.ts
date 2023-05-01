@@ -18,7 +18,6 @@ export const userRouter = router({
                 }
             })
 
-            
             return omit(user, ['email'])
         }),
     getAll: publicProcedure
