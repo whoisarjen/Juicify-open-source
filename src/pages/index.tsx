@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react'
 import { type BuiltInProviderType } from 'next-auth/providers'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
+import { env } from '@/env/client.mjs'
 
 const Home = () => {
     const { data: sessionData } = useSession()
@@ -41,7 +42,9 @@ const Home = () => {
                             variant="outlined"
                             key={provider.name}
                             onClick={() =>
-                                signIn(provider.id, { redirect: false })
+                                signIn(provider.id, {
+                                    callbackUrl: `${env.NEXT_PUBLIC_NEXTAUTH_URL}/coach`,
+                                })
                             }
                         >
                             Sign in with {provider.name}
