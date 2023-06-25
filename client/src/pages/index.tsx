@@ -19,7 +19,7 @@ const Home = () => {
     > | null>(null)
 
     useEffect(() => {
-        ;(async () => {
+        (async () => {
             setProviders(await getProviders())
         })()
     }, [setProviders])

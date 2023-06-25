@@ -17,7 +17,7 @@ services:
             - "traefik.tcp.routers.postgres.entrypoints=postgres"
             - "traefik.tcp.routers.postgres.rule=HostSNI(`*`)"
             - "traefik.tcp.routers.postgres.tls=false"
-            - "traefik.tcp.services.postgres.loadBalancer.server.port=5432"
+            - "traefik.tcp.services.postgres.loadBalancer.strapi.port=5432"
             - "traefik.tcp.routers.postgres.service=postgres"
 
     redis:
@@ -30,13 +30,11 @@ services:
             - redis_data:/data
 
     nextjs:
-        build:
-            context: .
-            dockerfile: Dockerfile
+        build: ./client/.
         restart: unless-stopped
         container_name: nextjs
         volumes:
-            - .:/usr/src/app
+            - ./client/.:/usr/src/app
         ports:
             - "3000:3000"
         expose:
@@ -102,6 +100,45 @@ services:
             - "3001:3001"
         expose:
             - "3001"
+
+    juicify_strapi:
+        container_name: juicify_strapi
+        build: ./strapi/.
+        image: strapi:latest
+        restart: unless-stopped
+        env_file: .env
+        environment:
+            DATABASE_CLIENT: ${DATABASE_CLIENT}
+            DATABASE_HOST: postgres
+            DATABASE_NAME: ${DATABASE_NAME}
+            DATABASE_USERNAME: ${DATABASE_USERNAME}
+            DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+            JWT_SECRET: ${JWT_SECRET}
+            ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
+            APP_KEYS: ${APP_KEYS}
+            NODE_ENV: ${NODE_ENV}
+            API_TOKEN_SALT: ${API_TOKEN_SALT}
+            HOST: ${HOST}
+        volumes:
+            - ./strapi/config:/opt/app/config
+            - ./strapi/src:/opt/app/src
+            - ./strapi/package.json:/opt/package.json
+            - ./strapi/yarn.lock:/opt/yarn.lock
+            - ./strapi/.env:/opt/app/.env
+            - ./strapi/public/uploads:/opt/app/public/uploads
+        ports:
+            - "6666:1337"
+        expose:
+            - "6666"
+        depends_on:
+            - postgres
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.strapi.rule=Host(`strapi.juicify.app`)"
+            - "traefik.http.routers.strapi.entrypoints=websecure"
+            - "traefik.http.routers.strapi.tls=true"
+            - "traefik.http.routers.strapi.tls.certresolver=myresolver"
+            - "traefik.http.services.strapi.loadbalancer.strapi.port=6666"
 
 volumes:
     postgres-data:
