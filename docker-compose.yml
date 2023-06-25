@@ -134,11 +134,11 @@ services:
             - postgres
         labels:
             - "traefik.enable=true"
-            - "traefik.http.routers.strapi.rule=Host(`strapi.juicify.app`)"
-            - "traefik.http.routers.strapi.entrypoints=websecure"
-            - "traefik.http.routers.strapi.tls=true"
-            - "traefik.http.routers.strapi.tls.certresolver=myresolver"
-            - "traefik.http.services.strapi.loadbalancer.strapi.port=6666"
+            - "traefik.http.routers.juicify_strapi.rule=Host(`strapi.juicify.app`)"
+            - "traefik.http.routers.juicify_strapi.entrypoints=websecure"
+            - "traefik.http.routers.juicify_strapi.tls=true"
+            - "traefik.http.routers.juicify_strapi.tls.certresolver=myresolver"
+            # - "traefik.http.services.juicify_strapi.loadbalancer.strapi.port=6666"
 
 volumes:
     postgres-data:
