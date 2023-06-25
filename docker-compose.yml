@@ -138,6 +138,7 @@ services:
             NODE_ENV: ${NODE_ENV}
             API_TOKEN_SALT: ${API_TOKEN_SALT}
             HOST: ${HOST}
+            PORT: ${PORT}
         volumes:
             - ./strapi/config:/opt/app/config
             - ./strapi/src:/opt/app/src
