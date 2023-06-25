@@ -115,10 +115,6 @@ services:
         volumes:
             - strapi-data:/var/lib/postgresql/data/
             - ./server/data:/var/lib/postgresql/data/
-        ports:
-            - "5454:5432"
-        expose:
-            - "5454"
 
     juicify_strapi:
         container_name: juicify_strapi
