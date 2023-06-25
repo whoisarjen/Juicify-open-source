@@ -139,6 +139,7 @@ services:
             - "traefik.http.routers.juicify_strapi.entrypoints=websecure"
             - "traefik.http.routers.juicify_strapi.tls=true"
             - "traefik.http.routers.juicify_strapi.tls.certresolver=myresolver"
+            - "traefik.tcp.routers.postgres.entrypoints=postgres"
             # - "traefik.http.services.juicify_strapi.loadbalancer.strapi.port=6666"
 
 volumes:
