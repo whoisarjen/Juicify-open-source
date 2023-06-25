@@ -8,6 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json /usr/src/app/
 COPY node_modules /usr/src/app/node_modules
 COPY next.config.js /usr/src/app/next.config.js
+COPY .env /usr/src/app/.env
 
 RUN npm install
 RUN npx prisma generate
