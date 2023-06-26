@@ -143,10 +143,6 @@ services:
             - ./strapi/yarn.lock:/opt/yarn.lock
             - ./strapi/.env:/opt/app/.env
             - ./strapi/public/uploads:/opt/app/public/uploads
-        ports:
-            - "6666:1337"
-        expose:
-            - "6666"
         depends_on:
             - juicify_strapi_db
         labels:
@@ -155,6 +151,7 @@ services:
             - "traefik.http.routers.juicify_strapi.entrypoints=websecure"
             - "traefik.http.routers.juicify_strapi.tls=true"
             - "traefik.http.routers.juicify_strapi.tls.certresolver=myresolver"
+            - "traefik.http.services.juicify_strapi.loadbalancer.server.port=1337"
 
 volumes:
     postgres-data:
