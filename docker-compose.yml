@@ -6,11 +6,10 @@ services:
         container_name: postgres
         env_file: .env
         environment:
-            POSTGRES_USER: ${DATABASE_USERNAME}
-            POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
-            POSTGRES_MULTIPLE_DATABASES: juicify,juicify_strapi
+            POSTGRES_USER: admin
+            POSTGRES_PASSWORD: admin
+            POSTGRES_MULTIPLE_DATABASES: juicify
         volumes:
-            - ./pg-init-scripts:/docker-entrypoint-initdb.d
             - postgres-data:/var/lib/postgresql/data
         labels:
             - "traefik.enable=true"
@@ -103,6 +102,22 @@ services:
         expose:
             - "3001"
 
+    juicify_strapi_db:
+        container_name: juicify_strapi_db
+        platform: linux/amd64 #for platform error on Apple M1 chips
+        restart: unless-stopped
+        env_file: .env
+        image: postgres:14
+        environment:
+            POSTGRES_USER: admin
+            POSTGRES_PASSWORD: admin
+            POSTGRES_DB: juicify_strapi
+        volumes:
+            - strapi-data:/var/lib/postgresql/data/
+            - ./strapi/data:/var/lib/postgresql/data/
+        expose:
+            - "5432"
+
     juicify_strapi:
         container_name: juicify_strapi
         build: ./strapi/.
@@ -133,14 +148,14 @@ services:
         expose:
             - "6666"
         depends_on:
-            - postgres
+            - juicify_strapi_db
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.juicify_strapi.rule=Host(`strapi.juicify.app`)"
             - "traefik.http.routers.juicify_strapi.entrypoints=websecure"
             - "traefik.http.routers.juicify_strapi.tls=true"
             - "traefik.http.routers.juicify_strapi.tls.certresolver=myresolver"
-            - "traefik.tcp.routers.postgres.entrypoints=postgres"
+            - "traefik.tcp.routers.juicify_strapi_db.entrypoints=juicify_strapi_db"
 
 volumes:
     postgres-data:
