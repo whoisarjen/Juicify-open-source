@@ -11,8 +11,6 @@ services:
             POSTGRES_DB: juicify
         volumes:
             - postgres-data:/var/lib/postgresql/data
-        expose:
-            - "5432"
         labels:
             - "traefik.enable=true"
             - "traefik.tcp.routers.postgres.entrypoints=postgres"
@@ -20,6 +18,10 @@ services:
             - "traefik.tcp.routers.postgres.tls=false"
             - "traefik.tcp.services.postgres.loadBalancer.strapi.port=5432"
             - "traefik.tcp.routers.postgres.service=postgres"
+        ports:
+            - "5432:5432"
+        expose:
+            - "5432"
 
     redis:
         image: redis:latest
@@ -48,7 +50,7 @@ services:
             - "traefik.http.routers.nextjs.rule=Host(`juicify.app`)"
             - "traefik.http.routers.nextjs.entrypoints=websecure"
             - "traefik.http.routers.nextjs.tls.certresolver=myresolver"
-            - "traefik.tcp.routers.postgres.entrypoints=postgres"
+            # - "traefik.tcp.routers.postgres.entrypoints=postgres"
         command: npm run start
 
     cadvisor:
@@ -157,7 +159,7 @@ services:
             - "traefik.http.routers.juicify_strapi.entrypoints=websecure"
             - "traefik.http.routers.juicify_strapi.tls=true"
             - "traefik.http.routers.juicify_strapi.tls.certresolver=myresolver"
-            - "traefik.tcp.routers.juicify_strapi_db.entrypoints=juicify_strapi_db"
+            # - "traefik.tcp.routers.juicify_strapi_db.entrypoints=juicify_strapi_db"
 
 volumes:
     postgres-data:
