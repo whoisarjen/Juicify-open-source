@@ -111,7 +111,7 @@ services:
         environment:
             POSTGRES_USER: admin
             POSTGRES_PASSWORD: admin
-            POSTGRES_DB: juicify_strapi
+            POSTGRES_DB: juicify
         volumes:
             - strapi-data:/var/lib/postgresql/data/
             - ./strapi/data:/var/lib/postgresql/data/
@@ -127,7 +127,7 @@ services:
         environment:
             DATABASE_CLIENT: ${DATABASE_CLIENT}
             DATABASE_HOST: postgres
-            DATABASE_NAME: juicify_strapi
+            DATABASE_NAME: juicify
             DATABASE_USERNAME: admin
             DATABASE_PASSWORD: admin
             JWT_SECRET: ${JWT_SECRET}
