@@ -115,13 +115,10 @@ services:
         volumes:
             - strapi-data:/var/lib/postgresql/data/
             - ./strapi/data:/var/lib/postgresql/data/
-        labels:
-            - "traefik.enable=true"
-            - "traefik.tcp.routers.juicify_strapi_db.entrypoints=juicify_strapi_db"
-            - "traefik.tcp.routers.juicify_strapi_db.rule=HostSNI(`*`)"
-            - "traefik.tcp.routers.juicify_strapi_db.tls=false"
-            - "traefik.tcp.services.juicify_strapi_db.loadBalancer.strapi.port=5432"
-            - "traefik.tcp.routers.juicify_strapi_db.service=juicify_strapi_db"
+        ports:
+            - "5433:5432"
+        expose:
+            - "5433"
 
     juicify_strapi:
         container_name: juicify_strapi
