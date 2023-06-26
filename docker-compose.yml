@@ -11,6 +11,7 @@ services:
             POSTGRES_DB: juicify
         volumes:
             - postgres-data:/var/lib/postgresql/data
+            - ./docker_postgres_init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
         labels:
             - "traefik.enable=true"
             - "traefik.tcp.routers.postgres.entrypoints=postgres"
@@ -50,7 +51,7 @@ services:
             - "traefik.http.routers.nextjs.rule=Host(`juicify.app`)"
             - "traefik.http.routers.nextjs.entrypoints=websecure"
             - "traefik.http.routers.nextjs.tls.certresolver=myresolver"
-            # - "traefik.tcp.routers.postgres.entrypoints=postgres"
+            - "traefik.tcp.routers.postgres.entrypoints=postgres"
         command: npm run start
 
     cadvisor:
@@ -104,24 +105,6 @@ services:
         expose:
             - "3001"
 
-    juicify_strapi_db:
-        container_name: juicify_strapi_db
-        platform: linux/amd64 #for platform error on Apple M1 chips
-        restart: unless-stopped
-        env_file: .env
-        image: postgres:14
-        environment:
-            POSTGRES_USER: admin
-            POSTGRES_PASSWORD: admin
-            POSTGRES_DB: juicify
-        volumes:
-            - strapi-data:/var/lib/postgresql/data/
-            - ./strapi/data:/var/lib/postgresql/data/
-        ports:
-            - "5433:5432"
-        expose:
-            - "5433"
-
     juicify_strapi:
         container_name: juicify_strapi
         build: ./strapi/.
@@ -131,7 +114,7 @@ services:
         environment:
             DATABASE_CLIENT: ${DATABASE_CLIENT}
             DATABASE_HOST: postgres
-            DATABASE_NAME: juicify
+            DATABASE_NAME: juicify_strapi
             DATABASE_USERNAME: admin
             DATABASE_PASSWORD: admin
             JWT_SECRET: ${JWT_SECRET}
@@ -152,14 +135,14 @@ services:
         expose:
             - "6666"
         depends_on:
-            - juicify_strapi_db
+            - postgres
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.juicify_strapi.rule=Host(`strapi.juicify.app`)"
             - "traefik.http.routers.juicify_strapi.entrypoints=websecure"
             - "traefik.http.routers.juicify_strapi.tls=true"
             - "traefik.http.routers.juicify_strapi.tls.certresolver=myresolver"
-            # - "traefik.tcp.routers.juicify_strapi_db.entrypoints=juicify_strapi_db"
+            - "traefik.tcp.routers.postgres.entrypoints=postgres"
 
 volumes:
     postgres-data:
