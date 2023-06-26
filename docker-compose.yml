@@ -19,8 +19,6 @@ services:
             - "traefik.tcp.routers.postgres.tls=false"
             - "traefik.tcp.services.postgres.loadBalancer.strapi.port=5432"
             - "traefik.tcp.routers.postgres.service=postgres"
-        ports:
-            - "5432:5432"
         expose:
             - "5432"
 
