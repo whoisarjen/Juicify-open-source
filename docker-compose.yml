@@ -8,9 +8,10 @@ services:
         environment:
             POSTGRES_USER: admin
             POSTGRES_PASSWORD: admin
+            POSTGRES_MULTIPLE_DATABASES: juicify,juicify_strapi
         volumes:
+            - ./pg-init-scripts:/docker-entrypoint-initdb.d
             - postgres-data:/var/lib/postgresql/data
-            - ./init-scripts:/docker-entrypoint-initdb.d
         labels:
             - "traefik.enable=true"
             - "traefik.tcp.routers.postgres.entrypoints=postgres"
