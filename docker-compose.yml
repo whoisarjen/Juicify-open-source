@@ -155,7 +155,6 @@ services:
             - "traefik.http.routers.juicify_strapi.entrypoints=websecure"
             - "traefik.http.routers.juicify_strapi.tls=true"
             - "traefik.http.routers.juicify_strapi.tls.certresolver=myresolver"
-            - "traefik.tcp.routers.postgres.entrypoints=juicify_strapi_db"
 
 volumes:
     postgres-data:
