@@ -15,5 +15,4 @@ RUN npx prisma generate
 
 COPY . /usr/src/app
 
-
 EXPOSE 3000
