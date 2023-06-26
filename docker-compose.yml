@@ -109,12 +109,12 @@ services:
         env_file: .env
         image: postgres:14
         environment:
-            POSTGRES_USER: ${DATABASE_USERNAME}
-            POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
-            POSTGRES_DB: ${DATABASE_NAME}
+            POSTGRES_USER: admin
+            POSTGRES_PASSWORD: admin
+            POSTGRES_DB: juicify
         volumes:
             - strapi-data:/var/lib/postgresql/data/
-            - ./server/data:/var/lib/postgresql/data/
+            - ./strapi/data:/var/lib/postgresql/data/
 
     juicify_strapi:
         container_name: juicify_strapi
@@ -125,16 +125,15 @@ services:
         environment:
             DATABASE_CLIENT: ${DATABASE_CLIENT}
             DATABASE_HOST: postgres
-            DATABASE_NAME: ${DATABASE_NAME}
-            DATABASE_USERNAME: ${DATABASE_USERNAME}
-            DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+            DATABASE_NAME: juicify
+            DATABASE_USERNAME: admin
+            DATABASE_PASSWORD: admin
             JWT_SECRET: ${JWT_SECRET}
             ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
             APP_KEYS: ${APP_KEYS}
             NODE_ENV: ${NODE_ENV}
             API_TOKEN_SALT: ${API_TOKEN_SALT}
             HOST: ${HOST}
-            PORT: ${PORT}
         volumes:
             - ./strapi/config:/opt/app/config
             - ./strapi/src:/opt/app/src
