@@ -21,6 +21,13 @@ const env = {
 const nextConfig = {
     reactStrictMode: false, // react-beautiful-dnd is not working, when true
     env,
+    images: {
+        domains: [
+            'strapi.juicify.app',
+            'localhost',
+            'localhost:1337',
+        ],
+    },
     ...nextTranslate(),
     async redirects() {
         return [

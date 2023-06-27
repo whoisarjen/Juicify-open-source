@@ -130,12 +130,14 @@ services:
             DATABASE_NAME: juicify
             DATABASE_USERNAME: admin
             DATABASE_PASSWORD: admin
+            DATABASE_URL: ${DATABASE_URL}
             JWT_SECRET: ${JWT_SECRET}
             ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
             APP_KEYS: ${APP_KEYS}
             NODE_ENV: ${NODE_ENV}
             API_TOKEN_SALT: ${API_TOKEN_SALT}
             HOST: ${HOST}
+            DOMAIN: https://strapi.juicify.app
         volumes:
             - ./strapi/config:/opt/app/config
             - ./strapi/src:/opt/app/src
