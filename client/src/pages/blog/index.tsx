@@ -33,7 +33,7 @@ const BlogPage = () => {
                         width="192"
                         height="108"
                         src={`${env.NEXT_PUBLIC_STRAPI_URL}${post.attributes.thumbnail
-                            ? `${env.NEXT_PUBLIC_STRAPI_URL}${post.attributes.thumbnail?.data.attributes.formats.large.url}`
+                            ? `${env.NEXT_PUBLIC_STRAPI_URL}${post.attributes.thumbnail.data?.attributes.formats.large.url}`
                             : '/images/logo.png'
                         }`}
                         alt={post.attributes.title}
