@@ -29,7 +29,7 @@ const BlogPage = () => {
             <h1>{t('LATEST_NEWS')}</h1>
             {!posts.length && t('POSTS_COMMING_SOON')}
             {posts.map(post =>
-                <Link href={`/blog/${slugify(post.attributes.title)}-${post.id}`} key={post.id} className="flex flex-row w-full gap-3">
+                <Link href={`/blog/${slugify(post.attributes.title, { lower: true, strict: true })}-${post.id}`} key={post.id} className="flex flex-row w-full gap-3">
                     <Image
                         width="192"
                         height="108"
