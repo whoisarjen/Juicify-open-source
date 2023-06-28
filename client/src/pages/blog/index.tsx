@@ -33,7 +33,7 @@ const BlogPage = () => {
                     <Image
                         width="192"
                         height="108"
-                        src={`${env.NEXT_PUBLIC_STRAPI_URL}${post.attributes.thumbnail.data.attributes.formats.large.url}`}
+                        src={`${env.NEXT_PUBLIC_STRAPI_URL}${post.attributes.thumbnail?.data.attributes.formats.large.url}`}
                         alt={post.attributes.title}
                     />
                     <div className="flex flex-1 items-center">

@@ -32,10 +32,10 @@ const PostPage = () => {
     return (
         <div className="flex flex-1 flex-col gap-8">
             <Image
-                src={`${env.NEXT_PUBLIC_STRAPI_URL}${post.data.attributes.thumbnail.data.attributes.formats.large.url}`}
+                src={`${env.NEXT_PUBLIC_STRAPI_URL}${post.data.attributes.thumbnail?.data.attributes.formats.large.url}`}
                 alt="Juicify"
-                width={post.data.attributes.thumbnail.data.attributes.formats.large.width}
-                height={post.data.attributes.thumbnail.data.attributes.formats.large.height}
+                width={post.data.attributes.thumbnail?.data.attributes.formats.large.width}
+                height={post.data.attributes.thumbnail?.data.attributes.formats.large.height}
                 className="mx-auto"
             />
             <div className="flex gap-8 flex-row">
