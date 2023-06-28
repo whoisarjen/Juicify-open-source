@@ -9,7 +9,7 @@ import { env } from '@/env/client.mjs'
 const PostPage = () => {
     const router = useRouter()
     const slug = router.query.slug as string
-    const postId = slug.substring(0, slug.indexOf('--'))
+    const postId = slug.substring(slug.lastIndexOf('-') + 1, slug.length)
     const [post, setPost] = useState(null)
 
     useEffect(() => {
