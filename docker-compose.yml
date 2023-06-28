@@ -58,7 +58,7 @@ services:
         restart: unless-stopped
         env_file: .env
         environment:
-            DATABASE_CLIENT: ${DATABASE_CLIENT}
+            DATABASE_CLIENT: postgres
             DATABASE_HOST: postgres
             DATABASE_NAME: strapi
             DATABASE_USERNAME: admin
