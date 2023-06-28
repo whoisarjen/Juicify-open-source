@@ -28,6 +28,7 @@ export const clientSchema = z.object({
     NEXT_PUBLIC_NODE_ENV: z.enum(["development", "test", "production"]),
     NEXT_PUBLIC_API_TOKEN: z.string(),
     NEXT_PUBLIC_STRAPI_URL: z.string(),
+    NEXT_PUBLIC_NEXTAUTH_URL: z.string(),
 });
 
 /**
@@ -42,4 +43,5 @@ export const clientEnv = {
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
     NEXT_PUBLIC_API_TOKEN: process.env.NEXT_PUBLIC_API_TOKEN,
     NEXT_PUBLIC_STRAPI_URL: process.env.NEXT_PUBLIC_STRAPI_URL,
+    NEXT_PUBLIC_NEXTAUTH_URL: process.env.NEXTAUTH_URL,
 };
