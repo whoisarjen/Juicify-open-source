@@ -13,6 +13,8 @@ export const serverSchema = z.object({
     NEXTAUTH_URL: z.string().url(),
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
+    NEXT_PUBLIC_API_TOKEN: z.string(),
+    NEXT_PUBLIC_STRAPI_URL: z.string(),
 });
 
 /**

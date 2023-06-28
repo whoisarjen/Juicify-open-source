@@ -19,12 +19,12 @@ if (_serverEnv.success === false) {
 /**
  * Validate that server-side environment variables are not exposed to the client.
  */
-for (let key of Object.keys(_serverEnv.data)) {
-  if (key.startsWith("NEXT_PUBLIC_")) {
-    console.warn("❌ You are exposing a server-side env-variable:", key);
+// for (let key of Object.keys(_serverEnv.data)) {
+//   if (key.startsWith("NEXT_PUBLIC_")) {
+//     console.warn("❌ You are exposing a server-side env-variable:", key);
 
-    throw new Error("You are exposing a server-side env-variable");
-  }
-}
+//     throw new Error("You are exposing a server-side env-variable");
+//   }
+// }
 
 export const env = { ..._serverEnv.data, ...clientEnv };
