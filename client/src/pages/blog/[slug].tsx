@@ -32,7 +32,7 @@ const PostPage = () => {
     return (
         <div className="flex flex-1 flex-col gap-8">
             <Image
-                src={`${post.data.attributes.thumbnail
+                src={`${post.data.attributes.thumbnail.data
                     ? `${env.NEXT_PUBLIC_STRAPI_URL}${post.data.attributes.thumbnail.data?.attributes.formats.large.url}`
                     : `${env.NEXT_PUBLIC_NEXTAUTH_URL}/images/logo.png`
                 }`}
