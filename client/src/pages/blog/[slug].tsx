@@ -34,7 +34,7 @@ const PostPage = () => {
             <Image
                 src={`${post.data.attributes.thumbnail.data
                     ? `${env.NEXT_PUBLIC_STRAPI_URL}${post.data.attributes.thumbnail.data?.attributes.formats.large.url}`
-                    : `${env.NEXT_PUBLIC_NEXTAUTH_URL}/images/logo.png`
+                    : '/images/logo.png'
                 }`}
                 alt="Juicify"
                 width={post.data.attributes.thumbnail.data?.attributes.formats.large.width || 1000}

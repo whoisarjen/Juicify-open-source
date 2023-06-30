@@ -34,7 +34,7 @@ const BlogPage = () => {
                         height="108"
                         src={`${env.NEXT_PUBLIC_STRAPI_URL}${post.attributes.thumbnail.data
                             ? `${env.NEXT_PUBLIC_STRAPI_URL}${post.attributes.thumbnail.data?.attributes.formats.large.url}`
-                            : `${env.NEXT_PUBLIC_NEXTAUTH_URL}/images/logo.png`
+                            : '/images/logo.png'
                         }`}
                         alt={post.attributes.title}
                     />
