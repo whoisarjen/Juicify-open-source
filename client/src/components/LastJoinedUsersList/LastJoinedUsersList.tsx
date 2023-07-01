@@ -38,7 +38,10 @@ export const SidebarRightBlogList = () => {
                             margin="auto auto auto 0"
                         />
                     </ListItemIcon> */}
-                    <ListItemText primary={post.attributes.title} />
+                    <ListItemText
+                        className='line-clamp-2'
+                        primary={post.attributes.title}
+                    />
                 </ListItemButton>
             )}
         </List>
