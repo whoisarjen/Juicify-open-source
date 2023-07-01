@@ -10,6 +10,37 @@ import useTranslation from 'next-translate/useTranslation';
 import slugify from 'slugify';
 import { env } from '@/env/client.mjs'
 
+export const SidebarRightBlogList = (router: any, posts?: any) => (
+    <List
+        sx={{
+            width: '100%',
+            bgcolor: 'background.paper'
+        }}
+        subheader={
+            <ListSubheader component='div' id='nested-list-subheader'>
+                Blog: 
+            </ListSubheader>
+        }
+    >
+        {posts?.data.map((post: any) =>
+            <ListItemButton key={post.id} onClick={() => router.push(`/blog/${slugify(post.attributes.title, { lower: true, strict: true })}-${post.id}`)}>
+                <ListItemIcon>
+                    <CustomAvatar
+                        src={`${post.attributes.thumbnail.data
+                            ? `${env.NEXT_PUBLIC_STRAPI_URL}${post.attributes.thumbnail.data?.attributes.formats.large.url}`
+                            : '/images/logo.png'
+                        }`}
+                        username={post.attributes.title}
+                        size="28px"
+                        margin="auto auto auto 0"
+                    />
+                </ListItemIcon>
+                <ListItemText primary={post.attributes.title} />
+            </ListItemButton>
+        )}
+    </List>
+)
+
 export const LastJoinedUsersList = () => {
     const router = useRouter()
     const { t } = useTranslation('home')
@@ -42,34 +73,8 @@ export const LastJoinedUsersList = () => {
                         <ListItemText primary={name || '-'} />
                     </ListItemButton>
                 )}
-            </List>
-            <List
-                sx={{
-                    width: '100%',
-                    bgcolor: 'background.paper'
-                }}
-                subheader={
-                    <ListSubheader component='div' id='nested-list-subheader'>
-                        Blog: 
-                    </ListSubheader>
-                }
-            >
-                {posts?.data.map((post: any) =>
-                    <ListItemButton key={post.id} onClick={() => router.push(`/blog/${slugify(post.attributes.title, { lower: true, strict: true })}-${post.id}`)}>
-                        <ListItemIcon>
-                            <CustomAvatar
-                                src={`${post.attributes.thumbnail.data
-                                    ? `${env.NEXT_PUBLIC_STRAPI_URL}${post.attributes.thumbnail.data?.attributes.formats.large.url}`
-                                    : '/images/logo.png'
-                                }`}
-                                username={post.attributes.title}
-                                size="28px"
-                                margin="auto auto auto 0"
-                            />
-                        </ListItemIcon>
-                        <ListItemText primary={post.attributes.title} />
-                    </ListItemButton>
-                )}
+
+                {SidebarRightBlogList(router, posts)}
             </List>
         </div>
     )

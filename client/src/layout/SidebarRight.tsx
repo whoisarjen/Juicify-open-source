@@ -8,13 +8,16 @@ import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import useDaily from '@/hooks/useDaily'
 import { trpc } from '@/utils/trpc.utils'
-import { LastJoinedUsersList } from '@/components/LastJoinedUsersList'
+import { LastJoinedUsersList, SidebarRightBlogList } from '@/components/LastJoinedUsersList'
+import { useRouter } from 'next/router'
 
 const whenAdded = moment().format('YYYY-MM-DD')
 
 const SidebarRight = () => {
+    const router = useRouter()
     const { t } = useTranslation('home')
     const { data: sessionData } = useSession()
+    const { data: posts } = trpc.post.getAll.useQuery({ take: 5 })
 
     const username = sessionData?.user?.username || ''
 
@@ -62,48 +65,50 @@ const SidebarRight = () => {
     const SidebarElements = () => {
         if (sessionData) {
             return (
-                <List
-                    sx={{
-                        width: '100%',
-                        bgcolor: 'background.paper',
-                        position: 'sticky',
-                        top: 0,
-                    }}
-                    subheader={
-                        <ListSubheader
-                            component="div"
-                            id="nested-list-subheader"
-                        >
-                            {t('Data for')}{' '}
-                            {moment(whenAdded).format('DD.MM.YYYY')}:
-                        </ListSubheader>
-                    }
-                >
-                    {CIRCULAR_BOXES.map(({ href, text, value, label }) => (
-                        <Link href={href} key={text}>
-                            <ListItemButton>
-                                <div className="flex items-center justify-center gap-3">
-                                    <div className="center-progress-bar-label max-h-[80px] min-h-[80px] min-w-[80px] max-w-[80px]">
-                                        <CircularProgressbar
-                                            value={value}
-                                            text={text}
-                                            styles={buildStyles({
-                                                textSize: 15,
-                                                pathTransitionDuration: 0.5,
-                                                pathColor: '#90caf9',
-                                                textColor:
-                                                    'rgba(122, 122, 122, 1',
-                                                trailColor: '#d6d6d6',
-                                                backgroundColor: '#90caf9',
-                                            })}
-                                        />
+                <div className="flex flex-col max-w-xs">
+                    <List
+                        sx={{
+                            width: '100%',
+                            bgcolor: 'background.paper',
+                        }}
+                        subheader={
+                            <ListSubheader
+                                component="div"
+                                id="nested-list-subheader"
+                            >
+                                {t('Data for')}{' '}
+                                {moment(whenAdded).format('DD.MM.YYYY')}:
+                            </ListSubheader>
+                        }
+                    >
+                        {CIRCULAR_BOXES.map(({ href, text, value, label }) => (
+                            <Link href={href} key={text}>
+                                <ListItemButton>
+                                    <div className="flex items-center justify-center gap-3">
+                                        <div className="center-progress-bar-label max-h-[80px] min-h-[80px] min-w-[80px] max-w-[80px]">
+                                            <CircularProgressbar
+                                                value={value}
+                                                text={text}
+                                                styles={buildStyles({
+                                                    textSize: 15,
+                                                    pathTransitionDuration: 0.5,
+                                                    pathColor: '#90caf9',
+                                                    textColor:
+                                                        'rgba(122, 122, 122, 1',
+                                                    trailColor: '#d6d6d6',
+                                                    backgroundColor: '#90caf9',
+                                                })}
+                                            />
+                                        </div>
+                                        <div>{label}</div>
                                     </div>
-                                    <div>{label}</div>
-                                </div>
-                            </ListItemButton>
-                        </Link>
-                    ))}
-                </List>
+                                </ListItemButton>
+                            </Link>
+                        ))}
+                    </List>
+
+                    {SidebarRightBlogList(router, posts)}
+                </div>
             )
         }
 
