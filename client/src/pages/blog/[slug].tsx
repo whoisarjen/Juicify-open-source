@@ -6,7 +6,7 @@ import SidebarRight from 'src/layout/SidebarRight'
 import { useEffect, useState } from 'react'
 import { env } from '@/env/client.mjs'
 import { trpc } from "@/utils/trpc.utils"
-import { BlogPostGridElement } from './index'
+import { BlogPostGrid } from './index'
 
 const PostPage = () => {
     const router = useRouter()
@@ -34,27 +34,28 @@ const PostPage = () => {
 
     return (
         <div className="flex flex-1 flex-col gap-8">
-            <Image
-                src={`${post.data.attributes.thumbnail.data
-                    ? `${env.NEXT_PUBLIC_STRAPI_URL}${post.data.attributes.thumbnail.data?.attributes.formats.large.url}`
-                    : '/images/logo.png'
-                }`}
-                alt="Juicify"
-                width={post.data.attributes.thumbnail.data?.attributes.formats.large.width || 1000}
-                height={post.data.attributes.thumbnail.data?.attributes.formats.large.height || 667}
-                className="mx-auto"
-            />
+            {post.data.attributes.thumbnail.data &&
+                <Image
+                    src={`${env.NEXT_PUBLIC_STRAPI_URL}${post.data.attributes.thumbnail.data?.attributes.formats.large.url}`}
+                    alt="Juicify"
+                    width={post.data.attributes.thumbnail.data?.attributes.formats.large.width || 1000}
+                    height={post.data.attributes.thumbnail.data?.attributes.formats.large.height || 667}
+                    className="mx-auto"
+                />
+            }
             <div className="flex gap-8 flex-row">
                 <div className="flex flex-1 flex-col gap-3 prose dark:prose-invert">
                     <h1>{post.data.attributes.title}</h1>
-                    <ReactMarkdown>{post.data.attributes.content}</ReactMarkdown>
+                    <ReactMarkdown>
+                        {post.data.attributes.content}
+                    </ReactMarkdown>
                     <p>Powyższy wpis nie jest poradą. W celu uzyskania indywidualnej pomocy, skontaktuj się z specjalistą.</p>
+                    {BlogPostGrid(posts)}
                 </div>
                 <div className="flex">
                     <SidebarRight />
                 </div>
             </div>
-            {posts?.data.map(BlogPostGridElement)}
         </div>
     )
 }
