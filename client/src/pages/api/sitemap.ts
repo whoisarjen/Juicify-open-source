@@ -2,19 +2,13 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from "@prisma/client"
 import { env } from '@/env/server.mjs'
 import slugify from 'slugify'
+import { getFromStrapi } from '@/utils/strapi.utils'
 
 const prisma = new PrismaClient()
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const users = await prisma.user.findMany()
-    const responsePosts = await fetch(`${env.NEXT_PUBLIC_STRAPI_URL}/api/posts`, {
-        method: 'GET',
-        headers: {
-            Authorization: `Bearer ${env.NEXT_PUBLIC_API_TOKEN}`,
-        },
-    })
-
-    const posts: any = await responsePosts.json()
+    const posts = await getFromStrapi('posts')
 
     res.statusCode = 200
     res.setHeader('Content-Type', 'text/xml')

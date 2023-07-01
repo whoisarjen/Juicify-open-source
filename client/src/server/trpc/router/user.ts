@@ -29,6 +29,7 @@ export const userRouter = router({
         .query(async ({ ctx, input: { take } }) => {
             return await ctx.prisma.user.findMany({
                 take,
+                skip: parseInt((Math.random() * 100) as unknown as string),
                 orderBy: {
                     id: 'desc',
                 },

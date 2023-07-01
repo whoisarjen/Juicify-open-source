@@ -1,47 +1,32 @@
 // @ts-nocheck
 import Image from "next/image";
-import useTranslation from 'next-translate/useTranslation';
 import Link from 'next/link';
 import slugify from "slugify"
 import { env } from '@/env/client.mjs'
-import { useState, useEffect } from "react";
+
+export const BlogPostGridElement = (post: any) => (
+    <Link href={`/blog/${slugify(post.attributes.title, { lower: true, strict: true })}-${post.id}`} key={post.id} className="flex flex-row w-full gap-3">
+        <Image
+            width="192"
+            height="108"
+            src={`${post.attributes.thumbnail.data
+                ? `${env.NEXT_PUBLIC_STRAPI_URL}${post.attributes.thumbnail.data?.attributes.formats.large.url}`
+                : '/images/logo.png'
+            }`}
+            alt={post.attributes.title}
+        />
+        <div className="flex flex-1 items-center">
+            <h2>{post.attributes.title}</h2>
+        </div>
+    </Link>
+)
 
 const BlogPage = () => {
-    const { t } = useTranslation('blog')
-    const [posts, setPosts] = useState([])
-
-    useEffect(() => {
-        (async () => {
-            await fetch(`${env.NEXT_PUBLIC_STRAPI_URL}/api/posts?populate=*`, {
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${env.NEXT_PUBLIC_API_TOKEN}`,
-                },
-            })
-                .then(async (res) => await res.json())
-                .then(res => setPosts(res.data))
-                .catch(() => setPosts([]))
-        })()
-    }, [])
+    const { data: posts } = trpc.post.getAll.useQuery({ take: 100000 })
 
     return (
         <div className="flex w-full flex-col">
-            {posts.map(post =>
-                <Link href={`/blog/${slugify(post.attributes.title, { lower: true, strict: true })}-${post.id}`} key={post.id} className="flex flex-row w-full gap-3">
-                    <Image
-                        width="192"
-                        height="108"
-                        src={`${post.attributes.thumbnail.data
-                            ? `${env.NEXT_PUBLIC_STRAPI_URL}${post.attributes.thumbnail.data?.attributes.formats.large.url}`
-                            : '/images/logo.png'
-                        }`}
-                        alt={post.attributes.title}
-                    />
-                    <div className="flex flex-1 items-center">
-                        <h2>{post.attributes.title}</h2>
-                    </div>
-                </Link>
-            )}
+            {posts?.data.map(BlogPostGridElement)}
         </div>
     );
 }

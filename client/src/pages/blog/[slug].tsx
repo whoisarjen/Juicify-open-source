@@ -5,12 +5,15 @@ import { useRouter } from 'next/router'
 import SidebarRight from 'src/layout/SidebarRight'
 import { useEffect, useState } from 'react'
 import { env } from '@/env/client.mjs'
+import { trpc } from "@/utils/trpc.utils"
+import { BlogPostGridElement } from './index'
 
 const PostPage = () => {
     const router = useRouter()
     const slug = router.query.slug as string
     const postId = slug.substring(slug.lastIndexOf('-') + 1, slug.length)
     const [post, setPost] = useState(null)
+    const { data: posts } = trpc.post.getAll.useQuery({ take: 5 })
 
     useEffect(() => {
         (async () => {
@@ -51,6 +54,7 @@ const PostPage = () => {
                     <SidebarRight />
                 </div>
             </div>
+            {posts?.data.map(BlogPostGridElement)}
         </div>
     )
 }
