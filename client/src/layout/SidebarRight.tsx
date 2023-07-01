@@ -17,7 +17,7 @@ const SidebarRight = () => {
     const router = useRouter()
     const { t } = useTranslation('home')
     const { data: sessionData } = useSession()
-    const { data: posts } = trpc.post.getAll.useQuery({ take: 5 })
+    const { data: posts } = trpc.post.getAll.useQuery({ take: 2 })
 
     const username = sessionData?.user?.username || ''
 
