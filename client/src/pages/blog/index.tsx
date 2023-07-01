@@ -26,13 +26,12 @@ const BlogPage = () => {
 
     return (
         <div className="flex w-full flex-col">
-            {!posts.length && t('POSTS_COMMING_SOON')}
             {posts.map(post =>
                 <Link href={`/blog/${slugify(post.attributes.title, { lower: true, strict: true })}-${post.id}`} key={post.id} className="flex flex-row w-full gap-3">
                     <Image
                         width="192"
                         height="108"
-                        src={post.attributes.thumbnail.data
+                        src={`${post.attributes.thumbnail.data
                             ? `${env.NEXT_PUBLIC_STRAPI_URL}${post.attributes.thumbnail.data?.attributes.formats.large.url}`
                             : '/images/logo.png'
                         }`}
