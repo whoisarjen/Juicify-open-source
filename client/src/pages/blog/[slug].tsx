@@ -45,6 +45,7 @@ const PostPage = () => {
                 <div className="flex flex-1 flex-col gap-3 prose dark:prose-invert">
                     <h1>{post.data.attributes.title}</h1>
                     <ReactMarkdown>{post.data.attributes.content}</ReactMarkdown>
+                    <p>Powyższy wpis nie jest poradą. W celu uzyskania indywidualnej pomocy, skontaktuj się z specjalistą.</p>
                 </div>
                 <div className="flex">
                     <SidebarRight />
