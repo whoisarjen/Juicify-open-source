@@ -14,10 +14,8 @@ import { useRouter } from 'next/router'
 const whenAdded = moment().format('YYYY-MM-DD')
 
 const SidebarRight = () => {
-    const router = useRouter()
     const { t } = useTranslation('home')
     const { data: sessionData } = useSession()
-    const { data: posts } = trpc.post.getAll.useQuery({ take: 2 })
 
     const username = sessionData?.user?.username || ''
 
@@ -107,7 +105,7 @@ const SidebarRight = () => {
                         ))}
                     </List>
 
-                    {SidebarRightBlogList(router, posts)}
+                    {SidebarRightBlogList()}
                 </div>
             )
         }

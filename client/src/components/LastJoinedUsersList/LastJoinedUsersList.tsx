@@ -8,44 +8,47 @@ import { useRouter } from "next/router";
 import CustomAvatar from "../CustomAvatar/CustomAvatar";
 import useTranslation from 'next-translate/useTranslation';
 import slugify from 'slugify';
-import { env } from '@/env/client.mjs'
 
-export const SidebarRightBlogList = (router: any, posts?: any) => (
-    <List
-        sx={{
-            width: '100%',
-            bgcolor: 'background.paper'
-        }}
-        subheader={
-            <ListSubheader component='div' id='nested-list-subheader'>
-                Blog: 
-            </ListSubheader>
-        }
-    >
-        {posts?.data.map((post: any) =>
-            <ListItemButton key={post.id} onClick={() => router.push(`/blog/${slugify(post.attributes.title, { lower: true, strict: true })}-${post.id}`)}>
-                <ListItemIcon>
-                    <CustomAvatar
-                        src={`${post.attributes.thumbnail.data
-                            ? `${env.NEXT_PUBLIC_STRAPI_URL}${post.attributes.thumbnail.data?.attributes.formats.large.url}`
-                            : '/images/logo.png'
-                        }`}
-                        username={post.attributes.title}
-                        size="28px"
-                        margin="auto auto auto 0"
-                    />
-                </ListItemIcon>
-                <ListItemText primary={post.attributes.title} />
-            </ListItemButton>
-        )}
-    </List>
-)
+export const SidebarRightBlogList = () => {
+    const router = useRouter()
+    const { data: posts } = trpc.post.getAll.useQuery({ take: 3 })
+
+    return (
+        <List
+            sx={{
+                width: '100%',
+                bgcolor: 'background.paper'
+            }}
+            subheader={
+                <ListSubheader component='div' id='nested-list-subheader'>
+                    Blog: 
+                </ListSubheader>
+            }
+        >
+            {posts?.data.map((post: any) =>
+                <ListItemButton key={post.id} onClick={() => router.push(`/blog/${slugify(post.attributes.title, { lower: true, strict: true })}-${post.id}`)}>
+                    {/* <ListItemIcon>
+                        <CustomAvatar
+                            src={`${post.attributes.thumbnail.data
+                                ? `${env.NEXT_PUBLIC_STRAPI_URL}${post.attributes.thumbnail.data?.attributes.formats.large.url}`
+                                : '/images/logo.png'
+                            }`}
+                            username={post.attributes.title}
+                            size="28px"
+                            margin="auto auto auto 0"
+                        />
+                    </ListItemIcon> */}
+                    <ListItemText primary={post.attributes.title} />
+                </ListItemButton>
+            )}
+        </List>
+    )
+}
 
 export const LastJoinedUsersList = () => {
     const router = useRouter()
     const { t } = useTranslation('home')
     const { data: users = [] } = trpc.user.getAll.useQuery({ take: 10 })
-    const { data: posts } = trpc.post.getAll.useQuery({ take: 5 })
 
     return (
         <div className="flex flex-col max-w-xs">
@@ -74,7 +77,7 @@ export const LastJoinedUsersList = () => {
                     </ListItemButton>
                 )}
 
-                {SidebarRightBlogList(router, posts)}
+                {SidebarRightBlogList()}
             </List>
         </div>
     )
