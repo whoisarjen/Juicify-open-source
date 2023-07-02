@@ -50,11 +50,11 @@ const getRouterPushOptions = (sessionData: Session | null, t: Translate) => {
             text: t('Blog'),
             children: <SchoolIcon color="primary" />,
         },
-        products: {
-            link: `/products`,
-            text: t('PRODUCTS'),
-            children: <FastfoodIcon color="primary" />,
-        },
+        // products: {
+        //     link: `/products`,
+        //     text: t('PRODUCTS'),
+        //     children: <FastfoodIcon color="primary" />,
+        // },
         diary: {
             link: `/${username}/consumed/${moment().format('YYYY-MM-DD')}`,
             text: t('Diary'),

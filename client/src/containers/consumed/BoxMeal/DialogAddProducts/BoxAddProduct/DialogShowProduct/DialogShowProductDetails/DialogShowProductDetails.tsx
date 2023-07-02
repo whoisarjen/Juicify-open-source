@@ -14,6 +14,7 @@ const PROPERTIES_TO_OMIT = [
     'isExpectingCheck',
     'createdAt',
     'updatedAt',
+    'barcode',
 ]
 
 export const DialogShowProductDetails = ({

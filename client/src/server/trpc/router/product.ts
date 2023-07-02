@@ -60,14 +60,16 @@ export const productRouter = router({
             z.object({
                 name: z.string(),
                 take: z.number().optional().default(10),
+                skip: z.number().optional().default(0),
             })
         )
-        .query(async ({ ctx, input: { name, take } }) => {
+        .query(async ({ ctx, input: { name, take, skip } }) => {
             const preparedName = name.trim()
             const contains = preparedName.substring(0, preparedName.length - 1)
 
             return await ctx.prisma.product.findMany({
                 take,
+                skip,
                 where: {
                     OR: [
                         {
