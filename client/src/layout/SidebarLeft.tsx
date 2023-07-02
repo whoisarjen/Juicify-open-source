@@ -27,6 +27,7 @@ import {
     handleSignOut,
     hasPermissionToPath,
 } from '@/utils/user.utils'
+import FastfoodIcon from '@mui/icons-material/Fastfood';
 
 const getRouterPushOptions = (sessionData: Session | null, t: Translate) => {
     const username = sessionData?.user?.username
@@ -48,6 +49,11 @@ const getRouterPushOptions = (sessionData: Session | null, t: Translate) => {
             link: `/blog`,
             text: t('Blog'),
             children: <SchoolIcon color="primary" />,
+        },
+        products: {
+            link: `/products`,
+            text: t('PRODUCTS'),
+            children: <FastfoodIcon color="primary" />,
         },
         diary: {
             link: `/${username}/consumed/${moment().format('YYYY-MM-DD')}`,

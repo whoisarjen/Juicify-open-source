@@ -4,6 +4,30 @@ import { z } from "zod"
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 
 export const productRouter = router({
+    getById: publicProcedure
+        .input(
+            z.object({
+                id: z.number(),
+            })
+        )
+        .query(async ({ ctx, input: { id } }) => {
+            return await ctx.prisma.product.findFirstOrThrow({
+                where: {
+                    OR: [
+                        {
+                            isDeleted: false,
+                            userId: null,
+                            id,
+                        },
+                        {
+                            isDeleted: false,
+                            userId: ctx.session?.user?.id || null,
+                            id,
+                        },
+                    ]
+                },
+            })
+        }),
     getByBarcode: publicProcedure
         .input(
             z.object({
@@ -35,14 +59,15 @@ export const productRouter = router({
         .input(
             z.object({
                 name: z.string(),
+                take: z.number().optional().default(10),
             })
         )
-        .query(async ({ ctx, input: { name } }) => {
+        .query(async ({ ctx, input: { name, take } }) => {
             const preparedName = name.trim()
             const contains = preparedName.substring(0, preparedName.length - 1)
 
             return await ctx.prisma.product.findMany({
-                take: 10,
+                take,
                 where: {
                     OR: [
                         {

@@ -1,10 +1,8 @@
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import SlideUp from '@/transition/SlideUp'
-import { omit } from 'lodash'
 import useTranslation from 'next-translate/useTranslation'
 import {
-    type ReactNode,
     useState,
     cloneElement,
     type ReactElement,
@@ -14,17 +12,7 @@ import DialogConfirm from '@/components/DialogConfirm/DialogConfirm'
 import { useSession } from 'next-auth/react'
 import { trpc } from '@/utils/trpc.utils'
 import DialogAddProduct from '@/containers/DialogAddProduct/DialogAddProduct'
-
-const PROPERTIES_TO_OMIT = [
-    'id',
-    'userId',
-    'nameLength',
-    'isVerified',
-    'isDeleted',
-    'isExpectingCheck',
-    'createdAt',
-    'updatedAt',
-]
+import { DialogShowProductDetails } from './DialogShowProductDetails'
 
 interface DialogShowProductProps {
     children?: ReactElement
@@ -68,24 +56,7 @@ const DialogShowProduct = ({
                 })}
             <Dialog fullScreen open={isDialog} TransitionComponent={SlideUp}>
                 <div className="flex flex-col">
-                    <table style={{ textAlign: 'center' }}>
-                        <tbody>
-                            {Object.keys(omit(product, PROPERTIES_TO_OMIT)).map(
-                                (key) => (
-                                    <tr key={key}>
-                                        <td key={key}>{key}</td>
-                                        <td>
-                                            {
-                                                product[
-                                                    key as keyof typeof product
-                                                ] as unknown as ReactNode
-                                            }
-                                        </td>
-                                    </tr>
-                                )
-                            )}
-                        </tbody>
-                    </table>
+                    <DialogShowProductDetails product={product} />
                     <div className="h-20 w-full" />
                     {isOwner && (
                         <DialogConfirm
