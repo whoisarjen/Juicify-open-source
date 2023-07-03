@@ -13,6 +13,9 @@ const ProductSlug = () => {
 
     return (
         <div className="flex flex-col gap-3">
+            <div>
+                
+            </div>
             <DialogShowProductDetails product={product} />
             <div>
                 {ProductsGrid(products)}

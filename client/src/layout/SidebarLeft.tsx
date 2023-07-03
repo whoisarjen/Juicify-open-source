@@ -19,14 +19,9 @@ import { useSession, signIn } from 'next-auth/react'
 import Divider from '@mui/material/Divider'
 import NoteAltIcon from '@mui/icons-material/NoteAlt'
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera'
-import DashboardIcon from '@mui/icons-material/Dashboard'
 import { type Translate } from 'next-translate'
 import { type Session } from 'next-auth'
-import {
-    DASHBOARD_PATH,
-    handleSignOut,
-    hasPermissionToPath,
-} from '@/utils/user.utils'
+import { handleSignOut } from '@/utils/user.utils'
 import FastfoodIcon from '@mui/icons-material/Fastfood';
 
 const getRouterPushOptions = (sessionData: Session | null, t: Translate) => {
@@ -126,18 +121,6 @@ const SidebarLeft = () => {
                         }
                     )}
                     <Divider />
-                    {hasPermissionToPath(sessionData, DASHBOARD_PATH) && (
-                        <ListItem disablePadding>
-                            <ListItemButton
-                                onClick={() => router.push('/dashboard')}
-                            >
-                                <ListItemIcon>
-                                    <DashboardIcon color="primary" />
-                                </ListItemIcon>
-                                <ListItemText primary="Dashboard" />
-                            </ListItemButton>
-                        </ListItem>
-                    )}
                     <ListItem disablePadding>
                         <ListItemButton
                             onClick={() => router.push('/settings')}

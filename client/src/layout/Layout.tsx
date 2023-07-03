@@ -9,7 +9,7 @@ import Button from '@mui/material/Button'
 import useTranslation from 'next-translate/useTranslation'
 import moment from 'moment'
 import { trpc } from '@/utils/trpc.utils'
-import { hasPermissionToPath, handleSignOut } from '@/utils/user.utils'
+import { handleSignOut } from '@/utils/user.utils'
 
 const SIGN_IN_PATH = '/'
 
@@ -97,11 +97,6 @@ const Layout = ({ children }: { children: any }) => {
                 const redirectTo =
                     asPath && asPath !== SIGN_IN_PATH ? asPath : '/coach'
                 router.push(redirectTo)
-                return
-            }
-
-            if (!hasPermissionToPath(sessionData, router.asPath)) {
-                router.push('/403')
                 return
             }
 
