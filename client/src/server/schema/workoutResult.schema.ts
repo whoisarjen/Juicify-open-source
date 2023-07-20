@@ -6,6 +6,7 @@ export const workoutResultExerciseResultSchema = object({
     open: preprocess((val) => Boolean(val), boolean()).optional(),
     reps: preprocess((val) => Number(val), number()),
     weight: preprocess((val) => Number(val), number()),
+    rir: preprocess((val) => Number(val), number()).optional(), // RIR wasn't supported before 20.07.2023
 })
 
 export type WorkoutResultExerciseResultSchema = TypeOf<typeof workoutResultExerciseResultSchema>

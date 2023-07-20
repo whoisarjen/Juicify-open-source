@@ -1,6 +1,5 @@
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
-import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined'
 import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete'
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined'
@@ -9,6 +8,7 @@ import DialogConfirm from '@/components/DialogConfirm/DialogConfirm'
 import { useState, useEffect } from 'react'
 import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon'
 import { type WorkoutResultExerciseResultSchema } from '@/server/schema/workoutResult.schema'
+import { range } from 'lodash'
 
 interface BoxResultProps {
     value: WorkoutResultExerciseResultSchema
@@ -17,7 +17,7 @@ interface BoxResultProps {
     deleteResult: () => void
     isOwner: boolean
     isLast: boolean
-    openNewResult: (lastResult: { reps: number; weight: number }) => void
+    openNewResult: (lastResult: { reps: number; weight: number, rir: number }) => void
 }
 
 const BoxResult = ({
@@ -31,9 +31,11 @@ const BoxResult = ({
 }: BoxResultProps) => {
     const [reps, setReps] = useState(value.reps.toString())
     const [weight, setWeight] = useState(value.weight.toString())
+    const [rir, setRir] = useState((value.rir || 0).toString())
     const [open, setOpen] = useState(value.open || false)
     const [repsOptions, setRepsOptions] = useState(['0'])
     const [weightOptions, setWeightOptions] = useState(['0'])
+    const [rirOptions, setRirOptions] = useState(['0'])
 
     const loadWeight = (choosenWeight: string) => {
         const choosenWeightLocally = parseFloat(choosenWeight)
@@ -55,12 +57,9 @@ const BoxResult = ({
     }
 
     useEffect(() => {
-        let reps = []
-        for (let i = 0; i <= 100; i++) {
-            reps.push(i.toString())
-        }
-        setRepsOptions(reps)
         loadWeight(value.weight.toString())
+        setRirOptions(range(0, 10).map(i => i.toString()))
+        setRepsOptions(range(0, 100).map(i => i.toString()))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -75,6 +74,7 @@ const BoxResult = ({
                             changeResult({
                                 reps: parseInt(reps),
                                 weight: parseFloat(weight),
+                                rir: parseInt(rir),
                                 open: false,
                             })
                         }}
@@ -103,6 +103,7 @@ const BoxResult = ({
                             changeResult({
                                 reps: parseInt(reps),
                                 weight: parseFloat(value || '0'),
+                                rir: parseInt(rir),
                                 open,
                             })
                         }
@@ -123,6 +124,7 @@ const BoxResult = ({
                             changeResult({
                                 reps: parseInt(value || '0'),
                                 weight: parseFloat(weight),
+                                rir: parseInt(rir),
                                 open,
                             })
                         }
@@ -132,6 +134,27 @@ const BoxResult = ({
                         getOptionLabel={(option) => option.toString()}
                         renderInput={(params) => (
                             <TextField {...params} label="Reps" />
+                        )}
+                    />
+                    <Autocomplete
+                        sx={{ marginTop: '8px' }}
+                        disablePortal
+                        value={rir}
+                        options={rirOptions}
+                        onChange={(_, value) =>
+                            changeResult({
+                                reps: parseFloat(reps),
+                                weight: parseFloat(weight),
+                                rir: parseInt(value || '0'),
+                                open,
+                            })
+                        }
+                        onInputChange={(_, valueLocally) =>
+                            setRir(valueLocally)
+                        }
+                        getOptionLabel={(option) => option.toString()}
+                        renderInput={(params) => (
+                            <TextField {...params} label="RIR" />
                         )}
                     />
                 </>
@@ -149,15 +172,7 @@ const BoxResult = ({
                     <div className="flex-1">{weight}kg</div>
                     <div className="flex-1">#{index + 1}</div>
                     <div className="flex-1">{reps}r.</div>
-                    <div className="flex-1">
-                        {isOwner && (
-                            <IconButton aria-label="save">
-                                <CheckCircleOutlinedIcon
-                                    sx={{ fontSize: 20 }}
-                                />
-                            </IconButton>
-                        )}
-                    </div>
+                    <div className="flex-1">{rir} RIR</div>
                 </div>
             )}
             {isOwner && isLast && (
@@ -167,6 +182,7 @@ const BoxResult = ({
                         openNewResult({
                             reps: parseInt(reps),
                             weight: parseFloat(weight),
+                            rir: parseInt(rir),
                         })
                     }
                 />

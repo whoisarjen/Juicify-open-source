@@ -30,7 +30,7 @@ const BaseBoxExercise = ({
     const [values, setValues] = useState<WorkoutResultExerciseResultSchema[]>(
         exercise.results as WorkoutResultExerciseResultSchema[]
     )
-
+console.log({ previousExercise })
     const changeResult = (
         object: WorkoutResultExerciseResultSchema,
         index: number
@@ -47,7 +47,7 @@ const BaseBoxExercise = ({
     }
 
     const openNewResult = (
-        lastResult: { reps: number; weight: number } | null
+        lastResult: { reps: number; weight: number, rir: number } | null
     ) => {
         if (lastResult) {
             const previousValues = values.map(
@@ -60,18 +60,23 @@ const BaseBoxExercise = ({
                 {
                     reps: lastResult.reps,
                     weight: lastResult.weight,
+                    rir: lastResult.rir,
                 },
                 {
                     reps: lastResult.reps,
                     weight: lastResult.weight,
+                    rir: lastResult.rir,
                     open: true,
                 },
             ])
         } else {
+            const prevRIR = previousExercise?.results?.at?.(-1)?.rir ?? 0
+
             setNewValues([
                 {
                     reps: 0,
                     weight: 0,
+                    rir: prevRIR > 0 ? prevRIR - 1 : exerciseFromWorkoutPlan?.rir ?? 0,
                     open: true,
                 },
             ])
@@ -98,20 +103,14 @@ const BaseBoxExercise = ({
                     {exercise.name} ({exerciseFromWorkoutPlan?.series ?? 1}x
                     {exerciseFromWorkoutPlan?.reps ?? 1})
                 </div>
-                <div>{exerciseFromWorkoutPlan?.rir ?? 1} RIR</div>
+                <div>{exerciseFromWorkoutPlan?.rir ?? 0} RIR</div>
             </div>
             <div>{exerciseFromWorkoutPlan?.note}</div>
             {!!previousExercise?.results?.length && (
                 <div>
                     {previousExercise?.results?.map(
-                        (result, index) =>
-                            result.weight +
-                            'x' +
-                            result.reps +
-                            (index + 1 === previousExercise.results?.length
-                                ? ''
-                                : ', ')
-                    )}
+                        (result, index) => `${result.weight}x${result.reps}${(result.rir !== undefined ? ` (${result.rir} RIR)` : '')}`
+                    ).join(', ')}
                 </div>
             )}
             {values.map(
