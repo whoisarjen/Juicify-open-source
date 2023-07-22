@@ -10,8 +10,11 @@ import useTranslation from "next-translate/useTranslation";
 import BoxBurned from "@/containers/consumed/BoxBurned/BoxBurned";
 import { env } from "@/env/client.mjs";
 import useConsumed from "@/hooks/useConsumed";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import IconButton from '@mui/material/IconButton'
+import { useSession } from 'next-auth/react'
+import Link from 'next/link'
+import CustomAvatar from '@/components/CustomAvatar/CustomAvatar'
 
 const Consumed = () => {
     const { t } = useTranslation('nutrition-diary')
@@ -42,6 +45,17 @@ const Consumed = () => {
                 <div className="flex-1 text-3xl font-bold">{t('title')}</div>
                 <ButtonShare />
                 <DateChanger />
+                {username === sessionData?.user?.username &&
+                    <Link href={`/${sessionData?.user?.username}`}>
+                        <IconButton color="primary">
+                            <CustomAvatar
+                                src={sessionData?.user?.image}
+                                username={sessionData?.user?.username}
+                                size="28px"
+                            />
+                        </IconButton>
+                    </Link>
+                }
             </div>
 
             <DateChangerFast />

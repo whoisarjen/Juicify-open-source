@@ -2,7 +2,6 @@ import PhotoCameraIcon from '@mui/icons-material/PhotoCamera'
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter'
 import BookIcon from '@mui/icons-material/Book'
-import CustomAvatar from '@/components/CustomAvatar/CustomAvatar'
 import SmartToyIcon from '@mui/icons-material/SmartToy'
 import moment from 'moment'
 import IconButton from '@mui/material/IconButton'
@@ -26,11 +25,6 @@ const Footer = () => {
                             <FitnessCenterIcon color="primary" />
                         </IconButton>
                     </Link>
-                    <Link href="/measurements">
-                        <IconButton color="primary">
-                            <EmojiEventsIcon color="primary" />
-                        </IconButton>
-                    </Link>
                     <Link href="/barcode">
                         <IconButton color="primary">
                             <PhotoCameraIcon color="primary" />
@@ -45,13 +39,9 @@ const Footer = () => {
                             <BookIcon color="primary" />
                         </IconButton>
                     </Link>
-                    <Link href={`/${sessionData?.user?.username}`}>
+                    <Link href="/measurements">
                         <IconButton color="primary">
-                            <CustomAvatar
-                                src={sessionData?.user?.image}
-                                username={sessionData?.user?.username}
-                                size="28px"
-                            />
+                            <EmojiEventsIcon color="primary" />
                         </IconButton>
                     </Link>
                 </div>
