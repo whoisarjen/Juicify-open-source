@@ -34,7 +34,7 @@ const ButtonMoreOptionsWorkoutResult = ({ exercises, setExercises }: ButtonMoreO
             <SpeedDial
                 data-testid="ButtonMoreOptionsWorkoutResult"
                 ariaLabel="Manage result"
-                sx={{ position: 'absolute', bottom: 22, left: 16, }}
+                sx={{ position: 'absolute', bottom: 44, left: 16, }}
                 icon={<SpeedDialIcon />}
                 onClose={() => setOpen(false)}
                 onOpen={() => setOpen(true)}
