@@ -95,7 +95,7 @@ const Layout = ({ children }: { children: any }) => {
             ) {
                 const asPath = localStorage.getItem('asPath')
 
-                if (asPath?.includes('consumes') && sessionData.user && asPath.includes(sessionData.user.username)) {
+                if (asPath?.includes('consumed') && sessionData.user && asPath.includes(sessionData.user.username)) {
                     router.push(asPath.slice(0, asPath.length - 10) + moment().format('YYYY-MM-DD'))
                     return
                 }
