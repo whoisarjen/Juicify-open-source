@@ -69,7 +69,7 @@ const Layout = ({ children }: { children: any }) => {
     })
 
     useEffect(() => {
-        ;(async () => {
+        (async () => {
             const locale = await getCookie('NEXT_LOCALE') // Redirect for PWA's scope
 
             if (locale && router.locale != locale) {
@@ -94,9 +94,13 @@ const Layout = ({ children }: { children: any }) => {
                 router.pathname === SIGN_IN_PATH
             ) {
                 const asPath = localStorage.getItem('asPath')
-                const redirectTo =
-                    asPath && asPath !== SIGN_IN_PATH ? asPath : '/coach'
-                router.push(redirectTo)
+
+                if (asPath?.includes('consumes') && sessionData.user && asPath.includes(sessionData.user.username)) {
+                    router.push(asPath.slice(0, asPath.length - 10) + moment().format('YYYY-MM-DD'))
+                    return
+                }
+
+                router.push(asPath && asPath !== SIGN_IN_PATH ? asPath : '/coach')
                 return
             }
 
