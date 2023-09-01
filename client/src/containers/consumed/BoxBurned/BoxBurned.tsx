@@ -50,6 +50,7 @@ const BoxBurned = () => {
                         name={name}
                         burnedCalories={burnedCalories}
                         whenAdded={whenAdded}
+                        redirectTo={`/${router.query.login}/workout/results/${id}`}
                     />
                 </Fragment>
             ))}

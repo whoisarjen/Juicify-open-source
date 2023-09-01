@@ -3,6 +3,8 @@ import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment'
 import EditIcon from '@mui/icons-material/Edit'
 import { type ReactNode } from 'react'
 import { DialogEditBurnedCalories } from '../DialogEditBurnedCalories'
+import { useRouter } from 'next/router'
+import InfoIcon from '@mui/icons-material/Info'
 
 interface BoxBurnedItemProps {
     name: string
@@ -11,6 +13,7 @@ interface BoxBurnedItemProps {
     icon?: ReactNode
     id: number
     whenAdded: Date
+    redirectTo?: string
 }
 
 const BoxBurnedItem = ({
@@ -20,7 +23,10 @@ const BoxBurnedItem = ({
     icon,
     id,
     whenAdded,
+    redirectTo,
 }: BoxBurnedItemProps) => {
+    const router = useRouter()
+
     return (
         <div className="flex w-full items-center justify-center gap-2">
             <div className="flex items-center justify-center">
@@ -50,6 +56,11 @@ const BoxBurnedItem = ({
                 <div className="font-bold">{name}</div>
                 <div>{burnedCalories}kcal</div>
             </div>
+            {redirectTo &&
+                <IconButton aria-label="edit" onClick={() => router.push(redirectTo)}>
+                    <InfoIcon fontSize="small" />
+                </IconButton>
+            }
         </div>
     )
 }
