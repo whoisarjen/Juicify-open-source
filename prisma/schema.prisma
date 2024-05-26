@@ -3,7 +3,7 @@ generator client {
   // binaryTargets = ["native", "linux-musl"] // VPN
   // binaryTargets = ["native", "rhel-openssl-1.0.x"] // Vercel
   previewFeatures = ["driverAdapters"]
-  // output   = "./generated/client" // Vercel fix
+  output   = "./generated/client" // Vercel fix
 }
 
 datasource db {
