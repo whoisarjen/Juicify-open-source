@@ -6,14 +6,12 @@ import { z } from "zod";
  * This way you can ensure the app isn't built with invalid env vars.
  */
 export const serverSchema = z.object({
-    REDIS_URL: z.string(),
     DATABASE_URL: z.string().url(),
     NODE_ENV: z.enum(["development", "test", "production"]),
     NEXTAUTH_SECRET: z.string(),
     NEXTAUTH_URL: z.string().url(),
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
-    NEXT_PUBLIC_API_TOKEN: z.string(),
 });
 
 /**
@@ -25,8 +23,6 @@ export const clientSchema = z.object({
     NEXT_PUBLIC_SEARCH_MIN_NAME_LENGTH: z.number(),
     NEXT_PUBLIC_DEFAULT_NUMBER_OF_MEALS: z.number(),
     NEXT_PUBLIC_NODE_ENV: z.enum(["development", "test", "production"]),
-    NEXT_PUBLIC_API_TOKEN: z.string(),
-    NEXT_PUBLIC_NEXTAUTH_URL: z.string(),
 });
 
 /**
@@ -39,6 +35,4 @@ export const clientEnv = {
     NEXT_PUBLIC_SEARCH_MIN_NAME_LENGTH: Number(process.env.NEXT_PUBLIC_SEARCH_MIN_NAME_LENGTH),
     NEXT_PUBLIC_DEFAULT_NUMBER_OF_MEALS: Number(process.env.NEXT_PUBLIC_DEFAULT_NUMBER_OF_MEALS),
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
-    NEXT_PUBLIC_API_TOKEN: process.env.NEXT_PUBLIC_API_TOKEN,
-    NEXT_PUBLIC_NEXTAUTH_URL: process.env.NEXT_PUBLIC_NEXTAUTH_URL,
 };
