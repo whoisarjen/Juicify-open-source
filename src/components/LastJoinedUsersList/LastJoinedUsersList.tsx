@@ -7,7 +7,6 @@ import ListItemText from '@mui/material/ListItemText';
 import { useRouter } from "next/router";
 import CustomAvatar from "../CustomAvatar/CustomAvatar";
 import useTranslation from 'next-translate/useTranslation';
-import slugify from 'slugify';
 
 export const LastJoinedUsersList = () => {
     const router = useRouter()
