@@ -1,4 +1,4 @@
-import { type Decimal } from "@prisma/client/runtime"
+import { type Decimal } from "@prisma/client/runtime/library"
 import moment from "moment"
 
 export const DEFAULT_MACRO = {
