@@ -1,7 +1,6 @@
 import { router } from "../trpc";
 import { userRouter } from "./user";
 import { coachRouter } from "./coach";
-import { postRouter } from "./post";
 import { exerciseRouter } from "./exercise";
 import { productRouter } from "./product";
 import { consumedRouter } from "./consumed"
@@ -14,7 +13,6 @@ import { versionRouter } from "./version";
 export const appRouter = router({
     user: userRouter,
     coach: coachRouter,
-    post: postRouter,
     exercise: exerciseRouter,
     workoutPlan: workoutPlanRouter,
     workoutResult: workoutResultRouter,

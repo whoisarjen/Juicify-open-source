@@ -8,7 +8,7 @@ import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import useDaily from '@/hooks/useDaily'
 import { trpc } from '@/utils/trpc.utils'
-import { LastJoinedUsersList, SidebarRightBlogList } from '@/components/LastJoinedUsersList'
+import { LastJoinedUsersList } from '@/components/LastJoinedUsersList'
 import { useRouter } from 'next/router'
 
 const whenAdded = moment().format('YYYY-MM-DD')
@@ -104,8 +104,6 @@ const SidebarRight = () => {
                             </Link>
                         ))}
                     </List>
-
-                    {SidebarRightBlogList()}
                 </div>
             )
         }

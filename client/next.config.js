@@ -23,7 +23,6 @@ const nextConfig = {
     env,
     images: {
         domains: [
-            'strapi.juicify.app',
             'localhost',
             'localhost:1337',
         ],

@@ -9,45 +9,6 @@ import CustomAvatar from "../CustomAvatar/CustomAvatar";
 import useTranslation from 'next-translate/useTranslation';
 import slugify from 'slugify';
 
-export const SidebarRightBlogList = () => {
-    const router = useRouter()
-    const { data: posts } = trpc.post.getAll.useQuery({ take: 3 })
-
-    return (
-        <List
-            sx={{
-                width: '100%',
-                bgcolor: 'background.paper'
-            }}
-            subheader={
-                <ListSubheader component='div' id='nested-list-subheader'>
-                    Blog: 
-                </ListSubheader>
-            }
-        >
-            {posts?.data.map((post: any) =>
-                <ListItemButton key={post.id} onClick={() => router.push(`/blog/${slugify(post.attributes.title, { lower: true, strict: true })}-${post.id}`)}>
-                    {/* <ListItemIcon>
-                        <CustomAvatar
-                            src={`${post.attributes.thumbnail.data
-                                ? `${env.NEXT_PUBLIC_STRAPI_URL}${post.attributes.thumbnail.data?.attributes.formats.large.url}`
-                                : '/images/logo.png'
-                            }`}
-                            username={post.attributes.title}
-                            size="28px"
-                            margin="auto auto auto 0"
-                        />
-                    </ListItemIcon> */}
-                    <ListItemText
-                        className='line-clamp-2'
-                        primary={post.attributes.title}
-                    />
-                </ListItemButton>
-            )}
-        </List>
-    )
-}
-
 export const LastJoinedUsersList = () => {
     const router = useRouter()
     const { t } = useTranslation('home')
@@ -79,8 +40,6 @@ export const LastJoinedUsersList = () => {
                         <ListItemText primary={name || '-'} />
                     </ListItemButton>
                 )}
-
-                {SidebarRightBlogList()}
             </List>
         </div>
     )
