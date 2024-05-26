@@ -1,35 +1,4 @@
 services:
-    # postgres:
-    #     image: postgres:15.1
-    #     restart: unless-stopped
-    #     container_name: postgres
-    #     environment:
-    #         POSTGRES_DB: juicify
-    #         POSTGRES_USER: admin
-    #         POSTGRES_PASSWORD: admin
-    #     volumes:
-    #         - postgres-data:/var/lib/postgresql/dataw
-    #     ports:
-    #         - "5432:5432"
-    #     expose:
-    #         - "5432"
-    #     labels:
-    #         - "traefik.enable=true"
-    #         - "traefik.tcp.routers.postgres.entrypoints=postgres"
-    #         - "traefik.tcp.routers.postgres.rule=HostSNI(`*`)"
-    #         - "traefik.tcp.routers.postgres.tls=false"
-    #         - "traefik.tcp.services.postgres.loadBalancer.server.port=5432"
-    #         - "traefik.tcp.routers.postgres.service=postgres"
-
-    # redis:
-    #     image: redis:latest
-    #     restart: unless-stopped
-    #     container_name: redis
-    #     expose:
-    #         - "6379"
-    #     volumes:
-    #         - redis_data:/data
-
     nextjs:
         build:
             context: ./client/.
@@ -42,9 +11,6 @@ services:
             - "3000:3000"
         expose:
             - "3000"
-        # depends_on:
-        #     - postgres
-        #     - redis
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.nextjs.rule=Host(`juicify.app`)"
@@ -52,44 +18,6 @@ services:
             - "traefik.http.routers.nextjs.tls.certresolver=myresolver"
             - "traefik.tcp.routers.postgres.entrypoints=postgres"
         command: npm run start
-
-    # juicify_strapi:
-    #     container_name: juicify_strapi
-    #     build: ./strapi/.
-    #     image: strapi:latest
-    #     restart: unless-stopped
-    #     env_file: .env
-    #     environment:
-    #         DATABASE_CLIENT: postgres
-    #         DATABASE_HOST: postgres
-    #         DATABASE_NAME: strapi
-    #         DATABASE_USERNAME: admin
-    #         DATABASE_PASSWORD: admin
-    #         DATABASE_URL: postgres://admin:admin@postgres:5432/strapi
-    #         JWT_SECRET: ${JWT_SECRET}
-    #         ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
-    #         APP_KEYS: ${APP_KEYS}
-    #         NODE_ENV: ${NODE_ENV}
-    #         API_TOKEN_SALT: ${API_TOKEN_SALT}
-    #         HOST: ${HOST}
-    #         DOMAIN: https://strapi.juicify.app
-    #     volumes:
-    #         - ./strapi/config:/opt/app/config
-    #         - ./strapi/src:/opt/app/src
-    #         - ./strapi/package.json:/opt/package.json
-    #         - ./strapi/yarn.lock:/opt/yarn.lock
-    #         - ./strapi/.env:/opt/app/.env
-    #         - ./strapi/public/uploads:/opt/app/public/uploads
-    #     depends_on:
-    #         - postgres
-    #         - redis
-    #     labels:
-    #         - "traefik.enable=true"
-    #         - "traefik.http.routers.juicify_strapi.rule=Host(`strapi.juicify.app`)"
-    #         - "traefik.http.routers.juicify_strapi.entrypoints=websecure"
-    #         - "traefik.http.routers.juicify_strapi.tls=true"
-    #         - "traefik.http.routers.juicify_strapi.tls.certresolver=myresolver"
-    #         - "traefik.http.services.juicify_strapi.loadbalancer.server.port=1337"
 
     cadvisor:
         image: gcr.io/cadvisor/cadvisor:v0.47.0
@@ -143,8 +71,6 @@ services:
             - "3001"
 
 volumes:
-    # postgres-data:
-    # redis_data:
     prometheus-data:
     grafana-data:
     juicify-strapi-data:
