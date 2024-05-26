@@ -26,7 +26,7 @@ export const LastJoinedUsersList = () => {
                     </ListSubheader>
                 }
             >
-                {users.map(({ id, name, username, image }) =>
+                {(users as User[]).map(({ id, name, username, image }) =>
                     <ListItemButton key={id} onClick={() => router.push(`/${username}`)}>
                         <ListItemIcon>
                             <CustomAvatar

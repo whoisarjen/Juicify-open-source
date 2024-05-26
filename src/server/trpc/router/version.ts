@@ -5,7 +5,7 @@ import { router, publicProcedure } from "../trpc";
 export const versionRouter = router({
     get: publicProcedure
         .query(() => {
-            return ''
+            return '' // TODO Get Vercel Deploy Id
             // const dir = path.resolve('./public', '')
             // const filenames = fs.readdirSync(dir)
 
