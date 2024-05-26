@@ -27,6 +27,8 @@ const nextConfig = {
             'localhost',
             'localhost:1337',
             'laughing-space-barnacle-v55qw4q7rrqc6g7x-3000.app.github.dev',
+            'juicify.app',
+            'juicify.vercel.app',
         ],
     },
     ...nextTranslate(),
