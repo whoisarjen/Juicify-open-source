@@ -9,6 +9,8 @@ services:
             POSTGRES_PASSWORD: admin
         volumes:
             - postgres-data:/var/lib/postgresql/data
+        ports:
+            - "5432:5432"
         expose:
             - "5432"
         labels:
@@ -16,7 +18,7 @@ services:
             - "traefik.tcp.routers.postgres.entrypoints=postgres"
             - "traefik.tcp.routers.postgres.rule=HostSNI(`*`)"
             - "traefik.tcp.routers.postgres.tls=false"
-            # - "traefik.tcp.services.postgres.loadBalancer.server.port=5432"
+            - "traefik.tcp.services.postgres.loadBalancer.server.port=5432"
             - "traefik.tcp.routers.postgres.service=postgres"
 
     redis:
