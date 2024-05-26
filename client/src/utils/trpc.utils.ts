@@ -5,11 +5,11 @@ import superjson from "superjson";
 
 import { type AppRouter } from "@/server/trpc/router/_app";
 
-export const SPAM_PROTECTION_LIMIT_FOR_CALLS = {
-    NUMBER_OF_CALLS: 200,
-    DURATION: 300,
-    BAN_DURATION: 900,
-}
+// export const SPAM_PROTECTION_LIMIT_FOR_CALLS = {
+//     NUMBER_OF_CALLS: 200,
+//     DURATION: 300,
+//     BAN_DURATION: 900,
+// }
 
 const getBaseUrl = () => {
     if (typeof window !== "undefined") return ""; // browser should use relative url

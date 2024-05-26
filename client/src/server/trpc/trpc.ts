@@ -1,9 +1,9 @@
-import { redis } from "@/utils/redis.utils";
+// import { redis } from "@/utils/redis.utils";
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { getClientIp } from 'request-ip'
 import { type Context } from "./context";
-import { SPAM_PROTECTION_LIMIT_FOR_CALLS } from '@/utils/trpc.utils'
+// import { SPAM_PROTECTION_LIMIT_FOR_CALLS } from '@/utils/trpc.utils'
 import { Histogram, register } from "prom-client"
 
 register.clear();
@@ -42,28 +42,28 @@ const isAuthed = t.middleware(({ ctx, next }) => {
 });
 
 const spamProtectionMiddleware = t.middleware(async ({ ctx: { req }, next }) => {
-    const userIp = getClientIp(req)
+    // const userIp = getClientIp(req)
 
-    if (userIp) {
-        const currentStatusOfIp = await redis.get(userIp)
-        const updatedStatusOfIp = Number(currentStatusOfIp || 0) + 1
+    // if (userIp) {
+    //     const currentStatusOfIp = await redis.get(userIp)
+    //     const updatedStatusOfIp = Number(currentStatusOfIp || 0) + 1
 
-        if (updatedStatusOfIp >= SPAM_PROTECTION_LIMIT_FOR_CALLS.NUMBER_OF_CALLS) {
-            await redis.set(
-                userIp,
-                SPAM_PROTECTION_LIMIT_FOR_CALLS.NUMBER_OF_CALLS,
-                { EX: SPAM_PROTECTION_LIMIT_FOR_CALLS.BAN_DURATION },
-            )
+    //     if (updatedStatusOfIp >= SPAM_PROTECTION_LIMIT_FOR_CALLS.NUMBER_OF_CALLS) {
+    //         await redis.set(
+    //             userIp,
+    //             SPAM_PROTECTION_LIMIT_FOR_CALLS.NUMBER_OF_CALLS,
+    //             { EX: SPAM_PROTECTION_LIMIT_FOR_CALLS.BAN_DURATION },
+    //         )
 
-            throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
-        }
+    //         throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+    //     }
 
-        await redis.set(
-            userIp,
-            updatedStatusOfIp,
-            { EX: SPAM_PROTECTION_LIMIT_FOR_CALLS.DURATION },
-        )
-    }
+    //     await redis.set(
+    //         userIp,
+    //         updatedStatusOfIp,
+    //         { EX: SPAM_PROTECTION_LIMIT_FOR_CALLS.DURATION },
+    //     )
+    // }
 
     return await next();
 });
@@ -103,12 +103,12 @@ const prometheusDBResponseMiddleware = t.middleware(async ({ path, type, ctx: { 
 export const publicProcedure = t
     .procedure
     .use(prometheusRestResponseMiddleware)
-    .use(spamProtectionMiddleware)
+    // .use(spamProtectionMiddleware)
     .use(prometheusDBResponseMiddleware)
 
 export const protectedProcedure = t
     .procedure
     .use(prometheusRestResponseMiddleware)
-    .use(spamProtectionMiddleware)
+    // .use(spamProtectionMiddleware)
     .use(prometheusDBResponseMiddleware)
     .use(isAuthed)
