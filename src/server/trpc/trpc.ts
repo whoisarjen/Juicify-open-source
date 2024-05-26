@@ -1,7 +1,7 @@
 // import { redis } from "@/utils/redis.utils";
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
-import { getClientIp } from 'request-ip'
+// import { getClientIp } from 'request-ip'
 import { type Context } from "./context";
 // import { SPAM_PROTECTION_LIMIT_FOR_CALLS } from '@/utils/trpc.utils'
 // import { Histogram, register } from "prom-client"
