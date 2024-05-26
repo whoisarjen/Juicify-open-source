@@ -1,0 +1,307 @@
+generator client {
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native", "linux-musl"]
+  previewFeatures = ["driverAdapters"]
+  output          = "./generated/client" // Vercel fix
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum kindOfDiets {
+  REGULAR
+  KETOGENIC
+}
+
+enum activityLevels {
+  ZERO
+  MINIMAL
+  AVERAGE
+  HIGH
+  EXTREME
+}
+
+enum goals {
+  MINUS_ONE_AND_HALF
+  MINUS_ONE_AND_QUARTER
+  MINUS_ONE
+  MINUS_THREE_QUARTERS
+  MINUS_HALF
+  ZERO
+  HALF
+  THREE_QUARTERS
+  ONE
+  ONE_AND_QUARTER
+  ONE_AND_HALF
+}
+
+model Account {
+  id                Int      @id @default(autoincrement())
+  createdAt         DateTime @default(now())
+  userId            Int
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  sessionToken String   @unique
+  userId       Int
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Permission {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+  name        String
+  description String?
+  users       User[]
+}
+
+model User {
+  id                  Int              @id @default(autoincrement())
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @default(now()) @updatedAt
+  username            String           @unique @default(uuid())
+  name                String?
+  surname             String?
+  email               String           @unique
+  emailVerified       DateTime?
+  image               String?
+  locale              String           @default("en") @db.Char(2)
+  numberOfMeals       Int              @default(5)
+  proteinsDay0        Int              @default(0)
+  carbsDay0           Int              @default(0)
+  fatsDay0            Int              @default(0)
+  proteinsDay1        Int              @default(0)
+  carbsDay1           Int              @default(0)
+  fatsDay1            Int              @default(0)
+  proteinsDay2        Int              @default(0)
+  carbsDay2           Int              @default(0)
+  fatsDay2            Int              @default(0)
+  proteinsDay3        Int              @default(0)
+  carbsDay3           Int              @default(0)
+  fatsDay3            Int              @default(0)
+  proteinsDay4        Int              @default(0)
+  carbsDay4           Int              @default(0)
+  fatsDay4            Int              @default(0)
+  proteinsDay5        Int              @default(0)
+  carbsDay5           Int              @default(0)
+  fatsDay5            Int              @default(0)
+  proteinsDay6        Int              @default(0)
+  carbsDay6           Int              @default(0)
+  fatsDay6            Int              @default(0)
+  fiber               Int              @default(10)
+  carbsPercentAsSugar Int              @default(10)
+  nextCoach           DateTime         @default(now())
+  isCoachAnalyze      Boolean          @default(false)
+  height              Int              @default(0)
+  birth               DateTime         @default(now())
+  description         String           @default("")
+  website             String           @default("")
+  facebook            String           @default("")
+  instagram           String           @default("")
+  twitter             String           @default("")
+  goal                goals            @default(ZERO)
+  kindOfDiet          kindOfDiets      @default(REGULAR)
+  isSportActive       Boolean          @default(false)
+  activityLevel       activityLevels   @default(AVERAGE)
+  sex                 Boolean          @default(true)
+  isBanned            Boolean          @default(false)
+  permissions         Permission[]
+  accounts            Account[]
+  sessions            Session[]
+  Exercise            Exercise[]
+  WorkoutPlan         WorkoutPlan[]
+  WorkoutResult       WorkoutResult[]
+  Product             Product[]
+  Consumed            Consumed[]
+  Measurement         Measurement[]
+  Coach               Coach[]
+  BurnedCalories      BurnedCalories[]
+  Post                Post[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Exercise {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+  user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int?
+  name       String   @db.VarChar(100)
+  nameLength Int
+  isDeleted  Boolean  @default(false)
+
+  @@unique([userId, name, isDeleted])
+  @@index([userId])
+}
+
+model WorkoutPlan {
+  id             Int             @id @default(autoincrement())
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @default(now()) @updatedAt
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         Int
+  name           String          @db.VarChar(100)
+  description    String?
+  burnedCalories Int             @default(0)
+  isDeleted      Boolean         @default(false)
+  exercises      Json
+  WorkoutResult  WorkoutResult[]
+
+  @@unique([id, userId])
+  @@index([userId])
+}
+
+model WorkoutResult {
+  id             Int          @id @default(autoincrement())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @default(now()) @updatedAt
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         Int
+  name           String       @db.VarChar(100)
+  note           String?
+  burnedCalories Int          @default(0)
+  exercises      Json
+  workoutPlan    WorkoutPlan? @relation(fields: [workoutPlanId], references: [id], onDelete: SetNull)
+  workoutPlanId  Int?
+  whenAdded      DateTime     @default(now())
+
+  @@unique([id, userId])
+  @@index([userId])
+  @@index([workoutPlanId])
+}
+
+model Product {
+  id               Int        @id @default(autoincrement())
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @default(now()) @updatedAt
+  user             User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           Int?
+  name             String     @db.VarChar(255)
+  nameLength       Int
+  proteins         Decimal    @default(0) @db.Decimal(4, 1)
+  carbs            Decimal    @default(0) @db.Decimal(4, 1)
+  sugar            Decimal    @default(0) @db.Decimal(4, 1)
+  fats             Decimal    @default(0) @db.Decimal(4, 1)
+  fiber            Decimal    @default(0) @db.Decimal(4, 1)
+  sodium           Decimal    @default(0) @db.Decimal(4, 1)
+  ethanol          Decimal    @default(0) @db.Decimal(4, 1)
+  barcode          String?
+  isVerified       Boolean?   @default(false)
+  isDeleted        Boolean?   @default(false)
+  isExpectingCheck Boolean?   @default(false)
+  Consumed         Consumed[]
+
+  @@unique([id, userId])
+  @@unique([name, userId])
+  @@index([userId])
+}
+
+model Consumed {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  whenAdded DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int
+  howMany   Decimal  @default(1) @db.Decimal(4, 1)
+  meal      Int      @default(0)
+
+  @@unique([id, userId])
+  @@index([userId])
+  @@index([productId])
+}
+
+model Measurement {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  whenAdded DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  weight    Decimal  @default(0) @db.Decimal(4, 1)
+  userId    Int
+
+  @@unique([id, userId])
+  @@index([userId])
+}
+
+model Coach {
+  id              Int            @id @default(autoincrement())
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @default(now()) @updatedAt
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          Int
+  goal            goals          @default(ZERO)
+  kindOfDiet      kindOfDiets    @default(REGULAR)
+  isSportActive   Boolean        @default(false)
+  activityLevel   activityLevels @default(AVERAGE)
+  countedProteins Int            @default(0)
+  countedCarbs    Int            @default(0)
+  countedFats     Int            @default(0)
+  countedCalories Int            @default(0)
+  currentWeight   Decimal        @db.Decimal(4, 1)
+  changeInWeight  Decimal        @db.Decimal(4, 1)
+  isDataInJuicify Boolean        @default(false)
+  data            Json
+
+  @@index([userId])
+}
+
+model BurnedCalories {
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+  whenAdded      DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         Int
+  name           String   @db.VarChar(255)
+  burnedCalories Int
+
+  @@unique([id, userId])
+  @@index([userId])
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  whenAdded DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  title     String   @db.VarChar(255)
+  content   String   @db.Text
+  img_url   String
+
+  @@unique([id, userId])
+  @@index([userId])
+}

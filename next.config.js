@@ -23,12 +23,10 @@ const nextConfig = {
     env,
     images: {
         domains: [
-            'ep-delicate-grass-a2qgy73h.eu-central-1.aws.neon.tech',
             'localhost',
-            'localhost:1337',
-            'laughing-space-barnacle-v55qw4q7rrqc6g7x-3000.app.github.dev',
             'juicify.app',
-            'juicify.vercel.app',
+            'ep-delicate-grass-a2qgy73h.eu-central-1.aws.neon.tech',
+            'laughing-space-barnacle-v55qw4q7rrqc6g7x-3000.app.github.dev',
         ],
     },
     ...nextTranslate(),
