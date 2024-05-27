@@ -13,7 +13,6 @@ const withPWA = require("next-pwa")({
 
 const nextConfig = {
     reactStrictMode: false, // react-beautiful-dnd is not working, when true
-    env,
     images: {
         domains: [
             'localhost',
