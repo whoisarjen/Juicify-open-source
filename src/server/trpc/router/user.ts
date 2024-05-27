@@ -1,8 +1,8 @@
 import { z } from 'zod'
-import { omit } from 'lodash'
 
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { userSchema } from "../../schema/user.schema";
+import { prepareUserForFE } from "@/utils/user.utils";
 
 export const userRouter = router({
     getByUsername: publicProcedure
@@ -12,13 +12,13 @@ export const userRouter = router({
             })
         )
         .query(async ({ ctx, input: { username } }) => {
-            const user = await ctx.prisma.user.findFirstOrThrow({
-                where: {
-                    username,
-                }
-            })
-
-            return omit(user, ['email'])
+            return prepareUserForFE(
+                await ctx.prisma.user.findFirstOrThrow({
+                    where: {
+                        username,
+                    }
+                })
+            )
         }),
     getAll: publicProcedure
         .input(
@@ -35,20 +35,20 @@ export const userRouter = router({
                 },
             })
 
-            return users.map(user => omit(user, ['email']))
+            return users.map(prepareUserForFE)
         }),
     update: protectedProcedure
         .input(userSchema)
         .mutation(async ({ ctx, input }) => {
-            const user = await ctx.prisma.user.update({
-                data: {
-                    ...input,
-                },
-                where: {
-                    id: ctx.session.user.id,
-                }
-            })
-
-            return omit(user, ['email'])
+            return prepareUserForFE(
+                await ctx.prisma.user.update({
+                    data: {
+                        ...input,
+                    },
+                    where: {
+                        id: ctx.session.user.id,
+                    }
+                })
+            )
         }),
 });

@@ -3,6 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db/client";
+import { prepareUserForFE } from "@/utils/user.utils";
 
 export const authOptions: NextAuthOptions = {
     callbacks: {
@@ -13,17 +14,19 @@ export const authOptions: NextAuthOptions = {
 
             return true
         },
-        async session({ session, user }) {
+        async session({ session, user: { id } }) {
             return {
                 ...session,
-                user: await prisma.user.findFirstOrThrow({
-                    include: {
-                        permissions: true,
-                    },
-                    where: {
-                        id: parseInt(user.id),
-                    },
-                }),
+                user: prepareUserForFE(
+                    await prisma.user.findFirstOrThrow({
+                        include: {
+                            permissions: true,
+                        },
+                        where: {
+                            id: parseInt(id),
+                        },
+                    })
+                ),
             }
         },
     },

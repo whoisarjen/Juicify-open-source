@@ -3,7 +3,11 @@ import { env } from '@/env/server.mjs'
 import { prisma } from '../../server/db/client'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const users = await prisma.user.findMany()
+    const users = await prisma.user.findMany({
+        select: {
+            username: true,
+        }
+    })
 
     res.statusCode = 200
     res.setHeader('Content-Type', 'text/xml')
