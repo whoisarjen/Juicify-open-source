@@ -21,8 +21,8 @@ export const serverSchema = z.object({
  * To expose them to the client, prefix them with `NEXT_PUBLIC_`.
  */
 export const clientSchema = z.object({
-    NEXT_PUBLIC_SEARCH_MIN_NAME_LENGTH: z.number(),
-    NEXT_PUBLIC_DEFAULT_NUMBER_OF_MEALS: z.number(),
+    NEXT_PUBLIC_SEARCH_MIN_NAME_LENGTH: z.number().optional().default(3),
+    NEXT_PUBLIC_DEFAULT_NUMBER_OF_MEALS: z.number().optional().default(5),
     NEXT_PUBLIC_NODE_ENV: z.enum(["development", "test", "production"]),
 });
 

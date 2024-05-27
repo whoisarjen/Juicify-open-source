@@ -11,13 +11,6 @@ const withPWA = require("next-pwa")({
     skipWaiting: isProduction,
 })
 
-const env = {
-    NEXT_PUBLIC_SEARCH_MIN_NAME_LENGTH: 3,
-    NEXT_PUBLIC_DEFAULT_NUMBER_OF_MEALS: 5,
-    APP_VERSION: new Date().toISOString(),
-    isProduction,
-}
-
 const nextConfig = {
     reactStrictMode: false, // react-beautiful-dnd is not working, when true
     env,
@@ -25,8 +18,6 @@ const nextConfig = {
         domains: [
             'localhost',
             'juicify.app',
-            'ep-delicate-grass-a2qgy73h.eu-central-1.aws.neon.tech',
-            'laughing-space-barnacle-v55qw4q7rrqc6g7x-3000.app.github.dev',
         ],
     },
     ...nextTranslate(),
