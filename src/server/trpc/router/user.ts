@@ -27,18 +27,20 @@ export const userRouter = router({
             })
         )
         .query(async ({ ctx, input: { take } }) => {
-            return await ctx.prisma.user.findMany({
+            const users = await ctx.prisma.user.findMany({
                 take,
                 skip: parseInt((Math.random() * 100) as unknown as string),
                 orderBy: {
                     id: 'desc',
                 },
             })
+
+            return users.map(user => omit(user, ['email']))
         }),
     update: protectedProcedure
         .input(userSchema)
         .mutation(async ({ ctx, input }) => {
-            return await ctx.prisma.user.update({
+            const user = await ctx.prisma.user.update({
                 data: {
                     ...input,
                 },
@@ -46,5 +48,7 @@ export const userRouter = router({
                     id: ctx.session.user.id,
                 }
             })
+
+            return omit(user, ['email'])
         }),
 });
