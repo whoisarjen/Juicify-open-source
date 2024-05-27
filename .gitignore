@@ -3,6 +3,7 @@
 /.pnp
 .pnp.js
 .env
+/public/fallback-*
 
 # testing
 /coverage
