@@ -20,7 +20,7 @@ import TabPanel from '@mui/lab/TabPanel'
 const WorkoutStatisticsPage = () => {
     const router: any = useRouter()
     const { data: sessionData } = useSession()
-    const { t } = useTranslation('workout')
+    const { t } = useTranslation('home')
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString())
 
     const username = router.query.login || ''
