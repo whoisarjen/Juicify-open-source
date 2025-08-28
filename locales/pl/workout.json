@@ -51,5 +51,8 @@
     "WORKOUTS_PER_WEEK": "treningi/tydzień",
     "WORKOUTS_PER_MONTH": "treningi/miesiąc",
     "NO_WORKOUTS_FOUND": "Nie znaleziono treningów dla",
-    "LOADING_STATISTICS": "Ładowanie szczegółowych statystyk..."
+    "LOADING_STATISTICS": "Ładowanie szczegółowych statystyk...",
+    "COMPLETE_HISTORY": "Kompletna Historia Treningów",
+    "ACTIVE_MONTHS": "aktywne miesiące",
+    "TOTAL": "łącznie"
 }
