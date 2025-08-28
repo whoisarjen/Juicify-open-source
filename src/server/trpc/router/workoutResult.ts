@@ -257,17 +257,18 @@ export const workoutResultRouter = router({
             statistics.totalCaloriesBurned = workoutResults.reduce((total, workout) => total + workout.burnedCalories, 0);
 
             // Group workouts by month-year
-            const workoutsByMonth = new Map<string, typeof workoutResults>();
+            const workoutsByMonth: Record<string, typeof workoutResults> = {};
             workoutResults.forEach(workout => {
                 const monthKey = moment(workout.whenAdded).format('YYYY-MM');
-                if (!workoutsByMonth.has(monthKey)) {
-                    workoutsByMonth.set(monthKey, []);
+                if (!workoutsByMonth[monthKey]) {
+                    workoutsByMonth[monthKey] = [];
                 }
-                workoutsByMonth.get(monthKey)!.push(workout);
+                workoutsByMonth[monthKey].push(workout);
             });
 
             // Process only months that have workouts
-            for (const [monthKey, monthWorkouts] of workoutsByMonth.entries()) {
+            for (const monthKey of Object.keys(workoutsByMonth)) {
+                const monthWorkouts = workoutsByMonth[monthKey];
                 const monthStart = moment(monthKey + '-01');
                 const monthEnd = monthStart.clone().endOf('month');
                 const monthName = monthStart.format('MMMM');
@@ -357,8 +358,9 @@ export const workoutResultRouter = router({
             statistics.averageWorkoutsPerMonth = Math.round((statistics.totalWorkouts / Math.max(totalMonths, 1)) * 100) / 100;
 
             // Get yearly comparison data
-            const years = new Set(workoutResults.map(workout => moment(workout.whenAdded).year()));
-            for (const year of years) {
+            const yearsArray = workoutResults.map(workout => moment(workout.whenAdded).year());
+            const uniqueYears = Array.from(new Set(yearsArray));
+            for (const year of uniqueYears) {
                 const yearWorkouts = workoutResults.filter(workout => 
                     moment(workout.whenAdded).year() === year
                 ).length;
