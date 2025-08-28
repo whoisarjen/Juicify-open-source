@@ -19,6 +19,7 @@ import { useSession, signIn } from 'next-auth/react'
 import Divider from '@mui/material/Divider'
 import NoteAltIcon from '@mui/icons-material/NoteAlt'
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera'
+import BarChartIcon from '@mui/icons-material/BarChart'
 import { type Translate } from 'next-translate'
 import { type Session } from 'next-auth'
 import { handleSignOut } from '@/utils/user.utils'
@@ -74,6 +75,11 @@ const getRouterPushOptions = (sessionData: Session | null, t: Translate) => {
             link: `/${username}/workout/plans`,
             text: t('WORKOUT_PLANS'),
             children: <NoteAltIcon color="primary" />,
+        },
+        statistics: {
+            link: `/${username}/workout/statistics`,
+            text: t('WORKOUT_STATISTICS'),
+            children: <BarChartIcon color="primary" />,
         },
         coach: {
             link: `/coach`,

@@ -170,21 +170,14 @@ export const workoutResultRouter = router({
         .input(
             z.object({
                 username: z.string(),
-                year: z.number().optional(),
             })
         )
-        .query(async ({ ctx, input: { username, year } }) => {
-            const currentYear = year || new Date().getFullYear();
-            
-            // Get all workout results for the user in the specified year
+        .query(async ({ ctx, input: { username } }) => {
+            // Get ALL workout results for the user (no year filter)
             const workoutResults = await ctx.prisma.workoutResult.findMany({
                 where: {
                     user: {
                         username,
-                    },
-                    whenAdded: {
-                        gte: new Date(`${currentYear}-01-01`),
-                        lte: new Date(`${currentYear}-12-31T23:59:59`),
                     },
                 },
                 select: {
@@ -194,13 +187,35 @@ export const workoutResultRouter = router({
                     burnedCalories: true,
                 },
                 orderBy: {
-                    whenAdded: 'asc'
+                    whenAdded: 'desc'
                 }
             });
 
+            // If no workouts, return empty structure
+            if (workoutResults.length === 0) {
+                return {
+                    totalWorkouts: 0,
+                    totalCaloriesBurned: 0,
+                    averageWorkoutsPerWeek: 0,
+                    averageWorkoutsPerMonth: 0,
+                    months: [],
+                    yearlyComparison: {},
+                    dateRange: {
+                        earliest: null,
+                        latest: null,
+                    }
+                };
+            }
+
+            // Get date range
+            const sortedWorkouts = workoutResults.sort((a, b) => 
+                new Date(a.whenAdded).getTime() - new Date(b.whenAdded).getTime()
+            );
+            const earliestDate = moment(sortedWorkouts[0].whenAdded);
+            const latestDate = moment(sortedWorkouts[sortedWorkouts.length - 1].whenAdded);
+            
             // Initialize detailed statistics structure
             const statistics = {
-                year: currentYear,
                 totalWorkouts: workoutResults.length,
                 totalCaloriesBurned: 0,
                 averageWorkoutsPerWeek: 0,
@@ -232,22 +247,31 @@ export const workoutResultRouter = router({
                     }>;
                 }>,
                 yearlyComparison: {} as Record<string, number>,
+                dateRange: {
+                    earliest: earliestDate.format('YYYY-MM-DD'),
+                    latest: latestDate.format('YYYY-MM-DD'),
+                }
             };
 
             // Calculate total calories burned
             statistics.totalCaloriesBurned = workoutResults.reduce((total, workout) => total + workout.burnedCalories, 0);
 
-            // Generate all months for the year (even if no workouts)
-            for (let month = 0; month < 12; month++) {
-                const monthStart = moment([currentYear, month]);
-                const monthEnd = moment([currentYear, month]).endOf('month');
-                const monthKey = monthStart.format('YYYY-MM');
-                const monthName = monthStart.format('MMMM');
+            // Group workouts by month-year
+            const workoutsByMonth = new Map<string, typeof workoutResults>();
+            workoutResults.forEach(workout => {
+                const monthKey = moment(workout.whenAdded).format('YYYY-MM');
+                if (!workoutsByMonth.has(monthKey)) {
+                    workoutsByMonth.set(monthKey, []);
+                }
+                workoutsByMonth.get(monthKey)!.push(workout);
+            });
 
-                // Get workouts for this month
-                const monthWorkouts = workoutResults.filter(workout => 
-                    moment(workout.whenAdded).format('YYYY-MM') === monthKey
-                );
+            // Process only months that have workouts
+            for (const [monthKey, monthWorkouts] of workoutsByMonth.entries()) {
+                const monthStart = moment(monthKey + '-01');
+                const monthEnd = monthStart.clone().endOf('month');
+                const monthName = monthStart.format('MMMM');
+                const year = monthStart.year();
 
                 // Generate all weeks for this month
                 const weeks = [];
@@ -268,7 +292,7 @@ export const workoutResultRouter = router({
                     const workoutDays = [];
                     for (let day = 0; day < 7; day++) {
                         const currentDay = weekStart.clone().add(day, 'days');
-                        if (currentDay.month() === month) {
+                        if (currentDay.month() === monthStart.month() && currentDay.year() === year) {
                             const dayWorkouts = weekWorkouts.filter(workout => 
                                 moment(workout.whenAdded).isSame(currentDay, 'day')
                             );
@@ -281,15 +305,17 @@ export const workoutResultRouter = router({
                         }
                     }
 
-                    weeks.push({
-                        week: weekKey,
-                        weekNumber,
-                        startDate: weekStart.format('YYYY-MM-DD'),
-                        endDate: weekEnd.format('YYYY-MM-DD'),
-                        workouts: weekWorkouts.length,
-                        caloriesBurned: weekWorkouts.reduce((total, workout) => total + workout.burnedCalories, 0),
-                        workoutDays,
-                    });
+                    if (weekWorkouts.length > 0 || workoutDays.some(day => day.workouts > 0)) {
+                        weeks.push({
+                            week: weekKey,
+                            weekNumber,
+                            startDate: weekStart.format('YYYY-MM-DD'),
+                            endDate: weekEnd.format('YYYY-MM-DD'),
+                            workouts: weekWorkouts.length,
+                            caloriesBurned: weekWorkouts.reduce((total, workout) => total + workout.burnedCalories, 0),
+                            workoutDays,
+                        });
+                    }
 
                     weekStart.add(1, 'week');
                 }
@@ -297,7 +323,7 @@ export const workoutResultRouter = router({
                 // Generate daily breakdown for the entire month
                 const dailyBreakdown = [];
                 for (let day = 1; day <= monthEnd.date(); day++) {
-                    const currentDay = moment([currentYear, month, day]);
+                    const currentDay = moment([year, monthStart.month(), day]);
                     const dayWorkouts = monthWorkouts.filter(workout => 
                         moment(workout.whenAdded).isSame(currentDay, 'day')
                     );
@@ -313,36 +339,30 @@ export const workoutResultRouter = router({
                 statistics.months.push({
                     month: monthKey,
                     monthName,
-                    year: currentYear,
+                    year,
                     totalWorkouts: monthWorkouts.length,
                     totalCaloriesBurned: monthWorkouts.reduce((total, workout) => total + workout.burnedCalories, 0),
-                    weeks: weeks.filter(week => 
-                        week.workoutDays.some(day => day.workouts > 0) || 
-                        moment(week.startDate).month() === month ||
-                        moment(week.endDate).month() === month
-                    ),
+                    weeks,
                     dailyBreakdown,
                 });
             }
 
-            // Calculate averages
-            const totalWeeksInYear = 52;
-            statistics.averageWorkoutsPerWeek = Math.round((statistics.totalWorkouts / totalWeeksInYear) * 100) / 100;
-            statistics.averageWorkoutsPerMonth = Math.round((statistics.totalWorkouts / 12) * 100) / 100;
+            // Sort months by date (most recent first)
+            statistics.months.sort((a, b) => b.month.localeCompare(a.month));
 
-            // Get data for previous years for comparison
-            const previousYears = [currentYear - 1, currentYear - 2];
-            for (const prevYear of previousYears) {
-                const prevYearWorkouts = await ctx.prisma.workoutResult.count({
-                    where: {
-                        user: { username },
-                        whenAdded: {
-                            gte: new Date(`${prevYear}-01-01`),
-                            lte: new Date(`${prevYear}-12-31T23:59:59`),
-                        },
-                    },
-                });
-                statistics.yearlyComparison[prevYear.toString()] = prevYearWorkouts;
+            // Calculate averages based on actual time period
+            const totalMonths = moment().diff(earliestDate, 'months', true);
+            const totalWeeks = moment().diff(earliestDate, 'weeks', true);
+            statistics.averageWorkoutsPerWeek = Math.round((statistics.totalWorkouts / Math.max(totalWeeks, 1)) * 100) / 100;
+            statistics.averageWorkoutsPerMonth = Math.round((statistics.totalWorkouts / Math.max(totalMonths, 1)) * 100) / 100;
+
+            // Get yearly comparison data
+            const years = new Set(workoutResults.map(workout => moment(workout.whenAdded).year()));
+            for (const year of years) {
+                const yearWorkouts = workoutResults.filter(workout => 
+                    moment(workout.whenAdded).year() === year
+                ).length;
+                statistics.yearlyComparison[year.toString()] = yearWorkouts;
             }
 
             return statistics;

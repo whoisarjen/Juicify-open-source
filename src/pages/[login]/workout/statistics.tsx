@@ -1,312 +1,190 @@
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
-import { useState } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { trpc } from '@/utils/trpc.utils'
 import NavbarProfile from '@/containers/profile/NavbarProfile/NavbarProfile'
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
-import { 
-    Typography, 
-    Card, 
-    CardContent, 
-    Grid, 
-    Box, 
-    Select, 
-    MenuItem, 
-    FormControl, 
-    InputLabel,
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
-    Chip,
-    LinearProgress,
-    Divider,
-    Paper
-} from '@mui/material'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import TrendingUpIcon from '@mui/icons-material/TrendingUp'
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
-import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment'
 
 const WorkoutStatisticsPage = () => {
     const router: any = useRouter()
     const { data: sessionData } = useSession()
     const { t } = useTranslation('workout')
-    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
 
     const username = router.query.login || ''
     const isOwner = sessionData?.user?.username == username
 
     const { data: statistics, isFetching } = trpc.workoutResult.getStatistics.useQuery(
-        { username, year: selectedYear },
+        { username },
         { enabled: !!username }
     )
 
-    const years = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i)
-
     const getWorkoutIntensityColor = (count: number) => {
-        if (count === 0) return '#f5f5f5'
-        if (count === 1) return '#d4edda'
-        if (count === 2) return '#c3e6cb'
-        if (count === 3) return '#b1dfbb'
-        return '#28a745'
+        if (count === 0) return 'bg-gray-50 border-gray-200'
+        if (count === 1) return 'bg-blue-100 border-blue-300'
+        if (count === 2) return 'bg-blue-200 border-blue-400'
+        if (count === 3) return 'bg-blue-300 border-blue-500'
+        return 'bg-blue-500 border-blue-600'
+    }
+
+    const getTextColor = (count: number) => {
+        if (count === 0) return 'text-gray-400'
+        if (count <= 2) return 'text-gray-800'
+        return 'text-white'
     }
 
     return (
-        <div className="flex flex-1 flex-col gap-4">
+        <div className="flex flex-1 flex-col gap-4 pb-16 md:pb-4">
             {isOwner ? (
                 <NavbarOnlyTitle title="workout:WORKOUT_STATISTICS" />
             ) : (
                 <NavbarProfile tab={2} />
             )}
-            
-            <Box className="mb-4">
-                <FormControl size="small" sx={{ minWidth: 120 }}>
-                    <InputLabel>{t('YEAR')}</InputLabel>
-                    <Select
-                        value={selectedYear}
-                        label={t('YEAR')}
-                        onChange={(e) => setSelectedYear(Number(e.target.value))}
-                    >
-                        {years.map(year => (
-                            <MenuItem key={year} value={year}>
-                                {year}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-            </Box>
 
-            {!isFetching && statistics && (
+            {!isFetching && statistics ? (
                 <>
-                    {/* Overview Cards */}
-                    <Grid container spacing={3}>
-                        <Grid item xs={12} md={3}>
-                            <Card>
-                                <CardContent>
-                                    <Box display="flex" alignItems="center" mb={1}>
-                                        <TrendingUpIcon color="primary" sx={{ mr: 1 }} />
-                                        <Typography variant="h6">{t('TOTAL_WORKOUTS')}</Typography>
-                                    </Box>
-                                    <Typography variant="h3" color="primary" fontWeight="bold">
-                                        {statistics.totalWorkouts}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        in {statistics.year}
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid>
+                    {/* Date Range Header */}
+                    {statistics.dateRange.earliest && statistics.dateRange.latest && (
+                        <div className="bg-white p-4 rounded-lg shadow mb-4">
+                            <div className="text-center">
+                                <h2 className="text-lg font-semibold text-gray-900">Complete Workout History</h2>
+                                <p className="text-sm text-gray-500 mt-1">
+                                    {statistics.dateRange.earliest} to {statistics.dateRange.latest}
+                                </p>
+                                <p className="text-xs text-gray-400 mt-1">
+                                    {statistics.months.length} active months
+                                </p>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Overview Stats */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6">
+                        <div className="bg-white p-3 md:p-4 rounded-lg shadow">
+                            <h3 className="text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wide">{t('TOTAL_WORKOUTS')}</h3>
+                            <div className="mt-2 flex items-baseline">
+                                <p className="text-xl md:text-2xl font-semibold text-primary-600">{statistics.totalWorkouts}</p>
+                                <p className="ml-1 md:ml-2 text-xs md:text-sm text-gray-500">total</p>
+                            </div>
+                        </div>
                         
-                        <Grid item xs={12} md={3}>
-                            <Card>
-                                <CardContent>
-                                    <Box display="flex" alignItems="center" mb={1}>
-                                        <LocalFireDepartmentIcon color="error" sx={{ mr: 1 }} />
-                                        <Typography variant="h6">Calories Burned</Typography>
-                                    </Box>
-                                    <Typography variant="h3" color="error.main" fontWeight="bold">
-                                        {statistics.totalCaloriesBurned.toLocaleString()}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        total calories
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid>
+                        <div className="bg-white p-3 md:p-4 rounded-lg shadow">
+                            <h3 className="text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wide">{t('CALORIES_BURNED')}</h3>
+                            <div className="mt-2 flex items-baseline">
+                                <p className="text-xl md:text-2xl font-semibold text-red-600">{statistics.totalCaloriesBurned.toLocaleString()}</p>
+                                <p className="ml-1 md:ml-2 text-xs md:text-sm text-gray-500">cal</p>
+                            </div>
+                        </div>
                         
-                        <Grid item xs={12} md={3}>
-                            <Card>
-                                <CardContent>
-                                    <Box display="flex" alignItems="center" mb={1}>
-                                        <CalendarMonthIcon color="success" sx={{ mr: 1 }} />
-                                        <Typography variant="h6">Weekly Average</Typography>
-                                    </Box>
-                                    <Typography variant="h3" color="success.main" fontWeight="bold">
-                                        {statistics.averageWorkoutsPerWeek}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        workouts/week
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid>
+                        <div className="bg-white p-3 md:p-4 rounded-lg shadow">
+                            <h3 className="text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wide">{t('WEEKLY_AVERAGE')}</h3>
+                            <div className="mt-2 flex items-baseline">
+                                <p className="text-xl md:text-2xl font-semibold text-green-600">{statistics.averageWorkoutsPerWeek}</p>
+                                <p className="ml-1 md:ml-2 text-xs md:text-sm text-gray-500">/week</p>
+                            </div>
+                        </div>
                         
-                        <Grid item xs={12} md={3}>
-                            <Card>
-                                <CardContent>
-                                    <Box display="flex" alignItems="center" mb={1}>
-                                        <CalendarMonthIcon color="info" sx={{ mr: 1 }} />
-                                        <Typography variant="h6">Monthly Average</Typography>
-                                    </Box>
-                                    <Typography variant="h3" color="info.main" fontWeight="bold">
-                                        {statistics.averageWorkoutsPerMonth}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        workouts/month
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    </Grid>
+                        <div className="bg-white p-3 md:p-4 rounded-lg shadow">
+                            <h3 className="text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wide">{t('MONTHLY_AVERAGE')}</h3>
+                            <div className="mt-2 flex items-baseline">
+                                <p className="text-xl md:text-2xl font-semibold text-blue-600">{statistics.averageWorkoutsPerMonth}</p>
+                                <p className="ml-1 md:ml-2 text-xs md:text-sm text-gray-500">/month</p>
+                            </div>
+                        </div>
+                    </div>
 
                     {/* Year Comparison */}
-                    {Object.keys(statistics.yearlyComparison).length > 0 && (
-                        <Card sx={{ mt: 3 }}>
-                            <CardContent>
-                                <Typography variant="h6" gutterBottom>
-                                    Year-over-Year Comparison
-                                </Typography>
-                                <Grid container spacing={2}>
-                                    {Object.entries(statistics.yearlyComparison)
-                                        .sort(([a], [b]) => Number(b) - Number(a))
-                                        .map(([year, count]) => (
-                                            <Grid item xs={12} sm={4} key={year}>
-                                                <Paper elevation={1} sx={{ p: 2, textAlign: 'center' }}>
-                                                    <Typography variant="h4" color="primary">
-                                                        {count}
-                                                    </Typography>
-                                                    <Typography variant="body1">
-                                                        {year}
-                                                    </Typography>
-                                                    <Typography variant="body2" color="text.secondary">
-                                                        {count !== statistics.totalWorkouts && (
-                                                            <span>
-                                                                {count < statistics.totalWorkouts ? '↑' : '↓'} 
-                                                                {Math.abs(statistics.totalWorkouts - count)} from current year
-                                                            </span>
-                                                        )}
-                                                    </Typography>
-                                                </Paper>
-                                            </Grid>
-                                        ))}
-                                </Grid>
-                            </CardContent>
-                        </Card>
+                    {Object.keys(statistics.yearlyComparison).length > 1 && (
+                        <div className="bg-white p-4 md:p-6 rounded-lg shadow mb-6">
+                            <h3 className="text-lg font-medium text-gray-900 mb-4">{t('YEAR_COMPARISON')}</h3>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
+                                {Object.entries(statistics.yearlyComparison)
+                                    .sort(([a], [b]) => Number(b) - Number(a))
+                                    .map(([year, count]) => (
+                                        <div key={year} className="text-center p-3 border rounded-lg">
+                                            <p className="text-xl md:text-2xl font-bold text-primary-600">{count as number}</p>
+                                            <p className="text-sm text-gray-600">{year}</p>
+                                        </div>
+                                    ))}
+                            </div>
+                        </div>
                     )}
 
-                    {/* Monthly Breakdown */}
-                    <Typography variant="h5" sx={{ mt: 4, mb: 2 }}>
-                        Monthly Breakdown
-                    </Typography>
-                    
-                    {statistics.months.map((month, index) => (
-                        <Accordion key={month.month} defaultExpanded={index < 3}>
-                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                <Box display="flex" alignItems="center" width="100%">
-                                    <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                                        {month.monthName} {month.year}
-                                    </Typography>
-                                    <Box display="flex" gap={2} alignItems="center" sx={{ mr: 2 }}>
-                                        <Chip 
-                                            label={`${month.totalWorkouts} workouts`} 
-                                            color={month.totalWorkouts > 0 ? "primary" : "default"}
-                                            size="small"
-                                        />
-                                        <Chip 
-                                            label={`${month.totalCaloriesBurned} cal`} 
-                                            color="secondary"
-                                            size="small"
-                                        />
-                                    </Box>
-                                </Box>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                {/* Weekly breakdown for this month */}
-                                <Typography variant="subtitle1" gutterBottom>
-                                    Weekly Breakdown
-                                </Typography>
-                                <Grid container spacing={2} sx={{ mb: 3 }}>
-                                    {month.weeks.map(week => (
-                                        <Grid item xs={12} sm={6} md={3} key={week.week}>
-                                            <Card variant="outlined">
-                                                <CardContent sx={{ p: 2 }}>
-                                                    <Typography variant="body2" color="text.secondary">
-                                                        {week.week}
-                                                    </Typography>
-                                                    <Typography variant="h6">
-                                                        {week.workouts} workouts
-                                                    </Typography>
-                                                    <Typography variant="body2">
-                                                        {week.caloriesBurned} calories
-                                                    </Typography>
-                                                    <LinearProgress 
-                                                        variant="determinate" 
-                                                        value={week.workouts > 0 ? Math.min((week.workouts / 7) * 100, 100) : 0}
-                                                        sx={{ mt: 1 }}
-                                                    />
-                                                </CardContent>
-                                            </Card>
-                                        </Grid>
-                                    ))}
-                                </Grid>
+                    {/* Monthly Grid */}
+                    <div className="bg-white p-3 md:p-6 rounded-lg shadow">
+                        <h3 className="text-lg font-medium text-gray-900 mb-4">{t('MONTHLY_BREAKDOWN')}</h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
+                            {statistics.months.map((month) => (
+                                <div key={month.month} className="border rounded-lg p-3 md:p-4">
+                                    {/* Month Header */}
+                                    <div className="flex justify-between items-center mb-3">
+                                        <div>
+                                            <h4 className="font-medium text-gray-900 text-sm md:text-base">{month.monthName}</h4>
+                                            <p className="text-xs text-gray-500">{month.year}</p>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-sm font-semibold text-primary-600">{month.totalWorkouts} {t('WORKOUTS')}</p>
+                                            <p className="text-xs text-gray-500">{month.totalCaloriesBurned} cal</p>
+                                        </div>
+                                    </div>
 
-                                <Divider sx={{ my: 2 }} />
-                                
-                                {/* Daily calendar view */}
-                                <Typography variant="subtitle1" gutterBottom>
-                                    Daily Activity
-                                </Typography>
-                                <Grid container spacing={1}>
-                                    {month.dailyBreakdown.map(day => (
-                                        <Grid item xs={12/7} key={day.date}>
-                                            <Paper 
-                                                sx={{ 
-                                                    p: 1, 
-                                                    textAlign: 'center', 
-                                                    backgroundColor: getWorkoutIntensityColor(day.workouts),
-                                                    minHeight: 60,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    justifyContent: 'center',
-                                                    border: day.workouts > 0 ? '2px solid #1976d2' : '1px solid #e0e0e0'
-                                                }}
-                                            >
-                                                <Typography variant="caption" display="block">
-                                                    {new Date(day.date).getDate()}
-                                                </Typography>
-                                                <Typography variant="caption" display="block">
-                                                    {day.dayName.slice(0, 3)}
-                                                </Typography>
-                                                {day.workouts > 0 && (
-                                                    <>
-                                                        <Typography variant="body2" fontWeight="bold">
-                                                            {day.workouts}
-                                                        </Typography>
-                                                        <Typography variant="caption">
-                                                            {day.caloriesBurned}cal
-                                                        </Typography>
-                                                    </>
-                                                )}
-                                            </Paper>
-                                        </Grid>
-                                    ))}
-                                </Grid>
-                            </AccordionDetails>
-                        </Accordion>
-                    ))}
+                                    {/* Daily Calendar Grid */}
+                                    <div className="grid grid-cols-7 gap-0.5 sm:gap-1 mb-3">
+                                        {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(day => (
+                                            <div key={day} className="text-xs font-medium text-gray-500 text-center p-1">
+                                                {day}
+                                            </div>
+                                        ))}
+                                        {month.dailyBreakdown.map(day => {
+                                            const dayOfWeek = new Date(day.date).getDay()
+                                            const isEmpty = day.workouts === 0
+                                            return (
+                                                <div
+                                                    key={day.date}
+                                                    className={`
+                                                        aspect-square text-xs rounded-sm flex flex-col items-center justify-center
+                                                        ${getWorkoutIntensityColor(day.workouts)}
+                                                        ${getTextColor(day.workouts)}
+                                                        border transition-all hover:scale-105 cursor-pointer
+                                                        min-h-[28px] sm:min-h-[32px]
+                                                    `}
+                                                    title={`${day.date}: ${day.workouts} workouts, ${day.caloriesBurned} cal`}
+                                                >
+                                                    <span className="font-medium">{new Date(day.date).getDate()}</span>
+                                                    {day.workouts > 0 && (
+                                                        <span className="text-xs font-bold">{day.workouts}</span>
+                                                    )}
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+
+                                    {/* Weekly Summary */}
+                                    <div className="space-y-1">
+                                        {month.weeks.slice(0, 4).map(week => (
+                                            <div key={week.week} className="flex justify-between text-xs">
+                                                <span className="text-gray-500 truncate">{week.week}</span>
+                                                <span className="font-medium ml-1">{week.workouts}w</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
 
                     {statistics.totalWorkouts === 0 && (
-                        <Card>
-                            <CardContent>
-                                <Typography variant="body1" color="text.secondary" align="center">
-                                    No workouts found for {statistics.year}
-                                </Typography>
-                            </CardContent>
-                        </Card>
+                        <div className="bg-white p-8 rounded-lg shadow text-center">
+                            <p className="text-gray-500">No workouts found in your history</p>
+                        </div>
                     )}
                 </>
-            )}
-
-            {isFetching && (
-                <Card>
-                    <CardContent>
-                        <Typography variant="body1" align="center">
-                            Loading detailed statistics...
-                        </Typography>
-                        <LinearProgress sx={{ mt: 2 }} />
-                    </CardContent>
-                </Card>
+            ) : (
+                <div className="bg-white p-8 rounded-lg shadow text-center">
+                    <p className="text-gray-500">{t('LOADING_STATISTICS')}</p>
+                    <div className="mt-4 w-full bg-gray-200 rounded-full h-2">
+                        <div className="bg-primary-600 h-2 rounded-full animate-pulse w-1/2"></div>
+                    </div>
+                </div>
             )}
         </div>
     )
