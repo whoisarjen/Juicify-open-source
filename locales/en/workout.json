@@ -53,5 +53,6 @@
     "LOADING_STATISTICS": "Loading detailed statistics...",
     "COMPLETE_HISTORY": "Complete Workout History",
     "ACTIVE_MONTHS": "active months",
-    "TOTAL": "total"
+    "TOTAL": "total",
+    "NO_WORKOUTS_FOUND_HISTORY": "No workouts found in your history"
 }

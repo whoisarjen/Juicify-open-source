@@ -54,5 +54,6 @@
     "LOADING_STATISTICS": "Ładowanie szczegółowych statystyk...",
     "COMPLETE_HISTORY": "Kompletna Historia Treningów",
     "ACTIVE_MONTHS": "aktywne miesiące",
-    "TOTAL": "łącznie"
+    "TOTAL": "łącznie",
+    "NO_WORKOUTS_FOUND_HISTORY": "Nie znaleziono treningów w Twojej historii"
 }
