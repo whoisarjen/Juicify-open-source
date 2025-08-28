@@ -60,7 +60,7 @@ const WorkoutStatisticsPage = () => {
     return (
         <div className="flex flex-1 flex-col gap-4">
             {isOwner ? (
-                <NavbarOnlyTitle title="workout:WORKOUT_STATISTICS" />
+                <NavbarOnlyTitle title="home:WORKOUT_STATISTICS" />
             ) : (
                 <NavbarProfile tab={2} />
             )}
