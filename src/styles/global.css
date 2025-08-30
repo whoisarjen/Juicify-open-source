@@ -21,6 +21,7 @@
     font-family: 'Quicksand';
     font-style: normal;
     font-weight: 400;
+    font-display: swap;
     src: url('../../public/fonts/quicksand/quicksand-v24-latin-ext-regular.eot'); /* IE9 Compat Modes */
     src: local(''),
         url('../../public/fonts/quicksand/quicksand-v24-latin-ext-regular.eot?#iefix')
@@ -42,6 +43,7 @@
     font-family: 'Quicksand';
     font-style: normal;
     font-weight: 700;
+    font-display: swap;
     src: url('../../public/fonts/quicksand/quicksand-v24-latin-ext-700.eot'); /* IE9 Compat Modes */
     src: local(''),
         url('../../public/fonts/quicksand/quicksand-v24-latin-ext-700.eot?#iefix')

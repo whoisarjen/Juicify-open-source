@@ -2,19 +2,19 @@ import {
     createTheme,
     ThemeProvider as ThemeProviderMUI,
 } from '@mui/material/styles'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 
 const MUI = ({ children }: { children: any }) => {
     const [mode, setMode]: any = useState('dark')
 
-    const theme = createTheme({
+    const theme = useMemo(() => createTheme({
         typography: {
             fontFamily: 'Quicksand, sans-serif',
         },
         palette: {
             mode,
         },
-    })
+    }), [mode])
 
     useEffect(
         () =>
