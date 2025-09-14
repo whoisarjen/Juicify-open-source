@@ -43,7 +43,7 @@ export const workoutPlanRouter = router({
                     },
                 },
                 orderBy: {
-                    name: 'desc',
+                    updatedAt: 'desc',
                 },
             }) as unknown as WorkoutPlan[]
         }),
