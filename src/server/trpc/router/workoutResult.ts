@@ -27,8 +27,8 @@ export const workoutResultRouter = router({
                 },
             })
 
-            const previousWorkoutResult = workoutResult.workoutPlanId
-                ? await ctx.prisma.workoutResult.findFirst({
+            const previousWorkoutResults = workoutResult.workoutPlanId
+                ? await ctx.prisma.workoutResult.findMany({
                     where: {
                         whenAdded: {
                             lt: workoutResult.whenAdded,
@@ -39,8 +39,40 @@ export const workoutResultRouter = router({
                     orderBy: {
                         whenAdded: 'desc',
                     },
+                    take: 5,
                 })
-                : undefined
+                : []
+
+            // Process the last 5 workout results to find the most recent result for each exercise
+            let previousWorkoutResult: any = undefined
+
+            if (previousWorkoutResults.length > 0) {
+                // Create a map to store the most recent result for each exercise
+                const latestExerciseResults = new Map<number, any>()
+
+                // Go through all previous workouts (already ordered by most recent first)
+                for (const prevWorkout of previousWorkoutResults) {
+                    const exercises = prevWorkout.exercises as any[]
+                    if (exercises && Array.isArray(exercises)) {
+                        for (const exercise of exercises) {
+                            // If we haven't seen this exercise yet, or if this exercise has results
+                            if (exercise && typeof exercise === 'object' && exercise.id &&
+                                !latestExerciseResults.has(exercise.id) &&
+                                exercise.results && Array.isArray(exercise.results) && exercise.results.length > 0) {
+                                latestExerciseResults.set(exercise.id, exercise)
+                            }
+                        }
+                    }
+                }
+
+                // Create a mock previous workout result with the latest exercise data
+                if (latestExerciseResults.size > 0) {
+                    previousWorkoutResult = {
+                        ...previousWorkoutResults[0], // Use the most recent workout as base
+                        exercises: Array.from(latestExerciseResults.values())
+                    }
+                }
+            }
 
             return {
                 ...workoutResult,
