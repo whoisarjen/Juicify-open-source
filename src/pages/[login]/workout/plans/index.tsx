@@ -34,8 +34,18 @@ const WorkoutPlansPage = () => {
         },
     })
 
+    const addPredefinedPlan = trpc.workoutPlan.addPredefinedPlan.useMutation({
+        onSuccess: () => {
+            utils.workoutPlan.getAll.invalidate({ username })
+        },
+    })
+
     const handleCreateWorkoutPlan = async () => {
         await createWorkoutPlan.mutateAsync({ name: 'ABC' })
+    }
+
+    const handleAddPredefinedPlan = async () => {
+        await addPredefinedPlan.mutateAsync()
     }
 
     const isOwner = router.query.login == sessionData?.user?.username
@@ -43,7 +53,18 @@ const WorkoutPlansPage = () => {
     return (
         <div className="flex flex-1 flex-col gap-4">
             {isOwner && <NavbarOnlyTitle title="workout:WORKOUT_PLANS" />}
-            {isOwner && <ButtonPlusIcon onClick={handleCreateWorkoutPlan} />}
+            {isOwner && (
+                <div className="flex gap-2">
+                    <ButtonPlusIcon onClick={handleCreateWorkoutPlan} />
+                    <button
+                        onClick={handleAddPredefinedPlan}
+                        disabled={addPredefinedPlan.isLoading}
+                        className="flex-1 rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
+                    >
+                        {addPredefinedPlan.isLoading ? 'Adding...' : 'Add Sample Workout Plan'}
+                    </button>
+                </div>
+            )}
             {!isOwner && <NavbarProfile tab={3} />}
             <BoxWorkoutLoader isLoading={isFetching}>
                 <>
