@@ -94,51 +94,47 @@ export const workoutPlanRouter = router({
         .mutation(async ({ ctx }) => {
             const predefinedWorkouts = [
                 {
-                    name: "WORKOUT A - Hip Power & Core",
-                    description: "Glute-focused power session with core activation. Emphasizes hip extension strength and abdominal development.",
-                    burnedCalories: 320,
+                    name: "LOWER A - Glute & Core Focus",
+                    description: "Focus on glute activation and core strength",
                     exercises: [
-                        { name: "Cable Crunches (kneeling)", series: 5, reps: 14, rir: 3 },
-                        { name: "Hip Thrust", series: 4, reps: 7, rir: 4 },
-                        { name: "Single Leg RDL", series: 3, reps: 9, rir: 4 },
-                        { name: "Bulgarian Split Squats", series: 3, reps: 11, rir: 4 },
-                        { name: "Leg Extensions", series: 3, reps: 14, rir: 4 }
+                        { name: "Cable Crunches (kneeling)", series: 4, reps: 15, rir: 2 },
+                        { name: "Hip Thrust", series: 4, reps: 8, rir: 3 },
+                        { name: "Bulgarian Split Squats", series: 3, reps: 12, rir: 3 },
+                        { name: "Single Leg RDL", series: 3, reps: 10, rir: 3 },
+                        { name: "Machine Hip Abduction", series: 3, reps: 15, rir: 2 }
                     ]
                 },
                 {
-                    name: "WORKOUT B - Back & Press Power",
-                    description: "Heavy strength-focused session targeting back thickness and pressing power. Core rotation and upper body development.",
-                    burnedCalories: 330,
+                    name: "UPPER A - Back Focus",
+                    description: "Focus on back strength and width",
                     exercises: [
-                        { name: "Cable Wood Chops (high to low)", series: 5, reps: 14, rir: 3 },
-                        { name: "Bent Over Row", series: 4, reps: 7, rir: 4 },
-                        { name: "Overhead Press", series: 3, reps: 9, rir: 4 },
-                        { name: "Leg Curls", series: 3, reps: 11, rir: 4 },
-                        { name: "Machine Chest Press", series: 3, reps: 10, rir: 4 }
+                        { name: "Cable Wood Chops (high to low)", series: 4, reps: 15, rir: 2 },
+                        { name: "Bent Over Row", series: 4, reps: 8, rir: 3 },
+                        { name: "Pull-ups/Lat Pulldown", series: 3, reps: 12, rir: 3 },
+                        { name: "Overhead Press", series: 3, reps: 10, rir: 3 },
+                        { name: "Machine Chest Press", series: 3, reps: 12, rir: 3 }
                     ]
                 },
                 {
-                    name: "WORKOUT C - Posterior Chain & Legs",
-                    description: "Hip hinge dominant session with quad development. Focuses on posterior chain strength and lower abs conditioning.",
-                    burnedCalories: 310,
+                    name: "LOWER B - Posterior Chain & Core",
+                    description: "Focus on posterior chain and core stability",
                     exercises: [
-                        { name: "Hanging Leg Raises", series: 5, reps: 10, rir: 3 },
-                        { name: "Romanian Deadlift", series: 4, reps: 9, rir: 4 },
-                        { name: "Close Loaded Back Extension", series: 3, reps: 14, rir: 4 },
-                        { name: "Leg Press", series: 3, reps: 14, rir: 4 },
-                        { name: "Machine Hip Abduction", series: 3, reps: 14, rir: 3 }
+                        { name: "Hanging Leg Raises", series: 4, reps: 12, rir: 2 },
+                        { name: "Romanian Deadlift", series: 4, reps: 10, rir: 3 },
+                        { name: "Close Loaded Back Extension", series: 3, reps: 15, rir: 3 },
+                        { name: "Leg Press", series: 3, reps: 15, rir: 3 },
+                        { name: "Calf Raises", series: 3, reps: 20, rir: 2 }
                     ]
                 },
                 {
-                    name: "WORKOUT D - Pull & Pump",
-                    description: "Volume-focused pulling session with upper body pump work. Emphasizes back width, shoulder health, and oblique development.",
-                    burnedCalories: 300,
+                    name: "UPPER B - Back Width & Core",
+                    description: "Focus on back width and core strength",
                     exercises: [
-                        { name: "Cable Side Crunches", series: 5, reps: 14, rir: 3 },
-                        { name: "Cable Row (Wide Grip)", series: 4, reps: 11, rir: 4 },
-                        { name: "Lat Pulldown", series: 3, reps: 10, rir: 4 },
-                        { name: "Standing Lateral Raise", series: 3, reps: 14, rir: 3 },
-                        { name: "Incline Dumbbell Press", series: 3, reps: 10, rir: 4 }
+                        { name: "Cable Side Crunches", series: 4, reps: 15, rir: 2 },
+                        { name: "Cable Row (Wide Grip)", series: 4, reps: 12, rir: 3 },
+                        { name: "Reverse Flyes", series: 3, reps: 15, rir: 3 },
+                        { name: "Standing Lateral Raise", series: 3, reps: 15, rir: 2 },
+                        { name: "Incline Dumbbell Press", series: 3, reps: 12, rir: 3 }
                     ]
                 }
             ];
@@ -149,34 +145,16 @@ export const workoutPlanRouter = router({
                 const exercisesWithIds = [];
 
                 for (const exercise of workout.exercises) {
-                    const exerciseVariations = [exercise.name];
-
-                    // Add alternative names for common exercises
-                    if (exercise.name.toLowerCase().includes('lat pulldown')) {
-                        exerciseVariations.push('Pull-ups/Lat Pulldown', 'Pulldown', 'Lat Pull Down');
-                    }
-                    if (exercise.name.toLowerCase().includes('cable side crunches')) {
-                        exerciseVariations.push('Cable Side Crunch', 'Side Crunches');
-                    }
-
                     let existingExercise = await ctx.prisma.exercise.findFirst({
                         where: {
-                            AND: [
-                                {
-                                    OR: exerciseVariations.map(variation => ({
-                                        name: {
-                                            equals: variation,
-                                            mode: 'insensitive'
-                                        }
-                                    }))
-                                },
-                                { isDeleted: false },
-                                {
-                                    OR: [
-                                        { userId: null },
-                                        { userId: ctx.session.user.id }
-                                    ]
-                                }
+                            name: {
+                                equals: exercise.name,
+                                mode: 'insensitive'
+                            },
+                            isDeleted: false,
+                            OR: [
+                                { userId: null },
+                                { userId: ctx.session.user.id }
                             ]
                         }
                     });
@@ -204,7 +182,6 @@ export const workoutPlanRouter = router({
                     data: {
                         name: workout.name,
                         description: workout.description,
-                        burnedCalories: workout.burnedCalories,
                         userId: ctx.session.user.id,
                         exercises: exercisesWithIds
                     }
