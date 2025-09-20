@@ -42,7 +42,7 @@ const Home = () => {
                             key={provider.name}
                             onClick={() =>
                                 signIn(provider.id, {
-                                    callbackUrl: 'http://juicify.app/coach',
+                                    callbackUrl: `${window.location.origin}/coach`,
                                 })
                             }
                         >
