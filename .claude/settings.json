@@ -12,9 +12,7 @@
             "Edit(locales/**)"
         ],
         "deny": [
-            "Bash(sudo *)",
-            "Read(.env)",
-            "Read(.env.*)"
+            "Bash(sudo *)"
         ]
     },
     "env": {
