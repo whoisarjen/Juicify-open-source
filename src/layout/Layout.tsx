@@ -139,23 +139,26 @@ const Layout = ({ children }: { children: any }) => {
 
     const isBlog = router.pathname.includes('blog')
     const isNeutralPath = isBlog || router.pathname === SIGN_IN_PATH
+    const isLandingPage = router.pathname === SIGN_IN_PATH && !sessionData?.user
 
     const isSidebarGrid = !isBlog
 
     return (
-        <main className="pb-safe dark container flex h-screen max-w-7xl flex-col">
-            <div className="flex flex-1 flex-row gap-4 p-4">
-                <div className="relative w-64 max-xl:hidden">
-                    <SidebarLeft />
-                </div>
+        <main className={`pb-safe dark container flex max-w-7xl flex-col ${isLandingPage ? 'min-h-screen' : 'h-screen'}`}>
+            <div className={`flex flex-1 ${isLandingPage ? '' : 'flex-row gap-4'} p-4`}>
+                {!isLandingPage && (
+                    <div className="relative w-64 max-xl:hidden">
+                        <SidebarLeft />
+                    </div>
+                )}
                 <div className="pb-safe flex flex-1 items-stretch">{children}</div>
-                {isSidebarGrid && (
+                {isSidebarGrid && !isLandingPage && (
                     <div className="w-64 max-lg:hidden">
                         <SidebarRight />
                     </div>
                 )}
             </div>
-            <Footer />
+            {!isLandingPage && <Footer />}
             {!sessionData?.user && !isNeutralPath && (
                 <div className="fixed bottom-24 left-0 flex w-full items-center justify-center">
                     <Button
