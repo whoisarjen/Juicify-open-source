@@ -54,5 +54,6 @@
     "Name": "Name",
     "Code": "Barcode",
     "Verified": "Verified",
-    "g in 100g/ml": "g in 100g/ml"
+    "g in 100g/ml": "g in 100g/ml",
+    "SCAN_BARCODE": "Scan barcode"
 }

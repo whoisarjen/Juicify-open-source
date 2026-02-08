@@ -45,11 +45,12 @@ const WorkoutResultPage = () => {
                     )
             )
 
-            utils.workoutResult.getAll.setData({ username }, (currentData) => [
-                ...(currentData || []).filter(
+            utils.workoutResult.getAll.setData({ username }, (currentData) => ({
+                items: (currentData?.items || []).filter(
                     (workoutPlan) => workoutPlan.id !== id
                 ),
-            ])
+                nextCursor: currentData?.nextCursor,
+            }))
 
             router.push(`/${router.query?.login}/workout/results`)
         },
@@ -64,9 +65,10 @@ const WorkoutResultPage = () => {
 
             // TODO update where workoutResult has value as previousWorkoutResult (before offline mode)
 
-            utils.workoutResult.getAll.setData({ username }, (currentData) =>
-                updateArray<WorkoutResult>(currentData, data)
-            )
+            utils.workoutResult.getAll.setData({ username }, (currentData) => ({
+                items: updateArray<WorkoutResult>(currentData?.items, data),
+                nextCursor: currentData?.nextCursor,
+            }))
         },
     })
 

@@ -77,5 +77,6 @@
     "EXTRA_ACTIVITY": "Dodatkowa aktywność",
     "THATS_ALL": "To wszystko",
     "DAY": "dzień",
-    "STANDARD_TIME_TO_CHECK_PROGRESS": "Czas zweryfikować Twój progres!"
+    "STANDARD_TIME_TO_CHECK_PROGRESS": "Czas zweryfikować Twój progres!",
+    "UNKNOWN_STEP": "Coś nieoczekiwanego się wydarzyło"
 }

@@ -14,19 +14,23 @@ const Footer = () => {
     return (
         <div className="footer w-full">
             {sessionData?.user?.username && (
-                <div className="footer fixed bottom-0 left-0 z-50 flex w-full items-center justify-evenly bg-gray-200 shadow dark:bg-black xl:hidden">
+                <div
+                    role="navigation"
+                    aria-label="Mobile navigation"
+                    className="footer fixed bottom-0 left-0 z-50 flex w-full items-center justify-evenly bg-gray-200 shadow dark:bg-black xl:hidden"
+                >
                     <Link href="/coach">
-                        <IconButton color="primary">
+                        <IconButton color="primary" aria-label="Coach">
                             <SmartToyIcon color="primary" />
                         </IconButton>
                     </Link>
                     <Link href={`/${sessionData?.user?.username}/workout`}>
-                        <IconButton color="primary">
+                        <IconButton color="primary" aria-label="Workout">
                             <FitnessCenterIcon color="primary" />
                         </IconButton>
                     </Link>
                     <Link href="/barcode">
-                        <IconButton color="primary">
+                        <IconButton color="primary" aria-label="Barcode scanner">
                             <PhotoCameraIcon color="primary" />
                         </IconButton>
                     </Link>
@@ -35,12 +39,12 @@ const Footer = () => {
                             sessionData?.user?.username
                         }/consumed/${moment().format('YYYY-MM-DD')}`}
                     >
-                        <IconButton color="primary">
+                        <IconButton color="primary" aria-label="Diary">
                             <BookIcon color="primary" />
                         </IconButton>
                     </Link>
                     <Link href="/measurements">
-                        <IconButton color="primary">
+                        <IconButton color="primary" aria-label="Measurements">
                             <EmojiEventsIcon color="primary" />
                         </IconButton>
                     </Link>

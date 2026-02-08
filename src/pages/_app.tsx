@@ -7,21 +7,24 @@ import { SessionProvider } from 'next-auth/react'
 import { type AppType } from 'next/app'
 import { type Session } from 'next-auth'
 import { GoogleAnalytics } from 'src/layout/GoogleAnalytics'
+import ErrorBoundary from '@/components/ErrorBoundary'
 
 const App: AppType<{ session: Session | null }> = ({
     Component,
     pageProps: { session, ...pageProps },
 }) => {
     return (
-        <MUI>
-            <Header />
-            <GoogleAnalytics />
-            <SessionProvider session={session}>
-                <Layout>
-                    <Component {...pageProps} />
-                </Layout>
-            </SessionProvider>
-        </MUI>
+        <ErrorBoundary>
+            <MUI>
+                <Header />
+                <GoogleAnalytics />
+                <SessionProvider session={session}>
+                    <Layout>
+                        <Component {...pageProps} />
+                    </Layout>
+                </SessionProvider>
+            </MUI>
+        </ErrorBoundary>
     )
 }
 

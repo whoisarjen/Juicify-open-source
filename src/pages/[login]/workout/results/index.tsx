@@ -14,11 +14,13 @@ const WorkoutResultsPage = () => {
 
     const username = router.query.login || ''
 
-    const { data: workoutResults = [], isFetching } =
+    const { data, isFetching } =
         trpc.workoutResult.getAll.useQuery(
             { username },
             { enabled: !!username }
         )
+
+    const workoutResults = data?.items ?? []
 
     const isOwner = sessionData?.user?.username == username
 

@@ -30,7 +30,7 @@ const BaseBoxExercise = ({
     const [values, setValues] = useState<WorkoutResultExerciseResultSchema[]>(
         exercise.results as WorkoutResultExerciseResultSchema[]
     )
-console.log({ previousExercise })
+
     const changeResult = (
         object: WorkoutResultExerciseResultSchema,
         index: number

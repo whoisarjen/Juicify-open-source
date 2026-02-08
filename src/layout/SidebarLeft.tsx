@@ -103,7 +103,7 @@ const SidebarLeft = () => {
                 top: 0,
             }}
         >
-            <nav>
+            <nav role="navigation" aria-label="Main navigation">
                 <List>
                     {Object.keys(getRouterPushOptions(sessionData, t)).map(
                         (key) => {
@@ -113,6 +113,7 @@ const SidebarLeft = () => {
                             return (
                                 <ListItem disablePadding key={key}>
                                     <ListItemButton
+                                        aria-label={text}
                                         onClick={() =>
                                             sessionData?.user
                                                 ? router.push(link)
@@ -129,6 +130,7 @@ const SidebarLeft = () => {
                     <Divider />
                     <ListItem disablePadding>
                         <ListItemButton
+                            aria-label={t('Settings')}
                             onClick={() => router.push('/settings')}
                         >
                             <ListItemIcon>
@@ -139,6 +141,7 @@ const SidebarLeft = () => {
                     </ListItem>
                     <ListItem disablePadding>
                         <ListItemButton
+                            aria-label={sessionData ? t('LOGOUT') : t('LOGIN')}
                             onClick={() =>
                                 sessionData ? handleSignOut() : signIn()
                             }

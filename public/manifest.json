@@ -31,5 +31,18 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+  ],
+  "categories": ["health", "fitness", "lifestyle"],
+  "shortcuts": [
+    {
+      "name": "AI Coach",
+      "url": "/coach",
+      "icons": [{ "src": "icons/manifest-icon-192.maskable.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Barcode Scanner",
+      "url": "/barcode",
+      "icons": [{ "src": "icons/manifest-icon-192.maskable.png", "sizes": "192x192" }]
+    }
   ]
 }

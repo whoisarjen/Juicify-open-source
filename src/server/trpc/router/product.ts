@@ -64,8 +64,7 @@ export const productRouter = router({
             })
         )
         .query(async ({ ctx, input: { name, take, skip } }) => {
-            const preparedName = name.trim()
-            const contains = preparedName.substring(0, preparedName.length - 1)
+            const contains = name.trim()
 
             return await ctx.prisma.product.findMany({
                 take,

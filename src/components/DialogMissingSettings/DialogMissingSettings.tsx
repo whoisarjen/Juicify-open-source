@@ -17,7 +17,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { DatePicker } from '@/components/DatePicker'
 import LoadingButton from '@mui/lab/LoadingButton';
 
-export const DialogMissingSettings = () => {
+export const DialogMissingSettings = ({ onSkip }: { onSkip?: () => void }) => {
     const { t } = useTranslation()
     const { data: sessionData } = useSession()
 
@@ -76,6 +76,11 @@ export const DialogMissingSettings = () => {
                 />
             </DialogContent>
             <DialogActions>
+                {onSkip && (
+                    <Button onClick={onSkip}>
+                        {t('home:SKIP_FOR_NOW')}
+                    </Button>
+                )}
                 <LoadingButton
                     loading={updateUser.isLoading}
                     onClick={handleSubmit(changeSettings)}

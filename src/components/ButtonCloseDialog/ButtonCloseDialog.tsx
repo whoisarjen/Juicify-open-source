@@ -11,7 +11,7 @@ const ButtonCloseDialog = ({ clicked }: { clicked: () => void }) => {
                 onClick={clicked}
                 className="bg-black fixed bottom-0 left-0 z-10 flex w-full items-center justify-center p-2"
             >
-                <Button className="flex-1" variant="contained">
+                <Button className="flex-1" variant="contained" aria-label="Close dialog">
                     {t('Close')}
                 </Button>
             </div>

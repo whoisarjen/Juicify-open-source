@@ -11,7 +11,7 @@ const ButtonShare = () => {
 
     return (
         <div onClick={shareLocation}>
-            <IconButton>
+            <IconButton aria-label="Share">
                 <ShareIcon color="primary" />
             </IconButton>
         </div>

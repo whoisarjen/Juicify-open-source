@@ -54,5 +54,6 @@
     "Name": "Nazwa",
     "Code": "Barcode",
     "Verified": "Zweryfikowany",
-    "g in 100g/ml": "g w 100g/ml"
+    "g in 100g/ml": "g w 100g/ml",
+    "SCAN_BARCODE": "Zeskanuj kod kreskowy"
 }

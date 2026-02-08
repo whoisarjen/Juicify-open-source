@@ -5,6 +5,7 @@ import {
     signIn,
     useSession,
 } from 'next-auth/react'
+import Head from 'next/head'
 import Logo from '@/components/Logo/Logo'
 import { useEffect, useMemo, useState } from 'react'
 import { type BuiltInProviderType } from 'next-auth/providers'
@@ -119,6 +120,17 @@ const Home = () => {
 
     return (
         <div className="flex w-full flex-col scroll-smooth">
+            <Head>
+                <title>Juicify — Free AI Calorie Counter & Personal Trainer</title>
+                <meta name="description" content="Free AI-powered calorie counter and personal trainer. Track calories, plan workouts, and reach your fitness goals — no ads, no subscriptions." />
+                <meta property="og:title" content="Juicify — Free AI Calorie Counter & Personal Trainer" />
+                <meta property="og:description" content="Free AI-powered calorie counter and personal trainer. No ads, no subscriptions, ever." />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content="https://juicify.app" />
+                <meta property="og:image" content="https://juicify.app/images/logo.png" />
+                <meta name="twitter:card" content="summary" />
+                <meta name="twitter:creator" content="@whoisarjen" />
+            </Head>
             {/* Hero Section */}
             <section className="flex min-h-[85vh] flex-col items-center justify-center px-4 py-20 text-center">
                 <Logo size={120} />

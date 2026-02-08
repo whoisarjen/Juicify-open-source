@@ -11,8 +11,7 @@ export const exerciseRouter = router({
             })
         )
         .query(async ({ ctx, input: { name } }) => {
-            const preparedName = name.trim()
-            const contains = preparedName.substring(0, preparedName.length - 1)
+            const contains = name.trim()
 
             return await ctx.prisma.exercise.findMany({
                 take: 10,

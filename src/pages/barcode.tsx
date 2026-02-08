@@ -3,8 +3,10 @@ import { useState, useEffect } from 'react'
 import { trpc } from '@/utils/trpc.utils'
 import DialogShowProduct from '@/containers/consumed/BoxMeal/DialogAddProducts/BoxAddProduct/DialogShowProduct/DialogShowProduct'
 import DialogCreateProduct from '@/containers/DialogCreateProduct/DialogCreateProduct'
+import useTranslation from 'next-translate/useTranslation'
 
 const BarcodeScannerPage = () => {
+    const { t } = useTranslation('nutrition-diary')
     const [barcode, setBarcode] = useState('')
     const [isDialogShowProduct, setIsDialogShowProduct] = useState(false)
     const [isDialogCreateProduct, setIsDialogCreateProduct] = useState(false)
@@ -141,7 +143,7 @@ const BarcodeScannerPage = () => {
         <div className="flex flex-1 flex-col">
             <div className="flex h-full w-full flex-col items-center justify-center">
                 <div id="scanner-container" className="flex-1" />
-                <div className="min-h-8 text-center">Scan barcode code</div>
+                <div className="min-h-8 text-center">{t('SCAN_BARCODE')}</div>
             </div>
             {isDialogShowProduct && product && (
                 <DialogShowProduct

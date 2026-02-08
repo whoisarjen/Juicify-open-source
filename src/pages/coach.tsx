@@ -18,6 +18,7 @@ import { type CoachSchema } from '@/server/schema/coach.schema'
 import { trpc } from '@/utils/trpc.utils'
 import { useSession } from 'next-auth/react'
 import { useState, useEffect } from 'react'
+import useTranslation from 'next-translate/useTranslation'
 import moment from 'moment'
 import { type GetMacronutrientsReturn } from '@/utils/coach.utils'
 import { reloadSession } from '@/utils/global.utils'
@@ -25,6 +26,7 @@ import { reloadSession } from '@/utils/global.utils'
 const whenAdded = moment().format('YYYY-MM-DD')
 
 const Coach = () => {
+    const { t } = useTranslation('coach')
     const { data: sessionData } = useSession()
     const [step, setStep] = useState(
         sessionData?.user?.isCoachAnalyze ? 'Standard' : 'Welcome'
@@ -132,7 +134,7 @@ const Coach = () => {
                 />
             ) : (
                 <>
-                    {"We didn't code anything like that :("}
+                    {t('UNKNOWN_STEP')}
                     <button onClick={() => setStep('Welcome')}></button>
                 </>
             )}

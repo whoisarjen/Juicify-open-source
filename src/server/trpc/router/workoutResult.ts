@@ -130,10 +130,12 @@ export const workoutResultRouter = router({
         .input(
             z.object({
                 username: z.string(),
+                take: z.number().min(1).max(100).optional().default(50),
+                cursor: z.number().optional(),
             })
         )
-        .query(async ({ ctx, input: { username } }) => {
-            return await ctx.prisma.workoutResult.findMany({
+        .query(async ({ ctx, input: { username, take, cursor } }) => {
+            const items = await ctx.prisma.workoutResult.findMany({
                 where: {
                     user: {
                         username,
@@ -141,8 +143,21 @@ export const workoutResultRouter = router({
                 },
                 orderBy: {
                     whenAdded: 'desc'
-                }
+                },
+                take: take + 1,
+                ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
             }) as unknown as WorkoutResult[]
+
+            let nextCursor: number | undefined = undefined
+            if (items.length > take) {
+                const nextItem = items.pop()
+                nextCursor = nextItem?.id
+            }
+
+            return {
+                items,
+                nextCursor,
+            }
         }),
     create: protectedProcedure
         .input(

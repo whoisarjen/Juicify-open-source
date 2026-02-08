@@ -77,5 +77,6 @@
     "EXTRA_ACTIVITY": "Extra activity",
     "THATS_ALL": "That's all",
     "DAY": "day",
-    "STANDARD_TIME_TO_CHECK_PROGRESS": "It's time to checkout your progress!"
+    "STANDARD_TIME_TO_CHECK_PROGRESS": "It's time to checkout your progress!",
+    "UNKNOWN_STEP": "Something unexpected happened"
 }

@@ -1,6 +1,6 @@
 import Footer from './Footer'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import SidebarLeft from './SidebarLeft'
 import SidebarRight from './SidebarRight'
 import { useSession } from 'next-auth/react'
@@ -36,7 +36,19 @@ const Layout = ({ children }: { children: any }) => {
     const { t } = useTranslation('home')
     const router = useRouter()
     const [isAllowedLocation, setIsAllowedLocation] = useState(false)
+    const [skippedSettings, setSkippedSettings] = useState(false)
     const { data: sessionData, status } = useSession()
+
+    useEffect(() => {
+        if (localStorage.getItem('skipMissingSettings') === 'true') {
+            setSkippedSettings(true)
+        }
+    }, [])
+
+    const handleSkipMissingSettings = useCallback(() => {
+        localStorage.setItem('skipMissingSettings', 'true')
+        setSkippedSettings(true)
+    }, [])
 
     trpc.version.get.useQuery(undefined, {
         enabled: typeof window !== 'undefined' && !!process.env.isProduction,
@@ -172,7 +184,9 @@ const Layout = ({ children }: { children: any }) => {
                     </Button>
                 </div>
             )}
-            {sessionData?.user?.height === 0 && <DialogMissingSettings />}
+            {sessionData?.user?.height === 0 && !skippedSettings && (
+                <DialogMissingSettings onSkip={handleSkipMissingSettings} />
+            )}
         </main>
     )
 }

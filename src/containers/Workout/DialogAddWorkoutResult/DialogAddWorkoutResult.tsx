@@ -38,13 +38,14 @@ const DialogAddWorkoutResult = () => {
             utils
                 .workoutResult
                 .getAll
-                .setData({ username }, currentData =>
-                    orderBy(
-                        [...(currentData || []), data as unknown as WorkoutResult],
+                .setData({ username }, currentData => ({
+                    items: orderBy(
+                        [...(currentData?.items || []), data as unknown as WorkoutResult],
                         ['whenAdded'],
                         ['desc'],
-                    )
-                )
+                    ),
+                    nextCursor: currentData?.nextCursor,
+                }))
 
             router.push(`/${username}/workout/results/${data.id}`)
         }
