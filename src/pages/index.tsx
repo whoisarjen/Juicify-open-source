@@ -69,6 +69,7 @@ const Home = () => {
             icon: <SmartToyIcon sx={{ color: '#90caf9', fontSize: 40 }} />,
             title: t('LANDING_FEATURE_AI_TITLE'),
             desc: t('LANDING_FEATURE_AI_DESC'),
+            badge: t('LANDING_BADGE_BETA'),
         },
         {
             icon: <RestaurantIcon sx={{ color: '#90caf9', fontSize: 40 }} />,
@@ -89,6 +90,7 @@ const Home = () => {
             icon: <CloudOffIcon sx={{ color: '#90caf9', fontSize: 40 }} />,
             title: t('LANDING_FEATURE_OFFLINE_TITLE'),
             desc: t('LANDING_FEATURE_OFFLINE_DESC'),
+            badge: t('LANDING_BADGE_COMING_SOON'),
         },
         {
             icon: <FavoriteIcon sx={{ color: '#90caf9', fontSize: 40 }} />,
@@ -153,8 +155,13 @@ const Home = () => {
                         {features.map((feature, index) => (
                             <div
                                 key={index}
-                                className="rounded-xl border border-gray-800 bg-[#1a1a1a] p-6 transition hover:border-[#90caf9]/30"
+                                className="relative rounded-xl border border-gray-800 bg-[#1a1a1a] p-6 transition hover:border-[#90caf9]/30"
                             >
+                                {feature.badge && (
+                                    <span className="absolute -top-3 right-4 rounded-full bg-[#90caf9] px-3 py-0.5 text-xs font-bold text-[#121212]">
+                                        {feature.badge}
+                                    </span>
+                                )}
                                 <div className="mb-4">{feature.icon}</div>
                                 <h3 className="mb-2 text-lg font-bold text-white">
                                     {feature.title}

@@ -100,5 +100,7 @@
     "LANDING_OPENSOURCE_DESC": "Juicify is fully open source. Inspect the code, contribute, or self-host your own instance.",
     "LANDING_FINAL_TITLE": "Start your transformation today",
     "LANDING_FINAL_DESC": "Let AI guide your fitness journey. Free, private, and effective.",
-    "LANDING_SIGN_IN_WITH": "Sign in with {{provider}}"
+    "LANDING_SIGN_IN_WITH": "Sign in with {{provider}}",
+    "LANDING_BADGE_BETA": "Beta",
+    "LANDING_BADGE_COMING_SOON": "Coming Soon"
 }
