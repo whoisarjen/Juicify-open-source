@@ -1,11 +1,11 @@
 generator client {
-  provider        = "prisma-client-js"
+  provider      = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
 }
 
 enum kindOfDiets {
@@ -159,7 +159,6 @@ model Exercise {
 
   @@unique([userId, name, isDeleted])
   @@index([userId])
-  @@index([userId, isDeleted])
 }
 
 model WorkoutPlan {
@@ -177,7 +176,6 @@ model WorkoutPlan {
 
   @@unique([id, userId])
   @@index([userId])
-  @@index([userId, isDeleted])
 }
 
 model WorkoutResult {
@@ -223,8 +221,6 @@ model Product {
   @@unique([id, userId])
   @@unique([name, userId])
   @@index([userId])
-  @@index([barcode])
-  @@index([userId, isDeleted])
 }
 
 model Consumed {
@@ -242,7 +238,6 @@ model Consumed {
   @@unique([id, userId])
   @@index([userId])
   @@index([productId])
-  @@index([userId, whenAdded])
 }
 
 model Measurement {
@@ -256,7 +251,6 @@ model Measurement {
 
   @@unique([id, userId])
   @@index([userId])
-  @@index([userId, whenAdded])
 }
 
 model Coach {
@@ -279,7 +273,6 @@ model Coach {
   data            Json
 
   @@index([userId])
-  @@index([userId, createdAt])
 }
 
 model BurnedCalories {
@@ -294,7 +287,6 @@ model BurnedCalories {
 
   @@unique([id, userId])
   @@index([userId])
-  @@index([userId, whenAdded])
 }
 
 model Post {
