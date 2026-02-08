@@ -1,0 +1,24 @@
+{
+    "permissions": {
+        "allow": [
+            "Bash(npm run *)",
+            "Bash(npm install *)",
+            "Bash(npx prisma *)",
+            "Read(src/**)",
+            "Edit(src/**)",
+            "Read(prisma/**)",
+            "Edit(prisma/**)",
+            "Read(locales/**)",
+            "Edit(locales/**)"
+        ],
+        "deny": [
+            "Bash(sudo *)",
+            "Read(.env)",
+            "Read(.env.*)"
+        ]
+    },
+    "env": {
+        "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    },
+    "teammateMode": "auto"
+}
