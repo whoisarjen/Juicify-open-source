@@ -107,10 +107,15 @@ const BaseBoxExercise = ({
             </div>
             <div>{exerciseFromWorkoutPlan?.note}</div>
             {!!previousExercise?.results?.length && (
-                <div>
-                    {previousExercise?.results?.map(
-                        (result, index) => `${result.weight}x${result.reps}${(result.rir !== undefined ? ` (${result.rir} RIR)` : '')}`
-                    ).join(', ')}
+                <div className="flex flex-col gap-1 opacity-50">
+                    {previousExercise.results.map((result, index) => (
+                        <div key={index} className="flex flex-row border border-dashed p-2 rounded items-center justify-center">
+                            <div className="flex-1">{result.weight}kg</div>
+                            <div className="flex-1">#{index + 1}</div>
+                            <div className="flex-1">{result.reps}r.</div>
+                            <div className="flex-1">{result.rir ?? 0} RIR</div>
+                        </div>
+                    ))}
                 </div>
             )}
             {values.map(
