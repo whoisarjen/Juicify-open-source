@@ -4,12 +4,6 @@ Open-source calorie counter and personal trainer that combines nutrition trackin
 
 **[Live](https://juicify.whoisarjen.com)**
 
-<p align="center">
-  <a href="https://juicify.whoisarjen.com">
-    <img src=".github/preview.png" alt="Juicify preview" width="720" />
-  </a>
-</p>
-
 ## Features
 
 - **Calorie & macro tracking** — Log meals with barcode scanning or manual search
