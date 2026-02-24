@@ -11,9 +11,10 @@ export const workoutResultRouter = router({
             z.object({
                 id: z.number(),
                 username: z.string(),
+                searchAllPlans: z.boolean().optional().default(true),
             })
         )
-        .query(async ({ ctx, input: { id, username } }) => {
+        .query(async ({ ctx, input: { id, username, searchAllPlans } }) => {
             const workoutResult = await ctx.prisma.workoutResult.findFirstOrThrow({
                 where: {
                     id,
@@ -27,21 +28,24 @@ export const workoutResultRouter = router({
                 },
             })
 
-            const previousWorkoutResults = workoutResult.workoutPlanId
-                ? await ctx.prisma.workoutResult.findMany({
-                    where: {
-                        whenAdded: {
-                            lt: workoutResult.whenAdded,
+            const previousWorkoutResults =
+                !searchAllPlans && !workoutResult.workoutPlanId
+                    ? []
+                    : await ctx.prisma.workoutResult.findMany({
+                        where: {
+                            whenAdded: {
+                                lt: workoutResult.whenAdded,
+                            },
+                            userId: workoutResult.userId,
+                            ...(!searchAllPlans
+                                ? { workoutPlanId: workoutResult.workoutPlanId }
+                                : {}),
                         },
-                        userId: workoutResult.userId,
-                        workoutPlanId: workoutResult.workoutPlanId,
-                    },
-                    orderBy: {
-                        whenAdded: 'desc',
-                    },
-                    take: 5,
-                })
-                : []
+                        orderBy: {
+                            whenAdded: 'desc',
+                        },
+                        take: searchAllPlans ? 20 : 5,
+                    })
 
             // Process the last 5 workout results to find the most recent result for each exercise
             let previousWorkoutResult: any = undefined

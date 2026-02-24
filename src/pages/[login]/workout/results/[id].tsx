@@ -7,6 +7,8 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
 import InputAdornment from '@mui/material/InputAdornment'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Switch from '@mui/material/Switch'
 import ButtonMoreOptionsWorkoutResult from '@/containers/Workout/ButtonMoreOptionsWorkoutResult/ButtonMoreOptionsWorkoutResult'
 import BoxResult from '@/containers/Workout/BoxExercise/BoxExercise'
 import { pick } from 'lodash'
@@ -29,11 +31,16 @@ const WorkoutResultPage = () => {
     const [previousExercises, setPreviousExercises] = useState<
         WorkoutResultExercise[]
     >([])
+    const [searchAllPlans, setSearchAllPlans] = useState(
+        sessionData?.user?.searchAllPlans ?? true
+    )
 
     const id = parseInt(router.query.id || 0)
     const username = router.query.login || ''
 
     const utils = trpc.useContext()
+
+    const updateUser = trpc.user.update.useMutation()
 
     const deleteWorkoutResult = trpc.workoutResult.delete.useMutation({
         onSuccess: () => {
@@ -72,18 +79,20 @@ const WorkoutResultPage = () => {
         },
     })
 
-    const { data, isFetching } = trpc.workoutResult.get.useQuery(
-        { id, username },
-        {
-            enabled: !!id && !!username,
-            onSuccess(data) {
-                reset(data)
-                setPreviousExercises(
-                    data.previousWorkoutResult?.exercises || []
-                )
-            },
-        }
-    )
+    const { data, isFetching, isInitialLoading } =
+        trpc.workoutResult.get.useQuery(
+            { id, username, searchAllPlans },
+            {
+                enabled: !!id && !!username,
+                keepPreviousData: true,
+                onSuccess(data) {
+                    reset(data)
+                    setPreviousExercises(
+                        data.previousWorkoutResult?.exercises || []
+                    )
+                },
+            }
+        )
 
     const {
         register,
@@ -113,6 +122,12 @@ const WorkoutResultPage = () => {
             .then(() => router.push(`/${router.query?.login}/workout/results`))
 
     useEffect(() => {
+        if (sessionData?.user?.searchAllPlans !== undefined) {
+            setSearchAllPlans(sessionData.user.searchAllPlans)
+        }
+    }, [sessionData?.user?.searchAllPlans])
+
+    useEffect(() => {
         const handleSubmitProxy = () => handleSubmit(handleOnSave)()
 
         window.addEventListener('blur', handleSubmitProxy)
@@ -124,7 +139,7 @@ const WorkoutResultPage = () => {
     }, [])
 
     const isLoading =
-        isFetching ||
+        isInitialLoading ||
         updateWorkoutResult.isLoading ||
         deleteWorkoutResult.isLoading
 
@@ -191,6 +206,28 @@ const WorkoutResultPage = () => {
                     disabled
                     multiline
                     defaultValue={data.workoutPlan.description}
+                />
+            )}
+
+            {sessionData?.user?.username == username && (
+                <FormControlLabel
+                    control={
+                        <Switch
+                            checked={searchAllPlans}
+                            onChange={(e) => {
+                                const newValue = e.target.checked
+                                setSearchAllPlans(newValue)
+                                updateUser.mutate(
+                                    { searchAllPlans: newValue },
+                                    {
+                                        onError: () =>
+                                            setSearchAllPlans(!newValue),
+                                    }
+                                )
+                            }}
+                        />
+                    }
+                    label={t('SEARCH_ALL_PLANS')}
                 />
             )}
 

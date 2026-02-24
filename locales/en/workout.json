@@ -29,6 +29,7 @@
     "CREATE_RESULT": "Create result",
     "ADD_EXERCISES": "Add exercises",
     "CREATE_RESULT_DESCRIPTION": "Choose workout plan for which you want to create result",
+    "SEARCH_ALL_PLANS": "Search across all plans",
     "WORKOUT_STATISTICS": "Statistics",
     "WORKOUT_STATISTICS_DESCRIPTION": "View your workout statistics by week, month, and year."
 }

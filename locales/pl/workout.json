@@ -30,6 +30,7 @@
     "CREATE_RESULT": "Stwórz rezultat",
     "ADD_EXERCISES": "Dodaj ćwiczenia",
     "CREATE_RESULT_DESCRIPTION": "Wybierz plan treningowy, dla którego chcesz stworzyć rezultat",
+    "SEARCH_ALL_PLANS": "Szukaj we wszystkich planach",
     "WORKOUT_STATISTICS": "Statystyki",
     "WORKOUT_STATISTICS_DESCRIPTION": "Zobacz swoje statystyki treningowe według tygodnia, miesiąca i roku."
 }

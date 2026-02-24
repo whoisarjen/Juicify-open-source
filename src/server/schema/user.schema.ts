@@ -33,6 +33,7 @@ export const userSchema = z.object({
     facebook: z.string().max(150).optional(),
     instagram: z.string().max(150).optional(),
     twitter: z.string().max(150).optional(),
+    searchAllPlans: z.boolean().optional(),
 })
 
 export type UserSchema = z.infer<typeof userSchema>

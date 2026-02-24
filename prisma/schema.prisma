@@ -121,6 +121,7 @@ model User {
   twitter             String           @default("")
   goal                goals            @default(ZERO)
   kindOfDiet          kindOfDiets      @default(REGULAR)
+  searchAllPlans      Boolean          @default(true)
   isSportActive       Boolean          @default(false)
   activityLevel       activityLevels   @default(AVERAGE)
   sex                 Boolean          @default(true)
