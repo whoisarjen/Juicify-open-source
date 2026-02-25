@@ -6,6 +6,7 @@ import {
     useSession,
 } from 'next-auth/react'
 import Head from 'next/head'
+import Script from 'next/script'
 import Logo from '@/components/Logo/Logo'
 import { useEffect, useMemo, useState } from 'react'
 import { type BuiltInProviderType } from 'next-auth/providers'
@@ -131,6 +132,11 @@ const Home = () => {
                 <meta name="twitter:card" content="summary" />
                 <meta name="twitter:creator" content="@whoisarjen" />
             </Head>
+            <Script
+                src="https://beamback.whoisarjen.com/widget.js"
+                data-api-key="ak_djEqImKCdQCfS71H_OMF8"
+                strategy="afterInteractive"
+            />
             {/* Hero Section */}
             <section className="flex min-h-[85vh] flex-col items-center justify-center px-4 py-20 text-center">
                 <Logo size={120} />
