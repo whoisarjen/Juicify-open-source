@@ -14,6 +14,7 @@ interface DatePickerProps {
     focused?: boolean
     maxDateTime?: Date
     minDateTime?: Date
+    label?: string
 }
 
 const format = "YYYY/MM/DD hh:mm"
@@ -26,6 +27,7 @@ export const DatePicker = ({
     focused = false,
     maxDateTime = moment().add(-12, 'years').toDate(),
     minDateTime = moment().add(-100, 'years').toDate(),
+    label,
 }: DatePickerProps) => {
     const { t } = useTranslation('home')
     const [date, setDate] = useState(moment(defaultDate).format(format))
@@ -44,7 +46,7 @@ export const DatePicker = ({
             <MobileDateTimePicker
                 value={date}
                 onChange={newDate => handleOnChange(moment(newDate).toDate())}
-                label={t("DATE")}
+                label={label ?? t("DATE")}
                 renderInput={params =>
                     <TextField
                         sx={sx}

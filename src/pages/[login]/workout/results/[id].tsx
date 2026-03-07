@@ -202,19 +202,18 @@ const WorkoutResultPage = () => {
                 maxDateTime={moment().add(2, 'hour').toDate()}
             />
 
-            <TextField
-                variant="outlined"
+            <DatePicker
                 label={t('Finished at')}
-                type="text"
-                focused
-                disabled
-                value={
+                defaultDate={
                     data?.finishedAt
-                        ? moment(data.finishedAt as unknown as Date).format(
-                              'YYYY-MM-DD HH:mm (Z)'
-                          )
-                        : ''
+                        ? moment(data.finishedAt as unknown as Date).toDate()
+                        : moment().toDate()
                 }
+                onChange={(newFinishedAt) =>
+                    setValue('finishedAt', newFinishedAt)
+                }
+                register={register('finishedAt')}
+                focused
             />
 
             <TextField
