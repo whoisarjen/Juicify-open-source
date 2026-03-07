@@ -214,6 +214,7 @@ const WorkoutResultPage = () => {
                 }
                 register={register('finishedAt')}
                 focused
+                maxDateTime={moment().add(2, 'hour').toDate()}
             />
 
             <TextField
