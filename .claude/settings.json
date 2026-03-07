@@ -1,22 +1,23 @@
 {
-    "permissions": {
-        "allow": [
-            "Bash(npm run *)",
-            "Bash(npm install *)",
-            "Bash(npx prisma *)",
-            "Read(src/**)",
-            "Edit(src/**)",
-            "Read(prisma/**)",
-            "Edit(prisma/**)",
-            "Read(locales/**)",
-            "Edit(locales/**)"
-        ],
-        "deny": [
-            "Bash(sudo *)"
-        ]
-    },
-    "env": {
-        "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
-    },
-    "teammateMode": "auto"
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(npm install *)",
+      "Bash(npx prisma *)",
+      "Read(src/**)",
+      "Edit(src/**)",
+      "Read(prisma/**)",
+      "Edit(prisma/**)",
+      "Read(locales/**)",
+      "Edit(locales/**)",
+      "Bash(git add prisma/schema.prisma src/pages/[login]/workout/results/[id].tsx src/server/schema/workoutResult.schema.ts)"
+    ],
+    "deny": [
+      "Bash(sudo *)"
+    ]
+  },
+  "teammateMode": "auto"
 }
