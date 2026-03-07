@@ -22,6 +22,7 @@ export const workoutResultSchema = object({
     id: number(),
     name: string(),
     whenAdded: date(),
+    finishedAt: date().optional().nullable(),
     note: string().optional().nullable(),
     burnedCalories: preprocess((val) => Number(val), number().min(0).max(5000)),
     exercises: array(workoutResultExerciseSchema).optional().default([]),

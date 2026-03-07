@@ -1,7 +1,15 @@
 import BottomFlyingGuestBanner from '@/components/BottomFlyingGuestBanner/BottomFlyingGuestBanner'
 import NavbarWorkout from '@/containers/Workout/NavbarWorkout/NavbarWorkout'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { TextField } from '@mui/material'
+import {
+    TextField,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    DialogActions,
+    Button,
+} from '@mui/material'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -34,6 +42,9 @@ const WorkoutResultPage = () => {
     const [searchAllPlans, setSearchAllPlans] = useState(
         sessionData?.user?.searchAllPlans ?? true
     )
+    const [showFinishTimeModal, setShowFinishTimeModal] = useState(false)
+    const [pendingFormValues, setPendingFormValues] =
+        useState<WorkoutResultSchema | null>(null)
 
     const id = parseInt(router.query.id || 0)
     const username = router.query.login || ''
@@ -114,12 +125,31 @@ const WorkoutResultPage = () => {
     const handleOnSave = async (values: WorkoutResultSchema) =>
         await updateWorkoutResult.mutate(values)
 
-    const handleOnSaveWithRouter = async (
-        newWorkoutResult: WorkoutResultSchema
-    ) =>
+    const handleOnSaveWithRouter = (newWorkoutResult: WorkoutResultSchema) => {
+        setPendingFormValues(newWorkoutResult)
+        setShowFinishTimeModal(true)
+    }
+
+    const handleAcceptFinishTime = async () => {
+        if (!pendingFormValues) return
+        setShowFinishTimeModal(false)
         await updateWorkoutResult
-            .mutateAsync(newWorkoutResult)
+            .mutateAsync({ ...pendingFormValues, finishedAt: new Date() })
             .then(() => router.push(`/${router.query?.login}/workout/results`))
+    }
+
+    const handleSkipFinishTime = async () => {
+        if (!pendingFormValues) return
+        setShowFinishTimeModal(false)
+        await updateWorkoutResult
+            .mutateAsync(pendingFormValues)
+            .then(() => router.push(`/${router.query?.login}/workout/results`))
+    }
+
+    const handleCloseFinishTimeModal = () => {
+        setShowFinishTimeModal(false)
+        setPendingFormValues(null)
+    }
 
     useEffect(() => {
         if (sessionData?.user?.searchAllPlans !== undefined) {
@@ -170,6 +200,21 @@ const WorkoutResultPage = () => {
                 register={register('whenAdded')}
                 focused
                 maxDateTime={moment().add(2, 'hour').toDate()}
+            />
+
+            <TextField
+                variant="outlined"
+                label={t('Finished at')}
+                type="text"
+                focused
+                disabled
+                value={
+                    data?.finishedAt
+                        ? moment(data.finishedAt as unknown as Date).format(
+                              'YYYY-MM-DD HH:mm (Z)'
+                          )
+                        : ''
+                }
             />
 
             <TextField
@@ -283,6 +328,32 @@ const WorkoutResultPage = () => {
                         username={data?.user.username}
                     />
                 )}
+
+            <Dialog
+                open={showFinishTimeModal}
+                onClose={handleCloseFinishTimeModal}
+            >
+                <DialogTitle>{t('Update workout finish time?')}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        {moment().format('YYYY-MM-DD HH:mm (Z)')}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseFinishTimeModal}>
+                        {t('Close')}
+                    </Button>
+                    <Button onClick={handleSkipFinishTime}>
+                        {t('Skip')}
+                    </Button>
+                    <Button
+                        onClick={handleAcceptFinishTime}
+                        variant="contained"
+                    >
+                        {t('Accept')}
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </form>
     )
 }

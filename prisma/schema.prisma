@@ -192,6 +192,7 @@ model WorkoutResult {
   workoutPlan    WorkoutPlan? @relation(fields: [workoutPlanId], references: [id], onDelete: SetNull)
   workoutPlanId  Int?
   whenAdded      DateTime     @default(now())
+  finishedAt     DateTime?
 
   @@unique([id, userId])
   @@index([userId])
