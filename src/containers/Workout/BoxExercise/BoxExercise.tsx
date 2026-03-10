@@ -49,6 +49,9 @@ const BaseBoxExercise = ({
     const openNewResult = (
         lastResult: { reps: number; weight: number, rir: number } | null
     ) => {
+        const setAt = new Date().toISOString()
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+
         if (lastResult) {
             const previousValues = values.map(
                 (value: WorkoutResultExerciseResultSchema) =>
@@ -58,6 +61,7 @@ const BaseBoxExercise = ({
             setNewValues([
                 ...previousValues.slice(0, previousValues.length - 1),
                 {
+                    ...previousValues[previousValues.length - 1],
                     reps: lastResult.reps,
                     weight: lastResult.weight,
                     rir: lastResult.rir,
@@ -67,6 +71,8 @@ const BaseBoxExercise = ({
                     weight: lastResult.weight,
                     rir: lastResult.rir,
                     open: true,
+                    setAt,
+                    timezone,
                 },
             ])
         } else {
@@ -78,6 +84,8 @@ const BaseBoxExercise = ({
                     weight: 0,
                     rir: prevRIR > 0 ? prevRIR - 1 : exerciseFromWorkoutPlan?.rir ?? 0,
                     open: true,
+                    setAt,
+                    timezone,
                 },
             ])
         }
@@ -129,6 +137,7 @@ const BaseBoxExercise = ({
                         isOwner={isOwner}
                         isLast={index + 1 === values.length}
                         openNewResult={openNewResult}
+                        previousSetAt={index > 0 ? values[index - 1]?.setAt : undefined}
                     />
                 )
             )}

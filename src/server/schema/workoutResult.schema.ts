@@ -7,6 +7,8 @@ export const workoutResultExerciseResultSchema = object({
     reps: preprocess((val) => Number(val), number()),
     weight: preprocess((val) => Number(val), number()),
     rir: preprocess((val) => Number(val), number()).optional(), // RIR wasn't supported before 20.07.2023
+    setAt: string().optional(), // UTC ISO timestamp when set was opened/recorded
+    timezone: string().optional(), // IANA timezone e.g. "Europe/Warsaw" - stored for future tz-aware display
 })
 
 export type WorkoutResultExerciseResultSchema = TypeOf<typeof workoutResultExerciseResultSchema>
