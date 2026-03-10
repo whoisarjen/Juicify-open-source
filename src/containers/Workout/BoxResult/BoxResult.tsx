@@ -285,14 +285,9 @@ const BoxResult = ({
                     </div>
                     <div className="flex-1">{weight}kg</div>
                     <div className="flex-1 flex flex-col items-center text-xs">
-                        {mmss ? (
-                            <>
-                                <span>{mmss}</span>
-                                {diff && <span>rest {diff}</span>}
-                            </>
-                        ) : (
-                            <span>{`#${index + 1}`}</span>
-                        )}
+                        <span className="font-semibold">#{index + 1}</span>
+                        {mmss && <span className="opacity-60">{mmss}</span>}
+                        {diff && <span className="opacity-60">rest {diff}</span>}
                     </div>
                     <div className="flex-1">{reps}r.</div>
                     <div className="flex-1">{rir} RIR</div>
