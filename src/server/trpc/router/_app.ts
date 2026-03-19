@@ -9,6 +9,7 @@ import { workoutResultRouter } from "./workoutResult"
 import { measurementRouter } from "./measurement"
 import { burnedCaloriesRouter } from "./burnedCalories";
 import { versionRouter } from "./version";
+import { articleRouter } from "./article";
 
 export const appRouter = router({
     user: userRouter,
@@ -21,6 +22,7 @@ export const appRouter = router({
     measurement: measurementRouter,
     burnedCalories: burnedCaloriesRouter,
     version: versionRouter,
+    article: articleRouter,
 });
 
 // export type definition of API
