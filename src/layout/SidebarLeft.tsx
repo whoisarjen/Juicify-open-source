@@ -114,11 +114,16 @@ const SidebarLeft = () => {
                                 <ListItem disablePadding key={key}>
                                     <ListItemButton
                                         aria-label={text}
-                                        onClick={() =>
-                                            sessionData?.user
-                                                ? router.push(link)
-                                                : signIn()
-                                        }
+                                        onClick={() => {
+                                            if (
+                                                sessionData?.user ||
+                                                link === '/blog'
+                                            ) {
+                                                router.push(link)
+                                            } else {
+                                                signIn()
+                                            }
+                                        }}
                                     >
                                         <ListItemIcon>{children}</ListItemIcon>
                                         <ListItemText primary={text} />
