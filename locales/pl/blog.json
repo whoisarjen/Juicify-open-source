@@ -1,4 +1,25 @@
 {
-    "LATEST_NEWS": "Najnowsze posty",
-    "POSTS_COMMING_SOON": "Na ten moment nie ma żadnych postów."
+    "LATEST_NEWS": "Najnowsze artykuły",
+    "BACK_TO_BLOG": "Powrót do bloga",
+    "READ_MORE": "Czytaj więcej",
+    "MINUTES_READ": "{{count}} min czytania",
+    "PUBLISHED": "Opublikowano",
+    "RELATED_ARTICLES": "Powiązane artykuły",
+    "REFERENCES": "Źródła",
+    "FAQ": "Często zadawane pytania",
+    "NO_ARTICLES": "Brak artykułów. Wkrótce się pojawią!",
+    "PAGE": "Strona",
+    "OF": "z",
+    "PREVIOUS": "Poprzednia",
+    "NEXT": "Następna",
+    "NICHE_nutrition-science": "Nauka o żywieniu",
+    "NICHE_diet-guide": "Przewodnik po dietach",
+    "NICHE_weight-management": "Zarządzanie wagą",
+    "NICHE_exercise-science": "Nauka o ćwiczeniach",
+    "NICHE_food-myths": "Mity żywieniowe",
+    "NICHE_supplement-review": "Przegląd suplementów",
+    "NICHE_meal-planning": "Planowanie posiłków",
+    "NICHE_body-composition": "Kompozycja ciała",
+    "NICHE_fitness-for-beginners": "Fitness dla początkujących",
+    "NICHE_sport-nutrition": "Żywienie sportowe"
 }
