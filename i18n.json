@@ -1,5 +1,5 @@
 {
-    "locales": ["en", "pl"],
+    "locales": ["en", "pl", "es", "de", "pt", "fr", "ko", "ar", "tr", "ja", "it"],
     "defaultLocale": "en",
     "pages": {
         "*": ["home"],
@@ -15,6 +15,6 @@
         "/settings": ["settings"],
         "/[login]": ["profile"],
         "/blog": ["blog"],
-        "/blog/[url]": ["blog"]
+        "/blog/[slug]": ["blog"]
     }
 }

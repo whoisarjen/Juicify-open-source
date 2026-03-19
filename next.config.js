@@ -17,6 +17,7 @@ const nextConfig = {
         domains: [
             'localhost',
             'juicify.app',
+            'images.unsplash.com',
         ],
     },
     ...nextTranslate(),
