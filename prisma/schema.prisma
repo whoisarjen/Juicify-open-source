@@ -305,3 +305,100 @@ model Post {
   @@unique([id, userId])
   @@index([userId])
 }
+
+model Article {
+  slug        String   @id
+  isPublished Boolean  @default(false)
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+
+  // English (required)
+  titleEn     String
+  excerptEn   String
+  contentEn   String   @db.Text
+  metaTitleEn String?
+  metaDescEn  String?
+
+  // Polish
+  titlePl     String?
+  excerptPl   String?
+  contentPl   String?  @db.Text
+  metaTitlePl String?
+  metaDescPl  String?
+
+  // Spanish
+  titleEs     String?
+  excerptEs   String?
+  contentEs   String?  @db.Text
+  metaTitleEs String?
+  metaDescEs  String?
+
+  // German
+  titleDe     String?
+  excerptDe   String?
+  contentDe   String?  @db.Text
+  metaTitleDe String?
+  metaDescDe  String?
+
+  // Portuguese
+  titlePt     String?
+  excerptPt   String?
+  contentPt   String?  @db.Text
+  metaTitlePt String?
+  metaDescPt  String?
+
+  // French
+  titleFr     String?
+  excerptFr   String?
+  contentFr   String?  @db.Text
+  metaTitleFr String?
+  metaDescFr  String?
+
+  // Korean
+  titleKo     String?
+  excerptKo   String?
+  contentKo   String?  @db.Text
+  metaTitleKo String?
+  metaDescKo  String?
+
+  // Arabic
+  titleAr     String?
+  excerptAr   String?
+  contentAr   String?  @db.Text
+  metaTitleAr String?
+  metaDescAr  String?
+
+  // Turkish
+  titleTr     String?
+  excerptTr   String?
+  contentTr   String?  @db.Text
+  metaTitleTr String?
+  metaDescTr  String?
+
+  // Japanese
+  titleJa     String?
+  excerptJa   String?
+  contentJa   String?  @db.Text
+  metaTitleJa String?
+  metaDescJa  String?
+
+  // Italian
+  titleIt     String?
+  excerptIt   String?
+  contentIt   String?  @db.Text
+  metaTitleIt String?
+  metaDescIt  String?
+
+  // Shared fields
+  featuredImageUrl          String?
+  featuredImageAlt          String?
+  featuredImageOwnerName    String?
+  featuredImageOwnerUsername String?
+  readingTimeMinutes        Int      @default(1)
+  faqs                      Json?
+  niche                     String?
+  references                Json?
+
+  @@index([isPublished, publishedAt])
+}
