@@ -90,8 +90,61 @@ export default function HealthDashboard() {
 
     if (isLoading) {
         return (
-            <div className="flex min-h-[50vh] items-center justify-center">
-                <div className="h-6 w-6 animate-spin rounded-full border-2 border-zinc-700 border-t-sky-400" />
+            <div className="mx-auto w-full max-w-3xl space-y-5 px-2 py-4">
+                {/* Header */}
+                <div className="flex items-center justify-between">
+                    <div className="h-6 w-16 animate-pulse rounded bg-zinc-800" />
+                    <div className="h-8 w-28 animate-pulse rounded-md bg-zinc-800/60" />
+                </div>
+                {/* Key metrics */}
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                    {[0, 1, 2, 3].map((i) => (
+                        <div key={i} className="rounded-lg border border-zinc-800/60 bg-zinc-900/50 p-4">
+                            <div className="mb-2 h-3 w-12 animate-pulse rounded bg-zinc-800" />
+                            <div className="h-6 w-20 animate-pulse rounded bg-zinc-800" />
+                        </div>
+                    ))}
+                </div>
+                {/* Activity chart */}
+                <div className="rounded-lg border border-zinc-800/60 bg-zinc-900/50 p-4">
+                    <div className="mb-3 h-4 w-16 animate-pulse rounded bg-zinc-800" />
+                    <div className="h-36 animate-pulse rounded bg-zinc-800/40" />
+                    <div className="mt-3 grid grid-cols-3 gap-3 border-t border-zinc-800/60 pt-3">
+                        {[0, 1, 2].map((i) => (
+                            <div key={i}>
+                                <div className="mb-1 h-3 w-12 animate-pulse rounded bg-zinc-800" />
+                                <div className="h-5 w-16 animate-pulse rounded bg-zinc-800" />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                {/* Sleep chart */}
+                <div className="rounded-lg border border-zinc-800/60 bg-zinc-900/50 p-4">
+                    <div className="mb-3 h-4 w-12 animate-pulse rounded bg-zinc-800" />
+                    <div className="h-36 animate-pulse rounded bg-zinc-800/40" />
+                    <div className="mt-3 grid grid-cols-4 gap-3 border-t border-zinc-800/60 pt-3">
+                        {[0, 1, 2, 3].map((i) => (
+                            <div key={i}>
+                                <div className="mb-1 h-3 w-10 animate-pulse rounded bg-zinc-800" />
+                                <div className="h-5 w-14 animate-pulse rounded bg-zinc-800" />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                {/* Body chart */}
+                <div className="rounded-lg border border-zinc-800/60 bg-zinc-900/50 p-4">
+                    <div className="mb-3 h-4 w-10 animate-pulse rounded bg-zinc-800" />
+                    <div className="h-36 animate-pulse rounded bg-zinc-800/40" />
+                </div>
+                {/* Workouts */}
+                <div className="rounded-lg border border-zinc-800/60 bg-zinc-900/50 p-4">
+                    <div className="mb-3 h-4 w-20 animate-pulse rounded bg-zinc-800" />
+                    <div className="space-y-1.5">
+                        {[0, 1, 2, 3, 4].map((i) => (
+                            <div key={i} className="h-11 animate-pulse rounded-md bg-zinc-800/40" />
+                        ))}
+                    </div>
+                </div>
             </div>
         )
     }
