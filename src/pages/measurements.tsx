@@ -12,14 +12,19 @@ import { useSession } from "next-auth/react";
 import { trpc } from "@/utils/trpc.utils";
 import { DialogMeasurement } from '@/containers/DialogMeasurement'
 import NavbarOnlyTitle from "@/components/NavbarOnlyTitle/NavbarOnlyTitle";
+import IconButton from '@mui/material/IconButton';
+import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
+import { useRouter } from "next/router";
 
 const MeasurementsPage = () => {
     const { t } = useTranslation('home')
     const [selectedMeasurement, setSelectedMeasurement] = useState<null | Measurement>(null)
 
     const { data: sessionData } = useSession()
+    const router = useRouter()
 
     const username = sessionData?.user?.username || ''
+    const isAdmin = (sessionData?.user as any)?.permissions?.some((p: any) => p.name === 'Administration')
 
     const {
         data: measurements = [],
@@ -30,7 +35,18 @@ const MeasurementsPage = () => {
 
     return (
         <div className="flex flex-col gap-4 flex-1">
-            <NavbarOnlyTitle title="home:ADD_WEIGHT" />
+            <div className="flex items-center justify-between">
+                <NavbarOnlyTitle title="home:ADD_WEIGHT" />
+                {isAdmin && (
+                    <IconButton
+                        color="primary"
+                        aria-label="Health Dashboard"
+                        onClick={() => router.push('/health')}
+                    >
+                        <MonitorHeartIcon />
+                    </IconButton>
+                )}
+            </div>
             <div>
                 {t('Add weight description')}
             </div>
