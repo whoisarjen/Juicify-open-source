@@ -3,6 +3,7 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter'
 import BookIcon from '@mui/icons-material/Book'
 import SmartToyIcon from '@mui/icons-material/SmartToy'
+import MonitorHeartIcon from '@mui/icons-material/MonitorHeart'
 import moment from 'moment'
 import IconButton from '@mui/material/IconButton'
 import { useSession } from 'next-auth/react'
@@ -48,6 +49,13 @@ const Footer = () => {
                             <EmojiEventsIcon color="primary" />
                         </IconButton>
                     </Link>
+                    {(sessionData?.user as any)?.permissions?.some((p: any) => p.name === 'Administration') && (
+                        <Link href="/health">
+                            <IconButton color="primary" aria-label="Health">
+                                <MonitorHeartIcon color="primary" />
+                            </IconButton>
+                        </Link>
+                    )}
                 </div>
             )}
         </div>
