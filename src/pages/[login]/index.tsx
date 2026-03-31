@@ -85,7 +85,7 @@ const ProfilePage = () => {
             }
         })
 
-        burnedCalories
+        ;(burnedCalories as Array<{ whenAdded: Date; burnedCalories: number }>)
             .concat(workoutResults)
             .forEach(({ whenAdded, burnedCalories }) => {
                 const index = defaultData.findIndex(
