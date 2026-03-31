@@ -131,6 +131,19 @@ export default function HealthDashboard() {
                         ))}
                     </div>
                 </div>
+                {/* Heart rate chart */}
+                <div className="rounded-lg border border-zinc-800/60 bg-zinc-900/50 p-4">
+                    <div className="mb-3 h-4 w-20 animate-pulse rounded bg-zinc-800" />
+                    <div className="h-36 animate-pulse rounded bg-zinc-800/40" />
+                    <div className="mt-3 grid grid-cols-4 gap-3 border-t border-zinc-800/60 pt-3">
+                        {[0, 1, 2, 3].map((i) => (
+                            <div key={i}>
+                                <div className="mb-1 h-3 w-10 animate-pulse rounded bg-zinc-800" />
+                                <div className="h-5 w-14 animate-pulse rounded bg-zinc-800" />
+                            </div>
+                        ))}
+                    </div>
+                </div>
                 {/* Body chart */}
                 <div className="rounded-lg border border-zinc-800/60 bg-zinc-900/50 p-4">
                     <div className="mb-3 h-4 w-10 animate-pulse rounded bg-zinc-800" />
@@ -199,6 +212,22 @@ export default function HealthDashboard() {
         fat: m.fatRatio ? Number(m.fatRatio) : null,
         muscle: m.muscleMass ? Number(m.muscleMass) : null,
     }))
+
+    const hrData = sleepRecords
+        .filter((s) => s.hrAverage)
+        .map((s) => ({
+            date: fmt(s.date),
+            avg: s.hrAverage,
+            min: s.hrMin,
+            max: s.hrMax,
+        }))
+
+    const latestHr = hrData[hrData.length - 1]
+    const avgHr = hrData.length
+        ? Math.round(
+              hrData.reduce((s, h) => s + (h.avg || 0), 0) / hrData.length
+          )
+        : 0
 
     return (
         <div className="mx-auto w-full max-w-3xl space-y-5 px-2 py-4">
@@ -435,6 +464,153 @@ export default function HealthDashboard() {
                     </p>
                 )}
             </Card>
+
+            {/* Heart rate */}
+            {hrData.length > 0 && (
+                <Card>
+                    <SectionHeader
+                        title="Heart Rate"
+                        right={
+                            <span className="text-[11px] text-zinc-600">
+                                during sleep
+                            </span>
+                        }
+                    />
+                    <div className="h-36">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart data={hrData}>
+                                <defs>
+                                    <linearGradient
+                                        id="hrGrad"
+                                        x1="0"
+                                        y1="0"
+                                        x2="0"
+                                        y2="1"
+                                    >
+                                        <stop
+                                            offset="0%"
+                                            stopColor="#f43f5e"
+                                            stopOpacity={0.3}
+                                        />
+                                        <stop
+                                            offset="100%"
+                                            stopColor="#f43f5e"
+                                            stopOpacity={0}
+                                        />
+                                    </linearGradient>
+                                    <linearGradient
+                                        id="hrBandGrad"
+                                        x1="0"
+                                        y1="0"
+                                        x2="0"
+                                        y2="1"
+                                    >
+                                        <stop
+                                            offset="0%"
+                                            stopColor="#f43f5e"
+                                            stopOpacity={0.08}
+                                        />
+                                        <stop
+                                            offset="100%"
+                                            stopColor="#f43f5e"
+                                            stopOpacity={0.02}
+                                        />
+                                    </linearGradient>
+                                </defs>
+                                <XAxis
+                                    dataKey="date"
+                                    tick={{ fontSize: 10, fill: '#52525b' }}
+                                    axisLine={false}
+                                    tickLine={false}
+                                    interval="preserveStartEnd"
+                                />
+                                <YAxis
+                                    domain={['dataMin - 5', 'dataMax + 5']}
+                                    hide
+                                />
+                                <Tooltip
+                                    contentStyle={{
+                                        background: '#18181b',
+                                        border: '1px solid #27272a',
+                                        borderRadius: 8,
+                                        fontSize: 12,
+                                    }}
+                                    labelStyle={{ color: '#a1a1aa' }}
+                                    formatter={(v: any) => `${v} bpm`}
+                                />
+                                <Area
+                                    type="monotone"
+                                    dataKey="max"
+                                    stroke="none"
+                                    fill="url(#hrBandGrad)"
+                                    name="Max"
+                                />
+                                <Area
+                                    type="monotone"
+                                    dataKey="avg"
+                                    stroke="#f43f5e"
+                                    strokeWidth={2}
+                                    fill="url(#hrGrad)"
+                                    name="Avg"
+                                    dot={{ r: 2, fill: '#f43f5e' }}
+                                />
+                                <Area
+                                    type="monotone"
+                                    dataKey="min"
+                                    stroke="#f43f5e"
+                                    strokeWidth={1}
+                                    strokeDasharray="3 3"
+                                    strokeOpacity={0.4}
+                                    fill="none"
+                                    name="Min"
+                                />
+                            </AreaChart>
+                        </ResponsiveContainer>
+                    </div>
+                    <div className="mt-3 grid grid-cols-4 gap-3 border-t border-zinc-800/60 pt-3">
+                        <Stat
+                            label="Resting"
+                            value={latestHr?.avg ?? '—'}
+                            unit="bpm"
+                        />
+                        <Stat
+                            label="Min"
+                            value={latestHr?.min ?? '—'}
+                            unit="bpm"
+                        />
+                        <Stat
+                            label="Max"
+                            value={latestHr?.max ?? '—'}
+                            unit="bpm"
+                        />
+                        <Stat
+                            label="Avg"
+                            value={avgHr || '—'}
+                            unit="bpm"
+                            sub={`${hrData.length}d avg`}
+                        />
+                    </div>
+                    {latestSleep?.rrAverage && (
+                        <div className="mt-3 grid grid-cols-3 gap-3 border-t border-zinc-800/60 pt-3">
+                            <Stat
+                                label="Breathing"
+                                value={latestSleep.rrAverage}
+                                unit="br/min"
+                            />
+                            <Stat
+                                label="Min"
+                                value={latestSleep.rrMin ?? '—'}
+                                unit="br/min"
+                            />
+                            <Stat
+                                label="Max"
+                                value={latestSleep.rrMax ?? '—'}
+                                unit="br/min"
+                            />
+                        </div>
+                    )}
+                </Card>
+            )}
 
             {/* Weight & body comp */}
             {weightData.length > 0 && (
