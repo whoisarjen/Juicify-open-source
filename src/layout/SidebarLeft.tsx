@@ -116,7 +116,7 @@ const SidebarLeft = () => {
                         (key) => {
                             const option =
                                 getRouterPushOptions(sessionData, t)[key]
-                            if ('restricted' in option && option.restricted && sessionData?.user?.username !== 'whoisarjen') return null
+                            if ('restricted' in option && option.restricted && !sessionData?.user?.permissions?.some((p: any) => p.name === 'Administration')) return null
                             const { link, children, text } = option
 
                             return (
