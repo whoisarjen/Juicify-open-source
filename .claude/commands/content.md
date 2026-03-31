@@ -203,28 +203,60 @@ Output these English fields:
 
 ## Pipeline Step 3: Pick Featured Image
 
-Search Unsplash for a relevant photo. Do NOT guess photo IDs — search for real ones.
+Search for a relevant Unsplash photo. **Each article MUST have a unique image** — never reuse the same photo ID as an existing article.
 
-1. **Search Unsplash:**
-   ```
-   WebFetch: https://unsplash.com/s/photos/[topic-keyword]
-   ```
-   Example topics: `healthy-food`, `gym-workout`, `protein-meal`, `running`, `vegetables`, `nutrition`
+### Step 3a: Check existing images to avoid duplicates
 
-   If WebFetch fails, fallback to:
-   ```
-   WebSearch: "unsplash.com/photos [topic] fitness nutrition"
-   ```
+```sql
+SELECT "featuredImageUrl" FROM "Article" WHERE "isPublished" = true;
+```
 
-2. **Extract from results:**
-   - Photo ID from URL (e.g., `abc123XYZ` from `unsplash.com/photos/healthy-meal-abc123XYZ`)
-   - Construct: `https://images.unsplash.com/photo-[PHOTO_ID]?w=1200&h=630&fit=crop`
-   - `featuredImageOwnerName`: photographer's display name (REQUIRED)
-   - `featuredImageOwnerUsername`: photographer's Unsplash username
+Store this list — your chosen image URL must NOT match any existing one.
 
-3. If search fails after 2 attempts → use fallback:
-   `https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1200&h=630&fit=crop`
-   (attribution: ownerName: "Brooke Lark", ownerUsername: "brookelark")
+### Step 3b: Search for a unique photo
+
+Use WebSearch (NOT WebFetch — Unsplash blocks scraping) with specific queries:
+
+```
+WebSearch: site:unsplash.com/photos [specific-topic-keyword]
+```
+
+Try 2-3 different search queries with specific keywords related to the article topic. Examples:
+- For a keto article: `site:unsplash.com/photos avocado eggs bacon`
+- For a running article: `site:unsplash.com/photos trail running outdoors`
+- For a supplement article: `site:unsplash.com/photos supplement capsules vitamins`
+
+### Step 3c: Extract photo details
+
+From the search results, find an Unsplash photo page URL like `unsplash.com/photos/DESCRIPTION-PHOTO_ID`.
+
+1. **Extract the photo ID** — the last path segment (e.g., `abc123XYZ` from `/photos/healthy-meal-abc123XYZ`, or just `abc123XYZ` from `/photos/abc123XYZ`)
+2. **Fetch the photo page** to get attribution:
+   ```
+   WebFetch: https://unsplash.com/photos/[PHOTO_ID]
+   ```
+   Extract the photographer's name and username from the page.
+3. **Construct the image URL:** `https://images.unsplash.com/photo-[PHOTO_ID]?w=1200&h=630&fit=crop`
+4. **Verify the URL works** using WebFetch on the constructed URL. If it 404s, try the next search result.
+
+### Step 3d: Niche fallback images (only if search fails after 3 attempts)
+
+If you cannot find a unique image, use the fallback for the article's niche. **Never use the same fallback twice** — if the niche fallback is already used by another article, try the next niche's fallback.
+
+| Niche | Fallback Photo ID | Attribution |
+|-------|------------------|-------------|
+| `nutrition-science` | `photo-1490645935967-10de6ba17061` | Brooke Lark (brookelark) |
+| `diet-guide` | `photo-1512621776951-a57141f2eefd` | Anna Pelzer (annapelzer) |
+| `weight-management` | `photo-1465056836643-15cea6cfe14e` | Jenny Hill (jennyhill) |
+| `exercise-science` | `photo-1534438327276-14e5300c3a48` | Danielle Cerullo (dncerullo) |
+| `food-myths` | `photo-1546069901-ba9599a7e63c` | Ella Olsson (ellaolsson) |
+| `supplement-review` | `photo-1558618666-fcd25c85cd64` | Michele Blackwell (micheleblackwell) |
+| `meal-planning` | `photo-1498837167922-ddd27525d352` | Dan Gold (dangold) |
+| `body-composition` | `photo-1571019614242-c5c5dee9f50b` | Alora Griffiths (aloragriffiths) |
+| `fitness-for-beginners` | `photo-1517836357463-d25dfeac3438` | John Arano (johnarano) |
+| `sport-nutrition` | `photo-1504674900247-0877df9cc836` | Lily Banse (lilybanse) |
+
+URL format: `https://images.unsplash.com/[PHOTO_ID]?w=1200&h=630&fit=crop`
 
 ## Pipeline Step 4: Translate to 10 Languages (Parallel)
 

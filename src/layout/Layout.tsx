@@ -35,7 +35,9 @@ const getCookie = async (cookieName: string) => {
 const Layout = ({ children }: { children: any }) => {
     const { t } = useTranslation('home')
     const router = useRouter()
-    const [isAllowedLocation, setIsAllowedLocation] = useState(false)
+    const [isAllowedLocation, setIsAllowedLocation] = useState(
+        () => !REQUIRED_AUTH_PATHS.includes(router.pathname)
+    )
     const [skippedSettings, setSkippedSettings] = useState(false)
     const { data: sessionData, status } = useSession()
 

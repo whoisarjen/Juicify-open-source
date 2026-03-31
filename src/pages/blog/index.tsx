@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+import { type GetServerSideProps } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
@@ -15,23 +16,72 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import moment from 'moment'
 import { trpc } from '@/utils/trpc.utils'
+import { prisma } from '@/server/db/client'
+import { resolveArticleListItem } from '@/server/common/articleLocale'
 
-const ARTICLES_PER_PAGE = 9
+const ARTICLES_PER_PAGE = 10
 
-const BlogPage = () => {
+type ArticleListItem = {
+    slug: string
+    title: string
+    excerpt: string
+    featuredImageUrl: string | null
+    featuredImageAlt: string | null
+    readingTimeMinutes: number
+    publishedAt: string
+    niche: string | null
+}
+
+type BlogPageProps = {
+    initialArticles: ArticleListItem[]
+    initialTotalPages: number
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const locale = context.locale || 'en'
+
+    const [articles, total] = await Promise.all([
+        prisma.article.findMany({
+            where: { isPublished: true },
+            orderBy: { publishedAt: 'desc' },
+            take: ARTICLES_PER_PAGE,
+        }),
+        prisma.article.count({ where: { isPublished: true } }),
+    ])
+
+    return {
+        props: {
+            initialArticles: JSON.parse(
+                JSON.stringify(
+                    articles.map((a) => resolveArticleListItem(a, locale))
+                )
+            ),
+            initialTotalPages: Math.ceil(total / ARTICLES_PER_PAGE),
+        },
+    }
+}
+
+const BlogPage = ({ initialArticles, initialTotalPages }: BlogPageProps) => {
     const { t } = useTranslation('blog')
     const router = useRouter()
     const locale = router.locale || 'en'
     const [page, setPage] = useState(1)
 
-    const { data, isLoading } = trpc.article.list.useQuery({
-        page,
-        limit: ARTICLES_PER_PAGE,
-        locale,
-    })
+    const { data, isLoading } = trpc.article.list.useQuery(
+        {
+            page,
+            limit: ARTICLES_PER_PAGE,
+            locale,
+        },
+        {
+            enabled: page > 1,
+        }
+    )
 
-    const articles = data?.articles ?? []
-    const totalPages = data?.totalPages ?? 0
+    const articles = page === 1 ? initialArticles : (data?.articles ?? [])
+    const totalPages =
+        page === 1 ? initialTotalPages : (data?.totalPages ?? initialTotalPages)
+    const isPageLoading = page > 1 && isLoading
     const featuredArticle = articles[0]
     const gridArticles = articles.slice(1)
 
@@ -65,7 +115,7 @@ const BlogPage = () => {
             </Head>
 
             {/* Page Header */}
-            <div className="mb-8 px-4 pt-6 md:px-0">
+            <div className="mb-8 pt-6">
                 <Typography
                     variant="h4"
                     component="h1"
@@ -77,8 +127,8 @@ const BlogPage = () => {
             </div>
 
             {/* Loading State */}
-            {isLoading && (
-                <div className="flex flex-col gap-6 px-4 md:px-0">
+            {isPageLoading && (
+                <div className="flex flex-col gap-6">
                     {/* Featured skeleton */}
                     <Card
                         sx={{
@@ -143,8 +193,8 @@ const BlogPage = () => {
             )}
 
             {/* Empty State */}
-            {!isLoading && articles.length === 0 && (
-                <Box className="flex flex-col items-center justify-center px-4 py-20">
+            {!isPageLoading && articles.length === 0 && (
+                <Box className="flex flex-col items-center justify-center py-20">
                     <Typography
                         variant="h6"
                         className="!text-gray-400 dark:!text-gray-500"
@@ -155,8 +205,8 @@ const BlogPage = () => {
             )}
 
             {/* Content */}
-            {!isLoading && articles.length > 0 && (
-                <div className="flex flex-col gap-6 px-4 md:px-0">
+            {!isPageLoading && articles.length > 0 && (
+                <div className="flex flex-col gap-6">
                     {/* Featured Article (Hero) */}
                     {featuredArticle && page === 1 && (
                         <Link
@@ -225,19 +275,9 @@ const BlogPage = () => {
                                     >
                                         {featuredArticle.title}
                                     </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        className="!text-gray-400"
-                                        sx={{
-                                            display: '-webkit-box',
-                                            WebkitLineClamp: 3,
-                                            WebkitBoxOrient: 'vertical',
-                                            overflow: 'hidden',
-                                            mb: 2,
-                                        }}
-                                    >
+                                    <p className="mb-4 text-sm text-gray-400 line-clamp-2">
                                         {featuredArticle.excerpt}
-                                    </Typography>
+                                    </p>
                                     <div className="flex items-center gap-4 text-xs text-gray-500">
                                         {featuredArticle.readingTimeMinutes && (
                                             <span className="flex items-center gap-1">
@@ -352,22 +392,9 @@ const BlogPage = () => {
                                                 >
                                                     {article.title}
                                                 </Typography>
-                                                <Typography
-                                                    variant="body2"
-                                                    className="!text-gray-400"
-                                                    sx={{
-                                                        display:
-                                                            '-webkit-box',
-                                                        WebkitLineClamp: 2,
-                                                        WebkitBoxOrient:
-                                                            'vertical',
-                                                        overflow: 'hidden',
-                                                        mb: 'auto',
-                                                        pb: 1.5,
-                                                    }}
-                                                >
+                                                <p className="mb-auto pb-3 text-sm text-gray-400 line-clamp-2">
                                                     {article.excerpt}
-                                                </Typography>
+                                                </p>
                                                 <div className="flex items-center gap-4 text-xs text-gray-500">
                                                     {article.readingTimeMinutes && (
                                                         <span className="flex items-center gap-1">
