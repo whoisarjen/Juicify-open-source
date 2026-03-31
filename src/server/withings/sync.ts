@@ -63,28 +63,109 @@ export async function syncWithingsData(userId: number) {
 export async function syncWithingsRange(userId: number, days: number) {
     const accessToken = await getValidAccessToken(userId)
 
-    const startDate = moment().subtract(days, 'days').startOf('day')
-    const endDate = moment().subtract(1, 'day').endOf('day')
-    const startYmd = startDate.format('YYYY-MM-DD')
-    const endYmd = endDate.format('YYYY-MM-DD')
-
-    // Measurements need day-by-day (unix timestamp range per day)
-    for (let i = days; i >= 1; i--) {
-        const day = moment().subtract(i, 'day')
-        await syncMeasurements(
+    // Measurements — single range call, then upsert per day
+    const rangeStart = moment().subtract(days, 'days').startOf('day')
+    const rangeEnd = moment().subtract(1, 'day').endOf('day')
+    try {
+        const allGroups = await getMeasurements(
             accessToken,
-            userId,
-            day.clone().startOf('day'),
-            day.clone().endOf('day'),
+            rangeStart.unix(),
+            rangeEnd.unix(),
         )
+        // Group by date, take latest per day
+        const byDay = new Map<string, typeof allGroups>()
+        for (const g of allGroups) {
+            const dayKey = moment.unix(g.date).format('YYYY-MM-DD')
+            const existing = byDay.get(dayKey) || []
+            existing.push(g)
+            byDay.set(dayKey, existing)
+        }
+        for (const dayKey of Array.from(byDay.keys())) {
+            const groups = byDay.get(dayKey)!
+            const dayStart = moment(dayKey, 'YYYY-MM-DD').startOf('day')
+            const dayEnd = dayStart.clone().endOf('day')
+            // Reuse existing syncMeasurements by passing the groups directly
+            // But syncMeasurements fetches from API, so we do inline upsert
+            const values: Record<string, number> = {}
+            let latestDate = 0
+            for (const group of groups) {
+                if (group.date > latestDate) latestDate = group.date
+                for (const measure of group.measures) {
+                    const field = MEASTYPE_MAP[measure.type]
+                    if (field) {
+                        values[field] = parseWithingsValue(measure.value, measure.unit)
+                    }
+                }
+            }
+            if (Object.keys(values).length === 0) continue
+            const toInt = (v: number | undefined) =>
+                v !== undefined ? Math.round(v) : null
+            const data = {
+                weight: values.weight ?? 0,
+                fatFreeMass: values.fatFreeMass ?? null,
+                fatRatio: values.fatRatio ?? null,
+                fatMass: values.fatMass ?? null,
+                muscleMass: values.muscleMass ?? null,
+                boneMass: values.boneMass ?? null,
+                waterMass: values.waterMass ?? null,
+                heartPulse: toInt(values.heartPulse),
+                diastolicBp: toInt(values.diastolicBp),
+                systolicBp: toInt(values.systolicBp),
+                temperature: values.temperature ?? null,
+                bodyTemperature: values.bodyTemperature ?? null,
+                skinTemperature: values.skinTemperature ?? null,
+                spo2: values.spo2 ?? null,
+                pulseWaveVelocity: values.pulseWaveVelocity ?? null,
+                vo2Max: values.vo2Max ?? null,
+                source: 'withings' as const,
+            }
+            const existing = await prisma.measurement.findFirst({
+                where: {
+                    userId,
+                    source: 'withings',
+                    whenAdded: { gte: dayStart.toDate(), lte: dayEnd.toDate() },
+                },
+            })
+            if (existing) {
+                await prisma.measurement.update({
+                    where: { id_userId: { id: existing.id, userId } },
+                    data,
+                })
+            } else {
+                await prisma.measurement.create({
+                    data: { ...data, userId, whenAdded: new Date(latestDate * 1000) },
+                })
+            }
+        }
+    } catch (e) {
+        console.error('Withings measurements range error:', e)
     }
 
-    // Activity, sleep, workouts support date ranges — one call each
-    await Promise.all([
-        syncActivityRange(accessToken, userId, startYmd, endYmd),
-        syncSleepRange(accessToken, userId, startYmd, endYmd),
-        syncWorkoutRange(accessToken, userId, startYmd, endYmd),
-    ])
+    // Activity, sleep, workouts in 30-day chunks with delay to avoid rate limits
+    const chunkSize = 30
+    for (let offset = days; offset > 0; offset -= chunkSize) {
+        const chunkStart = moment()
+            .subtract(offset, 'days')
+            .startOf('day')
+        const chunkEnd = moment()
+            .subtract(Math.max(offset - chunkSize, 1), 'days')
+            .endOf('day')
+        const chunkStartYmd = chunkStart.format('YYYY-MM-DD')
+        const chunkEndYmd = chunkEnd.format('YYYY-MM-DD')
+
+        const safeCall = async (fn: () => Promise<void>) => {
+            try { await fn() } catch (e) {
+                console.error('Withings chunk error:', e)
+            }
+        }
+
+        await safeCall(() => syncActivityRange(accessToken, userId, chunkStartYmd, chunkEndYmd))
+        await safeCall(() => syncSleepRange(accessToken, userId, chunkStartYmd, chunkEndYmd))
+        await safeCall(() => syncWorkoutRange(accessToken, userId, chunkStartYmd, chunkEndYmd))
+
+        // Rate limit protection
+        await new Promise((r) => setTimeout(r, 2000))
+    }
 }
 
 async function syncMeasurements(

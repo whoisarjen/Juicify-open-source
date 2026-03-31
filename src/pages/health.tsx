@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSession } from 'next-auth/react'
 import { trpc } from '@/utils/trpc.utils'
 import moment from 'moment'
 import {
@@ -85,8 +86,12 @@ const RANGE_OPTIONS = [
 
 export default function HealthDashboard() {
     const [days, setDays] = useState(30)
+    const { data: session } = useSession()
 
-    const { data, isLoading } = trpc.withings.dashboard.useQuery({ days })
+    const { data, isLoading } = trpc.withings.dashboard.useQuery(
+        { days },
+        { enabled: !!session?.user, trpc: { ssr: false } }
+    )
 
     if (isLoading) {
         return (
@@ -192,6 +197,19 @@ export default function HealthDashboard() {
         cal: Math.round(Number(a.activeCalories)),
     }))
 
+    const tdeeData = activities.map((a) => ({
+        date: fmt(a.date),
+        bmr: Math.round(Number(a.totalCalories) - Number(a.activeCalories)),
+        active: Math.round(Number(a.activeCalories)),
+        total: Math.round(Number(a.totalCalories)),
+    }))
+
+    const avgTdee = tdeeData.length
+        ? Math.round(
+              tdeeData.reduce((s, d) => s + d.total, 0) / tdeeData.length
+          )
+        : 0
+
     const sleepData = sleepRecords.map((s) => ({
         date: fmt(s.date),
         deep: Math.round((s.deepSleepDuration || 0) / 60),
@@ -264,15 +282,20 @@ export default function HealthDashboard() {
                 </Card>
                 <Card>
                     <Stat
-                        label="Calories"
+                        label="TDEE"
                         value={
                             latest
                                 ? Math.round(
-                                      Number(latest.activeCalories)
+                                      Number(latest.totalCalories)
                                   ).toLocaleString()
                                 : '—'
                         }
                         unit="kcal"
+                        sub={
+                            latest
+                                ? `${Math.round(Number(latest.totalCalories) - Number(latest.activeCalories))} + ${Math.round(Number(latest.activeCalories))} active`
+                                : undefined
+                        }
                     />
                 </Card>
                 <Card>
@@ -363,6 +386,81 @@ export default function HealthDashboard() {
                                 (latest.moderateDuration || 0) +
                                     (latest.intenseDuration || 0)
                             )}
+                        />
+                    </div>
+                )}
+            </Card>
+
+            {/* TDEE chart */}
+            <Card>
+                <SectionHeader
+                    title="TDEE"
+                    right={
+                        <span className="text-xs tabular-nums text-zinc-600">
+                            avg {avgTdee.toLocaleString()} kcal
+                        </span>
+                    }
+                />
+                <div className="h-36">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={tdeeData} barCategoryGap="20%">
+                            <XAxis
+                                dataKey="date"
+                                tick={{ fontSize: 10, fill: '#52525b' }}
+                                axisLine={false}
+                                tickLine={false}
+                                interval="preserveStartEnd"
+                            />
+                            <YAxis hide />
+                            <Tooltip
+                                contentStyle={{
+                                    background: '#18181b',
+                                    border: '1px solid #27272a',
+                                    borderRadius: 8,
+                                    fontSize: 12,
+                                }}
+                                labelStyle={{ color: '#a1a1aa' }}
+                                formatter={(v: any) =>
+                                    `${Number(v).toLocaleString()} kcal`
+                                }
+                            />
+                            <Bar
+                                dataKey="bmr"
+                                stackId="tdee"
+                                fill="#f97316"
+                                fillOpacity={0.5}
+                                name="BMR"
+                                radius={[0, 0, 0, 0]}
+                            />
+                            <Bar
+                                dataKey="active"
+                                stackId="tdee"
+                                fill="#f97316"
+                                name="Active"
+                                radius={[3, 3, 0, 0]}
+                            />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
+                {latest && (
+                    <div className="mt-3 grid grid-cols-3 gap-3 border-t border-zinc-800/60 pt-3">
+                        <Stat
+                            label="Total"
+                            value={Math.round(Number(latest.totalCalories)).toLocaleString()}
+                            unit="kcal"
+                        />
+                        <Stat
+                            label="BMR"
+                            value={Math.round(
+                                Number(latest.totalCalories) -
+                                    Number(latest.activeCalories)
+                            ).toLocaleString()}
+                            unit="kcal"
+                        />
+                        <Stat
+                            label="Active"
+                            value={Math.round(Number(latest.activeCalories)).toLocaleString()}
+                            unit="kcal"
                         />
                     </div>
                 )}
