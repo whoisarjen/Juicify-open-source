@@ -59,53 +59,53 @@ const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
                         }
                     />
                     <div className="flex w-full flex-1 text-sm">
-                        <tbody className="flex w-full flex-1 flex-col">
-                            <tr className="flex">
-                                <th className="flex-1 text-left">Proteins:</th>
-                                <td className="w-12 text-right font-bold">
+                        <div className="flex w-full flex-1 flex-col">
+                            <div className="flex">
+                                <span className="flex-1 text-left">Proteins:</span>
+                                <span className="w-12 text-right font-bold">
                                     {consumedMacro.proteins}g
-                                </td>
-                                <td className="flex-1 text-right">
+                                </span>
+                                <span className="flex-1 text-right">
                                     {expectedMacro.proteins}g
-                                </td>
-                            </tr>
-                            <tr className="flex">
-                                <th className="flex-1 text-left">Carbs:</th>
-                                <td className="w-12 text-right font-bold">
+                                </span>
+                            </div>
+                            <div className="flex">
+                                <span className="flex-1 text-left">Carbs:</span>
+                                <span className="w-12 text-right font-bold">
                                     {consumedMacro.carbs}g
-                                </td>
-                                <td className="flex-1 text-right">
+                                </span>
+                                <span className="flex-1 text-right">
                                     {expectedMacro.carbs}g
-                                </td>
-                            </tr>
-                            <tr className="flex">
-                                <th className="flex-1 text-left">Sugar:</th>
-                                <td className="w-12 text-right font-bold">
+                                </span>
+                            </div>
+                            <div className="flex">
+                                <span className="flex-1 text-left">Sugar:</span>
+                                <span className="w-12 text-right font-bold">
                                     {consumedMacro.sugar}g
-                                </td>
-                                <td className="flex-1 text-right">
+                                </span>
+                                <span className="flex-1 text-right">
                                     {expectedMacro.sugar}g
-                                </td>
-                            </tr>
-                            <tr className="flex">
-                                <th className="flex-1 text-left">Fats:</th>
-                                <td className="w-12 text-right font-bold">
+                                </span>
+                            </div>
+                            <div className="flex">
+                                <span className="flex-1 text-left">Fats:</span>
+                                <span className="w-12 text-right font-bold">
                                     {consumedMacro.fats}g
-                                </td>
-                                <td className="flex-1 text-right">
+                                </span>
+                                <span className="flex-1 text-right">
                                     {expectedMacro.fats}g
-                                </td>
-                            </tr>
-                            <tr className="flex">
-                                <th className="flex-1 text-left">Fiber:</th>
-                                <td className="w-12 text-right font-bold">
+                                </span>
+                            </div>
+                            <div className="flex">
+                                <span className="flex-1 text-left">Fiber:</span>
+                                <span className="w-12 text-right font-bold">
                                     {consumedMacro.fiber}g
-                                </td>
-                                <td className="flex-1 text-right">
+                                </span>
+                                <span className="flex-1 text-right">
                                     {expectedMacro.fiber}g
-                                </td>
-                            </tr>
-                        </tbody>
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </TabPanel>
                 <TabPanel
@@ -131,55 +131,55 @@ const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
                         }
                     />
                     <div className="flex w-full flex-1 text-sm">
-                        <tbody className="flex w-full flex-1 flex-col">
-                            <tr className="flex">
-                                <th className="flex-1 text-left">Proteins:</th>
-                                <td className="w-12 text-right font-bold">
+                        <div className="flex w-full flex-1 flex-col">
+                            <div className="flex">
+                                <span className="flex-1 text-left">Proteins:</span>
+                                <span className="w-12 text-right font-bold">
                                     {expectedMacro.proteins -
                                         consumedMacro.proteins}
                                     g
-                                </td>
-                                <td className="flex-1 text-right">
+                                </span>
+                                <span className="flex-1 text-right">
                                     {expectedMacro.proteins}g
-                                </td>
-                            </tr>
-                            <tr className="flex">
-                                <th className="flex-1 text-left">Carbs:</th>
-                                <td className="w-12 text-right font-bold">
+                                </span>
+                            </div>
+                            <div className="flex">
+                                <span className="flex-1 text-left">Carbs:</span>
+                                <span className="w-12 text-right font-bold">
                                     {expectedMacro.carbs - consumedMacro.carbs}g
-                                </td>
-                                <td className="flex-1 text-right">
+                                </span>
+                                <span className="flex-1 text-right">
                                     {expectedMacro.carbs}g
-                                </td>
-                            </tr>
-                            <tr className="flex">
-                                <th className="flex-1 text-left">Sugar:</th>
-                                <td className="w-12 text-right font-bold">
+                                </span>
+                            </div>
+                            <div className="flex">
+                                <span className="flex-1 text-left">Sugar:</span>
+                                <span className="w-12 text-right font-bold">
                                     {expectedMacro.sugar}g
-                                </td>
-                                <td className="flex-1 text-right">
+                                </span>
+                                <span className="flex-1 text-right">
                                     {expectedMacro.sugar}g
-                                </td>
-                            </tr>
-                            <tr className="flex">
-                                <th className="flex-1 text-left">Fats:</th>
-                                <td className="w-12 text-right font-bold">
+                                </span>
+                            </div>
+                            <div className="flex">
+                                <span className="flex-1 text-left">Fats:</span>
+                                <span className="w-12 text-right font-bold">
                                     {expectedMacro.fats - consumedMacro.fats}g
-                                </td>
-                                <td className="flex-1 text-right">
+                                </span>
+                                <span className="flex-1 text-right">
                                     {expectedMacro.fats}g
-                                </td>
-                            </tr>
-                            <tr className="flex">
-                                <th className="flex-1 text-left">Fiber:</th>
-                                <td className="w-12 text-right font-bold">
+                                </span>
+                            </div>
+                            <div className="flex">
+                                <span className="flex-1 text-left">Fiber:</span>
+                                <span className="w-12 text-right font-bold">
                                     {expectedMacro.fiber - consumedMacro.fiber}g
-                                </td>
-                                <td className="flex-1 text-right">
+                                </span>
+                                <span className="flex-1 text-right">
                                     {expectedMacro.fiber}g
-                                </td>
-                            </tr>
-                        </tbody>
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </TabPanel>
             </TabContext>
