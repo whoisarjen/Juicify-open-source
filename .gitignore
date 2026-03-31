@@ -38,3 +38,6 @@ yarn-error.log*
 # grafana
 /grafana/data/*
 .env*.local
+
+tmp
+.claude/settings.json

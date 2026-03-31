@@ -62,23 +62,6 @@ LIMIT 10;
 - If more thin articles exist than requested slots → pick the shortest ones first
 - If no thin articles → skip this step entirely, proceed normally
 
-## Step 1c: Check for Broken Featured Images
-
-Also check for articles with missing or broken images:
-
-```sql
-SELECT slug, "titleEn", "featuredImageUrl", "featuredImageOwnerName"
-FROM "Article"
-WHERE "featuredImageUrl" IS NULL
-   OR "featuredImageUrl" = ''
-   OR "featuredImageOwnerName" IS NULL
-   OR "featuredImageOwnerName" = ''
-ORDER BY "publishedAt" DESC
-LIMIT 10;
-```
-
-If found, note these slugs — regeneration in Step 1b will fix their images too. If they weren't caught by the thin-content check, add them to the regeneration queue (they still consume slots from N).
-
 ## Step 2: Pick Keywords (Keyword Analyst)
 
 ### Content Overlap Detection
@@ -218,53 +201,30 @@ Output these English fields:
 - metaDescEn (120-155 chars, include key number or finding)
 - FAQ pairs: 4-6 pairs — **both `questionEn` and `answerEn` must be non-empty strings for every pair** (never null, never empty string). Omit a pair entirely rather than including one with a missing answer. **Each answer must be at least 150 characters** (3-5 sentences with specific data points). One-liner FAQ answers don't earn Google rich snippets — substantial answers do.
 
-## Pipeline Step 3: Pick and Verify Featured Image (MANDATORY)
+## Pipeline Step 3: Pick Featured Image
 
-**The core problem:** LLMs cannot recall real Unsplash photo IDs from memory. Guessing IDs produces broken URLs. The ONLY reliable method is to **search the web for a real Unsplash URL** for each article.
+Search Unsplash for a relevant photo. Do NOT guess photo IDs — search for real ones.
 
-**Process:**
-1. Get recently used images:
-   ```sql
-   SELECT "featuredImageUrl" FROM "Article" WHERE "featuredImageUrl" IS NOT NULL ORDER BY "publishedAt" DESC LIMIT 100;
-   ```
-
-2. **Primary method — fetch the Unsplash search page directly:**
+1. **Search Unsplash:**
    ```
    WebFetch: https://unsplash.com/s/photos/[topic-keyword]
    ```
-   Example topics: `healthy-food`, `gym-workout`, `protein-meal`, `running`, `vegetables`, `nutrition`, `weight-training`
-   This returns a gallery page with multiple `unsplash.com/photos/...` links and photographer names. Parse the page for photo URLs and attribution.
+   Example topics: `healthy-food`, `gym-workout`, `protein-meal`, `running`, `vegetables`, `nutrition`
 
-3. **Fallback method — if WebFetch fails (rate limit, timeout):**
+   If WebFetch fails, fallback to:
    ```
    WebSearch: "unsplash.com/photos [topic] fitness nutrition"
    ```
-   Look through results for an `unsplash.com/photos/...` URL.
 
-4. **Extract the photo ID from the Unsplash URL:**
-   - Browser URL format: `unsplash.com/photos/[slug]-[PHOTO_ID]` or `unsplash.com/photos/[PHOTO_ID]`
-   - The photo ID is the last segment (e.g., `abc123XYZ` from `unsplash.com/photos/healthy-meal-abc123XYZ`)
-   - Construct the direct image URL: `https://images.unsplash.com/photo-[PHOTO_ID]?w=1200&h=630&fit=crop`
+2. **Extract from results:**
+   - Photo ID from URL (e.g., `abc123XYZ` from `unsplash.com/photos/healthy-meal-abc123XYZ`)
+   - Construct: `https://images.unsplash.com/photo-[PHOTO_ID]?w=1200&h=630&fit=crop`
+   - `featuredImageOwnerName`: photographer's display name (REQUIRED)
+   - `featuredImageOwnerUsername`: photographer's Unsplash username
 
-5. **Extract photographer attribution from the Unsplash page:**
-   - `featuredImageOwnerName`: photographer's display name (REQUIRED — never empty)
-   - `featuredImageOwnerUsername`: photographer's Unsplash username (from their profile URL)
-   - These are legally required by the Unsplash license
-
-6. **Verify the constructed URL works:**
-   ```bash
-   curl -sL -o /dev/null -w "%{http_code}" "https://images.unsplash.com/photo-[PHOTO_ID]?w=1200&h=630&fit=crop" --max-time 10
-   ```
-
-7. **Check uniqueness** — the URL must NOT match any of the 100 most recent images from step 1.
-
-8. If the first attempt doesn't yield a usable result, try alternative searches:
-   - `unsplash.com/s/photos/[related-topic]`
-   - WebSearch: `"unsplash [topic] healthy lifestyle photography"`
-
-9. Up to 3 attempts. If all fail → use this known-working fallback and note it in the report:
+3. If search fails after 2 attempts → use fallback:
    `https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1200&h=630&fit=crop`
-   (fallback attribution: ownerName: "Brooke Lark", ownerUsername: "brookelark")
+   (attribution: ownerName: "Brooke Lark", ownerUsername: "brookelark")
 
 ## Pipeline Step 4: Translate to 10 Languages (Parallel)
 
@@ -299,11 +259,11 @@ Hard fails (do NOT insert):
 - Check slug doesn't already exist (for new articles): `SELECT slug FROM "Article" WHERE slug = '[slug]'`
 - titleEn and titlePl must be non-empty
 - contentEn must be **2000+ words AND 8,000+ characters** (articles under 8000 chars get flagged for regeneration — hard-fail now to avoid wasting the pipeline). If too short, go back to Pipeline Step 2 and expand the article before continuing.
-- featuredImageUrl curl returned 200 (verified in Pipeline Step 3 — if skipped, treat as hard fail)
+- featuredImageUrl must be non-empty
 - featuredImageOwnerName must be a non-empty string (Unsplash license requires attribution)
-- featuredImageAlt must be at least 20 characters and describe the actual image (e.g., "Fresh vegetables and protein sources on a cutting board" — not just "image" or "photo")
-- Every FAQ pair in `faqs` must have both a non-empty `question` and a non-empty `answer` — drop any pair missing either field rather than inserting null/empty values
-- Every FAQ `answer` must be at least **150 characters** — short answers don't qualify for rich snippets
+- featuredImageAlt must be at least 20 characters and describe the actual image
+- Every FAQ pair in `faqs` must have both a non-empty `question` and a non-empty `answer` — drop any pair missing either field
+- Every FAQ `answer` must be at least **150 characters**
 - Minimum 3 entries in `references` JSON array — each with non-empty `title`, `url`, and `source`
 - Medical disclaimer must be present in contentEn
 
@@ -311,8 +271,8 @@ Soft warnings (insert anyway, note in report):
 - Any meta title over 60 chars → truncate
 - Any meta description over 155 chars → truncate
 - Translation content under threshold (60% for Latin scripts, 40% for KO/JA/AR) → flag
-- featuredImageOwnerUsername is null → flag (attribution incomplete but not fatal)
-- Fewer than 5 references → flag (3 minimum still met)
+- featuredImageOwnerUsername is null → flag
+- Fewer than 5 references → flag
 
 ## Pipeline Step 6: Calculate Reading Time + Insert via SQL
 
@@ -370,20 +330,62 @@ INSERT INTO "Article" (
 -- featuredImageOwnerUsername: photographer's Unsplash username (use NULL only if truly unknown after web search)
 -- references: JSON array of citations, e.g. [{"title":"...","url":"...","source":"PubMed"},...]
 
-## Pipeline Step 7: Report
+## Pipeline Step 7: Deep Post-Insert Verification (MANDATORY)
+
+After inserting, immediately verify the article exists and is complete in the database. This is the most important step — an article that isn't queryable is worthless.
+
+```sql
+SELECT
+  slug,
+  "isPublished",
+  LENGTH("contentEn") AS en_chars,
+  LENGTH("contentPl") AS pl_chars,
+  LENGTH("contentEs") AS es_chars,
+  LENGTH("contentDe") AS de_chars,
+  LENGTH("contentPt") AS pt_chars,
+  LENGTH("contentFr") AS fr_chars,
+  LENGTH("contentKo") AS ko_chars,
+  LENGTH("contentAr") AS ar_chars,
+  LENGTH("contentTr") AS tr_chars,
+  LENGTH("contentJa") AS ja_chars,
+  LENGTH("contentIt") AS it_chars,
+  "titleEn" IS NOT NULL AND "titleEn" != '' AS has_title_en,
+  "titlePl" IS NOT NULL AND "titlePl" != '' AS has_title_pl,
+  "featuredImageUrl" IS NOT NULL AND "featuredImageUrl" != '' AS has_image,
+  "featuredImageOwnerName" IS NOT NULL AND "featuredImageOwnerName" != '' AS has_attribution,
+  jsonb_array_length(COALESCE(references, '[]'::jsonb)) AS ref_count,
+  jsonb_array_length(COALESCE(faqs, '[]'::jsonb)) AS faq_count,
+  "readingTimeMinutes",
+  niche
+FROM "Article"
+WHERE slug = '[slug]';
+```
+
+**Verification checks:**
+1. Row exists (`isPublished = true`)
+2. `en_chars >= 8000` — if not, the insert was truncated or malformed. DELETE and retry.
+3. All 11 language content columns are non-null and non-empty (`> 0` chars)
+4. `ref_count >= 3` — citations are present
+5. `faq_count >= 4` — FAQs are present
+6. `has_image = true` and `has_attribution = true`
+7. `readingTimeMinutes >= 1`
+8. `niche` is set
+
+**If any check fails:** Report which check failed. For critical failures (row missing, content truncated, 0 translations), attempt one retry — DELETE the row and re-insert. For minor failures (1-2 translations empty), flag in report but don't retry.
+
+## Pipeline Step 8: Report
 
 Return a summary:
-- Status: published / failed
+- Status: published / verified / failed
 - Slug
 - Keyword
 - **Niche** (from taxonomy)
 - Word count (EN)
+- EN chars (from DB verification)
 - Reading time (calculated)
-- Citations count
-- Image: verified / fallback / failed
-- Image attribution: complete / partial / missing
-- Translations completed (X/10)
-- Translation quality: all OK / [list any flagged]
+- Citations count (from DB verification)
+- Translations: X/10 non-empty (from DB verification)
+- DB verification: PASS / FAIL [details]
 - Any warnings
 ```
 
@@ -399,11 +401,11 @@ After all N agents finish, present:
 **Regenerated (thin):** R
 **Failed:** Y (with reasons)
 
-| # | Slug | Niche | Citations | Image | Languages | Warnings |
-|---|------|-------|-----------|-------|-----------|----------|
-| 1 | how-protein-synthesis-works-... | nutrition-science | 5 | verified | 11/11 | none |
-| 2 | calorie-deficit-guide-... | weight-management | 4 | verified | 10/11 | KO translation short |
-| 3 | creatine-evidence-review-... | supplement-review | 6 | fallback | 11/11 | image: used fallback |
+| # | Slug | Niche | EN chars | Citations | Languages | DB Verified | Warnings |
+|---|------|-------|----------|-----------|-----------|-------------|----------|
+| 1 | how-protein-synthesis-works-... | nutrition-science | 12,340 | 5 | 11/11 | PASS | none |
+| 2 | calorie-deficit-guide-... | weight-management | 9,870 | 4 | 10/11 | PASS | KO empty |
+| 3 | creatine-evidence-review-... | supplement-review | 11,200 | 6 | 11/11 | PASS | fallback image |
 | ...
 
 **Next trigger will analyze fresh and pick the next best keywords.**
@@ -421,3 +423,4 @@ After all N agents finish, present:
 8. **Unsplash images via WebSearch** — never guess photo IDs
 9. **FAQ answers minimum 150 characters**, citing specific data
 10. **Reading time calculated:** ROUND(words / 230), minimum 1
+11. **Deep DB verification after every insert** — query the row back and confirm all fields are present and meet minimums. No article is "done" until verified in DB.

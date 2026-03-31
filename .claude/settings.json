@@ -13,10 +13,19 @@
       "Edit(prisma/**)",
       "Read(locales/**)",
       "Edit(locales/**)",
-      "Bash(git add prisma/schema.prisma src/pages/[login]/workout/results/[id].tsx src/server/schema/workoutResult.schema.ts)"
+      "Bash(git add prisma/schema.prisma src/pages/[login]/workout/results/[id].tsx src/server/schema/workoutResult.schema.ts)",
+      "Bash(git add:*)",
+      "Read(//Users/kamilowczarek/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.5/skills/subagent-driven-development/**)",
+      "Bash(npx next:*)",
+      "Bash(NEXT_DIST_DIR=/tmp/juicify-next-build npx next build)",
+      "mcp__Neon__run_sql"
     ],
     "deny": [
       "Bash(sudo *)"
+    ],
+    "additionalDirectories": [
+      "/Users/kamilowczarek/Documents/GitHub/Juicify-open-source/.claude",
+      "/tmp"
     ]
   },
   "teammateMode": "auto"
