@@ -20,7 +20,7 @@ import CodeIcon from '@mui/icons-material/Code'
 
 const Home = () => {
     const { t } = useTranslation('home')
-    const { data: sessionData } = useSession()
+    const { data: sessionData, status } = useSession()
     const [providers, setProviders] = useState<Record<
         LiteralUnion<BuiltInProviderType, string>,
         ClientSafeProvider
@@ -122,6 +122,11 @@ const Home = () => {
             desc: t('LANDING_STEP_3_DESC'),
         },
     ]
+
+    // Authenticated users get redirected by Layout — render nothing to avoid flash
+    if (status === 'loading' || sessionData) {
+        return null
+    }
 
     return (
         <div
