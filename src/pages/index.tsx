@@ -34,12 +34,6 @@ const Home = () => {
     }, [setProviders])
 
     useEffect(() => {
-        if (sessionData) {
-            window.location.reload()
-        }
-    }, [sessionData])
-
-    useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
