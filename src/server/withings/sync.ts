@@ -9,8 +9,40 @@ import {
     MEASTYPE_MAP,
     WORKOUT_CATEGORY_MAP,
 } from './client'
-import type { WithingsSleepSummary } from './client'
+import type { WithingsSleepSummary, WithingsSleepData } from './client'
 import moment from 'moment'
+
+function sleepDataToDb(sleep: WithingsSleepSummary) {
+    const d: WithingsSleepData = sleep.data ?? {}
+    return {
+        startDate: sleep.startdate ? new Date(sleep.startdate * 1000) : null,
+        endDate: sleep.enddate ? new Date(sleep.enddate * 1000) : null,
+        lightSleepDuration: d.lightsleepduration || 0,
+        deepSleepDuration: d.deepsleepduration || 0,
+        remSleepDuration: d.remsleepduration || 0,
+        wakeupDuration: d.wakeupduration || 0,
+        wakeupCount: d.wakeupcount || 0,
+        durationToSleep: d.durationtosleep || 0,
+        durationToWakeup: d.durationtowakeup || 0,
+        hrAverage: d.hr_average || null,
+        hrMin: d.hr_min || null,
+        hrMax: d.hr_max || null,
+        rrAverage: d.rr_average || null,
+        rrMin: d.rr_min || null,
+        rrMax: d.rr_max || null,
+        breathingDisturbancesIntensity: d.breathing_disturbances_intensity || null,
+        snoring: d.snoring || null,
+        snoringEpisodeCount: d.snoringepisodecount || null,
+        sleepScore: d.sleep_score || null,
+        totalSleepTime: d.total_sleep_time || 0,
+        totalTimeInBed: d.total_timeinbed || 0,
+        sleepEfficiency: d.sleep_efficiency || null,
+        sleepLatency: d.sleep_latency || null,
+        waso: d.waso || null,
+        outOfBedCount: d.out_of_bed_count || null,
+        nbRemEpisodes: d.nb_rem_episodes || null,
+    }
+}
 
 export async function syncWithingsData(userId: number) {
     const accessToken = await getValidAccessToken(userId)
@@ -298,86 +330,20 @@ async function syncSleepData(
 
     if (sleepSummaries.length === 0) return
 
-    // Take the longest sleep session if multiple exist (naps vs main sleep)
     const sleep = sleepSummaries.reduce(
         (longest: WithingsSleepSummary, s: WithingsSleepSummary) =>
-            (s.total_timeinbed || 0) > (longest.total_timeinbed || 0)
+            (s.data?.total_timeinbed || 0) > (longest.data?.total_timeinbed || 0)
                 ? s
                 : longest,
     )
 
     const date = startOfDay.toDate()
+    const dbData = sleepDataToDb(sleep)
 
     await prisma.withingsSleep.upsert({
         where: { userId_date: { userId, date } },
-        update: {
-            startDate: sleep.startdate
-                ? new Date(sleep.startdate * 1000)
-                : null,
-            endDate: sleep.enddate
-                ? new Date(sleep.enddate * 1000)
-                : null,
-            lightSleepDuration: sleep.lightsleepduration || 0,
-            deepSleepDuration: sleep.deepsleepduration || 0,
-            remSleepDuration: sleep.remsleepduration || 0,
-            wakeupDuration: sleep.wakeupduration || 0,
-            wakeupCount: sleep.wakeupcount || 0,
-            durationToSleep: sleep.durationtosleep || 0,
-            durationToWakeup: sleep.durationtowakeup || 0,
-            hrAverage: sleep.hr_average || null,
-            hrMin: sleep.hr_min || null,
-            hrMax: sleep.hr_max || null,
-            rrAverage: sleep.rr_average || null,
-            rrMin: sleep.rr_min || null,
-            rrMax: sleep.rr_max || null,
-            breathingDisturbancesIntensity:
-                sleep.breathing_disturbances_intensity || null,
-            snoring: sleep.snoring || null,
-            snoringEpisodeCount: sleep.snoringepisodecount || null,
-            sleepScore: sleep.sleep_score || null,
-            totalSleepTime: sleep.total_sleep_time || 0,
-            totalTimeInBed: sleep.total_timeinbed || 0,
-            sleepEfficiency: sleep.sleep_efficiency || null,
-            sleepLatency: sleep.sleep_latency || null,
-            waso: sleep.waso || null,
-            outOfBedCount: sleep.out_of_bed_count || null,
-            nbRemEpisodes: sleep.nb_rem_episodes || null,
-        },
-        create: {
-            userId,
-            date,
-            startDate: sleep.startdate
-                ? new Date(sleep.startdate * 1000)
-                : null,
-            endDate: sleep.enddate
-                ? new Date(sleep.enddate * 1000)
-                : null,
-            lightSleepDuration: sleep.lightsleepduration || 0,
-            deepSleepDuration: sleep.deepsleepduration || 0,
-            remSleepDuration: sleep.remsleepduration || 0,
-            wakeupDuration: sleep.wakeupduration || 0,
-            wakeupCount: sleep.wakeupcount || 0,
-            durationToSleep: sleep.durationtosleep || 0,
-            durationToWakeup: sleep.durationtowakeup || 0,
-            hrAverage: sleep.hr_average || null,
-            hrMin: sleep.hr_min || null,
-            hrMax: sleep.hr_max || null,
-            rrAverage: sleep.rr_average || null,
-            rrMin: sleep.rr_min || null,
-            rrMax: sleep.rr_max || null,
-            breathingDisturbancesIntensity:
-                sleep.breathing_disturbances_intensity || null,
-            snoring: sleep.snoring || null,
-            snoringEpisodeCount: sleep.snoringepisodecount || null,
-            sleepScore: sleep.sleep_score || null,
-            totalSleepTime: sleep.total_sleep_time || 0,
-            totalTimeInBed: sleep.total_timeinbed || 0,
-            sleepEfficiency: sleep.sleep_efficiency || null,
-            sleepLatency: sleep.sleep_latency || null,
-            waso: sleep.waso || null,
-            outOfBedCount: sleep.out_of_bed_count || null,
-            nbRemEpisodes: sleep.nb_rem_episodes || null,
-        },
+        update: dbData,
+        create: { userId, date, ...dbData },
     })
 }
 
@@ -480,7 +446,7 @@ async function syncSleepRange(
     const byDate = new Map<string, WithingsSleepSummary>()
     for (const s of sleepSummaries) {
         const existing = byDate.get(s.date)
-        if (!existing || (s.total_timeinbed || 0) > (existing.total_timeinbed || 0)) {
+        if (!existing || (s.data?.total_timeinbed || 0) > (existing.data?.total_timeinbed || 0)) {
             byDate.set(s.date, s)
         }
     }
@@ -488,67 +454,12 @@ async function syncSleepRange(
     for (const dateStr of Array.from(byDate.keys())) {
         const sleep = byDate.get(dateStr)!
         const date = moment(dateStr, 'YYYY-MM-DD').startOf('day').toDate()
+        const dbData = sleepDataToDb(sleep)
 
         await prisma.withingsSleep.upsert({
             where: { userId_date: { userId, date } },
-            update: {
-                startDate: sleep.startdate ? new Date(sleep.startdate * 1000) : null,
-                endDate: sleep.enddate ? new Date(sleep.enddate * 1000) : null,
-                lightSleepDuration: sleep.lightsleepduration || 0,
-                deepSleepDuration: sleep.deepsleepduration || 0,
-                remSleepDuration: sleep.remsleepduration || 0,
-                wakeupDuration: sleep.wakeupduration || 0,
-                wakeupCount: sleep.wakeupcount || 0,
-                durationToSleep: sleep.durationtosleep || 0,
-                durationToWakeup: sleep.durationtowakeup || 0,
-                hrAverage: sleep.hr_average || null,
-                hrMin: sleep.hr_min || null,
-                hrMax: sleep.hr_max || null,
-                rrAverage: sleep.rr_average || null,
-                rrMin: sleep.rr_min || null,
-                rrMax: sleep.rr_max || null,
-                breathingDisturbancesIntensity: sleep.breathing_disturbances_intensity || null,
-                snoring: sleep.snoring || null,
-                snoringEpisodeCount: sleep.snoringepisodecount || null,
-                sleepScore: sleep.sleep_score || null,
-                totalSleepTime: sleep.total_sleep_time || 0,
-                totalTimeInBed: sleep.total_timeinbed || 0,
-                sleepEfficiency: sleep.sleep_efficiency || null,
-                sleepLatency: sleep.sleep_latency || null,
-                waso: sleep.waso || null,
-                outOfBedCount: sleep.out_of_bed_count || null,
-                nbRemEpisodes: sleep.nb_rem_episodes || null,
-            },
-            create: {
-                userId,
-                date,
-                startDate: sleep.startdate ? new Date(sleep.startdate * 1000) : null,
-                endDate: sleep.enddate ? new Date(sleep.enddate * 1000) : null,
-                lightSleepDuration: sleep.lightsleepduration || 0,
-                deepSleepDuration: sleep.deepsleepduration || 0,
-                remSleepDuration: sleep.remsleepduration || 0,
-                wakeupDuration: sleep.wakeupduration || 0,
-                wakeupCount: sleep.wakeupcount || 0,
-                durationToSleep: sleep.durationtosleep || 0,
-                durationToWakeup: sleep.durationtowakeup || 0,
-                hrAverage: sleep.hr_average || null,
-                hrMin: sleep.hr_min || null,
-                hrMax: sleep.hr_max || null,
-                rrAverage: sleep.rr_average || null,
-                rrMin: sleep.rr_min || null,
-                rrMax: sleep.rr_max || null,
-                breathingDisturbancesIntensity: sleep.breathing_disturbances_intensity || null,
-                snoring: sleep.snoring || null,
-                snoringEpisodeCount: sleep.snoringepisodecount || null,
-                sleepScore: sleep.sleep_score || null,
-                totalSleepTime: sleep.total_sleep_time || 0,
-                totalTimeInBed: sleep.total_timeinbed || 0,
-                sleepEfficiency: sleep.sleep_efficiency || null,
-                sleepLatency: sleep.sleep_latency || null,
-                waso: sleep.waso || null,
-                outOfBedCount: sleep.out_of_bed_count || null,
-                nbRemEpisodes: sleep.nb_rem_episodes || null,
-            },
+            update: dbData,
+            create: { userId, date, ...dbData },
         })
     }
 }

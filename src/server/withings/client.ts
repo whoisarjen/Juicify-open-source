@@ -119,34 +119,38 @@ export const WORKOUT_CATEGORY_MAP: Record<number, string> = {
     308: 'Strength Training',
 }
 
+export interface WithingsSleepData {
+    wakeupduration?: number
+    lightsleepduration?: number
+    deepsleepduration?: number
+    remsleepduration?: number
+    wakeupcount?: number
+    durationtosleep?: number
+    durationtowakeup?: number
+    hr_average?: number
+    hr_min?: number
+    hr_max?: number
+    rr_average?: number
+    rr_min?: number
+    rr_max?: number
+    breathing_disturbances_intensity?: number
+    snoring?: number
+    snoringepisodecount?: number
+    sleep_score?: number
+    total_sleep_time?: number
+    total_timeinbed?: number
+    sleep_efficiency?: number
+    sleep_latency?: number
+    waso?: number
+    out_of_bed_count?: number
+    nb_rem_episodes?: number
+}
+
 export interface WithingsSleepSummary {
     date: string
     startdate: number
     enddate: number
-    wakeupduration: number
-    lightsleepduration: number
-    deepsleepduration: number
-    remsleepduration: number
-    wakeupcount: number
-    durationtosleep: number
-    durationtowakeup: number
-    hr_average: number
-    hr_min: number
-    hr_max: number
-    rr_average: number
-    rr_min: number
-    rr_max: number
-    breathing_disturbances_intensity: number
-    snoring: number
-    snoringepisodecount: number
-    sleep_score: number
-    total_sleep_time: number
-    total_timeinbed: number
-    sleep_efficiency: number
-    sleep_latency: number
-    waso: number
-    out_of_bed_count: number
-    nb_rem_episodes: number
+    data: WithingsSleepData
 }
 
 export function parseWithingsValue(value: number, unit: number): number {
@@ -326,6 +330,8 @@ export async function getSleep(
         action: 'getsummary',
         startdateymd: startDateYmd,
         enddateymd: endDateYmd,
+        data_fields:
+            'nb_rem_episodes,sleep_efficiency,sleep_latency,sleep_score,snoring,snoringepisodecount,wakeupcount,wakeupduration,lightsleepduration,deepsleepduration,remsleepduration,durationtosleep,durationtowakeup,hr_average,hr_min,hr_max,rr_average,rr_min,rr_max,breathing_disturbances_intensity,total_sleep_time,total_timeinbed,waso,out_of_bed_count',
     })
 
     const res = await fetch(WITHINGS_SLEEP_URL, {
