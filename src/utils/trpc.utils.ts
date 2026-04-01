@@ -29,6 +29,8 @@ export const trpc = createTRPCNext<AppRouter>({
             queryClientConfig: {
                 defaultOptions: {
                     queries: {
+                        staleTime: 1000 * 60 * 5, // 5 min — data stays fresh, no refetch on navigation
+                        gcTime: 1000 * 60 * 10, // 10 min — keep unused data in cache
                         refetchOnWindowFocus: false,
                         retryOnMount: false,
                         retry: false,
