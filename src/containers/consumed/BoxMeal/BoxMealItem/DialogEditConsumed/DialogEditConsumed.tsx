@@ -4,8 +4,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 import { zodResolver } from '@hookform/resolvers/zod';
 import useTranslation from 'next-translate/useTranslation';
 import { useEffect } from 'react';
@@ -67,17 +65,15 @@ const DialogEditConsumed = ({
                     {t('Edit')}
                 </DialogTitle>
                 <DialogContent>
-                    <Select
-                        sx={{ width: '100%' }}
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
+                    <select
+                        className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 dark:border-gray-600"
                         defaultValue={consumed.meal || 0}
                         {...register('meal')}
                     >
                         {range(sessionData?.user?.numberOfMeals || 0).map((x) =>
-                            <MenuItem key={x} value={x}>{t('Meal')} {x + 1}</MenuItem>
+                            <option key={x} value={x}>{t('Meal')} {x + 1}</option>
                         )}
-                    </Select>
+                    </select>
                     <TextField
                         type="number"
                         label={t('How many times 100g/ml')}

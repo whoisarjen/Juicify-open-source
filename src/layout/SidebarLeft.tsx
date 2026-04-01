@@ -1,9 +1,3 @@
-import Box from '@mui/material/Box'
-import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter'
 import SchoolIcon from '@mui/icons-material/School'
@@ -94,24 +88,18 @@ const SidebarLeft = () => {
     const { data: sessionData } = useSession()
 
     return (
-        <Box
-            sx={{
-                width: '100%',
-                bgcolor: 'background.paper',
-                position: 'sticky',
-                top: 0,
-            }}
-        >
+        <div className="sticky top-0 w-full">
             <nav role="navigation" aria-label="Main navigation">
-                <List>
+                <ul className="flex flex-col">
                     {Object.keys(getRouterPushOptions(sessionData, t)).map(
                         (key) => {
                             const { link, children, text } =
                                 getRouterPushOptions(sessionData, t)[key]
 
                             return (
-                                <ListItem disablePadding key={key}>
-                                    <ListItemButton
+                                <li key={key}>
+                                    <button
+                                        className="flex w-full items-center gap-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800"
                                         aria-label={text}
                                         onClick={() => {
                                             if (
@@ -124,43 +112,45 @@ const SidebarLeft = () => {
                                             }
                                         }}
                                     >
-                                        <ListItemIcon>{children}</ListItemIcon>
-                                        <ListItemText primary={text} />
-                                    </ListItemButton>
-                                </ListItem>
+                                        <span className="flex items-center">{children}</span>
+                                        <span>{text}</span>
+                                    </button>
+                                </li>
                             )
                         }
                     )}
                     <hr className="border-t border-gray-200 dark:border-gray-700" />
-                    <ListItem disablePadding>
-                        <ListItemButton
+                    <li>
+                        <button
+                            className="flex w-full items-center gap-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800"
                             aria-label={t('Settings')}
                             onClick={() => router.push('/settings')}
                         >
-                            <ListItemIcon>
+                            <span className="flex items-center">
                                 <Settings color="primary" />
-                            </ListItemIcon>
-                            <ListItemText primary={t('Settings')} />
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding>
-                        <ListItemButton
+                            </span>
+                            <span>{t('Settings')}</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            className="flex w-full items-center gap-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800"
                             aria-label={sessionData ? t('LOGOUT') : t('LOGIN')}
                             onClick={() =>
                                 sessionData ? handleSignOut() : signIn()
                             }
                         >
-                            <ListItemIcon>
+                            <span className="flex items-center">
                                 <LogoutIcon color="primary" />
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={sessionData ? t('LOGOUT') : t('LOGIN')}
-                            />
-                        </ListItemButton>
-                    </ListItem>
-                </List>
+                            </span>
+                            <span>
+                                {sessionData ? t('LOGOUT') : t('LOGIN')}
+                            </span>
+                        </button>
+                    </li>
+                </ul>
             </nav>
-        </Box>
+        </div>
     )
 }
 

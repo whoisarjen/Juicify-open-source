@@ -6,10 +6,6 @@ import { trpc } from '@/utils/trpc.utils'
 import NavbarProfile from '@/containers/profile/NavbarProfile/NavbarProfile'
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
 import { BoxWorkoutLoader } from '@/containers/Workout/BoxWorkoutLoader'
-import Tab from '@mui/material/Tab'
-import TabContext from '@mui/lab/TabContext'
-import TabList from '@mui/lab/TabList'
-import TabPanel from '@mui/lab/TabPanel'
 
 const WorkoutStatisticsPage = () => {
     const router: any = useRouter()
@@ -64,25 +60,25 @@ const WorkoutStatisticsPage = () => {
                     {allStatistics && availableYears.length > 0 && (
                         <>
                             {/* Year Selector Tabs */}
-                            <TabContext value={selectedYear}>
-                                <div className="w-full">
-                                    <TabList
-                                        onChange={(_, newValue: string) => setSelectedYear(newValue)}
-                                        value={selectedYear}
-                                        indicatorColor="primary"
-                                        textColor="inherit"
-                                        variant="scrollable"
-                                        scrollButtons="auto"
-                                        sx={{ marginBottom: '16px' }}
-                                    >
-                                        {availableYears.map(year => (
-                                            <Tab label={year} value={year} key={year} />
-                                        ))}
-                                    </TabList>
+                            <div>
+                                <div className="mb-4 flex overflow-x-auto border-b border-gray-200 dark:border-gray-700">
+                                    {availableYears.map(year => (
+                                        <button
+                                            key={year}
+                                            className={`shrink-0 px-4 py-2 text-sm font-medium ${
+                                                selectedYear === year
+                                                    ? 'border-b-2 border-blue-500 text-blue-500'
+                                                    : 'text-gray-500'
+                                            }`}
+                                            onClick={() => setSelectedYear(year)}
+                                        >
+                                            {year}
+                                        </button>
+                                    ))}
                                 </div>
 
-                                {availableYears.map(year => (
-                                    <TabPanel key={year} value={year} sx={{ padding: '0 !important' }}>
+                                {availableYears.filter(year => year === selectedYear).map(year => (
+                                    <div key={year} className="p-0">
                                         {/* Year Overview Stats */}
                                         <div className="mb-4 grid grid-cols-2 gap-4">
                                             <div className="rounded-lg bg-white p-4 shadow dark:bg-gray-800">
@@ -197,9 +193,9 @@ const WorkoutStatisticsPage = () => {
                                                 </p>
                                             </div>
                                         )}
-                                    </TabPanel>
+                                    </div>
                                 ))}
-                            </TabContext>
+                            </div>
                         </>
                     )}
 

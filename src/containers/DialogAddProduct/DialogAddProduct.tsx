@@ -5,8 +5,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 
 import useTranslation from 'next-translate/useTranslation';
 import { cloneElement, useState, type ReactElement } from 'react';
@@ -65,20 +63,17 @@ const DialogAddProduct = ({
             >
                 <DialogTitle>{t('ADD_TO_DIARY')}</DialogTitle>
                 <DialogContent>
-                    <Select
-                        sx={{ marginBottom: '10px' }}
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
+                    <select
+                        className="mb-2.5 w-full rounded border border-gray-300 bg-transparent px-3 py-2 dark:border-gray-600"
                         value={mealToAdd}
-                        fullWidth
                         onChange={(e) => setMealToAdd(Number(e.target.value))}
                     >
                         {
                             [...Array(sessionData?.user?.numberOfMeals)].map((x, i) =>
-                                <MenuItem key={i} value={i}>{t('Meal')} {i + 1}</MenuItem>
+                                <option key={i} value={i}>{t('Meal')} {i + 1}</option>
                             )
                         }
-                    </Select>
+                    </select>
                     <TextField
                         value={howMany}
                         onChange={(e) => setHowMany(e.target.value ? Number(e.target.value) : undefined)}

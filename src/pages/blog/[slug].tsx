@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { type GetServerSideProps } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import Typography from '@mui/material/Typography'
+
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'

@@ -1,9 +1,4 @@
-import ListSubheader from '@mui/material/ListSubheader';
 import { trpc } from "@/utils/trpc.utils"
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import { useRouter } from "next/router";
 import CustomAvatar from "../CustomAvatar/CustomAvatar";
 import useTranslation from 'next-translate/useTranslation';
@@ -15,31 +10,26 @@ export const LastJoinedUsersList = () => {
 
     return (
         <div className="flex flex-col max-w-xs">
-            <List
-                sx={{
-                    width: '100%',
-                    bgcolor: 'background.paper'
-                }}
-                subheader={
-                    <ListSubheader component='div' id='nested-list-subheader'>
-                        {t('LAST_JOINED')}: 
-                    </ListSubheader>
-                }
-            >
-                {(users as User[]).map(({ id, name, username, image }) =>
-                    <ListItemButton key={id} onClick={() => router.push(`/${username}`)}>
-                        <ListItemIcon>
-                            <CustomAvatar
-                                src={image}
-                                username={username}
-                                size="28px"
-                                margin="auto auto auto 0"
-                            />
-                        </ListItemIcon>
-                        <ListItemText primary={name || '-'} />
-                    </ListItemButton>
-                )}
-            </List>
+            <div>
+                <div className="px-4 py-2 text-sm font-medium text-gray-500">
+                    {t('LAST_JOINED')}:
+                </div>
+                <ul>
+                    {(users as User[]).map(({ id, name, username, image }) =>
+                        <button key={id} className="flex w-full items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800" onClick={() => router.push(`/${username}`)}>
+                            <span className="flex items-center">
+                                <CustomAvatar
+                                    src={image}
+                                    username={username}
+                                    size="28px"
+                                    margin="auto auto auto 0"
+                                />
+                            </span>
+                            <span>{name || '-'}</span>
+                        </button>
+                    )}
+                </ul>
+            </div>
         </div>
     )
 }

@@ -1,9 +1,5 @@
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
-import Select from '@mui/material/Select'
-import MenuItem from '@mui/material/MenuItem'
-import InputLabel from '@mui/material/InputLabel'
-import FormControl from '@mui/material/FormControl'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
@@ -96,21 +92,23 @@ const DialogAddWorkoutResult = () => {
                         />
                     </LocalizationProvider>
 
-                    <FormControl fullWidth sx={{ marginTop: '12px' }}>
-                        <InputLabel>{t('Workout plan')}</InputLabel>
-                        <Select
+                    <div className="mt-3">
+                        <label className="mb-1 block text-sm text-gray-500">
+                            {t('Workout plan')}
+                        </label>
+                        <select
+                            className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 dark:border-gray-600"
                             value={choosenWorkoutPlan || workoutPlans?.[0]?.id}
-                            label={t('WORKOUT_PLAN')}
                             onChange={event => setChoosenWorkoutPlan(parseInt(event.target.value.toString()))}
                         >
                             {workoutPlans?.map(workoutPlan =>
-                                <MenuItem
+                                <option
                                     value={workoutPlan.id}
                                     key={workoutPlan.id}
-                                >{workoutPlan.name}</MenuItem>
+                                >{workoutPlan.name}</option>
                             )}
-                        </Select>
-                    </FormControl>
+                        </select>
+                    </div>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setIsOpen(false)}>{t('Cancel')}</Button>

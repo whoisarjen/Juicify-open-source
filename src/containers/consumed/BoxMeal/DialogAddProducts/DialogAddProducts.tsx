@@ -1,8 +1,6 @@
 import { useState, type ReactNode, useEffect } from 'react'
 import Dialog from '@mui/material/Dialog'
 import Button from '@mui/material/Button'
-import Select from '@mui/material/Select'
-import MenuItem from '@mui/material/MenuItem'
 
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
 import useTranslation from 'next-translate/useTranslation'
@@ -93,20 +91,19 @@ const DialogAddProducts = ({ children, mealToAdd }: DialogAddProductsProps) => {
                 <div className="flex flex-col items-center p-3">
                     <div className="flex w-full max-w-3xl flex-1 flex-col gap-3">
                         <NavbarOnlyTitle title="home:ADD_PRODUCTS" />
-                        <Select
-                            sx={{ marginBottom: '10px' }}
+                        <select
+                            className="mb-2.5 w-full rounded border border-gray-300 bg-transparent px-3 py-2 dark:border-gray-600"
                             value={meal}
-                            fullWidth
                             onChange={(e) => setMeal(Number(e.target.value))}
                         >
                             {range(0, sessionData?.user?.numberOfMeals).map(
                                 (index) => (
-                                    <MenuItem key={index} value={index}>
+                                    <option key={index} value={index}>
                                         {t('Meal')} {index + 1}
-                                    </MenuItem>
+                                    </option>
                                 )
                             )}
-                        </Select>
+                        </select>
 
                         <CustomAutocomplete
                             find={name}

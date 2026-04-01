@@ -1,8 +1,3 @@
-import Box from '@mui/material/Box'
-import Tab from '@mui/material/Tab'
-import TabContext from '@mui/lab/TabContext'
-import TabList from '@mui/lab/TabList'
-import TabPanel from '@mui/lab/TabPanel'
 import useTranslation from 'next-translate/useTranslation'
 import { useState } from 'react'
 import DiagramCircular from '../../../components/DiagramCircular/DiagramCircular'
@@ -20,34 +15,31 @@ const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
     const { consumedMacro, expectedMacro, burnedCaloriesSum } = useDaily(props)
 
     return (
-        <Box
-            sx={{
-                width: '100%',
-                display: 'grid',
-            }}
-        >
-            <TabContext value={value}>
-                <Box>
-                    <TabList
-                        onChange={(_, newValue: string) => setValue(newValue)}
-                        value={value}
-                        indicatorColor="primary"
-                        textColor="inherit"
-                        variant="fullWidth"
-                        sx={{ marginBottom: '24px' }}
-                    >
-                        <Tab label={t('consumed')} value="1" key={1} />
-                        <Tab label={t('remaining')} value="2" key={2} />
-                    </TabList>
-                </Box>
-                <TabPanel
-                    value="1"
-                    sx={{
-                        width: '100%',
-                        display: 'flex',
-                        padding: '0 !important',
-                    }}
+        <div className="grid w-full">
+            <div className="mb-6 flex">
+                <button
+                    className={`flex-1 py-3 text-xs font-medium uppercase tracking-wide ${
+                        value === '1'
+                            ? 'border-b-2 border-[#90caf9] text-inherit'
+                            : 'border-b border-gray-700 text-gray-400'
+                    }`}
+                    onClick={() => setValue('1')}
                 >
+                    {t('consumed')}
+                </button>
+                <button
+                    className={`flex-1 py-3 text-xs font-medium uppercase tracking-wide ${
+                        value === '2'
+                            ? 'border-b-2 border-[#90caf9] text-inherit'
+                            : 'border-b border-gray-700 text-gray-400'
+                    }`}
+                    onClick={() => setValue('2')}
+                >
+                    {t('remaining')}
+                </button>
+            </div>
+            {value === '1' && (
+                <div className="flex w-full p-0">
                     <DiagramCircular
                         text={`${consumedMacro.calories - burnedCaloriesSum}${t(
                             'Kcal'
@@ -107,15 +99,10 @@ const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
                             </div>
                         </div>
                     </div>
-                </TabPanel>
-                <TabPanel
-                    value="2"
-                    sx={{
-                        width: '100%',
-                        display: 'flex',
-                        padding: '0 !important',
-                    }}
-                >
+                </div>
+            )}
+            {value === '2' && (
+                <div className="flex w-full p-0">
                     <DiagramCircular
                         text={`${
                             expectedMacro.calories -
@@ -181,9 +168,9 @@ const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
                             </div>
                         </div>
                     </div>
-                </TabPanel>
-            </TabContext>
-        </Box>
+                </div>
+            )}
+        </div>
     )
 }
 

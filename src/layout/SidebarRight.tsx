@@ -1,7 +1,4 @@
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
-import List from '@mui/material/List'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListSubheader from '@mui/material/ListSubheader'
 import useTranslation from 'next-translate/useTranslation'
 import moment from 'moment'
 import { useSession } from 'next-auth/react'
@@ -64,46 +61,38 @@ const SidebarRight = () => {
         if (sessionData) {
             return (
                 <div className="flex flex-col max-w-xs">
-                    <List
-                        sx={{
-                            width: '100%',
-                            bgcolor: 'background.paper',
-                        }}
-                        subheader={
-                            <ListSubheader
-                                component="div"
-                                id="nested-list-subheader"
-                            >
-                                {t('Data for')}{' '}
-                                {moment(whenAdded).format('DD.MM.YYYY')}:
-                            </ListSubheader>
-                        }
-                    >
-                        {CIRCULAR_BOXES.map(({ href, text, value, label }) => (
-                            <Link href={href} key={text}>
-                                <ListItemButton>
-                                    <div className="flex items-center justify-center gap-3">
-                                        <div className="center-progress-bar-label max-h-[80px] min-h-[80px] min-w-[80px] max-w-[80px]">
-                                            <CircularProgressbar
-                                                value={value}
-                                                text={text}
-                                                styles={buildStyles({
-                                                    textSize: 15,
-                                                    pathTransitionDuration: 0.5,
-                                                    pathColor: '#90caf9',
-                                                    textColor:
-                                                        'rgba(122, 122, 122, 1',
-                                                    trailColor: '#d6d6d6',
-                                                    backgroundColor: '#90caf9',
-                                                })}
-                                            />
+                    <div>
+                        <div className="px-4 py-2 text-sm font-medium text-gray-500">
+                            {t('Data for')}{' '}
+                            {moment(whenAdded).format('DD.MM.YYYY')}:
+                        </div>
+                        <ul>
+                            {CIRCULAR_BOXES.map(({ href, text, value, label }) => (
+                                <Link href={href} key={text}>
+                                    <button className="flex w-full items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
+                                        <div className="flex items-center justify-center gap-3">
+                                            <div className="center-progress-bar-label max-h-[80px] min-h-[80px] min-w-[80px] max-w-[80px]">
+                                                <CircularProgressbar
+                                                    value={value}
+                                                    text={text}
+                                                    styles={buildStyles({
+                                                        textSize: 15,
+                                                        pathTransitionDuration: 0.5,
+                                                        pathColor: '#90caf9',
+                                                        textColor:
+                                                            'rgba(122, 122, 122, 1',
+                                                        trailColor: '#d6d6d6',
+                                                        backgroundColor: '#90caf9',
+                                                    })}
+                                                />
+                                            </div>
+                                            <div>{label}</div>
                                         </div>
-                                        <div>{label}</div>
-                                    </div>
-                                </ListItemButton>
-                            </Link>
-                        ))}
-                    </List>
+                                    </button>
+                                </Link>
+                            ))}
+                        </ul>
+                    </div>
                 </div>
             )
         }

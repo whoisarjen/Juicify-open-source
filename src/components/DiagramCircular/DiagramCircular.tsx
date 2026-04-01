@@ -10,10 +10,10 @@ const DiagramCircular = ({ text, value }: DiagramCircularProps) => {
     const styles = buildStyles({
         pathTransitionDuration: 0.5,
         pathColor: '#90caf9',
-        textColor: 'rgba(122, 122, 122, 1',
+        textColor: 'rgba(122, 122, 122, 1)',
         trailColor: '#d6d6d6',
         backgroundColor: '#90caf9',
-        textSize: 10,
+        textSize: 9,
     })
 
     return (

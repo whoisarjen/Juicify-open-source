@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { type GetServerSideProps } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import Typography from '@mui/material/Typography'
+
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import moment from 'moment'
@@ -109,13 +109,9 @@ const BlogPage = ({ initialArticles, initialTotalPages }: BlogPageProps) => {
 
             {/* Page Header */}
             <div className="mb-8 pt-6">
-                <Typography
-                    variant="h4"
-                    component="h1"
-                    className="!font-bold"
-                >
+                <h1 className="text-2xl font-bold">
                     {t('LATEST_NEWS')}
-                </Typography>
+                </h1>
                 <div className="mt-2 h-1 w-12 rounded-full bg-[#90caf9]/40" />
             </div>
 
@@ -153,12 +149,9 @@ const BlogPage = ({ initialArticles, initialTotalPages }: BlogPageProps) => {
             {/* Empty State */}
             {!isPageLoading && articles.length === 0 && (
                 <div className="flex flex-col items-center justify-center py-20">
-                    <Typography
-                        variant="h6"
-                        className="!text-gray-400 dark:!text-gray-500"
-                    >
+                    <p className="text-lg text-gray-400 dark:text-gray-500">
                         {t('NO_ARTICLES')}
-                    </Typography>
+                    </p>
                 </div>
             )}
 
