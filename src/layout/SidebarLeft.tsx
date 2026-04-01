@@ -16,7 +16,6 @@ import moment from 'moment'
 import SmartToyIcon from '@mui/icons-material/SmartToy'
 import LogoutIcon from '@mui/icons-material/Logout'
 import { useSession, signIn } from 'next-auth/react'
-import Divider from '@mui/material/Divider'
 import NoteAltIcon from '@mui/icons-material/NoteAlt'
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera'
 import BarChartIcon from '@mui/icons-material/BarChart'
@@ -132,7 +131,7 @@ const SidebarLeft = () => {
                             )
                         }
                     )}
-                    <Divider />
+                    <hr className="border-t border-gray-200 dark:border-gray-700" />
                     <ListItem disablePadding>
                         <ListItemButton
                             aria-label={t('Settings')}

@@ -1,4 +1,4 @@
-import Stack from '@mui/material/Stack'
+
 import TextField from '@mui/material/TextField'
 import DeleteIcon from '@mui/icons-material/Delete'
 import SwapVertIcon from '@mui/icons-material/SwapVert'
@@ -189,10 +189,8 @@ const WorkoutPlan = () => {
             <DragDropContext onDragEnd={handleOnDragEnd}>
                 <Droppable droppableId="exercises">
                     {(provided: any) => (
-                        <Stack
-                            direction="column"
-                            spacing={1}
-                            marginTop="10px"
+                        <div
+                            className="mt-2.5 flex flex-col gap-2"
                             {...provided.droppableProps}
                             ref={provided.innerRef}
                         >
@@ -318,7 +316,7 @@ const WorkoutPlan = () => {
                                 </Draggable>
                             ))}
                             {provided.placeholder}
-                        </Stack>
+                        </div>
                     )}
                 </Droppable>
             </DragDropContext>
