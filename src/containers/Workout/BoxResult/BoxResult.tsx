@@ -159,14 +159,14 @@ const BoxResult = ({
             {open && isOwner ? (
                 <>
                     <div
-                        className="flex flex-row border p-2 rounded items-center justify-center"
+                        className="flex flex-row win2k-sunken p-1 items-center justify-center cursor-pointer"
                         onClick={() => {
                             setOpen(false)
                             changeResult(buildResult({ open: false }))
                         }}
                     >
-                        <div className="flex-1">Click to save</div>
-                        <div className="flex-1 flex flex-col items-center text-xs opacity-60">
+                        <div className="flex-1 text-[11px] font-bold text-black">Click to save</div>
+                        <div className="flex-1 flex flex-col items-center text-[10px] text-[#444444]">
                             {mmss ? (
                                 <>
                                     <span>{mmss}</span>
@@ -176,22 +176,22 @@ const BoxResult = ({
                                 <span>{`#${index + 1}`}</span>
                             )}
                         </div>
-                        <div className="flex-1">
-                            <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="arrow">
-                                <ArrowRight size={20} />
+                        <div className="flex-1 flex justify-center">
+                            <button className="win2k-btn flex items-center gap-1" aria-label="arrow">
+                                <ArrowRight size={11} />
                             </button>
                         </div>
-                        <div className="flex-1">
-                            <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="save">
-                                <Circle size={20} />
+                        <div className="flex-1 flex justify-center">
+                            <button className="win2k-btn flex items-center gap-1" aria-label="save">
+                                <Circle size={11} />
                             </button>
                         </div>
                     </div>
-                    <div className="mt-2">
-                        <label className="mb-1 block text-sm text-gray-500">Weight</label>
-                        <div className="flex items-center rounded border border-gray-300 focus-within:border-primary-dark dark:border-gray-600">
+                    <div className="mt-1">
+                        <label className="mb-px block text-[10px] text-[#444444] text-left">Weight</label>
+                        <div className="flex items-center win2k-sunken">
                             <input
-                                className="flex-1 bg-transparent px-3 py-2 outline-none"
+                                className="flex-1 bg-white px-2 py-1 text-[11px] text-black outline-none"
                                 list="weight-options"
                                 value={weight}
                                 onChange={(e) => {
@@ -209,10 +209,10 @@ const BoxResult = ({
                             ))}
                         </datalist>
                     </div>
-                    <div className="mt-2">
-                        <label className="mb-1 block text-sm text-gray-500">Reps</label>
+                    <div className="mt-1">
+                        <label className="mb-px block text-[10px] text-[#444444] text-left">Reps</label>
                         <select
-                            className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
+                            className="w-full win2k-sunken bg-white px-2 py-1 text-[11px] text-black outline-none"
                             value={reps}
                             onChange={(e) => {
                                 setReps(e.target.value)
@@ -227,10 +227,10 @@ const BoxResult = ({
                             ))}
                         </select>
                     </div>
-                    <div className="mt-2">
-                        <label className="mb-1 block text-sm text-gray-500">RIR</label>
+                    <div className="mt-1">
+                        <label className="mb-px block text-[10px] text-[#444444] text-left">RIR</label>
                         <select
-                            className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
+                            className="w-full win2k-sunken bg-white px-2 py-1 text-[11px] text-black outline-none"
                             value={rir}
                             onChange={(e) => {
                                 setRir(e.target.value)
@@ -246,10 +246,10 @@ const BoxResult = ({
                         </select>
                     </div>
                     {setAt && (
-                        <div className="mt-2">
-                            <label className="mb-1 block text-sm text-gray-500">Finished at (mm:ss)</label>
+                        <div className="mt-1">
+                            <label className="mb-px block text-[10px] text-[#444444] text-left">Finished at (mm:ss)</label>
                             <input
-                                className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
+                                className="w-full win2k-sunken bg-white px-2 py-1 text-[11px] text-black outline-none"
                                 placeholder="MM:SS"
                                 value={localTimeDisplay}
                                 onChange={(e) => setLocalTimeDisplay(e.target.value)}
@@ -266,24 +266,24 @@ const BoxResult = ({
                     )}
                 </>
             ) : (
-                <div onClick={() => setOpen(true)} className="flex flex-row border p-2 rounded items-center justify-center">
+                <div onClick={() => setOpen(true)} className="flex flex-row win2k-raised p-1 items-center justify-center cursor-pointer hover:bg-[#c8c4b8]">
                     <div className="flex-1">
                         {isOwner && (
                             <DialogConfirm onConfirmed={deleteResult}>
-                                <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="delete">
-                                    <Trash2 size={20} />
+                                <button className="win2k-btn !px-1 !py-0 !min-h-0 h-[18px] w-[20px] text-[10px] flex items-center justify-center" aria-label="delete">
+                                    <Trash2 size={11} />
                                 </button>
                             </DialogConfirm>
                         )}
                     </div>
-                    <div className="flex-1">{weight}kg</div>
-                    <div className="flex-1 flex flex-col items-center text-xs">
-                        <span className="font-semibold">#{index + 1}</span>
-                        {mmss && <span className="opacity-60">{mmss}</span>}
-                        {diff && <span className="opacity-60">rest {diff}</span>}
+                    <div className="flex-1 text-[11px] text-black font-semibold">{weight}kg</div>
+                    <div className="flex-1 flex flex-col items-center text-[10px]">
+                        <span className="font-bold text-black">#{index + 1}</span>
+                        {mmss && <span className="text-[#444444]">{mmss}</span>}
+                        {diff && <span className="text-[#444444]">rest {diff}</span>}
                     </div>
-                    <div className="flex-1">{reps}r.</div>
-                    <div className="flex-1">{rir} RIR</div>
+                    <div className="flex-1 text-[11px] text-black">{reps}r.</div>
+                    <div className="flex-1 text-[11px] text-black">{rir} RIR</div>
                 </div>
             )}
             {isOwner && isLast && (

@@ -20,22 +20,23 @@ const BoxWorkout = ({
     return (
         <Link
             href={route}
-            className="glass-interactive flex w-full p-4 cursor-pointer"
+            className="glass-interactive flex w-full p-2 cursor-pointer items-center gap-2"
         >
-            <div className="flex flex-1 flex-col gap-1 min-w-0">
-                <h2 className="text-sm font-bold text-zinc-200 truncate">{title}</h2>
-                {description && (
-                    <p className="text-xs text-[#7a7a7a] line-clamp-2">{description}</p>
-                )}
-                {whenAdded && (
-                    <div className="text-[11px] text-[#7a7a7a] mt-auto pt-2">
-                        {moment(whenAdded).format('DD.MM.YYYY')}
-                    </div>
-                )}
-            </div>
-            <div className="flex w-10 items-center justify-center shrink-0 text-[#7a7a7a]">
+            {/* Win2k icon container */}
+            <div className="flex w-8 h-8 items-center justify-center shrink-0 text-[#0a246a]">
                 {icon}
             </div>
+            <div className="flex flex-1 flex-col gap-0 min-w-0">
+                <h2 className="text-xs font-bold text-black truncate">{title}</h2>
+                {description && (
+                    <p className="text-[10px] text-[#444444] line-clamp-1">{description}</p>
+                )}
+            </div>
+            {whenAdded && (
+                <div className="text-[10px] text-[#444444] shrink-0 pr-1">
+                    {moment(whenAdded).format('DD.MM.YYYY')}
+                </div>
+            )}
         </Link>
     )
 }
