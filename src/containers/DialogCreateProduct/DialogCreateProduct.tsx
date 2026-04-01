@@ -1,8 +1,6 @@
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Dialog from '@mui/material/Dialog'
-import Switch from '@mui/material/Switch'
-import FormControlLabel from '@mui/material/FormControlLabel'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
@@ -211,12 +209,15 @@ const DialogCreateProduct = ({
                                 ),
                             }}
                         />
-                        <FormControlLabel
-                            control={
-                                <Switch {...register('isExpectingCheck')} />
-                            }
-                            label={t('Should be available for all?')}
-                        />
+                        <label className="flex items-center gap-2 py-2 text-sm">
+                            <input
+                                type="checkbox"
+                                role="switch"
+                                {...register('isExpectingCheck')}
+                                className="h-5 w-5 accent-blue-500"
+                            />
+                            {t('Should be available for all?')}
+                        </label>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => setIsDialog(false)}>

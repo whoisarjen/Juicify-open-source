@@ -15,8 +15,6 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
 import InputAdornment from '@mui/material/InputAdornment'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Switch from '@mui/material/Switch'
 import ButtonMoreOptionsWorkoutResult from '@/containers/Workout/ButtonMoreOptionsWorkoutResult/ButtonMoreOptionsWorkoutResult'
 import BoxResult from '@/containers/Workout/BoxExercise/BoxExercise'
 import { pick } from 'lodash'
@@ -255,25 +253,27 @@ const WorkoutResultPage = () => {
             )}
 
             {sessionData?.user?.username == username && (
-                <FormControlLabel
-                    control={
-                        <Switch
-                            checked={searchAllPlans}
-                            onChange={(e) => {
-                                const newValue = e.target.checked
-                                setSearchAllPlans(newValue)
-                                updateUser.mutate(
-                                    { searchAllPlans: newValue },
-                                    {
-                                        onError: () =>
-                                            setSearchAllPlans(!newValue),
-                                    }
-                                )
-                            }}
-                        />
-                    }
-                    label={t('SEARCH_ALL_PLANS')}
-                />
+                <label className="flex items-center gap-2 text-sm">
+                    <div
+                        role="switch"
+                        aria-checked={searchAllPlans}
+                        onClick={() => {
+                            const newValue = !searchAllPlans
+                            setSearchAllPlans(newValue)
+                            updateUser.mutate(
+                                { searchAllPlans: newValue },
+                                {
+                                    onError: () =>
+                                        setSearchAllPlans(!newValue),
+                                }
+                            )
+                        }}
+                        className={`relative h-6 w-11 cursor-pointer rounded-full transition-colors ${searchAllPlans ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'}`}
+                    >
+                        <span className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${searchAllPlans ? 'translate-x-5' : ''}`} />
+                    </div>
+                    {t('SEARCH_ALL_PLANS')}
+                </label>
             )}
 
             {fields.map((exercise, index: number) => (

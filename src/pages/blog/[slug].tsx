@@ -7,10 +7,6 @@ import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
-import Accordion from '@mui/material/Accordion'
-import AccordionSummary from '@mui/material/AccordionSummary'
-import AccordionDetails from '@mui/material/AccordionDetails'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
@@ -391,39 +387,29 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
                         </Typography>
                         <div className="space-y-2">
                             {article.faqs.map((faq, i) => (
-                                <Accordion
+                                <details
                                     key={i}
-                                    sx={{
-                                        bgcolor: 'rgba(255,255,255,0.02)',
-                                        border: '1px solid rgba(255,255,255,0.06)',
-                                        borderRadius: '12px !important',
-                                        '&:before': { display: 'none' },
-                                        '&.Mui-expanded': { margin: 0 },
-                                    }}
+                                    className="group rounded-xl border border-white/5 bg-white/[0.02]"
                                 >
-                                    <AccordionSummary
-                                        expandIcon={
-                                            <ExpandMoreIcon
-                                                sx={{ color: '#90caf9' }}
-                                            />
-                                        }
-                                        sx={{
-                                            fontWeight: 600,
-                                            fontSize: '0.95rem',
-                                        }}
-                                    >
+                                    <summary className="flex cursor-pointer items-center justify-between p-4 text-[0.95rem] font-semibold [&::-webkit-details-marker]:hidden">
                                         {faq.question}
-                                    </AccordionSummary>
-                                    <AccordionDetails
-                                        sx={{
-                                            color: 'text.secondary',
-                                            fontSize: '0.9rem',
-                                            lineHeight: 1.7,
-                                        }}
-                                    >
+                                        <svg
+                                            className="h-5 w-5 shrink-0 text-[#90caf9] transition-transform group-open:rotate-180"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <polyline points="6 9 12 15 18 9" />
+                                        </svg>
+                                    </summary>
+                                    <div className="px-4 pb-4 text-[0.9rem] leading-[1.7] text-gray-400">
                                         {faq.answer}
-                                    </AccordionDetails>
-                                </Accordion>
+                                    </div>
+                                </details>
                             ))}
                         </div>
                     </div>
