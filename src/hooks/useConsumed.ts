@@ -12,7 +12,7 @@ const useConsumed = ({
     startDate,
     endDate,
 }: useConsumedProps) => {
-    const utils = trpc.useContext()
+    const utils = trpc.useUtils()
 
     const {
         data = [],
@@ -42,7 +42,7 @@ const useConsumed = ({
 
     return {
         data,
-        isLoading: isFetching || isLoading || updateConsumed.isLoading || deleteConsumed.isLoading,
+        isLoading: isFetching || isLoading || updateConsumed.isPending || deleteConsumed.isPending,
         updateConsumed,
         deleteConsumed,
     }

@@ -21,7 +21,7 @@ const DialogAddProduct = ({
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const router: any = useRouter()
 
-    const utils = trpc.useContext()
+    const utils = trpc.useUtils()
 
     const createConsumed = trpc.consumed.create.useMutation({ // TODO move to useConsumed and remove in diffrent places
         onSuccess(data, variables, context) {

@@ -76,11 +76,11 @@ export const DialogMissingSettings = ({ onSkip }: { onSkip?: () => void }) => {
                         </button>
                     )}
                     <button
-                        disabled={updateUser.isLoading}
+                        disabled={updateUser.isPending}
                         className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
                         onClick={handleSubmit(changeSettings)}
                     >
-                        {updateUser.isLoading ? <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" /> : t('home:SAVE_AND_CLOSE')}
+                        {updateUser.isPending ? <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" /> : t('home:SAVE_AND_CLOSE')}
                     </button>
                 </div>
             </div>

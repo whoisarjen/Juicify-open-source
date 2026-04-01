@@ -14,6 +14,7 @@ import {
     workoutResultSchema,
     type WorkoutResultSchema,
 } from '@/server/schema/workoutResult.schema'
+import { keepPreviousData } from '@tanstack/react-query'
 import { DatePicker } from '@/components/DatePicker'
 import { updateArray } from '@/utils/global.utils'
 import moment from 'moment'
@@ -37,7 +38,7 @@ const WorkoutResultPage = () => {
     const id = parseInt(router.query.id || 0)
     const username = router.query.login || ''
 
-    const utils = trpc.useContext()
+    const utils = trpc.useUtils()
 
     const updateUser = trpc.user.update.useMutation()
 
@@ -83,15 +84,18 @@ const WorkoutResultPage = () => {
             { id, username, searchAllPlans },
             {
                 enabled: !!id && !!username,
-                keepPreviousData: true,
-                onSuccess(data) {
-                    reset(data)
-                    setPreviousExercises(
-                        data.previousWorkoutResult?.exercises || []
-                    )
-                },
+                placeholderData: keepPreviousData,
             }
         )
+
+    useEffect(() => {
+        if (data) {
+            reset(data)
+            setPreviousExercises(
+                data.previousWorkoutResult?.exercises || []
+            )
+        }
+    }, [data])
 
     const {
         register,
@@ -158,8 +162,8 @@ const WorkoutResultPage = () => {
 
     const isLoading =
         isInitialLoading ||
-        updateWorkoutResult.isLoading ||
-        deleteWorkoutResult.isLoading
+        updateWorkoutResult.isPending ||
+        deleteWorkoutResult.isPending
 
     return (
         <form className="flex flex-1 flex-col gap-3">

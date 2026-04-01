@@ -15,7 +15,7 @@ const WorkoutPlansPage = () => {
 
     const username = router.query.login || ''
 
-    const utils = trpc.useContext()
+    const utils = trpc.useUtils()
 
     const { data: workoutPlans = [], isFetching } =
         trpc.workoutPlan.getAll.useQuery({ username }, { enabled: !!username })

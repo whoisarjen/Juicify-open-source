@@ -40,7 +40,7 @@ const DialogAddProducts = ({ children, mealToAdd }: DialogAddProductsProps) => {
         { enabled }
     )
 
-    const utils = trpc.useContext()
+    const utils = trpc.useUtils()
 
     const createConsumed = trpc.consumed.create.useMutation({
         onSuccess(data, variables, context) {

@@ -22,7 +22,7 @@ export const DialogEditBurnedCalories = ({
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-    const utils = trpc.useContext()
+    const utils = trpc.useUtils()
 
     const deleteBurnedCalories = trpc.burnedCalories.delete.useMutation({
         onSuccess(data, variables, context) {

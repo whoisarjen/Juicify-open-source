@@ -63,11 +63,11 @@ const DialogCreateExercise = ({
                             <div className="flex justify-end gap-2 px-6 pb-6">
                                 <button className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800" onClick={() => setIsOpen(false)}>{t('Cancel')}</button>
                                 <button
-                                    disabled={createExercise.isLoading}
+                                    disabled={createExercise.isPending}
                                     className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
                                     type="submit"
                                 >
-                                    {createExercise.isLoading ? <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" /> : t('Submit')}
+                                    {createExercise.isPending ? <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" /> : t('Submit')}
                                 </button>
                             </div>
                         </form>

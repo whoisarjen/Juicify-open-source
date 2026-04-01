@@ -1,5 +1,6 @@
 import { httpBatchLink, loggerLink } from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
+import { ssrPrepass } from "@trpc/next/ssrPrepass";
 import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
 import superjson from "superjson";
 
@@ -12,17 +13,17 @@ const getBaseUrl = () => {
 };
 
 export const trpc = createTRPCNext<AppRouter>({
+    transformer: superjson,
     config() {
         return {
-            transformer: superjson,
             links: [
                 loggerLink({
                     enabled: (opts) =>
-                        process.env.NODE_ENV === "development" ||
-                        (opts.direction === "down" && opts.result instanceof Error),
+                        opts.direction === "down" && opts.result instanceof Error,
                 }),
                 httpBatchLink({
                     url: `${getBaseUrl()}/api/trpc`,
+                    transformer: superjson,
                 }),
             ],
             queryClientConfig: {
@@ -40,6 +41,7 @@ export const trpc = createTRPCNext<AppRouter>({
         };
     },
     ssr: true,
+    ssrPrepass,
 });
 
 /**

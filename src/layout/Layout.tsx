@@ -51,35 +51,36 @@ const Layout = ({ children }: { children: any }) => {
         setSkippedSettings(true)
     }, [])
 
-    trpc.version.get.useQuery(undefined, {
+    const { data: versionData } = trpc.version.get.useQuery(undefined, {
         enabled: typeof window !== 'undefined' && !!process.env.isProduction,
-        onSuccess(data) {
-            if (localStorage.getItem('version') !== data) {
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker
-                        .getRegistrations()
-                        .then(function (registrations) {
-                            for (let registration of registrations) {
-                                registration
-                                    .unregister()
-                                    .then(() => {
-                                        localStorage.setItem('version', data)
-                                    })
-                                    .finally(() => {
-                                        window.location.reload()
-                                    })
-                            }
-                        })
-                        .catch(function (err) {
-                            console.error(
-                                'Service Worker registration failed: ',
-                                err
-                            )
-                        })
-                }
-            }
-        },
     })
+
+    useEffect(() => {
+        if (versionData && localStorage.getItem('version') !== versionData) {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker
+                    .getRegistrations()
+                    .then(function (registrations) {
+                        for (let registration of registrations) {
+                            registration
+                                .unregister()
+                                .then(() => {
+                                    localStorage.setItem('version', versionData)
+                                })
+                                .finally(() => {
+                                    window.location.reload()
+                                })
+                        }
+                    })
+                    .catch(function (err) {
+                        console.error(
+                            'Service Worker registration failed: ',
+                            err
+                        )
+                    })
+            }
+        }
+    }, [versionData])
 
     useEffect(() => {
         (async () => {

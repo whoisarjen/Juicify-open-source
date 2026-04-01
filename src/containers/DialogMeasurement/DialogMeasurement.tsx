@@ -64,7 +64,7 @@ export const DialogMeasurement = ({
         reset({ whenAdded: moment().toDate(), weight: defaultWeight })
     }
 
-    const utils = trpc.useContext()
+    const utils = trpc.useUtils()
     const username = sessionData?.user?.username || ''
 
     const createMeasurement = trpc.measurement.create.useMutation({

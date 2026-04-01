@@ -19,7 +19,7 @@ export const DialogAddBurnedCalories = ({
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-    const utils = trpc.useContext()
+    const utils = trpc.useUtils()
 
     const createBurnedCalories = trpc.burnedCalories.create.useMutation({
         onSuccess() {

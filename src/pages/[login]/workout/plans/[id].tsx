@@ -32,21 +32,12 @@ const WorkoutPlan = () => {
     const username = router.query.login || ''
     const id = parseInt(router.query.id || 0)
 
-    const utils = trpc.useContext()
+    const utils = trpc.useUtils()
 
     const { data, isFetching } = trpc.workoutPlan.get.useQuery(
         { id, username },
         {
             enabled: !!id && !!username,
-            onSuccess(data) {
-                reset({
-                    id: data.id,
-                    name: data.name,
-                    description: data.description,
-                    burnedCalories: data.burnedCalories,
-                    exercises: data.exercises,
-                })
-            },
         }
     )
 
@@ -80,7 +71,7 @@ const WorkoutPlan = () => {
     })
 
     const isLoading =
-        isFetching || updateWorkoutPlan.isLoading || deleteWorkoutPlan.isLoading
+        isFetching || updateWorkoutPlan.isPending || deleteWorkoutPlan.isPending
 
     const {
         register,
@@ -89,6 +80,18 @@ const WorkoutPlan = () => {
         control,
         reset,
     } = useForm<WorkoutPlanSchema>({ resolver: zodResolver(workoutPlanSchema) })
+
+    useEffect(() => {
+        if (data) {
+            reset({
+                id: data.id,
+                name: data.name,
+                description: data.description,
+                burnedCalories: data.burnedCalories,
+                exercises: data.exercises,
+            })
+        }
+    }, [data, reset])
 
     const { fields, append, remove, move, update } = useFieldArray({
         control,

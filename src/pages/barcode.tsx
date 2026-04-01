@@ -11,18 +11,24 @@ const BarcodeScannerPage = () => {
     const [isDialogShowProduct, setIsDialogShowProduct] = useState(false)
     const [isDialogCreateProduct, setIsDialogCreateProduct] = useState(false)
 
-    const { data: product, refetch } = trpc.product.getByBarcode.useQuery(
+    const { data: product, refetch, error } = trpc.product.getByBarcode.useQuery(
         { barcode },
         {
             enabled: !!barcode,
-            onSuccess() {
-                setIsDialogShowProduct(true)
-            },
-            onError() {
-                setIsDialogCreateProduct(true)
-            },
         }
     )
+
+    useEffect(() => {
+        if (product) {
+            setIsDialogShowProduct(true)
+        }
+    }, [product])
+
+    useEffect(() => {
+        if (error) {
+            setIsDialogCreateProduct(true)
+        }
+    }, [error])
 
     const handleRefetch = () => {
         setIsDialogShowProduct(false)
