@@ -34,7 +34,7 @@ export const CustomTextField = ({
         setState(defaultValue)
     }, [defaultValue])
 
-    const inputClassName = 'w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600'
+    const inputClassName = 'w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600'
 
     return (
         <div className={className} style={sx}>

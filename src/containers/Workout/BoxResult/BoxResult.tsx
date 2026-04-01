@@ -189,7 +189,7 @@ const BoxResult = ({
                     </div>
                     <div className="mt-2">
                         <label className="mb-1 block text-sm text-gray-500">Weight</label>
-                        <div className="flex items-center rounded border border-gray-300 focus-within:border-blue-500 dark:border-gray-600">
+                        <div className="flex items-center rounded border border-gray-300 focus-within:border-primary-dark dark:border-gray-600">
                             <input
                                 className="flex-1 bg-transparent px-3 py-2 outline-none"
                                 list="weight-options"
@@ -212,7 +212,7 @@ const BoxResult = ({
                     <div className="mt-2">
                         <label className="mb-1 block text-sm text-gray-500">Reps</label>
                         <select
-                            className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                            className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
                             value={reps}
                             onChange={(e) => {
                                 setReps(e.target.value)
@@ -230,7 +230,7 @@ const BoxResult = ({
                     <div className="mt-2">
                         <label className="mb-1 block text-sm text-gray-500">RIR</label>
                         <select
-                            className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                            className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
                             value={rir}
                             onChange={(e) => {
                                 setRir(e.target.value)
@@ -249,7 +249,7 @@ const BoxResult = ({
                         <div className="mt-2">
                             <label className="mb-1 block text-sm text-gray-500">Finished at (mm:ss)</label>
                             <input
-                                className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                                className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
                                 placeholder="MM:SS"
                                 value={localTimeDisplay}
                                 onChange={(e) => setLocalTimeDisplay(e.target.value)}
@@ -289,6 +289,7 @@ const BoxResult = ({
             {isOwner && isLast && (
                 <ButtonPlusIcon
                     size="small"
+                    variant="inline"
                     onClick={() =>
                         openNewResult({
                             reps: parseInt(reps),

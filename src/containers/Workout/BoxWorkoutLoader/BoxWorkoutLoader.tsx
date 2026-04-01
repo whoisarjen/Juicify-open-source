@@ -9,16 +9,16 @@ interface BoxWorkoutLoaderProps {
 
 export const BoxWorkoutLoader = ({
     isLoading,
-    numberOfLoaders = 1,
+    numberOfLoaders = 3,
     children,
 }: BoxWorkoutLoaderProps) => {
     if (isLoading) {
         return (
-            <div>
+            <div className="flex flex-col gap-3">
                 {range(0, numberOfLoaders).map(index => (
                     <div
                         key={index}
-                        className="mb-2 h-[160px] animate-pulse rounded-lg bg-gray-200 dark:bg-gray-700"
+                        className="glass h-[72px] animate-pulse"
                     />
                 ))}
             </div>

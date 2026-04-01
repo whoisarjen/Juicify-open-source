@@ -29,9 +29,9 @@ const DialogConfirm = ({
         <>
             <div onClick={event => handleSetIsDialog(event, true)}>{children}</div>
             {!isDisabled && isDialog && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center">
-                    <div className="fixed inset-0 bg-black/50" />
-                    <div className="relative z-50 w-full max-w-lg rounded-lg bg-white p-0 shadow-xl dark:bg-gray-900">
+                <div className="fixed inset-0 z-[200] flex items-center justify-center">
+                    <div className="fixed inset-0 bg-black/50" onClick={event => handleSetIsDialog(event, false)} />
+                    <div className="relative z-[200] w-full max-w-lg rounded-lg bg-white p-0 shadow-xl dark:bg-gray-900 mx-4">
                         <div className="px-6 pt-6 text-lg font-semibold">
                             {t('Confirm Dialog Title')}
                         </div>
@@ -41,9 +41,9 @@ const DialogConfirm = ({
                             </p>
                         </div>
                         <div className="flex justify-end gap-2 px-6 pb-6">
-                            <button className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800" onClick={event => handleSetIsDialog(event, false)}>{t('Deny')}</button>
+                            <button className="px-4 py-2 text-primary-dark hover:bg-[rgba(255,255,255,0.04)] cursor-pointer" onClick={event => handleSetIsDialog(event, false)}>{t('Deny')}</button>
                             <button
-                                className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800"
+                                className="px-4 py-2 text-primary-dark hover:bg-[rgba(255,255,255,0.04)] cursor-pointer"
                                 onClick={handleConfimed}
                                 autoFocus
                             >

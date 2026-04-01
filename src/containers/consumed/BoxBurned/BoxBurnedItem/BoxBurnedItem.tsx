@@ -25,7 +25,7 @@ const BoxBurnedItem = ({
     const router = useRouter()
 
     return (
-        <div className="flex w-full items-center justify-center gap-2">
+        <div className="flex w-full items-center gap-2 py-1">
             <div className="flex items-center justify-center">
                 {isEditable ? (
                     <DialogEditBurnedCalories
@@ -36,26 +36,26 @@ const BoxBurnedItem = ({
                             whenAdded,
                         }}
                     >
-                        <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="edit">
-                            <Pencil size={20} />
+                        <button className="w-[28px] h-[28px] rounded-lg bg-[rgba(255,255,255,0.03)] flex items-center justify-center text-[#7a7a7a] hover:bg-[rgba(255,255,255,0.06)] transition-all cursor-pointer" aria-label="edit">
+                            <Pencil size={13} />
                         </button>
                     </DialogEditBurnedCalories>
                 ) : (
                     icon || (
                         <Flame
-                            size={20}
-                            className="text-red-500 m-[4px_4px_4px_6px]"
+                            size={16}
+                            className="text-macro-fat mx-1"
                         />
                     )
                 )}
             </div>
-            <div className="flex-1">
-                <div className="font-bold">{name}</div>
-                <div>{burnedCalories}kcal</div>
+            <div className="flex-1 min-w-0">
+                <div className="text-xs font-bold truncate">{name}</div>
             </div>
+            <div className="text-xs font-bold text-macro-fat shrink-0">{burnedCalories}kcal</div>
             {redirectTo &&
-                <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="edit" onClick={() => router.push(redirectTo)}>
-                    <Info size={20} />
+                <button className="w-[28px] h-[28px] rounded-lg bg-[rgba(255,255,255,0.03)] flex items-center justify-center text-[#7a7a7a] hover:bg-[rgba(255,255,255,0.06)] transition-all cursor-pointer" aria-label="info" onClick={() => router.push(redirectTo)}>
+                    <Info size={13} />
                 </button>
             }
         </div>

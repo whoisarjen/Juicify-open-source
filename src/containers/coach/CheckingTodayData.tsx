@@ -59,7 +59,7 @@ const CheckingTodayData = ({ setStep }: CheckingTodayDataProps) => {
                         {t('CHECKING_TODAY_DESCRIPTION')}
                     </div>
                     <button
-                        className="mt-auto w-full rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
+                        className="mt-auto w-full rounded bg-primary-dark px-4 py-2 text-[#121212] hover:bg-[#64b5f6] disabled:opacity-50"
                         onClick={() => router.push('/measurements')}
                     >
                         {t('ADD_WEIGHT')}
@@ -78,7 +78,7 @@ const CheckingTodayData = ({ setStep }: CheckingTodayDataProps) => {
                 </>
             )}
             <button
-                className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
+                className="rounded bg-primary-dark px-4 py-2 text-[#121212] hover:bg-[#64b5f6] disabled:opacity-50"
                 onClick={() => setStep('ChooseDiet')}
                 disabled={weight == 0}
             >

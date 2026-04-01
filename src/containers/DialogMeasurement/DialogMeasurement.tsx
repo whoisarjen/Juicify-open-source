@@ -204,7 +204,7 @@ export const DialogMeasurement = ({
                             />
                             <div className="mt-2 w-full">
                                 <label className="mb-1 block text-sm text-gray-500">Weight</label>
-                                <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-blue-500 dark:border-gray-600">
+                                <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-primary-dark dark:border-gray-600">
                                     <input
                                         className="flex-1 bg-transparent px-3 py-2 outline-none"
                                         type="number"
@@ -217,7 +217,7 @@ export const DialogMeasurement = ({
                             </div>
                             <div className="mt-2 w-full">
                                 <label className="mb-1 block text-sm text-gray-500">Waist</label>
-                                <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-blue-500 dark:border-gray-600">
+                                <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-primary-dark dark:border-gray-600">
                                     <input
                                         className="flex-1 bg-transparent px-3 py-2 outline-none"
                                         type="number"
@@ -228,7 +228,7 @@ export const DialogMeasurement = ({
                             </div>
                             <div className="mt-2 w-full">
                                 <label className="mb-1 block text-sm text-gray-500">Hips</label>
-                                <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-blue-500 dark:border-gray-600">
+                                <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-primary-dark dark:border-gray-600">
                                     <input
                                         className="flex-1 bg-transparent px-3 py-2 outline-none"
                                         type="number"
@@ -239,13 +239,13 @@ export const DialogMeasurement = ({
                             </div>
                         </div>
                         <div className="flex justify-end gap-2 px-6 pb-6">
-                            <button className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800" onClick={handleClose}>{t('deny')}</button>
+                            <button className="px-4 py-2 text-primary-dark hover:bg-[rgba(255,255,255,0.04)]" onClick={handleClose}>{t('deny')}</button>
                             {measurement &&
                                 <DialogConfirm onConfirmed={async () => await deleteMeasurement.mutateAsync({ id: measurement.id })}>
                                     <button className="px-4 py-2 text-red-500 hover:bg-red-50 dark:hover:bg-gray-800">{t('remove')}</button>
                                 </DialogConfirm>
                             }
-                            <button className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800" onClick={handleSubmitProxy()}>{t('accept')}</button>
+                            <button className="px-4 py-2 text-primary-dark hover:bg-[rgba(255,255,255,0.04)]" onClick={handleSubmitProxy()}>{t('accept')}</button>
                         </div>
                     </div>
                 </div>

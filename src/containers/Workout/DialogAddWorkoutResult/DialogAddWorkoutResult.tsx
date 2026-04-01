@@ -74,7 +74,7 @@ const DialogAddWorkoutResult = () => {
                                 <label className="mb-1 block text-sm text-gray-500">{t("Date")}</label>
                                 <input
                                     type="date"
-                                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
                                     value={whenAdded}
                                     onChange={(e) => setWhenAdded(e.target.value)}
                                 />
@@ -99,11 +99,11 @@ const DialogAddWorkoutResult = () => {
                             </div>
                         </div>
                         <div className="flex justify-end gap-2 px-6 pb-6">
-                            <button className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800" onClick={() => setIsOpen(false)}>{t('Cancel')}</button>
+                            <button className="px-4 py-2 text-primary-dark hover:bg-[rgba(255,255,255,0.04)]" onClick={() => setIsOpen(false)}>{t('Cancel')}</button>
                             <button
                                 disabled={workoutResultCreate.isPending || !choosenWorkoutPlan || !whenAdded}
                                 onClick={handleCreate}
-                                className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
+                                className="rounded bg-primary-dark px-4 py-2 text-[#121212] hover:bg-[#64b5f6] disabled:opacity-50"
                             >
                                 {workoutResultCreate.isPending ? (
                                     <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />

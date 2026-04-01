@@ -22,7 +22,7 @@ const Tutorial_6 = ({ setStep }: { setStep: (arg0: string) => void }) => {
                 {t('TUTORIAL_6')}
             </div>
             <button
-                className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
+                className="rounded bg-primary-dark px-4 py-2 text-[#121212] hover:bg-[#64b5f6] disabled:opacity-50"
                 onClick={() => setStep('Tutorial_7')}
             >
                 {t('NEXT_STEP')}

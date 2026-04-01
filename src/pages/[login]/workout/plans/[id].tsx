@@ -150,7 +150,7 @@ const WorkoutPlan = () => {
             <div>
                 <label className="mb-1 block text-sm text-gray-500">{t('NAME_OF_WORKOUT')}</label>
                 <input
-                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
                     disabled={!isOwner}
                     type="text"
                     {...register('name')}
@@ -160,7 +160,7 @@ const WorkoutPlan = () => {
 
             <div>
                 <label className="mb-1 block text-sm text-gray-500">{t('BURNT_CALORIES')}</label>
-                <div className="flex items-center rounded border border-gray-300 focus-within:border-blue-500 dark:border-gray-600">
+                <div className="flex items-center rounded border border-gray-300 focus-within:border-primary-dark dark:border-gray-600">
                     <input
                         className="flex-1 bg-transparent px-3 py-2 outline-none"
                         type="number"
@@ -175,7 +175,7 @@ const WorkoutPlan = () => {
             <div>
                 <label className="mb-1 block text-sm text-gray-500">{t('DESCRIPTION')}</label>
                 <textarea
-                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
                     disabled={!isOwner}
                     {...register('description')}
                 />
@@ -204,7 +204,7 @@ const WorkoutPlan = () => {
                                             {...provided.dragHandleProps}
                                             ref={provided.innerRef}
                                         >
-                                            <div className="flex flex-1 flex-row items-center justify-center rounded bg-blue-300 p-3 text-center text-white">
+                                            <div className="flex flex-1 flex-row items-center justify-center rounded bg-primary-dark p-3 text-center text-[#121212]">
                                                 <ArrowUpDown />
                                                 <div className="flex-1">{`${
                                                     i + 1
@@ -222,7 +222,7 @@ const WorkoutPlan = () => {
                                                 <div className="mt-2.5">
                                                     <label className="mb-1 block text-sm text-gray-500">Series</label>
                                                     <select
-                                                        className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                                                        className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
                                                         value={exercise.series ?? 1}
                                                         onChange={(e) =>
                                                             update(i, {
@@ -240,7 +240,7 @@ const WorkoutPlan = () => {
                                                 <div className="mt-2.5">
                                                     <label className="mb-1 block text-sm text-gray-500">Reps</label>
                                                     <select
-                                                        className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                                                        className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
                                                         value={exercise.reps ?? 1}
                                                         onChange={(e) =>
                                                             update(i, {
@@ -258,7 +258,7 @@ const WorkoutPlan = () => {
                                                 <div className="mt-2.5">
                                                     <label className="mb-1 block text-sm text-gray-500">RIR</label>
                                                     <select
-                                                        className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                                                        className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
                                                         value={exercise.rir ?? 1}
                                                         onChange={(e) =>
                                                             update(i, {

@@ -31,7 +31,7 @@ const Tutorial_3 = ({ setStep }: Tutorial_3Props) => {
                 {t('TUTORIAL_3')}
             </div>
             <button
-                className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
+                className="rounded bg-primary-dark px-4 py-2 text-[#121212] hover:bg-[#64b5f6] disabled:opacity-50"
                 onClick={() => setStep('Tutorial_4')}
             >
                 {t('NEXT_STEP')}

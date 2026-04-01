@@ -42,9 +42,14 @@ const WorkoutPlansPage = () => {
 
     return (
         <div className="flex flex-1 flex-col gap-4">
-            {isOwner && <NavbarOnlyTitle title="workout:WORKOUT_PLANS" />}
-            {isOwner && <ButtonPlusIcon onClick={handleCreateWorkoutPlan} />}
-            {!isOwner && <NavbarProfile tab={3} />}
+            {isOwner ? (
+                <>
+                    <NavbarOnlyTitle title="workout:WORKOUT_PLANS" />
+                    <ButtonPlusIcon onClick={handleCreateWorkoutPlan} />
+                </>
+            ) : (
+                <NavbarProfile tab={3} />
+            )}
             <BoxWorkoutLoader isLoading={isFetching}>
                 <>
                     {workoutPlans?.map((workoutPlan) => (

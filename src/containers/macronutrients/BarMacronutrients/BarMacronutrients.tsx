@@ -45,7 +45,7 @@ const BarMacronutrients = ({
                 <div className="flex h-[30%] items-center justify-center bg-green-400 text-white">
                     {object.fats} {t('F')}
                 </div>
-                <div className="flex h-[10%] items-center justify-center rounded-b bg-blue-400 text-white">
+                <div className="flex h-[10%] items-center justify-center rounded-b bg-primary-dark text-[#121212]">
                     {object.proteins * 4 + object.carbs * 4 + object.fats * 9}
                 </div>
             </div>

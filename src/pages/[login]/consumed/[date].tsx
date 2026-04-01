@@ -1,4 +1,5 @@
 import BottomFlyingGuestBanner from "@/components/BottomFlyingGuestBanner/BottomFlyingGuestBanner";
+import NavbarOnlyTitle from "@/components/NavbarOnlyTitle/NavbarOnlyTitle";
 import DiagramConsumedRemaining from "@/containers/consumed/DiagramConsumedRemaining/DiagramConsumedRemaining";
 import SectionDiaryManaging from "@/containers/consumed/SectionDiaryManaging/SectionDiaryManaging";
 import BoxMeal from "@/containers/consumed/BoxMeal/BoxMeal";
@@ -40,13 +41,12 @@ const Consumed = () => {
 
     return (
         <div className="flex flex-col gap-4 flex-1">
-            <div className="w-full flex items-center justify-center">
-                <div className="flex-1 text-3xl font-bold">{t('title')}</div>
+            <NavbarOnlyTitle title="nutrition-diary:title">
                 <ButtonShare />
                 <DateChanger />
                 {username === sessionData?.user?.username &&
                     <Link href={`/${sessionData?.user?.username}`}>
-                        <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800">
+                        <button className="rounded-full p-2 hover:bg-[rgba(255,255,255,0.04)] transition-all cursor-pointer">
                             <CustomAvatar
                                 src={sessionData?.user?.image}
                                 username={sessionData?.user?.username}
@@ -55,28 +55,36 @@ const Consumed = () => {
                         </button>
                     </Link>
                 }
-            </div>
+            </NavbarOnlyTitle>
 
             <DateChangerFast />
 
-            <DiagramConsumedRemaining
-                username={username}
-                startDate={whenAdded}
-                endDate={whenAdded}
-            />
+            {/* Command Center: single column (split layout ready for icon sidebar switch) */}
+            <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-4">
+                    <DiagramConsumedRemaining
+                        username={username}
+                        startDate={whenAdded}
+                        endDate={whenAdded}
+                    />
 
-            {isOwner && <SectionDiaryManaging />}
+                    {isOwner && <SectionDiaryManaging />}
 
-            <BoxBurned />
+                    <BoxBurned />
+                </div>
 
-            {meals.map((meal, i) =>
-                <BoxMeal
-                    key={i}
-                    index={i}
-                    meal={meal}
-                    isOwner={isOwner}
-                />
-            )}
+                {/* Right panel — meals */}
+                <div className="flex flex-col gap-4">
+                    {meals.map((meal, i) =>
+                        <BoxMeal
+                            key={i}
+                            index={i}
+                            meal={meal}
+                            isOwner={isOwner}
+                        />
+                    )}
+                </div>
+            </div>
 
             {!isOwner && lastMeal &&
                 <BottomFlyingGuestBanner

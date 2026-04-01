@@ -65,7 +65,7 @@ const DialogAddProduct = ({
                             </select>
                             <div className="mt-3 w-full">
                                 <label className="mb-1 block text-sm text-gray-500">{t('How many times 100g/ml')}</label>
-                                <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-blue-500 dark:border-gray-600">
+                                <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-primary-dark dark:border-gray-600">
                                     <input
                                         className="flex-1 bg-transparent px-3 py-2 outline-none"
                                         value={howMany}
@@ -76,8 +76,8 @@ const DialogAddProduct = ({
                             </div>
                         </div>
                         <div className="flex justify-end gap-2 px-6 pb-6">
-                            <button className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800" onClick={() => setIsDialogOpen(false)}>{t('Deny')}</button>
-                            <button className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800" onClick={addNewProduct}>{t('Confirm')}</button>
+                            <button className="px-4 py-2 text-primary-dark hover:bg-[rgba(255,255,255,0.04)]" onClick={() => setIsDialogOpen(false)}>{t('Deny')}</button>
+                            <button className="px-4 py-2 text-primary-dark hover:bg-[rgba(255,255,255,0.04)]" onClick={addNewProduct}>{t('Confirm')}</button>
                         </div>
                     </div>
                 </div>

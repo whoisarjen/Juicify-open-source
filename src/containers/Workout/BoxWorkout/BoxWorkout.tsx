@@ -20,18 +20,22 @@ const BoxWorkout = ({
     return (
         <Link
             href={route}
-            className="flex h-44 w-full rounded bg-primary-dark p-3 text-white transition hover:scale-105 hover:text-white"
+            className="glass-interactive flex w-full p-4 cursor-pointer"
         >
-            <div className="flex flex-1 flex-col p-3">
-                <div className="flex-1">
-                    <h1 className="text-xl font-bold">{title}</h1>
-                    <div>{description}</div>
-                </div>
+            <div className="flex flex-1 flex-col gap-1 min-w-0">
+                <h2 className="text-sm font-bold text-zinc-200 truncate">{title}</h2>
+                {description && (
+                    <p className="text-xs text-[#7a7a7a] line-clamp-2">{description}</p>
+                )}
                 {whenAdded && (
-                    <div>{moment(whenAdded).format('DD.MM.YYYY')}</div>
+                    <div className="text-[11px] text-[#7a7a7a] mt-auto pt-2">
+                        {moment(whenAdded).format('DD.MM.YYYY')}
+                    </div>
                 )}
             </div>
-            <div className="flex w-24 items-center justify-center">{icon}</div>
+            <div className="flex w-10 items-center justify-center shrink-0 text-[#7a7a7a]">
+                {icon}
+            </div>
         </Link>
     )
 }

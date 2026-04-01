@@ -39,11 +39,6 @@ const getRouterPushOptions = (sessionData: Session | null, t: Translate) => {
             text: t('Diary'),
             children: <BookOpen className="text-[#90caf9]" />,
         },
-        barcode: {
-            link: `/barcode`,
-            text: t('Barcode'),
-            children: <Camera className="text-[#90caf9]" />,
-        },
         measurements: {
             link: `/measurements`,
             text: t('Measurements'),

@@ -15,6 +15,7 @@ import {
     Line,
 } from 'recharts'
 import { DialogMeasurement } from '@/containers/DialogMeasurement'
+import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon'
 
 const fmt = (d: Date | string) => moment(d).format('MMM D')
 const fmtTime = (seconds: number) => {
@@ -572,27 +573,12 @@ export default function MeasurementsPage() {
             />
 
             {/* Floating add button */}
-            <button
+            <ButtonPlusIcon
                 onClick={() => {
                     setSelectedMeasurement(null)
                     setDialogOpen(true)
                 }}
-                className="fixed bottom-20 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-sky-500 shadow-lg shadow-sky-500/25 transition-transform hover:scale-105 active:scale-95 xl:bottom-6 xl:right-6"
-                aria-label="Add measurement"
-            >
-                <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="white"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                >
-                    <line x1="12" y1="5" x2="12" y2="19" />
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                </svg>
-            </button>
+            />
         </div>
     )
 }

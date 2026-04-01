@@ -20,30 +20,30 @@ const BoxBurned = () => {
     } = useBurned({ username, startDate: whenAdded, endDate: whenAdded })
 
     return (
-        <div className="flex w-full flex-col gap-3 rounded border p-3 text-sm">
-            <div className="flex w-full items-center justify-center">
-                <div className="flex-1 flex-col">
-                    <div className="font-bold text-red-500">
+        <div className="glass p-4">
+            <div className="flex w-full items-center justify-between mb-2">
+                <div>
+                    <div className="text-[11px] font-bold uppercase tracking-wide text-[#7a7a7a]">
                         Burned calories
                     </div>
-                    <div>{burnedCaloriesSum}kcal</div>
+                    <div className="text-sm font-bold text-macro-fat">
+                        {burnedCaloriesSum}kcal
+                    </div>
                 </div>
-                <div>
-                    {router.query.login === sessionData?.user?.username ? (
-                        <DialogAddBurnedCalories>
-                            <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="Add">
-                                <Plus size={20} />
-                            </button>
-                        </DialogAddBurnedCalories>
-                    ) : (
-                        <div />
-                    )}
-                </div>
+                {router.query.login === sessionData?.user?.username ? (
+                    <DialogAddBurnedCalories>
+                        <button className="w-[28px] h-[28px] rounded-lg border border-glass-border bg-glass flex items-center justify-center text-[#7a7a7a] hover:border-glass-border-accent hover:text-primary-dark transition-all duration-300 cursor-pointer" aria-label="Add">
+                            <Plus size={14} />
+                        </button>
+                    </DialogAddBurnedCalories>
+                ) : (
+                    <div />
+                )}
             </div>
 
             {workoutResults.map(({ id, name, burnedCalories, whenAdded }) => (
                 <Fragment key={id}>
-                    <div className="h-[1px] w-full bg-white" />
+                    <div className="h-px w-full bg-glass-border my-1" />
                     <BoxBurnedItem
                         id={id}
                         name={name}
@@ -57,7 +57,7 @@ const BoxBurned = () => {
             {burnedCalories.map(
                 ({ id, name, burnedCalories, whenAdded, userId }) => (
                     <Fragment key={id}>
-                        <div className="h-[1px] w-full bg-white" />
+                        <div className="h-px w-full bg-glass-border my-1" />
                         <BoxBurnedItem
                             id={id}
                             name={name}

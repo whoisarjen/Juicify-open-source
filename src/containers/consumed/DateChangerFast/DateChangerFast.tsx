@@ -5,43 +5,31 @@ import { useRouter } from "next/router";
 const DateChangerFast = () => {
     const router: any = useRouter();
 
+    const offsets = [-2, -1, 0, 1, 2]
+
     return (
-        <div className="flex w-full items-center gap-3 text-center">
-            <Link
-                className="flex h-12 w-12 items-center justify-center rounded bg-gray-100"
-                href={`/${router.query.login}/consumed/${moment(router.query.date)
-                    .add(-2, "days")
-                    .format("YYYY-MM-DD")}`}
-            >
-                {moment(router.query.date).add(-2, "days").format("DD")}
-            </Link>
-            <Link
-                className="flex h-12 w-12 items-center justify-center rounded bg-gray-100"
-                href={`/${router.query.login}/consumed/${moment(router.query.date)
-                    .add(-1, "days")
-                    .format("YYYY-MM-DD")}`}
-            >
-                {moment(router.query.date).add(-1, "days").format("DD")}
-            </Link>
-            <div className="flex h-16 flex-1 items-center justify-center rounded bg-blue-300 text-white">
-                {moment(router.query.date).format("DD.MM.YYYY")}
-            </div>
-            <Link
-                className="flex h-12 w-12 items-center justify-center rounded bg-gray-100"
-                href={`/${router.query.login}/consumed/${moment(router.query.date)
-                    .add(1, "days")
-                    .format("YYYY-MM-DD")}`}
-            >
-                {moment(router.query.date).add(1, "days").format("DD")}
-            </Link>
-            <Link
-                className="flex h-12 w-12 items-center justify-center rounded bg-gray-100"
-                href={`/${router.query.login}/consumed/${moment(router.query.date)
-                    .add(2, "days")
-                    .format("YYYY-MM-DD")}`}
-            >
-                {moment(router.query.date).add(2, "days").format("DD")}
-            </Link>
+        <div className="flex w-full items-center gap-2 text-center">
+            {offsets.map((offset) => {
+                const date = moment(router.query.date).add(offset, "days")
+                const isToday = offset === 0
+
+                return isToday ? (
+                    <div
+                        key={offset}
+                        className="flex h-[42px] flex-1 items-center justify-center rounded-xl bg-[rgba(144,202,249,0.10)] border border-[rgba(144,202,249,0.20)] text-sm font-bold text-primary-dark"
+                    >
+                        {date.format("DD.MM.YYYY")}
+                    </div>
+                ) : (
+                    <Link
+                        key={offset}
+                        className="flex h-[42px] w-[42px] items-center justify-center rounded-xl border border-glass-border bg-glass text-sm font-bold text-[#9ca3af] transition-all duration-300 hover:border-glass-border-hover hover:bg-glass-hover"
+                        href={`/${router.query.login}/consumed/${date.format("YYYY-MM-DD")}`}
+                    >
+                        {date.format("DD")}
+                    </Link>
+                )
+            })}
         </div>
     );
 };

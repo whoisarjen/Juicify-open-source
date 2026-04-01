@@ -182,7 +182,7 @@ const Layout = ({ children }: { children: any }) => {
             {status === 'unauthenticated' && !isNeutralPath && (
                 <div className="fixed bottom-24 left-0 flex w-full items-center justify-center">
                     <button
-                        className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
+                        className="rounded bg-primary-dark px-4 py-2 text-[#121212] hover:bg-[#64b5f6] disabled:opacity-50"
                         aria-label="authorization"
                         onClick={() => router.push(SIGN_IN_PATH)}
                     >

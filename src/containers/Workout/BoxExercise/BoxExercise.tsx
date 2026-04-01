@@ -96,7 +96,7 @@ const BaseBoxExercise = ({
 
     return (
         <div className="flex w-full flex-col gap-2 text-center text-sm">
-            <div className="flex flex-1 flex-row items-center justify-center rounded bg-blue-300 p-2 text-white">
+            <div className="flex flex-1 flex-row items-center justify-center rounded bg-primary-dark p-2 text-[#121212]">
                 <div>
                     {isOwner && (
                         <DialogConfirm onConfirmed={deleteExerciseWithIndex}>
@@ -143,6 +143,7 @@ const BaseBoxExercise = ({
             {isOwner && !values.length && (
                 <ButtonPlusIcon
                     size="small"
+                    variant="inline"
                     onClick={() => openNewResult(null)}
                 />
             )}

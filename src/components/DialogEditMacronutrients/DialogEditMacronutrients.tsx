@@ -52,7 +52,7 @@ const DialogEditMacronutrients = ({
                             </p>
                             <div className="mt-1 w-full">
                                 <label className="mb-1 block text-sm text-gray-500">{t('PROTEINS')}</label>
-                                <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-blue-500 dark:border-gray-600">
+                                <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-primary-dark dark:border-gray-600">
                                     <input
                                         className="flex-1 bg-transparent px-3 py-2 outline-none"
                                         type="number"
@@ -64,7 +64,7 @@ const DialogEditMacronutrients = ({
                             </div>
                             <div className="mt-1 w-full">
                                 <label className="mb-1 block text-sm text-gray-500">{t('CARBS')}</label>
-                                <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-blue-500 dark:border-gray-600">
+                                <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-primary-dark dark:border-gray-600">
                                     <input
                                         className="flex-1 bg-transparent px-3 py-2 outline-none"
                                         type="number"
@@ -76,7 +76,7 @@ const DialogEditMacronutrients = ({
                             </div>
                             <div className="mt-1 w-full">
                                 <label className="mb-1 block text-sm text-gray-500">{t('FATS')}</label>
-                                <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-blue-500 dark:border-gray-600">
+                                <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-primary-dark dark:border-gray-600">
                                     <input
                                         className="flex-1 bg-transparent px-3 py-2 outline-none"
                                         type="number"
@@ -88,9 +88,9 @@ const DialogEditMacronutrients = ({
                             </div>
                         </div>
                         <div className="flex justify-end gap-2 px-6 pb-6">
-                            <button className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800" onClick={onClose}>{t('CLOSE')}</button>
+                            <button className="px-4 py-2 text-primary-dark hover:bg-[rgba(255,255,255,0.04)]" onClick={onClose}>{t('CLOSE')}</button>
                             <DialogConfirm onConfirmed={handleConfirm}>
-                                <button className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800" onClick={() => setIsDialog(true)}>{t('CHANGE_ALL_DAYS')}</button>
+                                <button className="px-4 py-2 text-primary-dark hover:bg-[rgba(255,255,255,0.04)]" onClick={() => setIsDialog(true)}>{t('CHANGE_ALL_DAYS')}</button>
                             </DialogConfirm>
                         </div>
                     </div>

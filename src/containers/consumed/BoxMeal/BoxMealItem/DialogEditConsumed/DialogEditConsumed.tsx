@@ -49,11 +49,11 @@ const DialogEditConsumed = ({
 
     return (
         <form onSubmit={handleSubmit(handleUpdateConsumed)}>
-            <div onClick={() => setIsDialogOpen(true)}>{children}</div>
+            <div className="cursor-pointer" onClick={() => setIsDialogOpen(true)}>{children}</div>
             {isDialogOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center">
                     <div className="fixed inset-0 bg-black/50" />
-                    <div className="relative z-50 w-full max-w-lg rounded-lg bg-white p-0 shadow-xl dark:bg-gray-900">
+                    <div className="relative z-[100] w-full max-w-lg rounded-lg bg-white p-0 shadow-xl dark:bg-gray-900">
                         <div className="px-6 pt-6 text-lg font-semibold">
                             {t('Edit')}
                         </div>

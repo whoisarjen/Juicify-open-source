@@ -9,167 +9,97 @@ interface DiagramConsumedRemainingProps {
     endDate: string
 }
 
+const MACROS = [
+    { key: 'proteins', label: 'Protein', color: 'bg-macro-protein', textColor: 'text-macro-protein' },
+    { key: 'carbs', label: 'Carbs', color: 'bg-macro-carbs', textColor: 'text-macro-carbs' },
+    { key: 'sugar', label: 'Sugar', color: 'bg-[#7a7a7a]', textColor: 'text-[#7a7a7a]' },
+    { key: 'fats', label: 'Fat', color: 'bg-macro-fat', textColor: 'text-macro-fat' },
+    { key: 'fiber', label: 'Fiber', color: 'bg-[#7a7a7a]', textColor: 'text-[#7a7a7a]' },
+] as const
+
 const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
-    const [value, setValue] = useState('1')
+    const [mode, setMode] = useState<'consumed' | 'remaining'>('consumed')
     const { t } = useTranslation('nutrition-diary')
     const { consumedMacro, expectedMacro, burnedCaloriesSum } = useDaily(props)
 
+    const isConsumed = mode === 'consumed'
+
+    const netCal = consumedMacro.calories - burnedCaloriesSum
+    const remainingCal = expectedMacro.calories - consumedMacro.calories + burnedCaloriesSum
+
+    const ringText = `${isConsumed ? netCal : remainingCal}${t('Kcal')}`
+    const ringValue = expectedMacro.calories > 0
+        ? ((isConsumed ? netCal : remainingCal) / expectedMacro.calories) * 100
+        : 0
+
+    const getMacroValue = (key: string) => {
+        const consumed = consumedMacro[key as keyof typeof consumedMacro] as number
+        const expected = expectedMacro[key as keyof typeof expectedMacro] as number
+        if (isConsumed) return consumed
+        return expected - consumed
+    }
+
+    const getMacroExpected = (key: string) =>
+        expectedMacro[key as keyof typeof expectedMacro] as number
+
+    const getMacroPercent = (key: string) => {
+        const expected = getMacroExpected(key)
+        if (expected === 0) return 0
+        const consumed = consumedMacro[key as keyof typeof consumedMacro] as number
+        return Math.min((consumed / expected) * 100, 100)
+    }
+
     return (
-        <div className="grid w-full">
-            <div className="mb-6 flex">
+        <div className="glass p-4 lg:p-5">
+            {/* Tab switch */}
+            <div className="flex rounded-xl bg-[rgba(255,255,255,0.03)] p-[3px] mb-4">
                 <button
-                    className={`flex-1 py-3 text-xs font-medium uppercase tracking-wide ${
-                        value === '1'
-                            ? 'border-b-2 border-[#90caf9] text-inherit'
-                            : 'border-b border-gray-700 text-gray-400'
+                    className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all duration-300 ${
+                        isConsumed
+                            ? 'bg-[rgba(144,202,249,0.10)] text-primary-dark'
+                            : 'text-[#7a7a7a]'
                     }`}
-                    onClick={() => setValue('1')}
+                    onClick={() => setMode('consumed')}
                 >
                     {t('consumed')}
                 </button>
                 <button
-                    className={`flex-1 py-3 text-xs font-medium uppercase tracking-wide ${
-                        value === '2'
-                            ? 'border-b-2 border-[#90caf9] text-inherit'
-                            : 'border-b border-gray-700 text-gray-400'
+                    className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all duration-300 ${
+                        !isConsumed
+                            ? 'bg-[rgba(144,202,249,0.10)] text-primary-dark'
+                            : 'text-[#7a7a7a]'
                     }`}
-                    onClick={() => setValue('2')}
+                    onClick={() => setMode('remaining')}
                 >
                     {t('remaining')}
                 </button>
             </div>
-            {value === '1' && (
-                <div className="flex w-full p-0">
-                    <DiagramCircular
-                        text={`${consumedMacro.calories - burnedCaloriesSum}${t(
-                            'Kcal'
-                        )}`}
-                        value={
-                            ((consumedMacro.calories - burnedCaloriesSum) /
-                                expectedMacro.calories) *
-                            100
-                        }
-                    />
-                    <div className="flex w-full flex-1 text-sm">
-                        <div className="flex w-full flex-1 flex-col">
-                            <div className="flex">
-                                <span className="flex-1 text-left">Proteins:</span>
-                                <span className="w-12 text-right font-bold">
-                                    {consumedMacro.proteins}g
-                                </span>
-                                <span className="flex-1 text-right">
-                                    {expectedMacro.proteins}g
-                                </span>
+
+            {/* Ring + macro bars */}
+            <div className="flex gap-4 items-center">
+                <DiagramCircular text={ringText} value={ringValue} />
+
+                <div className="flex-1 flex flex-col gap-2">
+                    {MACROS.map(({ key, label, color, textColor }) => (
+                        <div key={key} className="flex items-center gap-2">
+                            <span className={`text-[11px] font-semibold w-[46px] shrink-0 ${textColor}`}>
+                                {label}
+                            </span>
+                            <div className="flex-1 h-[4px] rounded-full bg-[rgba(255,255,255,0.04)] overflow-hidden">
+                                <div
+                                    className={`h-full rounded-full transition-all duration-500 ${color}`}
+                                    style={{ width: `${getMacroPercent(key)}%` }}
+                                />
                             </div>
-                            <div className="flex">
-                                <span className="flex-1 text-left">Carbs:</span>
-                                <span className="w-12 text-right font-bold">
-                                    {consumedMacro.carbs}g
-                                </span>
-                                <span className="flex-1 text-right">
-                                    {expectedMacro.carbs}g
-                                </span>
-                            </div>
-                            <div className="flex">
-                                <span className="flex-1 text-left">Sugar:</span>
-                                <span className="w-12 text-right font-bold">
-                                    {consumedMacro.sugar}g
-                                </span>
-                                <span className="flex-1 text-right">
-                                    {expectedMacro.sugar}g
-                                </span>
-                            </div>
-                            <div className="flex">
-                                <span className="flex-1 text-left">Fats:</span>
-                                <span className="w-12 text-right font-bold">
-                                    {consumedMacro.fats}g
-                                </span>
-                                <span className="flex-1 text-right">
-                                    {expectedMacro.fats}g
-                                </span>
-                            </div>
-                            <div className="flex">
-                                <span className="flex-1 text-left">Fiber:</span>
-                                <span className="w-12 text-right font-bold">
-                                    {consumedMacro.fiber}g
-                                </span>
-                                <span className="flex-1 text-right">
-                                    {expectedMacro.fiber}g
-                                </span>
-                            </div>
+                            <span className="text-[11px] font-semibold text-[#9ca3af] w-[60px] text-right shrink-0">
+                                {getMacroValue(key).toFixed(0)}
+                                {isConsumed && ` / ${getMacroExpected(key)}g`}
+                                {!isConsumed && 'g'}
+                            </span>
                         </div>
-                    </div>
+                    ))}
                 </div>
-            )}
-            {value === '2' && (
-                <div className="flex w-full p-0">
-                    <DiagramCircular
-                        text={`${
-                            expectedMacro.calories -
-                            consumedMacro.calories +
-                            burnedCaloriesSum
-                        }${t('Kcal')}`}
-                        value={
-                            ((expectedMacro.calories -
-                                consumedMacro.calories +
-                                burnedCaloriesSum) /
-                                expectedMacro.calories) *
-                            100
-                        }
-                    />
-                    <div className="flex w-full flex-1 text-sm">
-                        <div className="flex w-full flex-1 flex-col">
-                            <div className="flex">
-                                <span className="flex-1 text-left">Proteins:</span>
-                                <span className="w-12 text-right font-bold">
-                                    {expectedMacro.proteins -
-                                        consumedMacro.proteins}
-                                    g
-                                </span>
-                                <span className="flex-1 text-right">
-                                    {expectedMacro.proteins}g
-                                </span>
-                            </div>
-                            <div className="flex">
-                                <span className="flex-1 text-left">Carbs:</span>
-                                <span className="w-12 text-right font-bold">
-                                    {expectedMacro.carbs - consumedMacro.carbs}g
-                                </span>
-                                <span className="flex-1 text-right">
-                                    {expectedMacro.carbs}g
-                                </span>
-                            </div>
-                            <div className="flex">
-                                <span className="flex-1 text-left">Sugar:</span>
-                                <span className="w-12 text-right font-bold">
-                                    {expectedMacro.sugar}g
-                                </span>
-                                <span className="flex-1 text-right">
-                                    {expectedMacro.sugar}g
-                                </span>
-                            </div>
-                            <div className="flex">
-                                <span className="flex-1 text-left">Fats:</span>
-                                <span className="w-12 text-right font-bold">
-                                    {expectedMacro.fats - consumedMacro.fats}g
-                                </span>
-                                <span className="flex-1 text-right">
-                                    {expectedMacro.fats}g
-                                </span>
-                            </div>
-                            <div className="flex">
-                                <span className="flex-1 text-left">Fiber:</span>
-                                <span className="w-12 text-right font-bold">
-                                    {expectedMacro.fiber - consumedMacro.fiber}g
-                                </span>
-                                <span className="flex-1 text-right">
-                                    {expectedMacro.fiber}g
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
+            </div>
         </div>
     )
 }

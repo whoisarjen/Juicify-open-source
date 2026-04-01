@@ -51,7 +51,7 @@ const SettingsPage = () => {
             <div>
                 <label className="mb-1 block text-sm text-gray-500">{t('Number of meals')}</label>
                 <input
-                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
                     type="number"
                     {...register('numberOfMeals')}
                 />
@@ -59,7 +59,7 @@ const SettingsPage = () => {
             </div>
             <div>
                 <label className="mb-1 block text-sm text-gray-500">{t('Fiber')}</label>
-                <div className="flex items-center rounded border border-gray-300 focus-within:border-blue-500 dark:border-gray-600">
+                <div className="flex items-center rounded border border-gray-300 focus-within:border-primary-dark dark:border-gray-600">
                     <input
                         className="flex-1 bg-transparent px-3 py-2 outline-none"
                         type="number"
@@ -71,7 +71,7 @@ const SettingsPage = () => {
             </div>
             <div>
                 <label className="mb-1 block text-sm text-gray-500">{t('Sugar')}</label>
-                <div className="flex items-center rounded border border-gray-300 focus-within:border-blue-500 dark:border-gray-600">
+                <div className="flex items-center rounded border border-gray-300 focus-within:border-primary-dark dark:border-gray-600">
                     <input
                         className="flex-1 bg-transparent px-3 py-2 outline-none"
                         type="number"
@@ -84,7 +84,7 @@ const SettingsPage = () => {
             <div>{t('Profile')}</div>
             <div>
                 <label className="mb-1 block text-sm text-gray-500">{t('Height')}</label>
-                <div className="flex items-center rounded border border-gray-300 focus-within:border-blue-500 dark:border-gray-600">
+                <div className="flex items-center rounded border border-gray-300 focus-within:border-primary-dark dark:border-gray-600">
                     <input
                         className="flex-1 bg-transparent px-3 py-2 outline-none"
                         type="number"
@@ -106,7 +106,7 @@ const SettingsPage = () => {
             <div>
                 <label className="mb-1 block text-sm text-gray-500">{t('Description')}</label>
                 <input
-                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
                     type="text"
                     {...register('description')}
                 />
@@ -114,7 +114,7 @@ const SettingsPage = () => {
             </div>
             <div>
                 <label className="mb-1 block text-sm text-gray-500">{t('Website')}</label>
-                <div className="flex items-center rounded border border-gray-300 focus-within:border-blue-500 dark:border-gray-600">
+                <div className="flex items-center rounded border border-gray-300 focus-within:border-primary-dark dark:border-gray-600">
                     <span className="px-3 text-sm text-gray-500">https://</span>
                     <input
                         className="flex-1 bg-transparent px-3 py-2 outline-none"
@@ -126,7 +126,7 @@ const SettingsPage = () => {
             </div>
             <div>
                 <label className="mb-1 block text-sm text-gray-500">Facebook</label>
-                <div className="flex items-center rounded border border-gray-300 focus-within:border-blue-500 dark:border-gray-600">
+                <div className="flex items-center rounded border border-gray-300 focus-within:border-primary-dark dark:border-gray-600">
                     <span className="px-3 text-sm text-gray-500">https://facebook.com/</span>
                     <input
                         className="flex-1 bg-transparent px-3 py-2 outline-none"
@@ -138,7 +138,7 @@ const SettingsPage = () => {
             </div>
             <div>
                 <label className="mb-1 block text-sm text-gray-500">Instagram</label>
-                <div className="flex items-center rounded border border-gray-300 focus-within:border-blue-500 dark:border-gray-600">
+                <div className="flex items-center rounded border border-gray-300 focus-within:border-primary-dark dark:border-gray-600">
                     <span className="px-3 text-sm text-gray-500">https://instagram.com/</span>
                     <input
                         className="flex-1 bg-transparent px-3 py-2 outline-none"
@@ -150,7 +150,7 @@ const SettingsPage = () => {
             </div>
             <div>
                 <label className="mb-1 block text-sm text-gray-500">Twitter</label>
-                <div className="flex items-center rounded border border-gray-300 focus-within:border-blue-500 dark:border-gray-600">
+                <div className="flex items-center rounded border border-gray-300 focus-within:border-primary-dark dark:border-gray-600">
                     <span className="px-3 text-sm text-gray-500">https://twitter.com/</span>
                     <input
                         className="flex-1 bg-transparent px-3 py-2 outline-none"

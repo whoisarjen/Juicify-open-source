@@ -54,11 +54,11 @@ export const DialogEditBurnedCalories = ({
 
     return (
         <form onSubmit={handleSubmit(handleUpdateConsumed)}>
-            <div onClick={() => setIsDialogOpen(true)}>{children}</div>
+            <div className="cursor-pointer" onClick={() => setIsDialogOpen(true)}>{children}</div>
             {isDialogOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center">
-                    <div className="fixed inset-0 bg-black/50" />
-                    <div className="relative z-50 w-full max-w-lg rounded-lg bg-white p-0 shadow-xl dark:bg-gray-900">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center">
+                    <div className="fixed inset-0 bg-black/50" onClick={() => setIsDialogOpen(false)} />
+                    <div className="relative z-[100] w-full max-w-lg rounded-lg bg-white p-0 shadow-xl dark:bg-gray-900">
                         <div className="px-6 pt-6 text-lg font-semibold">
                             {t('Edit')}
                         </div>
@@ -66,14 +66,14 @@ export const DialogEditBurnedCalories = ({
                             <div className="mt-2.5 w-full">
                                 <label className="mb-1 block text-sm text-gray-500">{t('Name')}</label>
                                 <input
-                                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
                                     {...register('name')}
                                 />
                                 {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name?.message}</p>}
                             </div>
                             <div className="mt-2.5 w-full">
                                 <label className="mb-1 block text-sm text-gray-500">{t("Burnt")}</label>
-                                <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-blue-500 dark:border-gray-600">
+                                <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-primary-dark dark:border-gray-600">
                                     <input
                                         className="flex-1 bg-transparent px-3 py-2 outline-none"
                                         type="number"
@@ -93,8 +93,8 @@ export const DialogEditBurnedCalories = ({
                             >
                                 <button type="button" className="px-4 py-2 text-red-500 hover:bg-red-50 dark:hover:bg-gray-800">{t('Delete')}</button>
                             </DialogConfirm>
-                            <button type="button" className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800" onClick={() => setIsDialogOpen(false)}>{t('Deny')}</button>
-                            <button type="submit" className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800" onClick={handleSubmit(handleUpdateConsumed)}>{t('Confirm')}</button>
+                            <button type="button" className="px-4 py-2 text-primary-dark hover:bg-[rgba(255,255,255,0.04)]" onClick={() => setIsDialogOpen(false)}>{t('Deny')}</button>
+                            <button type="submit" className="px-4 py-2 text-primary-dark hover:bg-[rgba(255,255,255,0.04)]" onClick={handleSubmit(handleUpdateConsumed)}>{t('Confirm')}</button>
                         </div>
                     </div>
                 </div>

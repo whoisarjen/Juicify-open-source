@@ -67,7 +67,7 @@ const WorkoutStatisticsPage = () => {
                                             key={year}
                                             className={`shrink-0 px-4 py-2 text-sm font-medium ${
                                                 selectedYear === year
-                                                    ? 'border-b-2 border-blue-500 text-blue-500'
+                                                    ? 'border-b-2 border-primary-dark text-primary-dark'
                                                     : 'text-gray-500'
                                             }`}
                                             onClick={() => setSelectedYear(year)}
@@ -86,7 +86,7 @@ const WorkoutStatisticsPage = () => {
                                                     {t('TOTAL_WORKOUTS')}
                                                 </span>
                                                 <div className="flex items-baseline">
-                                                    <span className="text-xl font-bold text-blue-500">
+                                                    <span className="text-xl font-bold text-primary-dark">
                                                         {statistics?.totalWorkouts || 0}
                                                     </span>
                                                     <span className="ml-2 text-xs text-gray-500">
@@ -127,7 +127,7 @@ const WorkoutStatisticsPage = () => {
                                                                     {month.monthName}
                                                                 </span>
                                                                 <div className="text-right">
-                                                                    <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${month.totalWorkouts > 0 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400'}`}>
+                                                                    <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${month.totalWorkouts > 0 ? 'bg-primary-dark text-[#121212]' : 'bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400'}`}>
                                                                         {month.totalWorkouts} {t('WORKOUTS')}
                                                                     </span>
                                                                     <span className="mt-1 block text-xs text-gray-500">

@@ -7,16 +7,14 @@ const SectionDiaryManaging = () => {
     const { t } = useTranslation('nutrition-diary')
 
     return (
-        <div className="flex">
-            <button
-                className="flex flex-1 items-center justify-center gap-2 rounded border border-gray-300 px-4 py-2 hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-800"
-                onClick={() => router.push('/macronutrients')}
-                aria-label="macronutrients"
-            >
-                <PieChart size={20} />
-                {t('Macronutrients')}
-            </button>
-        </div>
+        <button
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-[rgba(144,202,249,0.06)] border border-[rgba(144,202,249,0.12)] px-4 py-3 text-sm font-bold text-primary-dark transition-all duration-300 hover:bg-[rgba(144,202,249,0.10)] hover:border-[rgba(144,202,249,0.25)]"
+            onClick={() => router.push('/macronutrients')}
+            aria-label="macronutrients"
+        >
+            <PieChart size={16} />
+            {t('Macronutrients')}
+        </button>
     )
 }
 

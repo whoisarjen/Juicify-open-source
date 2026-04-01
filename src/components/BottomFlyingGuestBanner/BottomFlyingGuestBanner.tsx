@@ -21,7 +21,7 @@ const BottomFlyingGuestBanner = ({ src, username }: BottomFlyingGuestBannerProps
             <button
                 data-testid="BottomFlyingGuestBanner"
                 onClick={() => router.push(`/${router.query.login}`)}
-                className="fixed bottom-[52px] flex w-[calc(100%-24px)] max-w-[700px] items-center justify-center gap-2 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
+                className="fixed bottom-[52px] flex w-[calc(100%-24px)] max-w-[700px] items-center justify-center gap-2 rounded bg-primary-dark px-4 py-2 text-[#121212] hover:bg-[#64b5f6] disabled:opacity-50"
             >
                 <CustomAvatar
                     src={src}

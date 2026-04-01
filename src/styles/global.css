@@ -6,6 +6,33 @@
 @theme {
     --color-black: #121212;
     --color-primary-dark: #90caf9;
+    --color-glass: rgba(255, 255, 255, 0.02);
+    --color-glass-hover: rgba(255, 255, 255, 0.04);
+    --color-glass-border: rgba(255, 255, 255, 0.06);
+    --color-glass-border-hover: rgba(255, 255, 255, 0.12);
+    --color-glass-border-accent: rgba(144, 202, 249, 0.20);
+    --color-macro-protein: #fb7185;
+    --color-macro-carbs: #60a5fa;
+    --color-macro-fat: #fb923c;
+    --color-macro-kcal: #34d399;
+}
+
+@utility glass {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 1rem;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@utility glass-interactive {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 1rem;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    &:hover {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.12);
+    }
 }
 
 @utility container {

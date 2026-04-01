@@ -52,7 +52,7 @@ const DialogShowProduct = ({
                     onClick: () => handleSetIsDialog(true),
                 })}
             {isDialog && (
-                <div className="fixed inset-0 z-50 bg-white dark:bg-gray-900">
+                <div className="fixed inset-0 z-[100] bg-white dark:bg-gray-900">
                     <div className="flex flex-col">
                         <DialogShowProductDetails product={product} />
                         <div className="h-20 w-full" />

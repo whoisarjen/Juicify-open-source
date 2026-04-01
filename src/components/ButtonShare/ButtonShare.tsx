@@ -10,8 +10,8 @@ const ButtonShare = () => {
 
     return (
         <div onClick={shareLocation}>
-            <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="Share">
-                <Share2 className="text-[#90caf9]" />
+            <button className="rounded-full p-2 hover:bg-[rgba(255,255,255,0.04)] transition-all" aria-label="Share">
+                <Share2 size={20} className="text-primary-dark" />
             </button>
         </div>
     )

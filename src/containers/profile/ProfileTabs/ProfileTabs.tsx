@@ -21,7 +21,7 @@ const ProfileTabs = ({ tab }: { tab: number }) => {
                     onClick={item.onClick}
                     className={`flex flex-1 items-center justify-center px-4 py-2 ${
                         tab === index
-                            ? 'border-b-2 border-blue-500 text-blue-500'
+                            ? 'border-b-2 border-primary-dark text-primary-dark'
                             : 'text-gray-500'
                     }`}
                 >

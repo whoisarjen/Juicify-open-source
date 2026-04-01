@@ -81,9 +81,9 @@ const DialogAddProducts = ({ children, mealToAdd }: DialogAddProductsProps) => {
 
     return (
         <>
-            <div onClick={() => setIsDialogOpen(true)}>{children}</div>
+            <div className="cursor-pointer" onClick={() => setIsDialogOpen(true)}>{children}</div>
             {isDialogOpen && (
-                <div className="fixed inset-0 z-50 bg-white dark:bg-gray-900 overflow-auto">
+                <div className="fixed inset-0 z-[100] bg-white dark:bg-gray-900 overflow-auto">
                     <div className="flex flex-col items-center p-3">
                         <div className="flex w-full max-w-3xl flex-1 flex-col gap-3">
                             <NavbarOnlyTitle title="home:ADD_PRODUCTS" />

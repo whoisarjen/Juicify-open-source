@@ -27,10 +27,9 @@ const WorkoutResultsPage = () => {
     return (
         <div className="flex flex-1 flex-col gap-4">
             {isOwner ? (
-                <>
-                    <NavbarOnlyTitle title="home:WORKOUT_RESULTS" />
+                <NavbarOnlyTitle title="home:WORKOUT_RESULTS">
                     <DialogAddWorkoutResult />
-                </>
+                </NavbarOnlyTitle>
             ) : (
                 <NavbarProfile tab={2} />
             )}
