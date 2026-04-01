@@ -1,9 +1,5 @@
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Slider from '@mui/material/Slider';
-import MuiInput from '@mui/material/Input';
 import useTranslation from 'next-translate/useTranslation';
-import { useState, useEffect, ChangeEvent } from 'react';
+import { useState, useEffect, type ChangeEvent } from 'react';
 
 interface CustomSliderProps {
     title: string,
@@ -36,10 +32,8 @@ const CustomSlider = ({ title, macro, beginValue, changed, day }: CustomSliderPr
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [macro, day])
 
-    const handleChange = (_: Event, newValue: number | number[]) => {
-        if (typeof newValue === 'number') {
-            setValue(newValue);
-        }
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setValue(Number(e.target.value));
     };
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -66,36 +60,31 @@ const CustomSlider = ({ title, macro, beginValue, changed, day }: CustomSliderPr
     }, [value])
 
     return (
-        <Box sx={{ margin: 'auto 0' }}>
-            <Grid container spacing={2} alignItems="center">
-                <Grid item sx={{ minWidth: 75, textAlign: 'center' }}>
+        <div className="my-0">
+            <div className="flex items-center gap-4">
+                <span className="min-w-[75px] text-center text-sm">
                     {t(title.toUpperCase())}
-                </Grid>
-                <Grid item xs>
-                    <Slider
-                        value={value}
-                        min={0}
-                        max={maxValue}
-                        onChange={handleChange}
-                        valueLabelDisplay="auto"
-                    />
-                </Grid>
-                <Grid item>
-                    <MuiInput
-                        value={value}
-                        size="small"
-                        onChange={handleInputChange}
-                        onBlur={handleBlur}
-                        inputProps={{
-                            min: 0,
-                            max: maxValue,
-                            type: 'number',
-                            'aria-labelledby': 'input-slider',
-                        }}
-                    />
-                </Grid>
-            </Grid>
-        </Box>
+                </span>
+                <input
+                    type="range"
+                    min={0}
+                    max={maxValue}
+                    value={value || 0}
+                    onChange={handleChange}
+                    className="flex-1 accent-blue-500"
+                />
+                <input
+                    type="number"
+                    min={0}
+                    max={maxValue}
+                    value={value}
+                    onChange={handleInputChange}
+                    onBlur={handleBlur}
+                    aria-labelledby="input-slider"
+                    className="w-16 rounded border border-gray-300 bg-transparent px-2 py-1 text-center text-sm dark:border-gray-600"
+                />
+            </div>
+        </div>
     );
 }
 
