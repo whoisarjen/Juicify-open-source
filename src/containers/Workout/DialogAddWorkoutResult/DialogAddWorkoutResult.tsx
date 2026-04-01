@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon'
 import { useSession } from 'next-auth/react'
 import { trpc } from '@/utils/trpc.utils'
-import { orderBy } from 'lodash'
+import { orderBy } from 'lodash-es'
 import moment from 'moment'
 
 const DialogAddWorkoutResult = () => {

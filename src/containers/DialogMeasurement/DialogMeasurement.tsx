@@ -12,7 +12,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { trpc } from "@/utils/trpc.utils"
-import { orderBy } from 'lodash'
+import { orderBy } from 'lodash-es'
 import { useSession } from "next-auth/react"
 import DialogConfirm from "@/components/DialogConfirm/DialogConfirm"
 import { updateArray } from '@/utils/global.utils'

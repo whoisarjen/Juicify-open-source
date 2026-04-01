@@ -5,7 +5,7 @@ import BoxWorkout from '@/containers/Workout/BoxWorkout/BoxWorkout'
 import NavbarProfile from '@/containers/profile/NavbarProfile/NavbarProfile'
 import { useSession } from 'next-auth/react'
 import { trpc } from '@/utils/trpc.utils'
-import { orderBy } from 'lodash'
+import { orderBy } from 'lodash-es'
 import { BoxWorkoutLoader } from '@/containers/Workout/BoxWorkoutLoader'
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
 

@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
 import ButtonMoreOptionsWorkoutResult from '@/containers/Workout/ButtonMoreOptionsWorkoutResult/ButtonMoreOptionsWorkoutResult'
 import BoxResult from '@/containers/Workout/BoxExercise/BoxExercise'
-import { pick } from 'lodash'
+import { pick } from 'lodash-es'
 import { useSession } from 'next-auth/react'
 import { trpc } from '@/utils/trpc.utils'
 import {

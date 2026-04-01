@@ -1,5 +1,5 @@
 import moment from "moment";
-import { pick, omit } from 'lodash'
+import { pick, omit } from 'lodash-es'
 
 import { router, protectedProcedure } from "../trpc";
 import { createCoachSchema } from "../../schema/coach.schema";

@@ -16,7 +16,7 @@ import {
     workoutPlanSchema,
 } from '@/server/schema/workoutPlan.schema'
 import { updateArray } from '@/utils/global.utils'
-import { range } from 'lodash'
+import { range } from 'lodash-es'
 import { CustomTextField } from '@/components/CustomTextField'
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm'
 

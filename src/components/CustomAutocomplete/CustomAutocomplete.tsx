@@ -1,5 +1,5 @@
 import useTranslation from 'next-translate/useTranslation';
-import { debounce } from 'lodash';
+import { debounce } from 'lodash-es';
 import { useCallback, useState } from 'react'
 
 interface CustomAutocompleteProps {

@@ -8,7 +8,7 @@ import useConsumed from '@/hooks/useConsumed'
 import { useState, type ReactNode } from 'react'
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { range } from 'lodash';
+import { range } from 'lodash-es';
 
 interface DialogEditConsumedProps {
     children: ReactNode

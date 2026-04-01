@@ -1,5 +1,5 @@
 import { signOut } from "next-auth/react"
-import { omit } from 'lodash'
+import { omit } from 'lodash-es'
 
 export const handleSignOut = () => {
     localStorage.clear()

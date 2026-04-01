@@ -12,7 +12,7 @@ import { useSession } from 'next-auth/react'
 import { trpc } from '@/utils/trpc.utils'
 import { env } from '@/env/client.mjs'
 import CustomAutocomplete from '@/components/CustomAutocomplete/CustomAutocomplete'
-import { range } from 'lodash'
+import { range } from 'lodash-es'
 import moment from 'moment'
 import useCache from '@/hooks/useCache'
 

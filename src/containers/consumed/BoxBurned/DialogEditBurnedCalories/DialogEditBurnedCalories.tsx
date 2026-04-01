@@ -7,7 +7,7 @@ import { useState, type ReactNode } from 'react'
 import { type BurnedCalories } from '@prisma/client';
 import { trpc } from '@/utils/trpc.utils';
 import { burnedCaloriesSchema, BurnedCaloriesSchema } from '@/server/schema/burnedCalories.schema';
-import { pick } from 'lodash';
+import { pick } from 'lodash-es';
 
 interface DialogEditBurnedCaloriesProps {
     children: ReactNode

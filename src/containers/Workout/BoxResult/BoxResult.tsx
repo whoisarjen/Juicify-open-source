@@ -3,7 +3,7 @@ import DialogConfirm from '@/components/DialogConfirm/DialogConfirm'
 import { useState, useEffect } from 'react'
 import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon'
 import { type WorkoutResultExerciseResultSchema } from '@/server/schema/workoutResult.schema'
-import { range } from 'lodash'
+import { range } from 'lodash-es'
 
 interface BoxResultProps {
     value: WorkoutResultExerciseResultSchema

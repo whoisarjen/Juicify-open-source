@@ -7,7 +7,7 @@ import { getCalories, multipleProductByHowMany } from '@/utils/consumed.utils'
 import { StackedBarChart } from '@/components/StackedBarChart'
 import { SimpleLineChart } from '@/components/SimpleLineChart'
 import useDaily from '@/hooks/useDaily'
-import { range } from 'lodash'
+import { range } from 'lodash-es'
 
 const NUMBER_OF_SUPPORTED_DAYS = 7
 

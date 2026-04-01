@@ -3,7 +3,7 @@ import DiagramConsumedRemaining from "@/containers/consumed/DiagramConsumedRemai
 import SectionDiaryManaging from "@/containers/consumed/SectionDiaryManaging/SectionDiaryManaging";
 import BoxMeal from "@/containers/consumed/BoxMeal/BoxMeal";
 import ButtonShare from '@/components/ButtonShare/ButtonShare';
-import { max, range } from 'lodash';
+import { max, range } from 'lodash-es';
 import DateChanger from '@/containers/consumed/DateChanger/DateChanger';
 import DateChangerFast from "@/containers/consumed/DateChangerFast/DateChangerFast";
 import useTranslation from "next-translate/useTranslation";
