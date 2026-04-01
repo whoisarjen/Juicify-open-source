@@ -20,7 +20,6 @@ import Divider from '@mui/material/Divider'
 import NoteAltIcon from '@mui/icons-material/NoteAlt'
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera'
 import BarChartIcon from '@mui/icons-material/BarChart'
-import MonitorHeartIcon from '@mui/icons-material/MonitorHeart'
 import { type Translate } from 'next-translate'
 import { type Session } from 'next-auth'
 import { handleSignOut } from '@/utils/user.utils'
@@ -67,12 +66,6 @@ const getRouterPushOptions = (sessionData: Session | null, t: Translate) => {
             text: t('Measurements'),
             children: <EmojiEventsIcon color="primary" />,
         },
-        health: {
-            link: `/health`,
-            text: 'Health',
-            children: <MonitorHeartIcon color="primary" />,
-            restricted: true,
-        },
         results: {
             link: `/${username}/workout/results`,
             text: t('WORKOUT_RESULTS'),
@@ -114,10 +107,8 @@ const SidebarLeft = () => {
                 <List>
                     {Object.keys(getRouterPushOptions(sessionData, t)).map(
                         (key) => {
-                            const option =
+                            const { link, children, text } =
                                 getRouterPushOptions(sessionData, t)[key]
-                            if ('restricted' in option && option.restricted && !sessionData?.user?.permissions?.some((p: any) => p.name === 'Administration')) return null
-                            const { link, children, text } = option
 
                             return (
                                 <ListItem disablePadding key={key}>

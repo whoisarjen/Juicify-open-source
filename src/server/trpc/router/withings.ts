@@ -36,20 +36,4 @@ export const withingsRouter = router({
 
             return { activities, sleepRecords, workouts, measurements }
         }),
-    latestDaily: protectedProcedure.query(async ({ ctx }) => {
-        const userId = ctx.session.user.id
-
-        const [activity, sleep] = await Promise.all([
-            ctx.prisma.withingsActivity.findFirst({
-                where: { userId },
-                orderBy: { date: 'desc' },
-            }),
-            ctx.prisma.withingsSleep.findFirst({
-                where: { userId },
-                orderBy: { date: 'desc' },
-            }),
-        ])
-
-        return { activity, sleep }
-    }),
 })

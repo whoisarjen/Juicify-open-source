@@ -27,6 +27,9 @@ import { updateArray } from '@/utils/global.utils'
 interface DialogMeasurementProps {
     measurement: Measurement | null
     defaultWeight?: number
+    externalOpen?: boolean
+    onClose?: () => void
+    hideButton?: boolean
 }
 
 const today = moment().format('YYYY-MM-DD')
@@ -34,8 +37,12 @@ const today = moment().format('YYYY-MM-DD')
 export const DialogMeasurement = ({
     measurement,
     defaultWeight = 0,
+    externalOpen,
+    onClose: onExternalClose,
+    hideButton,
 }: DialogMeasurementProps) => {
-    const [open, setOpen] = useState(false)
+    const [internalOpen, setInternalOpen] = useState(false)
+    const open = externalOpen ?? internalOpen
     const { t } = useTranslation('home')
     const { data: sessionData } = useSession()
 
@@ -55,11 +62,12 @@ export const DialogMeasurement = ({
     })
 
     const handleClickOpen = () => {
-        setOpen(true)
+        setInternalOpen(true)
     }
 
     const handleClose = () => {
-        setOpen(false)
+        setInternalOpen(false)
+        onExternalClose?.()
         reset({ whenAdded: moment().toDate(), weight: defaultWeight })
     }
 
@@ -178,6 +186,8 @@ export const DialogMeasurement = ({
         reset({
             ...measurement,
             weight: Number(measurement.weight),
+            waist: measurement.waist ? Number(measurement.waist) : undefined,
+            hips: measurement.hips ? Number(measurement.hips) : undefined,
         })
         handleClickOpen()
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -185,7 +195,7 @@ export const DialogMeasurement = ({
 
     return (
         <form onSubmit={handleSubmitProxy()}>
-            <ButtonPlusIcon onClick={handleClickOpen} />
+            {!hideButton && <ButtonPlusIcon onClick={handleClickOpen} />}
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>{t('home:ADD_WEIGHT')}</DialogTitle>
                 <DialogContent>
@@ -208,6 +218,28 @@ export const DialogMeasurement = ({
                         helperText={errors.weight?.message}
                         InputProps={{
                             endAdornment: <InputAdornment position="end">kg</InputAdornment>,
+                        }}
+                    />
+                    <TextField
+                        fullWidth
+                        type="number"
+                        margin="dense"
+                        label="Waist"
+                        variant="outlined"
+                        {...register('waist')}
+                        InputProps={{
+                            endAdornment: <InputAdornment position="end">cm</InputAdornment>,
+                        }}
+                    />
+                    <TextField
+                        fullWidth
+                        type="number"
+                        margin="dense"
+                        label="Hips"
+                        variant="outlined"
+                        {...register('hips')}
+                        InputProps={{
+                            endAdornment: <InputAdornment position="end">cm</InputAdornment>,
                         }}
                     />
                 </DialogContent>

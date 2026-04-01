@@ -268,6 +268,8 @@ model Measurement {
   spo2              Decimal? @db.Decimal(4, 1)
   pulseWaveVelocity Decimal? @db.Decimal(5, 2)
   vo2Max            Decimal? @db.Decimal(4, 1)
+  waist             Decimal? @db.Decimal(4, 1)
+  hips              Decimal? @db.Decimal(4, 1)
   source            String?  @db.VarChar(20)
 
   @@unique([id, userId])
