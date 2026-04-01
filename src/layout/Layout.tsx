@@ -147,32 +147,38 @@ const Layout = ({ children }: { children: any }) => {
         }
     }, [router, sessionData?.user?.isBanned])
 
-    if (!isAllowedLocation || status === 'loading') {
+    if (!isAllowedLocation) {
         return null
     }
 
     const isBlog = router.pathname.includes('blog')
     const isNeutralPath = isBlog || router.pathname === SIGN_IN_PATH
-    const isLandingPage = router.pathname === SIGN_IN_PATH && !sessionData?.user
+    const isLandingPage = router.pathname === SIGN_IN_PATH && status !== 'loading' && !sessionData?.user
 
     const isSidebarGrid = !isBlog
 
     return (
         <main className={`pb-safe dark container flex max-w-7xl flex-col ${isLandingPage ? 'min-h-screen' : 'h-screen'}`}>
-            <div className={`flex flex-1 ${isLandingPage ? '' : 'flex-row gap-4'} p-4`}>
-                {!isLandingPage && (
-                    <div className="relative w-64 max-xl:hidden">
-                        <SidebarLeft />
+            {status === 'loading' ? (
+                <div className="flex flex-1" />
+            ) : (
+                <>
+                    <div className={`flex flex-1 ${isLandingPage ? '' : 'flex-row gap-4'} p-4`}>
+                        {!isLandingPage && (
+                            <div className="relative w-64 max-xl:hidden">
+                                <SidebarLeft />
+                            </div>
+                        )}
+                        <div className="pb-safe flex flex-1 items-stretch">{children}</div>
+                        {isSidebarGrid && !isLandingPage && (
+                            <div className="w-64 max-lg:hidden">
+                                <SidebarRight />
+                            </div>
+                        )}
                     </div>
-                )}
-                <div className="pb-safe flex flex-1 items-stretch">{children}</div>
-                {isSidebarGrid && !isLandingPage && (
-                    <div className="w-64 max-lg:hidden">
-                        <SidebarRight />
-                    </div>
-                )}
-            </div>
-            {!isLandingPage && <Footer />}
+                    {!isLandingPage && <Footer />}
+                </>
+            )}
             {status === 'unauthenticated' && !isNeutralPath && (
                 <div className="fixed bottom-24 left-0 flex w-full items-center justify-center">
                     <button
