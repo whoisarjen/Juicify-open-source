@@ -14,7 +14,7 @@ export const withingsRouter = router({
                 Date.now() - days * 24 * 60 * 60 * 1000
             )
 
-            const [activities, sleepRecords, workouts, measurements] =
+            const [activities, sleepRecords, workouts, measurements, lastSync] =
                 await Promise.all([
                     ctx.prisma.withingsActivity.findMany({
                         where: { userId, date: { gte: since } },
@@ -32,8 +32,19 @@ export const withingsRouter = router({
                         where: { userId, source: 'withings', whenAdded: { gte: since } },
                         orderBy: { whenAdded: 'asc' },
                     }),
+                    ctx.prisma.withingsSyncLog.findFirst({
+                        where: { userId, status: 'ok' },
+                        orderBy: { createdAt: 'desc' },
+                        select: { createdAt: true },
+                    }),
                 ])
 
-            return { activities, sleepRecords, workouts, measurements }
+            return {
+                activities,
+                sleepRecords,
+                workouts,
+                measurements,
+                lastSyncedAt: lastSync?.createdAt ?? null,
+            }
         }),
 })
