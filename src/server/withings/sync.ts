@@ -47,16 +47,28 @@ function sleepDataToDb(sleep: WithingsSleepSummary) {
 export async function syncWithingsData(userId: number) {
     const accessToken = await getValidAccessToken(userId)
 
+    const today = moment()
     const yesterday = moment().subtract(1, 'day')
-    const startOfDay = yesterday.clone().startOf('day')
-    const endOfDay = yesterday.clone().endOf('day')
-    const dateYmd = yesterday.format('YYYY-MM-DD')
+
+    // Sync yesterday (catches late-arriving data from Withings)
+    const yStart = yesterday.clone().startOf('day')
+    const yEnd = yesterday.clone().endOf('day')
+    const yYmd = yesterday.format('YYYY-MM-DD')
+
+    // Sync today (the main benefit of 4h cron)
+    const tStart = today.clone().startOf('day')
+    const tEnd = today.clone().endOf('day')
+    const tYmd = today.format('YYYY-MM-DD')
 
     await Promise.all([
-        syncMeasurements(accessToken, userId, startOfDay, endOfDay),
-        syncActivityData(accessToken, userId, startOfDay, dateYmd),
-        syncSleepData(accessToken, userId, startOfDay, dateYmd),
-        syncWorkouts(accessToken, userId, dateYmd),
+        syncMeasurements(accessToken, userId, yStart, yEnd),
+        syncActivityData(accessToken, userId, yStart, yYmd),
+        syncSleepData(accessToken, userId, yStart, yYmd),
+        syncWorkouts(accessToken, userId, yYmd),
+        syncMeasurements(accessToken, userId, tStart, tEnd),
+        syncActivityData(accessToken, userId, tStart, tYmd),
+        syncSleepData(accessToken, userId, tStart, tYmd),
+        syncWorkouts(accessToken, userId, tYmd),
     ])
 }
 
