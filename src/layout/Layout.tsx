@@ -147,7 +147,7 @@ const Layout = ({ children }: { children: any }) => {
         }
     }, [router, sessionData?.user?.isBanned])
 
-    if (!isAllowedLocation) {
+    if (!isAllowedLocation || status === 'loading') {
         return null
     }
 
