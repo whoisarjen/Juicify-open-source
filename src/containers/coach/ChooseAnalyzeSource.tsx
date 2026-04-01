@@ -39,19 +39,19 @@ const ChooseAnalyzeSource = ({
         >
             <CoachButton
                 color="error"
-                variant="contained"
+
                 onClick={() => router.push('/measurements')}
             >
                 Zweryfikuj wage
             </CoachButton>
             <CoachButton
-                variant="contained"
+
                 onClick={() => analyze(true)}
             >
                 Oblicz z danymi z aplikacji
             </CoachButton>
             <CoachButton
-                variant="contained"
+
                 onClick={() => analyze(false)}
             >
                 {`Oblicz z stałą wartością (${getCalories({ proteins, carbs, fats })}kcal)`}

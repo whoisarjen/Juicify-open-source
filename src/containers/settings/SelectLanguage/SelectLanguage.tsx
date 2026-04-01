@@ -1,8 +1,4 @@
 import { useRouter } from "next/router";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import useTranslation from "next-translate/useTranslation";
 
 const SelectLanguage = () => {
@@ -15,26 +11,21 @@ const SelectLanguage = () => {
     }
 
     return (
-        <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">{t("Language")}</InputLabel>
-            <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
+        <div className="mb-2.5 w-full">
+            <label className="mb-1 block text-sm text-gray-500">{t("Language")}</label>
+            <select
+                className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 dark:border-gray-600"
                 value={router.locale}
-                autoWidth
                 onChange={(e) => setLanguage(e.target.value)}
-                label={t("Language")}
-                sx={{ marginBottom: '10px' }}
             >
                 {router.locales.map((locale: any) => (
-                    <MenuItem key={locale} value={locale}>
+                    <option key={locale} value={locale}>
                         {locale}
-                    </MenuItem>
+                    </option>
                 ))}
-            </Select>
-        </FormControl>
+            </select>
+        </div>
     )
 }
-
 
 export default SelectLanguage

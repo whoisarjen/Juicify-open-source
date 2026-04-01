@@ -3,7 +3,7 @@ import Document, { Html, Head, Main, NextScript } from "next/document";
 class MyDocument extends Document {
     render() {
         return (
-            <Html>
+            <Html className="dark">
                 <Head>
                     <meta charSet="utf-8" />
                     <meta name="description" content="Free AI-powered calorie counter and personal trainer. Track calories, plan workouts, and reach your fitness goals — no ads, no subscriptions." />

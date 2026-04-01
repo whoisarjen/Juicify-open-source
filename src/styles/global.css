@@ -69,7 +69,7 @@
     --BothNavHeightAndPadding: calc(
         var(--BothNavHeightAndPaddingDefault) + 24px
     ); /* 24px => padding in globla grid */
-    --theme-background: '#121212';
+    --theme-background: #121212;
 }
 
 html {
@@ -108,12 +108,4 @@ input::-webkit-inner-spin-button {
 
 input[type='number'] {
     -moz-appearance: textfield;
-}
-
-.css-169iwlq-MuiCalendarPicker-root {
-    max-width: 100%;
-}
-
-.css-1a1wxa0-MuiInputBase-root-MuiOutlinedInput-root {
-    width: 100%;
 }
