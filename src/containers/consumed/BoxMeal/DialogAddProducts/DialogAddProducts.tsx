@@ -3,7 +3,7 @@ import Dialog from '@mui/material/Dialog'
 import Button from '@mui/material/Button'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
-import SlideUp from '@/transition/SlideUp'
+
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
 import useTranslation from 'next-translate/useTranslation'
 import BoxAddProduct from './BoxAddProduct/BoxAddProduct'
@@ -88,7 +88,7 @@ const DialogAddProducts = ({ children, mealToAdd }: DialogAddProductsProps) => {
                 fullScreen
                 scroll="body"
                 open={isDialogOpen}
-                TransitionComponent={SlideUp}
+
             >
                 <div className="flex flex-col items-center p-3">
                     <div className="flex w-full max-w-3xl flex-1 flex-col gap-3">

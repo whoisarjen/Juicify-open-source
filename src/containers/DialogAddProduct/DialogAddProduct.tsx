@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import SlideUp from "@/transition/SlideUp";
+
 import useTranslation from 'next-translate/useTranslation';
 import { cloneElement, useState, type ReactElement } from 'react';
 import { useRouter } from 'next/router';
@@ -58,7 +58,7 @@ const DialogAddProduct = ({
             {cloneElement(children, { onClick: () => setIsDialogOpen(true) })}
             <Dialog
                 open={isDialogOpen}
-                TransitionComponent={SlideUp}
+
                 keepMounted
                 onClose={() => setIsDialogOpen(false)}
                 aria-describedby="alert-dialog-slide-description"

@@ -1,5 +1,5 @@
 import Dialog from '@mui/material/Dialog'
-import SlideUp from '@/transition/SlideUp'
+
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
 import { useState, ReactNode } from 'react'
 import ButtonCloseDialog from '@/components/ButtonCloseDialog/ButtonCloseDialog'
@@ -80,7 +80,7 @@ const DialogAddExercises = ({
                 fullScreen
                 scroll="body"
                 open={isDialog}
-                TransitionComponent={SlideUp}
+
             >
                 <div className="flex flex-col items-center p-3">
                     <div className="flex w-full max-w-3xl flex-1 flex-col gap-3">

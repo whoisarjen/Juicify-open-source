@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
-import SlideUp from '@/transition/SlideUp'
+
 import useTranslation from 'next-translate/useTranslation'
 import {
     useState,
@@ -54,7 +54,7 @@ const DialogShowProduct = ({
                 cloneElement(children, {
                     onClick: () => handleSetIsDialog(true),
                 })}
-            <Dialog fullScreen open={isDialog} TransitionComponent={SlideUp}>
+            <Dialog fullScreen open={isDialog}>
                 <div className="flex flex-col">
                     <DialogShowProductDetails product={product} />
                     <div className="h-20 w-full" />

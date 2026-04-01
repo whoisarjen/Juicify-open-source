@@ -1,5 +1,3 @@
-import Avatar from '@mui/material/Avatar';
-
 interface CustomAvatarProps {
     src?: string | null
     username?: string
@@ -11,34 +9,38 @@ const CustomAvatar = ({
     src,
     username,
     size = '128px',
-    margin = 'auto'
+    margin = 'auto',
 }: CustomAvatarProps) => {
+    const style = { width: size, height: size, margin }
+    const alt = `${username} on Juicify.app`
+
+    const fallback = (
+        <img
+            data-testid="default_logo"
+            className="rounded-full object-cover"
+            style={style}
+            alt={alt}
+            src="/images/logo.png"
+        />
+    )
+
     if (!src) {
-        return (
-            <Avatar
-                data-testid="default_logo"
-                sx={{ background: 'none !important', width: size, height: size, margin }}
-                alt={`${username} on Juicify.app`}
-                src='/images/logo.png'
-            />
-        )
+        return fallback
     }
 
     return (
-        <Avatar
+        <img
             data-testid="user_logo"
-            sx={{ background: 'none !important', width: size, height: size, margin }}
-            alt={`${username} on Juicify.app`}
+            className="rounded-full object-cover"
+            style={style}
+            alt={alt}
             src={src}
-        >
-            <Avatar
-                data-testid="default_logo"
-                sx={{ background: 'none !important', width: size, height: size, margin }}
-                alt={`${username} on Juicify.app`}
-                src='/images/logo.png'
-            />
-        </Avatar>
+            onError={(e) => {
+                e.currentTarget.onerror = null
+                e.currentTarget.src = '/images/logo.png'
+            }}
+        />
     )
 }
 
-export default CustomAvatar;
+export default CustomAvatar

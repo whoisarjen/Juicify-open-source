@@ -9,7 +9,7 @@ import { useState } from "react"
 import { CalendarPicker } from '@mui/x-date-pickers'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import SlideUp from '@/transition/SlideUp'
+
 import moment from 'moment'
 
 const DateChanger = ({ where = 'consumed' }: { where?: string }) => {
@@ -29,7 +29,7 @@ const DateChanger = ({ where = 'consumed' }: { where?: string }) => {
             </IconButton>
             <Dialog
                 open={isDialog}
-                TransitionComponent={SlideUp}
+
                 keepMounted
                 aria-describedby="alert-dialog-slide-description"
             >

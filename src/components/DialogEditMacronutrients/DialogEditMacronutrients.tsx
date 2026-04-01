@@ -6,7 +6,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
-import SlideUp from '@/transition/SlideUp';
+
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm';
 import { useSession } from 'next-auth/react';
 import useTranslation from 'next-translate/useTranslation';
@@ -51,7 +51,7 @@ const DialogEditMacronutrients = ({
     return (
         <Dialog
             open={isOwnMacro}
-            TransitionComponent={SlideUp}
+
             keepMounted
             onClose={onClose}
         >
