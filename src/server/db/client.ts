@@ -1,27 +1,22 @@
-import { PrismaClient } from "@prisma/client";
-import { Pool, neonConfig } from '@neondatabase/serverless'
 import { PrismaNeon } from '@prisma/adapter-neon'
-import ws from 'ws'
-import { env } from "../../env/server.mjs";
+import { PrismaClient } from '@prisma/client'
 
-declare global {
-    // eslint-disable-next-line no-var
-    var prisma: PrismaClient | undefined;
+const prismaClientSingleton = () => {
+    const connectionString = process.env.DATABASE_URL!
+    const adapter = new PrismaNeon({ connectionString })
+
+    return new PrismaClient({
+        adapter,
+        log: ['error'],
+    })
 }
 
-neonConfig.webSocketConstructor = ws
-const connectionString = `${env.DATABASE_URL}`
+declare const globalThis: {
+    prismaGlobal: ReturnType<typeof prismaClientSingleton>
+} & typeof global
 
-const pool = new Pool({ connectionString })
-const adapter = new PrismaNeon(pool)
+export const prisma = globalThis.prismaGlobal ?? prismaClientSingleton()
 
-export const prisma =
-    global.prisma ||
-    new PrismaClient({
-        adapter,
-        log: ["error"],
-    });
-
-if (env.NODE_ENV !== "production") {
-    global.prisma = prisma;
+if (process.env.NODE_ENV !== 'production') {
+    globalThis.prismaGlobal = prisma
 }
