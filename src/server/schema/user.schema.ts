@@ -1,4 +1,3 @@
-import moment from "moment";
 import { z } from "zod";
 
 export const userSchema = z.object({
@@ -23,11 +22,11 @@ export const userSchema = z.object({
     proteinsDay6: z.number().min(0).max(9999).default(0).optional(),
     carbsDay6: z.number().min(0).max(9999).default(0).optional(),
     fatsDay6: z.number().min(0).max(9999).default(0).optional(),
-    numberOfMeals: z.preprocess((val) => Number(val), z.number().min(1).max(10)).optional(),
-    fiber: z.preprocess((val) => Number(val), z.number().min(0).max(100)).optional(),
-    carbsPercentAsSugar: z.preprocess((val) => Number(val), z.number().min(0).max(100)).optional(),
-    birth: z.preprocess(birth => moment(String(birth)).toDate(), z.date()).optional(),
-    height: z.preprocess((val) => Number(val), z.number().min(120).max(250)).optional(),
+    numberOfMeals: z.coerce.number().min(1).max(10).optional(),
+    fiber: z.coerce.number().min(0).max(100).optional(),
+    carbsPercentAsSugar: z.coerce.number().min(0).max(100).optional(),
+    birth: z.coerce.date().optional(),
+    height: z.coerce.number().min(120).max(250).optional(),
     description: z.string().max(255).optional(),
     website: z.string().max(150).optional(),
     facebook: z.string().max(150).optional(),

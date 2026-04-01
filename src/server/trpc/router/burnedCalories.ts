@@ -10,8 +10,8 @@ export const burnedCaloriesRouter = router({
         .input(
             z.object({
                 username: z.string(),
-                startDate: z.preprocess(whenAdded => moment(String(whenAdded)).toDate(), z.date()),
-                endDate: z.preprocess(whenAdded => moment(String(whenAdded)).toDate(), z.date()),
+                startDate: z.coerce.date(),
+                endDate: z.coerce.date(),
             })
         )
         .query(async ({ ctx, input: { username, startDate, endDate } }) => {

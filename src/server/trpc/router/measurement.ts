@@ -10,7 +10,7 @@ export const measurementRouter = router({
         .input(
             z.object({
                 username: z.string(),
-                whenAdded: z.preprocess(whenAdded => moment(String(whenAdded)).toDate(), z.date()),
+                whenAdded: z.coerce.date(),
             })
         )
         .query(async ({ ctx, input: { username, whenAdded } }) => {

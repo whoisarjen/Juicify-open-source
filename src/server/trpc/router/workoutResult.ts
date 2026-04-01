@@ -87,7 +87,7 @@ export const workoutResultRouter = router({
         .input(
             z.object({
                 username: z.string(),
-                whenAdded: z.preprocess(whenAdded => moment(String(whenAdded)).toDate(), z.date()),
+                whenAdded: z.coerce.date(),
             })
         )
         .query(async ({ ctx, input: { username, whenAdded } }) => {
@@ -110,8 +110,8 @@ export const workoutResultRouter = router({
         .input(
             z.object({
                 username: z.string(),
-                startDate: z.preprocess(whenAdded => moment(String(whenAdded)).toDate(), z.date()),
-                endDate: z.preprocess(whenAdded => moment(String(whenAdded)).toDate(), z.date()),
+                startDate: z.coerce.date(),
+                endDate: z.coerce.date(),
             })
         )
         .query(async ({ ctx, input: { username, startDate, endDate } }) => {
