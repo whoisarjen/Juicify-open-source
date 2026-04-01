@@ -40,7 +40,7 @@ export const measurementRouter = router({
         )
         .query(async ({ ctx, input: { username } }) => {
             return await ctx.prisma.measurement.findMany({
-                take: 10,
+                take: 30,
                 where: {
                     source: null,
                     user: {
