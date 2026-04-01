@@ -9,7 +9,7 @@ const ButtonCloseDialog = ({ clicked }: { clicked: () => void }) => {
             <div className="h-14 w-full" />
             <div
                 onClick={clicked}
-                className="bg-black fixed bottom-0 left-0 z-10 flex w-full items-center justify-center p-2"
+                className="fixed bottom-0 left-0 z-10 flex w-full items-center justify-center bg-gray-100 p-2 dark:bg-gray-800"
             >
                 <Button className="flex-1" variant="contained" aria-label="Close dialog">
                     {t('Close')}

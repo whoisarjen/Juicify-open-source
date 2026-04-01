@@ -1,6 +1,5 @@
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import CircularProgress from '@mui/material/CircularProgress';
 import useTranslation from 'next-translate/useTranslation';
 import { debounce } from 'lodash';
 import { useCallback } from 'react'
@@ -43,7 +42,7 @@ const CustomAutocomplete = ({
                         ...params.InputProps,
                         endAdornment: (
                             <>
-                                {isLoading ? <CircularProgress color="inherit" size={20} /> : null}
+                                {isLoading ? <div className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent" /> : null}
                                 {params.InputProps.endAdornment}
                             </>
                         ),
