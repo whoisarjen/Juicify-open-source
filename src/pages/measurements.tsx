@@ -139,6 +139,7 @@ export default function MeasurementsPage() {
 
     const activities = healthData?.activities ?? []
     const sleepRecords = healthData?.sleepRecords ?? []
+    const lastSyncedAt = healthData?.lastSyncedAt ?? null
 
     const latest = activities[activities.length - 1]
     const latestSleep = sleepRecords[sleepRecords.length - 1]
@@ -258,6 +259,11 @@ export default function MeasurementsPage() {
 
             {showHealth && (
                 <>
+                    {lastSyncedAt && (
+                        <p className="text-right text-[11px] text-zinc-600">
+                            Last synced: {new Date(lastSyncedAt).toLocaleString()}
+                        </p>
+                    )}
                     {/* Key metrics */}
                     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                         <Card>
@@ -460,6 +466,40 @@ export default function MeasurementsPage() {
                 </Card>
             )}
 
+            {/* Weight trend chart */}
+            {measurements.length > 1 && (
+                <Card>
+                    <SectionHeader title="Weight" />
+                    <div className="h-36">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart
+                                data={[...measurements]
+                                    .reverse()
+                                    .map((m) => ({
+                                        date: fmt(m.whenAdded),
+                                        weight: Number(m.weight) || null,
+                                        waist: m.waist ? Number(m.waist) : null,
+                                        hips: m.hips ? Number(m.hips) : null,
+                                    }))}
+                            >
+                                <defs>
+                                    <linearGradient id="manualWeightGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stopColor="#38bdf8" stopOpacity={0.3} />
+                                        <stop offset="100%" stopColor="#38bdf8" stopOpacity={0} />
+                                    </linearGradient>
+                                </defs>
+                                <XAxis dataKey="date" tick={{ fontSize: 10, fill: '#52525b' }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
+                                <YAxis domain={['dataMin - 1', 'dataMax + 1']} hide />
+                                <Tooltip contentStyle={tooltipStyle} labelStyle={{ color: '#a1a1aa' }} />
+                                <Area type="monotone" dataKey="weight" stroke="#38bdf8" strokeWidth={2} fill="url(#manualWeightGrad)" name="Weight (kg)" dot={{ r: 3, fill: '#38bdf8' }} connectNulls />
+                                <Area type="monotone" dataKey="waist" stroke="#fb923c" strokeWidth={1.5} fill="none" name="Waist (cm)" dot={{ r: 2, fill: '#fb923c' }} connectNulls />
+                                <Area type="monotone" dataKey="hips" stroke="#a78bfa" strokeWidth={1.5} fill="none" name="Hips (cm)" dot={{ r: 2, fill: '#a78bfa' }} connectNulls />
+                            </AreaChart>
+                        </ResponsiveContainer>
+                    </div>
+                </Card>
+            )}
+
             {/* Weight entries */}
             <Card>
                 <SectionHeader
@@ -471,7 +511,7 @@ export default function MeasurementsPage() {
                     }
                 />
                 <div className="space-y-1">
-                    {measurements.map((m) => (
+                    {measurements.slice(0, 7).map((m) => (
                         <div
                             key={m.id}
                             onClick={() => {
