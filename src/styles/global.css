@@ -8,6 +8,10 @@
     --color-primary-dark: #90caf9;
 }
 
+@utility container {
+    margin-inline: auto;
+}
+
 @utility pb-safe {
     padding-bottom: env(safe-area-inset-bottom);
 }

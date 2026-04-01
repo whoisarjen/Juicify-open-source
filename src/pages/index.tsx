@@ -1,14 +1,12 @@
 import {
     type ClientSafeProvider,
     getProviders,
-    LiteralUnion,
     signIn,
     useSession,
 } from 'next-auth/react'
 import Head from 'next/head'
 import Logo from '@/components/Logo/Logo'
 import { useEffect, useMemo, useState } from 'react'
-import { type BuiltInProviderType } from 'next-auth/providers'
 import useTranslation from 'next-translate/useTranslation'
 import { Bot, Utensils, ScanLine, Dumbbell, CloudOff, Heart, Code } from 'lucide-react'
 
@@ -16,7 +14,7 @@ const Home = () => {
     const { t } = useTranslation('home')
     const { data: sessionData, status } = useSession()
     const [providers, setProviders] = useState<Record<
-        LiteralUnion<BuiltInProviderType, string>,
+        string,
         ClientSafeProvider
     > | null>(null)
 

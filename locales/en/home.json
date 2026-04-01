@@ -1,6 +1,8 @@
 {
     "Home": "Home",
+    "Profile": "Profile",
     "Blog": "Blog",
+    "Barcode": "Barcode",
     "Contact": "Contact",
     "Diary": "Consumed",
     "Login": "Sign in",

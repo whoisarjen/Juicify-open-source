@@ -3,10 +3,10 @@
 	"private": true,
 	"scripts": {
 		"postinstall": "npx prisma generate",
-		"dev": "vercel env pull .env -y --environment=development && next dev --port 3000",
-		"build": "npx prisma generate && next build",
+		"dev": "vercel env pull .env -y --environment=development && next dev --webpack --port 3000",
+		"build": "npx prisma generate && next build --webpack",
 		"start": "next start",
-		"lint": "next lint",
+		"lint": "eslint src/",
 		"generate": "npx prisma generate"
 	},
 	"dependencies": {
@@ -28,7 +28,7 @@
 		"lodash-es": "^4.17.23",
 		"lucide-react": "^1.7.0",
 		"moment": "^2.30.1",
-		"next": "^15.5.14",
+		"next": "^16.2.2",
 		"next-auth": "^4.24.10",
 		"next-translate": "^3.1.2",
 		"react": "18.2.0",
@@ -48,7 +48,7 @@
 		"@types/node": "^18.19.100",
 		"@types/react": "^18.3.23",
 		"eslint": "^9.39.4",
-		"eslint-config-next": "^15.5.14",
+		"eslint-config-next": "^16.2.2",
 		"next-translate-plugin": "^3.1.2",
 		"postcss": "^8.5.8",
 		"prisma": "^7.6.0",

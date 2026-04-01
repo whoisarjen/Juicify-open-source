@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const BLOG_ONLY_LOCALES = ['es', 'de', 'pt', 'fr', 'ko', 'ar', 'tr', 'ja', 'it']
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl
     const locale = request.nextUrl.locale
 
