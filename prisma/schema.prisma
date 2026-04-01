@@ -141,6 +141,7 @@ model User {
   WithingsActivity    WithingsActivity[]
   WithingsWorkout     WithingsWorkout[]
   WithingsSleep       WithingsSleep[]
+  WithingsSyncLog     WithingsSyncLog[]
 }
 
 model VerificationToken {
@@ -371,6 +372,17 @@ model WithingsSleep {
 
   @@unique([userId, date])
   @@index([userId])
+}
+
+model WithingsSyncLog {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  status    String   @db.VarChar(10) // 'ok' or 'error'
+  message   String?
+
+  @@index([userId, createdAt])
 }
 
 model Coach {
