@@ -58,7 +58,7 @@ export const DialogEditBurnedCalories = ({
             {isDialogOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center">
                     <div className="fixed inset-0 bg-black/50" onClick={() => setIsDialogOpen(false)} />
-                    <div className="relative z-[100] w-full max-w-lg rounded-lg bg-white p-0 shadow-xl dark:bg-gray-900">
+                    <div className="relative z-[100] w-full max-w-lg rounded-lg bg-[#1a1a1f] p-0 shadow-xl mx-4">
                         <div className="px-6 pt-6 text-lg font-semibold">
                             {t('Edit')}
                         </div>

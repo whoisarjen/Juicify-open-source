@@ -17,7 +17,7 @@ const BoxMealItem = ({ consumed, isOwner }: BoxMealItemProps) => {
             <div className="shrink-0">
                 {isOwner ? (
                     <DialogEditConsumed consumed={consumed}>
-                        <button className="w-[28px] h-[28px] rounded-lg bg-[rgba(255,255,255,0.03)] flex items-center justify-center text-[#7a7a7a] hover:bg-[rgba(255,255,255,0.06)] transition-all cursor-pointer" aria-label="edit">
+                        <button type="button" className="w-[28px] h-[28px] rounded-lg bg-[rgba(255,255,255,0.03)] flex items-center justify-center text-[#7a7a7a] hover:bg-[rgba(255,255,255,0.06)] transition-all cursor-pointer" aria-label="edit">
                             <Pencil size={13} />
                         </button>
                     </DialogEditConsumed>
