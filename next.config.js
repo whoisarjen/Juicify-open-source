@@ -7,6 +7,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 const nextConfig = {
     reactStrictMode: false,
+    turbopack: {},
     images: {
         remotePatterns: [
             { hostname: 'localhost' },
