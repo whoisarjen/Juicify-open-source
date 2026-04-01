@@ -173,7 +173,7 @@ const Layout = ({ children }: { children: any }) => {
                 )}
             </div>
             {!isLandingPage && <Footer />}
-            {!sessionData?.user && !isNeutralPath && (
+            {status === 'unauthenticated' && !isNeutralPath && (
                 <div className="fixed bottom-24 left-0 flex w-full items-center justify-center">
                     <button
                         className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
