@@ -23,23 +23,32 @@ export default async function handler(
 
     const results = []
     for (const account of withingsAccounts) {
+        let status: 'ok' | 'error' = 'ok'
+        let message: string | null = null
+
         try {
             await syncWithingsData(account.userId)
-            results.push({ userId: account.userId, status: 'ok' })
         } catch (error) {
             console.error(
                 `Withings sync failed for user ${account.userId}:`,
                 error,
             )
-            results.push({
-                userId: account.userId,
-                status: 'error',
-                message:
-                    error instanceof Error
-                        ? error.message
-                        : 'Unknown error',
-            })
+            status = 'error'
+            message =
+                error instanceof Error
+                    ? error.message
+                    : 'Unknown error'
         }
+
+        await prisma.withingsSyncLog.create({
+            data: {
+                userId: account.userId,
+                status,
+                message,
+            },
+        })
+
+        results.push({ userId: account.userId, status, message })
     }
 
     return res.status(200).json({ results })
