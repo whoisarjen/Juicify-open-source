@@ -21,9 +21,10 @@ import { useState, useEffect } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import moment from 'moment'
 import { type GetMacronutrientsReturn } from '@/utils/coach.utils'
-import { reloadSession } from '@/utils/global.utils'
+import { reloadSession, getLocalDayBounds } from '@/utils/global.utils'
 
 const whenAdded = moment().format('YYYY-MM-DD')
+const todayBounds = getLocalDayBounds(whenAdded)
 
 const Coach = () => {
     const { t } = useTranslation('coach')
@@ -34,7 +35,7 @@ const Coach = () => {
     const username = sessionData?.user?.username || ''
 
     const { data: measurement } = trpc.measurement.getDay.useQuery(
-        { username, whenAdded },
+        { username, whenAdded: todayBounds.startDate, whenAddedEnd: todayBounds.endDate },
         { enabled: !!username && !!whenAdded }
     )
 

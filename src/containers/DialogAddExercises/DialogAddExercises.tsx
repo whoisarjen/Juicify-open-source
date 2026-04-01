@@ -74,7 +74,7 @@ const DialogAddExercises = ({
             </div>
 
             {isDialog && (
-                <div className="fixed inset-0 z-50 bg-white dark:bg-gray-900 overflow-auto">
+                <div className="fixed inset-0 z-[100] bg-[#121212] overflow-auto">
                     <div className="flex flex-col items-center p-3">
                         <div className="flex w-full max-w-3xl flex-1 flex-col gap-3">
                             <NavbarOnlyTitle title="workout:ADD_EXERCISES" />

@@ -1,5 +1,6 @@
 import { trpc } from "@/utils/trpc.utils"
-import { updateArray } from '@/utils/global.utils'
+import { updateArray, getLocalDayBounds } from '@/utils/global.utils'
+import { useMemo } from "react"
 
 interface useConsumedProps {
     username: string
@@ -14,18 +15,26 @@ const useConsumed = ({
 }: useConsumedProps) => {
     const utils = trpc.useUtils()
 
+    const bounds = useMemo(() => ({
+        startDate: getLocalDayBounds(startDate).startDate,
+        endDate: getLocalDayBounds(endDate).endDate,
+    }), [startDate, endDate])
+
     const {
         data = [],
         isFetching,
         isLoading,
-    } = trpc.consumed.getPeriod.useQuery({ username, startDate, endDate }, { enabled: !!username && !!startDate && !!endDate })
+    } = trpc.consumed.getPeriod.useQuery(
+        { username, startDate: bounds.startDate, endDate: bounds.endDate },
+        { enabled: !!username && !!startDate && !!endDate }
+    )
 
     const updateConsumed = trpc.consumed.update.useMutation({
         onSuccess(data) {
             utils
                 .consumed
                 .getPeriod
-                .setData({ username, startDate, endDate }, currentData =>
+                .setData({ username, startDate: bounds.startDate, endDate: bounds.endDate }, currentData =>
                     updateArray<Consumed & { user: Pick<User, 'id' | 'username' | 'image'> }>(currentData, data))
         },
     })
@@ -35,7 +44,7 @@ const useConsumed = ({
             utils
                 .consumed
                 .getPeriod
-                .setData({ username, startDate, endDate }, currentData => currentData
+                .setData({ username, startDate: bounds.startDate, endDate: bounds.endDate }, currentData => currentData
                     ?.filter(consumed => consumed.id !== variables.id))
         }
     })

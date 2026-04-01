@@ -7,8 +7,10 @@ import useDaily from '@/hooks/useDaily'
 import { trpc } from '@/utils/trpc.utils'
 import { LastJoinedUsersList } from '@/components/LastJoinedUsersList'
 import { useRouter } from 'next/router'
+import { getLocalDayBounds } from '@/utils/global.utils'
 
 const whenAdded = moment().format('YYYY-MM-DD')
+const todayBounds = getLocalDayBounds(whenAdded)
 
 const SidebarRight = () => {
     const { t } = useTranslation('home')
@@ -20,7 +22,7 @@ const SidebarRight = () => {
         useDaily({ username, startDate: whenAdded, endDate: whenAdded })
 
     const { data: measurement } = trpc.measurement.getDay.useQuery(
-        { username, whenAdded },
+        { username, whenAdded: todayBounds.startDate, whenAddedEnd: todayBounds.endDate },
         { enabled: !!username && !!whenAdded }
     )
 

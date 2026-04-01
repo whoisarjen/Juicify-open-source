@@ -94,8 +94,8 @@ export const workoutResultRouter = router({
             return await ctx.prisma.workoutResult.findMany({
                 where: {
                     whenAdded: {
-                        gte: moment(whenAdded).startOf('day').toDate(),
-                        lte: moment(whenAdded).endOf('day').toDate(),
+                        gte: whenAdded,
+                        lte: whenAdded,
                     },
                     user: {
                         username,
@@ -118,8 +118,8 @@ export const workoutResultRouter = router({
             return await ctx.prisma.workoutResult.findMany({
                 where: {
                     whenAdded: {
-                        gte: moment(startDate).startOf('day').toDate(),
-                        lte: moment(endDate).endOf('day').toDate(),
+                        gte: startDate,
+                        lte: endDate,
                     },
                     user: {
                         username,

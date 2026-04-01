@@ -1,6 +1,5 @@
 import { createBurnedCaloriesSchema, burnedCaloriesSchema } from "@/server/schema/burnedCalories.schema";
 import { omit } from "lodash";
-import moment from "moment";
 import { z } from "zod"
 
 import { router, publicProcedure, protectedProcedure } from "../trpc";
@@ -18,8 +17,8 @@ export const burnedCaloriesRouter = router({
             return await ctx.prisma.burnedCalories.findMany({
                 where: {
                     whenAdded: {
-                        gte: moment(startDate).startOf('day').toDate(),
-                        lte: moment(endDate).endOf('day').toDate(),
+                        gte: startDate,
+                        lte: endDate,
                     },
                     user: {
                         username,

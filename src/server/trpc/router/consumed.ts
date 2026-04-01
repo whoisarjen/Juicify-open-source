@@ -1,5 +1,4 @@
 import { z } from "zod"
-import moment from "moment";
 
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { consumedSchema, createConsumedSchema } from '@/server/schema/consumed.schema'
@@ -21,8 +20,8 @@ export const consumedRouter = router({
                         username,
                     },
                     whenAdded: {
-                        gte: moment(startDate).startOf('day').toDate(),
-                        lte: moment(endDate).endOf('day').toDate(),
+                        gte: startDate,
+                        lte: endDate,
                     },
                 },
                 include: {

@@ -1,5 +1,4 @@
 import { z } from "zod"
-import moment from "moment"
 import { omit } from "lodash"
 
 import { router, publicProcedure, protectedProcedure } from "../trpc"
@@ -11,17 +10,18 @@ export const measurementRouter = router({
             z.object({
                 username: z.string(),
                 whenAdded: z.coerce.date(),
+                whenAddedEnd: z.coerce.date().optional(),
             })
         )
-        .query(async ({ ctx, input: { username, whenAdded } }) => {
+        .query(async ({ ctx, input: { username, whenAdded, whenAddedEnd } }) => {
             return await ctx.prisma.measurement.findFirst({
                 where: {
                     weight: {
                         gte: 0,
                     },
                     whenAdded: {
-                        gte: moment(whenAdded).startOf('day').toDate(),
-                        lte: moment(whenAdded).endOf('day').toDate(),
+                        gte: whenAdded,
+                        lte: whenAddedEnd ?? whenAdded,
                     },
                     user: {
                         username,

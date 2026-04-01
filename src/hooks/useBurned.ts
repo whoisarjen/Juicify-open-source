@@ -1,4 +1,6 @@
 import { trpc } from "@/utils/trpc.utils"
+import { getLocalDayBounds } from "@/utils/global.utils"
+import { useMemo } from "react"
 
 interface useBurnedProps {
     username: string
@@ -11,6 +13,11 @@ const useBurned = ({
     startDate,
     endDate,
 }: useBurnedProps) => {
+    const bounds = useMemo(() => ({
+        startDate: getLocalDayBounds(startDate).startDate,
+        endDate: getLocalDayBounds(endDate).endDate,
+    }), [startDate, endDate])
+
     const [
         { data: burnedCalories = [] },
         { data: workoutResults = [] },
@@ -19,15 +26,15 @@ const useBurned = ({
             .burnedCalories
             .getPeriod({
                 username,
-                startDate,
-                endDate,
+                startDate: bounds.startDate,
+                endDate: bounds.endDate,
             }, { enabled: !!username && !!startDate && !!endDate }),
         t
             .workoutResult
             .getPeriod({
                 username,
-                startDate,
-                endDate,
+                startDate: bounds.startDate,
+                endDate: bounds.endDate,
             }, { enabled: !!username && !!startDate && !!endDate }),
     ])
 

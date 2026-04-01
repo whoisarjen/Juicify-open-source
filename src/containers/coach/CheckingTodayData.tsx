@@ -4,12 +4,14 @@ import moment from 'moment'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import { trpc } from '@/utils/trpc.utils'
+import { getLocalDayBounds } from '@/utils/global.utils'
 
 interface CheckingTodayDataProps {
     setStep: (arg0: string) => void
 }
 
 const whenAdded = moment().format('YYYY-MM-DD')
+const todayBounds = getLocalDayBounds(whenAdded)
 
 const CheckingTodayData = ({ setStep }: CheckingTodayDataProps) => {
     const { t } = useTranslation('coach')
@@ -19,7 +21,7 @@ const CheckingTodayData = ({ setStep }: CheckingTodayDataProps) => {
     const username = sessionData?.user?.username || ''
 
     const { data: measurement } = trpc.measurement.getDay.useQuery(
-        { username, whenAdded },
+        { username, whenAdded: todayBounds.startDate, whenAddedEnd: todayBounds.endDate },
         { enabled: !!username && !!whenAdded }
     )
 
