@@ -1,6 +1,5 @@
-import LockOpenIcon from '@mui/icons-material/LockOpen'
+import { LockOpen, Lock } from 'lucide-react'
 import IconButton from '@mui/material/IconButton'
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import moment from 'moment'
 
 interface BarMacronutrientsProps {
@@ -60,7 +59,7 @@ const BarMacronutrients = ({
                             color="secondary"
                             style={{ margin: 'auto' }}
                         >
-                            <LockOutlinedIcon data-testid="LockOutlinedIcon" />
+                            <Lock data-testid="LockOutlinedIcon" />
                         </IconButton>
                     ) : (
                         <IconButton
@@ -69,7 +68,7 @@ const BarMacronutrients = ({
                             color="primary"
                             style={{ margin: 'auto' }}
                         >
-                            <LockOpenIcon data-testid="LockOpenIcon" />
+                            <LockOpen data-testid="LockOpenIcon" />
                         </IconButton>
                     )}
                 </div>

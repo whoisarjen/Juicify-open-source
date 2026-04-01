@@ -1,6 +1,6 @@
 import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon'
 import { useRouter } from 'next/router'
-import NoteAltIcon from '@mui/icons-material/NoteAlt'
+import { FileText } from 'lucide-react'
 import BoxWorkout from '@/containers/Workout/BoxWorkout/BoxWorkout'
 import NavbarProfile from '@/containers/profile/NavbarProfile/NavbarProfile'
 import { useSession } from 'next-auth/react'
@@ -52,7 +52,7 @@ const WorkoutPlansPage = () => {
                             title={workoutPlan.name || ''}
                             description={workoutPlan.description || ''}
                             route={`/${router.query.login}/workout/plans/${workoutPlan.id}`}
-                            icon={<NoteAltIcon />}
+                            icon={<FileText />}
                             key={workoutPlan?.id}
                         />
                     ))}

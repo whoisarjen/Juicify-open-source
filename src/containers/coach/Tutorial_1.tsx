@@ -1,5 +1,5 @@
 import useTranslation from 'next-translate/useTranslation'
-import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
+import { ArrowLeft } from 'lucide-react'
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
@@ -16,7 +16,7 @@ const Tutorial_1 = ({ setStep, handlePreviousStep }: Tutorial_1Props) => {
         <div className="flex h-full flex-col gap-4">
             <div>
                 <IconButton aria-label="back" onClick={handlePreviousStep}>
-                    <KeyboardBackspaceIcon />
+                    <ArrowLeft />
                     <div />
                 </IconButton>
             </div>

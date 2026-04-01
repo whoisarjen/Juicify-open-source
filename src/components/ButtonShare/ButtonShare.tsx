@@ -1,4 +1,4 @@
-import ShareIcon from '@mui/icons-material/Share';
+import { Share2 } from 'lucide-react';
 import IconButton from '@mui/material/IconButton';
 
 const ButtonShare = () => {
@@ -12,7 +12,7 @@ const ButtonShare = () => {
     return (
         <div onClick={shareLocation}>
             <IconButton aria-label="Share">
-                <ShareIcon color="primary" />
+                <Share2 className="text-[#90caf9]" />
             </IconButton>
         </div>
     )

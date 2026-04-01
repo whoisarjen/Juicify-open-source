@@ -5,8 +5,7 @@ import { useState } from 'react'
 import { type GetServerSideProps } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 
-import AccessTimeIcon from '@mui/icons-material/AccessTime'
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
+import { Clock, Calendar } from 'lucide-react'
 import moment from 'moment'
 import { trpc } from '@/utils/trpc.utils'
 import { prisma } from '@/server/db/client'
@@ -192,8 +191,8 @@ const BlogPage = ({ initialArticles, initialTotalPages }: BlogPageProps) => {
                                     <div className="flex items-center gap-4 text-xs text-gray-500">
                                         {featuredArticle.readingTimeMinutes && (
                                             <span className="flex items-center gap-1">
-                                                <AccessTimeIcon
-                                                    sx={{ fontSize: 14 }}
+                                                <Clock
+                                                    size={14}
                                                 />
                                                 {t('MINUTES_READ', {
                                                     count: featuredArticle.readingTimeMinutes,
@@ -202,8 +201,8 @@ const BlogPage = ({ initialArticles, initialTotalPages }: BlogPageProps) => {
                                         )}
                                         {featuredArticle.publishedAt && (
                                             <span className="flex items-center gap-1">
-                                                <CalendarTodayIcon
-                                                    sx={{ fontSize: 14 }}
+                                                <Calendar
+                                                    size={14}
                                                 />
                                                 {moment(
                                                     featuredArticle.publishedAt
@@ -254,10 +253,8 @@ const BlogPage = ({ initialArticles, initialTotalPages }: BlogPageProps) => {
                                                 <div className="flex items-center gap-4 text-xs text-gray-500">
                                                     {article.readingTimeMinutes && (
                                                         <span className="flex items-center gap-1">
-                                                            <AccessTimeIcon
-                                                                sx={{
-                                                                    fontSize: 14,
-                                                                }}
+                                                            <Clock
+                                                                size={14}
                                                             />
                                                             {t(
                                                                 'MINUTES_READ',
@@ -269,10 +266,8 @@ const BlogPage = ({ initialArticles, initialTotalPages }: BlogPageProps) => {
                                                     )}
                                                     {article.publishedAt && (
                                                         <span className="flex items-center gap-1">
-                                                            <CalendarTodayIcon
-                                                                sx={{
-                                                                    fontSize: 14,
-                                                                }}
+                                                            <Calendar
+                                                                size={14}
                                                             />
                                                             {moment(
                                                                 article.publishedAt

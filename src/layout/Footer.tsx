@@ -1,8 +1,4 @@
-import PhotoCameraIcon from '@mui/icons-material/PhotoCamera'
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
-import FitnessCenterIcon from '@mui/icons-material/FitnessCenter'
-import BookIcon from '@mui/icons-material/Book'
-import SmartToyIcon from '@mui/icons-material/SmartToy'
+import { Camera, Trophy, Dumbbell, BookOpen, Bot } from 'lucide-react'
 import moment from 'moment'
 import IconButton from '@mui/material/IconButton'
 import { useSession } from 'next-auth/react'
@@ -21,17 +17,17 @@ const Footer = () => {
                 >
                     <Link href="/coach">
                         <IconButton color="primary" aria-label="Coach">
-                            <SmartToyIcon color="primary" />
+                            <Bot className="text-[#90caf9]" />
                         </IconButton>
                     </Link>
                     <Link href={`/${sessionData?.user?.username}/workout`}>
                         <IconButton color="primary" aria-label="Workout">
-                            <FitnessCenterIcon color="primary" />
+                            <Dumbbell className="text-[#90caf9]" />
                         </IconButton>
                     </Link>
                     <Link href="/barcode">
                         <IconButton color="primary" aria-label="Barcode scanner">
-                            <PhotoCameraIcon color="primary" />
+                            <Camera className="text-[#90caf9]" />
                         </IconButton>
                     </Link>
                     <Link
@@ -40,12 +36,12 @@ const Footer = () => {
                         }/consumed/${moment().format('YYYY-MM-DD')}`}
                     >
                         <IconButton color="primary" aria-label="Diary">
-                            <BookIcon color="primary" />
+                            <BookOpen className="text-[#90caf9]" />
                         </IconButton>
                     </Link>
                     <Link href="/measurements">
                         <IconButton color="primary" aria-label="Measurements">
-                            <EmojiEventsIcon color="primary" />
+                            <Trophy className="text-[#90caf9]" />
                         </IconButton>
                     </Link>
                 </div>

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Button from '@mui/material/Button'
 import useTranslation from 'next-translate/useTranslation'
-import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
+import { ArrowLeft } from 'lucide-react'
 import IconButton from '@mui/material/IconButton'
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
 import { DIET_ACTIVITY, DIET_KIND } from './constants'
@@ -37,7 +37,7 @@ const Recomposition = ({
                     aria-label="back"
                     onClick={() => handlePreviousStep('ChooseDiet')}
                 >
-                    <KeyboardBackspaceIcon />
+                    <ArrowLeft />
                     <div />
                 </IconButton>
             </div>

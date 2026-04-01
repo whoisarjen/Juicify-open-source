@@ -1,9 +1,5 @@
-import SettingsIcon from '@mui/icons-material/Settings'
+import { Settings, Facebook, Instagram, Twitter, Link } from 'lucide-react'
 import IconButton from '@mui/material/IconButton'
-import FacebookIcon from '@mui/icons-material/Facebook'
-import InstagramIcon from '@mui/icons-material/Instagram'
-import TwitterIcon from '@mui/icons-material/Twitter'
-import LinkIcon from '@mui/icons-material/Link'
 import ButtonShare from '../../../components/ButtonShare/ButtonShare'
 import CustomAvatar from '../../../components/CustomAvatar/CustomAvatar'
 import { useRouter } from 'next/router'
@@ -49,7 +45,7 @@ const NavbarProfile = ({ tab }: { tab: number }) => {
                                             aria-label="settings"
                                             color="primary"
                                         >
-                                            <SettingsIcon />
+                                            <Settings />
                                         </IconButton>
                                     </div>
                                 </>
@@ -71,7 +67,7 @@ const NavbarProfile = ({ tab }: { tab: number }) => {
                                 }
                                 color="primary"
                             >
-                                <FacebookIcon />
+                                <Facebook />
                             </IconButton>
                         )}
                         {user?.instagram && (
@@ -84,7 +80,7 @@ const NavbarProfile = ({ tab }: { tab: number }) => {
                                 }
                                 color="primary"
                             >
-                                <InstagramIcon />
+                                <Instagram />
                             </IconButton>
                         )}
                         {user?.twitter && (
@@ -97,7 +93,7 @@ const NavbarProfile = ({ tab }: { tab: number }) => {
                                 }
                                 color="primary"
                             >
-                                <TwitterIcon />
+                                <Twitter />
                             </IconButton>
                         )}
                         {user?.website && (
@@ -107,7 +103,7 @@ const NavbarProfile = ({ tab }: { tab: number }) => {
                                 }
                                 color="primary"
                             >
-                                <LinkIcon />
+                                <Link />
                             </IconButton>
                         )}
                     </div>

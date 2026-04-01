@@ -1,4 +1,4 @@
-import LockOpenIcon from '@mui/icons-material/LockOpen'
+import { LockOpen } from 'lucide-react'
 import Button from '@mui/material/Button'
 import useTranslation from 'next-translate/useTranslation'
 import { useEffect, useState } from 'react'
@@ -197,7 +197,7 @@ const MacronutrientsPage = () => {
                         <div className="flex flex-col items-center justify-center gap-3">
                             <div className="flex flex-1 items-center justify-center text-center">
                                 <div>
-                                    {t('DESCRIPTION')} <LockOpenIcon />{' '}
+                                    {t('DESCRIPTION')} <LockOpen className="inline" />{' '}
                                     {t('DESCRIPTION_2')}
                                 </div>
                             </div>

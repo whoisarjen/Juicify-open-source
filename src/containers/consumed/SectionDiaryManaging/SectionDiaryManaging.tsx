@@ -1,5 +1,5 @@
 import Button from '@mui/material/Button';
-import PieChartIcon from '@mui/icons-material/PieChart';
+import { PieChart } from 'lucide-react';
 import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
 
@@ -16,7 +16,7 @@ const SectionDiaryManaging = () => {
                 variant="outlined"
                 aria-label="macronutrients"
                 component="span"
-                startIcon={<PieChartIcon />}
+                startIcon={<PieChart />}
             >
                 {t('Macronutrients')}
             </Button>

@@ -10,13 +10,7 @@ import Logo from '@/components/Logo/Logo'
 import { useEffect, useMemo, useState } from 'react'
 import { type BuiltInProviderType } from 'next-auth/providers'
 import useTranslation from 'next-translate/useTranslation'
-import SmartToyIcon from '@mui/icons-material/SmartToy'
-import RestaurantIcon from '@mui/icons-material/Restaurant'
-import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner'
-import FitnessCenterIcon from '@mui/icons-material/FitnessCenter'
-import CloudOffIcon from '@mui/icons-material/CloudOff'
-import FavoriteIcon from '@mui/icons-material/Favorite'
-import CodeIcon from '@mui/icons-material/Code'
+import { Bot, Utensils, ScanLine, Dumbbell, CloudOff, Heart, Code } from 'lucide-react'
 
 const Home = () => {
     const { t } = useTranslation('home')
@@ -66,39 +60,39 @@ const Home = () => {
 
     const features = [
         {
-            icon: <SmartToyIcon sx={{ fontSize: 28 }} />,
+            icon: <Bot size={28} />,
             title: t('LANDING_FEATURE_AI_TITLE'),
             desc: t('LANDING_FEATURE_AI_DESC'),
             badge: t('LANDING_BADGE_BETA'),
             color: '#22d3ee',
         },
         {
-            icon: <RestaurantIcon sx={{ fontSize: 28 }} />,
+            icon: <Utensils size={28} />,
             title: t('LANDING_FEATURE_CALORIES_TITLE'),
             desc: t('LANDING_FEATURE_CALORIES_DESC'),
             color: '#34d399',
         },
         {
-            icon: <QrCodeScannerIcon sx={{ fontSize: 28 }} />,
+            icon: <ScanLine size={28} />,
             title: t('LANDING_FEATURE_BARCODE_TITLE'),
             desc: t('LANDING_FEATURE_BARCODE_DESC'),
             color: '#a78bfa',
         },
         {
-            icon: <FitnessCenterIcon sx={{ fontSize: 28 }} />,
+            icon: <Dumbbell size={28} />,
             title: t('LANDING_FEATURE_WORKOUT_TITLE'),
             desc: t('LANDING_FEATURE_WORKOUT_DESC'),
             color: '#fb923c',
         },
         {
-            icon: <CloudOffIcon sx={{ fontSize: 28 }} />,
+            icon: <CloudOff size={28} />,
             title: t('LANDING_FEATURE_OFFLINE_TITLE'),
             desc: t('LANDING_FEATURE_OFFLINE_DESC'),
             badge: t('LANDING_BADGE_COMING_SOON'),
             color: '#60a5fa',
         },
         {
-            icon: <FavoriteIcon sx={{ fontSize: 28 }} />,
+            icon: <Heart size={28} />,
             title: t('LANDING_FEATURE_FREE_TITLE'),
             desc: t('LANDING_FEATURE_FREE_DESC'),
             color: '#fb7185',
@@ -426,8 +420,9 @@ const Home = () => {
                                 style={{ backgroundColor: '#90caf9' }}
                             />
                             <div className="relative flex h-14 w-14 items-center justify-center rounded-xl bg-[#90caf9]/10">
-                                <CodeIcon
-                                    sx={{ color: '#90caf9', fontSize: 30 }}
+                                <Code
+                                    size={30}
+                                    className="text-[#90caf9]"
                                 />
                             </div>
                         </div>

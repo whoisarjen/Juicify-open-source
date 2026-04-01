@@ -1,7 +1,6 @@
 
 import TextField from '@mui/material/TextField'
-import DeleteIcon from '@mui/icons-material/Delete'
-import SwapVertIcon from '@mui/icons-material/SwapVert'
+import { Trash2, ArrowUpDown } from 'lucide-react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { zodResolver } from '@hookform/resolvers/zod'
 import useTranslation from 'next-translate/useTranslation'
@@ -209,7 +208,7 @@ const WorkoutPlan = () => {
                                             ref={provided.innerRef}
                                         >
                                             <div className="flex flex-1 flex-row items-center justify-center rounded bg-blue-300 p-3 text-center text-white">
-                                                <SwapVertIcon />
+                                                <ArrowUpDown />
                                                 <div className="flex-1">{`${
                                                     i + 1
                                                 }. ${exercise.name}`}</div>
@@ -219,7 +218,7 @@ const WorkoutPlan = () => {
                                                     }
                                                     isDisabled={!isOwner}
                                                 >
-                                                    <DeleteIcon fontSize="small" />
+                                                    <Trash2 size={20} />
                                                 </DialogConfirm>
                                             </div>
                                             <div>

@@ -1,8 +1,6 @@
-import SaveIcon from '@mui/icons-material/Save'
+import { Save, Trash2, ArrowLeft } from 'lucide-react'
 import IconButton from '@mui/material/IconButton'
 import LoadingButton from '@mui/lab/LoadingButton'
-import DeleteIcon from '@mui/icons-material/Delete'
-import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
@@ -30,21 +28,21 @@ const NavbarWorkout = ({
     return (
         <div className="flex w-full">
             <IconButton aria-label="route" onClick={onArrowBack} sx={{ margin: 'auto' }}>
-                <KeyboardBackspaceIcon />
+                <ArrowLeft />
             </IconButton>
             <div className="flex-1" />
             {sessionData?.user?.username == router.query.login
                 ? <>
                     <DialogConfirm onConfirmed={onDelete} isDisabled={isDisabled}>
                         <IconButton disabled={isDisabled} aria-label="delete" sx={{ margin: 'auto' }}>
-                            <DeleteIcon />
+                            <Trash2 />
                         </IconButton>
                     </DialogConfirm>
                     <LoadingButton
                         disabled={isDisabled}
                         loading={isLoading}
                         loadingPosition="start"
-                        startIcon={<SaveIcon />}
+                        startIcon={<Save />}
                         variant="outlined"
                         onClick={onSave}
                     >

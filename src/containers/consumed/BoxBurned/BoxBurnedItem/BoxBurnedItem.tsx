@@ -1,10 +1,8 @@
 import IconButton from '@mui/material/IconButton'
-import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment'
-import EditIcon from '@mui/icons-material/Edit'
+import { Flame, Pencil, Info } from 'lucide-react'
 import { type ReactNode } from 'react'
 import { DialogEditBurnedCalories } from '../DialogEditBurnedCalories'
 import { useRouter } from 'next/router'
-import InfoIcon from '@mui/icons-material/Info'
 
 interface BoxBurnedItemProps {
     name: string
@@ -40,14 +38,14 @@ const BoxBurnedItem = ({
                         }}
                     >
                         <IconButton aria-label="edit">
-                            <EditIcon fontSize="small" />
+                            <Pencil size={20} />
                         </IconButton>
                     </DialogEditBurnedCalories>
                 ) : (
                     icon || (
-                        <LocalFireDepartmentIcon
-                            fontSize="small"
-                            sx={{ color: 'red', margin: '4px 4px 4px 6px' }}
+                        <Flame
+                            size={20}
+                            className="text-red-500 m-[4px_4px_4px_6px]"
                         />
                     )
                 )}
@@ -58,7 +56,7 @@ const BoxBurnedItem = ({
             </div>
             {redirectTo &&
                 <IconButton aria-label="edit" onClick={() => router.push(redirectTo)}>
-                    <InfoIcon fontSize="small" />
+                    <Info size={20} />
                 </IconButton>
             }
         </div>

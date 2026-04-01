@@ -1,7 +1,4 @@
-import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
-import BookIcon from "@mui/icons-material/Book";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import NoteAltIcon from '@mui/icons-material/NoteAlt'
+import { Dumbbell, BookOpen, CircleUser, FileText } from 'lucide-react'
 import { useRouter } from 'next/router';
 import moment from 'moment';
 
@@ -9,10 +6,10 @@ const ProfileTabs = ({ tab }: { tab: number }) => {
     const router: any = useRouter()
 
     const tabs = [
-        { testId: 'target_profile', icon: <AccountCircleIcon />, onClick: () => router.push(`/${router.query.login}`) },
-        { testId: 'target_nutrition_diary', icon: <BookIcon />, onClick: () => router.push(`/${router.query.login}/consumed/${moment().format('YYYY-MM-DD')}`) },
-        { testId: 'target_workout_results', icon: <FitnessCenterIcon />, onClick: () => router.push(`/${router.query.login}/workout/results`) },
-        { testId: 'target_workout_plans', icon: <NoteAltIcon />, onClick: () => router.push(`/${router.query.login}/workout/plans`) },
+        { testId: 'target_profile', icon: <CircleUser />, onClick: () => router.push(`/${router.query.login}`) },
+        { testId: 'target_nutrition_diary', icon: <BookOpen />, onClick: () => router.push(`/${router.query.login}/consumed/${moment().format('YYYY-MM-DD')}`) },
+        { testId: 'target_workout_results', icon: <Dumbbell />, onClick: () => router.push(`/${router.query.login}/workout/results`) },
+        { testId: 'target_workout_plans', icon: <FileText />, onClick: () => router.push(`/${router.query.login}/workout/plans`) },
     ]
 
     return (

@@ -1,4 +1,4 @@
-import AddIcon from '@mui/icons-material/Add'
+import { Plus } from 'lucide-react'
 import IconButton from '@mui/material/IconButton'
 import useTranslation from 'next-translate/useTranslation'
 import { Fragment, useMemo } from 'react'
@@ -42,7 +42,7 @@ const BoxMeal = ({ index, meal, isOwner }: BoxMealProps) => {
                                 aria-label="Add"
                                 color="primary"
                             >
-                                <AddIcon fontSize="small" />
+                                <Plus size={20} />
                             </IconButton>
                         </DialogAddProducts>
                     ) : (

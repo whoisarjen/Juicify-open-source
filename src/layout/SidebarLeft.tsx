@@ -1,22 +1,12 @@
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
-import FitnessCenterIcon from '@mui/icons-material/FitnessCenter'
-import SchoolIcon from '@mui/icons-material/School'
-import BookIcon from '@mui/icons-material/Book'
+import { Trophy, Dumbbell, GraduationCap, BookOpen, Settings, Bot, LogOut, FileText, Camera, BarChart3, UtensilsCrossed } from 'lucide-react'
 import { useRouter } from 'next/router'
-import Settings from '@mui/icons-material/Settings'
 import useTranslation from 'next-translate/useTranslation'
 import CustomAvatar from '@/components/CustomAvatar/CustomAvatar'
 import moment from 'moment'
-import SmartToyIcon from '@mui/icons-material/SmartToy'
-import LogoutIcon from '@mui/icons-material/Logout'
 import { useSession, signIn } from 'next-auth/react'
-import NoteAltIcon from '@mui/icons-material/NoteAlt'
-import PhotoCameraIcon from '@mui/icons-material/PhotoCamera'
-import BarChartIcon from '@mui/icons-material/BarChart'
 import { type Translate } from 'next-translate'
 import { type Session } from 'next-auth'
 import { handleSignOut } from '@/utils/user.utils'
-import FastfoodIcon from '@mui/icons-material/Fastfood';
 
 const getRouterPushOptions = (sessionData: Session | null, t: Translate) => {
     const username = sessionData?.user?.username
@@ -37,47 +27,47 @@ const getRouterPushOptions = (sessionData: Session | null, t: Translate) => {
         blog: {
             link: `/blog`,
             text: t('Blog'),
-            children: <SchoolIcon color="primary" />,
+            children: <GraduationCap className="text-[#90caf9]" />,
         },
         // products: {
         //     link: `/products`,
         //     text: t('PRODUCTS'),
-        //     children: <FastfoodIcon color="primary" />,
+        //     children: <UtensilsCrossed className="text-[#90caf9]" />,
         // },
         diary: {
             link: `/${username}/consumed/${moment().format('YYYY-MM-DD')}`,
             text: t('Diary'),
-            children: <BookIcon color="primary" />,
+            children: <BookOpen className="text-[#90caf9]" />,
         },
         barcode: {
             link: `/barcode`,
             text: t('Barcode'),
-            children: <PhotoCameraIcon color="primary" />,
+            children: <Camera className="text-[#90caf9]" />,
         },
         measurements: {
             link: `/measurements`,
             text: t('Measurements'),
-            children: <EmojiEventsIcon color="primary" />,
+            children: <Trophy className="text-[#90caf9]" />,
         },
         results: {
             link: `/${username}/workout/results`,
             text: t('WORKOUT_RESULTS'),
-            children: <FitnessCenterIcon color="primary" />,
+            children: <Dumbbell className="text-[#90caf9]" />,
         },
         plans: {
             link: `/${username}/workout/plans`,
             text: t('WORKOUT_PLANS'),
-            children: <NoteAltIcon color="primary" />,
+            children: <FileText className="text-[#90caf9]" />,
         },
         statistics: {
             link: `/${username}/workout/statistics`,
             text: t('WORKOUT_STATISTICS'),
-            children: <BarChartIcon color="primary" />,
+            children: <BarChart3 className="text-[#90caf9]" />,
         },
         coach: {
             link: `/coach`,
             text: t('Coach'),
-            children: <SmartToyIcon color="primary" />,
+            children: <Bot className="text-[#90caf9]" />,
         },
     }
 }
@@ -127,7 +117,7 @@ const SidebarLeft = () => {
                             onClick={() => router.push('/settings')}
                         >
                             <span className="flex items-center">
-                                <Settings color="primary" />
+                                <Settings className="text-[#90caf9]" />
                             </span>
                             <span>{t('Settings')}</span>
                         </button>
@@ -141,7 +131,7 @@ const SidebarLeft = () => {
                             }
                         >
                             <span className="flex items-center">
-                                <LogoutIcon color="primary" />
+                                <LogOut className="text-[#90caf9]" />
                             </span>
                             <span>
                                 {sessionData ? t('LOGOUT') : t('LOGIN')}

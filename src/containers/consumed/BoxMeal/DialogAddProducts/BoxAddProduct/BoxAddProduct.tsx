@@ -1,6 +1,6 @@
 import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
-import InfoIcon from '@mui/icons-material/Info'
+import { Info } from 'lucide-react'
 import useTranslation from 'next-translate/useTranslation'
 import { useState } from 'react'
 import { getCalories } from '@/utils/consumed.utils'
@@ -46,8 +46,8 @@ const BoxAddProduct = ({
             </div>
             <DialogShowProduct product={product}>
                 <div>
-                    <IconButton color="primary">
-                        <InfoIcon fontSize="small" />
+                    <IconButton>
+                        <Info size={20} className="text-[#90caf9]" />
                     </IconButton>
                 </div>
             </DialogShowProduct>

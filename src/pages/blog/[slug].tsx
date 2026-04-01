@@ -3,9 +3,7 @@ import Link from 'next/link'
 import { type GetServerSideProps } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 
-import AccessTimeIcon from '@mui/icons-material/AccessTime'
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import { Clock, Calendar, ArrowLeft } from 'lucide-react'
 import moment from 'moment'
 import { prisma } from '@/server/db/client'
 import {
@@ -225,7 +223,7 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
                     href="/blog"
                     className="mb-6 inline-flex items-center gap-1 text-sm text-[#90caf9] transition-colors hover:text-[#64b5f6]"
                 >
-                    <ArrowBackIcon sx={{ fontSize: 16 }} />
+                    <ArrowLeft size={16} />
                     {t('BACK_TO_BLOG')}
                 </Link>
 
@@ -297,14 +295,14 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
                 <div className="mb-8 flex flex-wrap items-center gap-4 text-sm text-gray-400">
                     {article.publishedAt && (
                         <span className="flex items-center gap-1">
-                            <CalendarTodayIcon sx={{ fontSize: 16 }} />
+                            <Calendar size={16} />
                             {t('PUBLISHED')}{' '}
                             {moment(article.publishedAt).format('MMM D, YYYY')}
                         </span>
                     )}
                     {article.readingTimeMinutes > 0 && (
                         <span className="flex items-center gap-1">
-                            <AccessTimeIcon sx={{ fontSize: 16 }} />
+                            <Clock size={16} />
                             {t('MINUTES_READ', {
                                 count: article.readingTimeMinutes,
                             })}
@@ -430,10 +428,8 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
                                                 {related.readingTimeMinutes >
                                                     0 && (
                                                     <span className="flex items-center gap-1">
-                                                        <AccessTimeIcon
-                                                            sx={{
-                                                                fontSize: 14,
-                                                            }}
+                                                        <Clock
+                                                            size={14}
                                                         />
                                                         {t('MINUTES_READ', {
                                                             count: related.readingTimeMinutes,
@@ -442,10 +438,8 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
                                                 )}
                                                 {related.publishedAt && (
                                                     <span className="flex items-center gap-1">
-                                                        <CalendarTodayIcon
-                                                            sx={{
-                                                                fontSize: 14,
-                                                            }}
+                                                        <Calendar
+                                                            size={14}
                                                         />
                                                         {moment(
                                                             related.publishedAt
@@ -469,7 +463,7 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
                         href="/blog"
                         className="inline-flex items-center gap-1 text-sm text-[#90caf9] transition-colors hover:text-[#64b5f6]"
                     >
-                        <ArrowBackIcon sx={{ fontSize: 16 }} />
+                        <ArrowLeft size={16} />
                         {t('BACK_TO_BLOG')}
                     </Link>
                 </div>

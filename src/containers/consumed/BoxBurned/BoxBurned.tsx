@@ -3,7 +3,7 @@ import BoxBurnedItem from './BoxBurnedItem/BoxBurnedItem'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import IconButton from '@mui/material/IconButton'
-import AddIcon from '@mui/icons-material/Add'
+import { Plus } from 'lucide-react'
 import useBurned from '@/hooks/useBurned'
 import { DialogAddBurnedCalories } from './DialogAddBurnedCalories'
 
@@ -33,7 +33,7 @@ const BoxBurned = () => {
                     {router.query.login === sessionData?.user?.username ? (
                         <DialogAddBurnedCalories>
                             <IconButton aria-label="Add" color="primary">
-                                <AddIcon fontSize="small" />
+                                <Plus size={20} />
                             </IconButton>
                         </DialogAddBurnedCalories>
                     ) : (

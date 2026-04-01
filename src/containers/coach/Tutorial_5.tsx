@@ -1,5 +1,5 @@
 import useTranslation from 'next-translate/useTranslation'
-import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
+import { ArrowLeft } from 'lucide-react'
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
@@ -14,7 +14,7 @@ const Tutorial_5 = ({ setStep }: { setStep: (arg0: string) => void }) => {
                     aria-label="back"
                     onClick={() => setStep('Tutorial_4')}
                 >
-                    <KeyboardBackspaceIcon />
+                    <ArrowLeft />
                     <div />
                 </IconButton>
             </div>

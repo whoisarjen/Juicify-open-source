@@ -1,7 +1,7 @@
 import Dialog from '@mui/material/Dialog'
 import Button from '@mui/material/Button'
 import { useRouter } from "next/router"
-import EventIcon from '@mui/icons-material/Event'
+import { CalendarDays } from 'lucide-react'
 import IconButton from '@mui/material/IconButton'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
@@ -25,7 +25,7 @@ const DateChanger = ({ where = 'consumed' }: { where?: string }) => {
     return (
         <>
             <IconButton onClick={() => setIsDialog(true)}>
-                <EventIcon color="primary" />
+                <CalendarDays className="text-[#90caf9]" />
             </IconButton>
             <Dialog
                 open={isDialog}

@@ -4,8 +4,7 @@ import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
 import { useState, ReactNode } from 'react'
 import ButtonCloseDialog from '@/components/ButtonCloseDialog/ButtonCloseDialog'
 import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon'
-import FitnessCenterIcon from '@mui/icons-material/FitnessCenter'
-import { grey } from '@mui/material/colors'
+import { Dumbbell } from 'lucide-react'
 import BoxExercise from '@/containers/DialogAddExercises/BoxExercise/BoxExercise'
 import DialogCreateExercise from '@/containers/DialogAddExercises/DialogCreateExercise/DialogCreateExercise'
 import TabsAddDialog from '@/components/TabsAddDialog/TabsAddDialog'
@@ -71,7 +70,7 @@ const DialogAddExercises = ({
             <div onClick={() => setIsDialog(true)}>
                 {children || (
                     <ButtonPlusIcon
-                        icon={<FitnessCenterIcon sx={{ color: grey[50] }} />}
+                        icon={<Dumbbell className="text-gray-50" />}
                     />
                 )}
             </div>

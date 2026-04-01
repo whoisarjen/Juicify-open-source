@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import DialogAddWorkoutResult from '@/containers/Workout/DialogAddWorkoutResult/DialogAddWorkoutResult'
-import FitnessCenterIcon from '@mui/icons-material/FitnessCenter'
+import { Dumbbell } from 'lucide-react'
 import BoxWorkout from '@/containers/Workout/BoxWorkout/BoxWorkout'
 import NavbarProfile from '@/containers/profile/NavbarProfile/NavbarProfile'
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
@@ -42,7 +42,7 @@ const WorkoutResultsPage = () => {
                             title={workoutResult.name}
                             description={workoutResult.note || ''}
                             route={`/${username}/workout/results/${workoutResult.id}`}
-                            icon={<FitnessCenterIcon />}
+                            icon={<Dumbbell />}
                             key={workoutResult.id}
                         />
                     ))}

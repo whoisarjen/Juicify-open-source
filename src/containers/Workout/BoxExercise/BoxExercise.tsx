@@ -1,5 +1,5 @@
 import IconButton from '@mui/material/IconButton'
-import DeleteIcon from '@mui/icons-material/Delete'
+import { Trash2 } from 'lucide-react'
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm'
 import { useState, useEffect } from 'react'
 import BoxResult from '../BoxResult/BoxResult'
@@ -102,7 +102,7 @@ const BaseBoxExercise = ({
                     {isOwner && (
                         <DialogConfirm onConfirmed={deleteExerciseWithIndex}>
                             <IconButton component="span">
-                                <DeleteIcon sx={{ fontSize: 20 }} />
+                                <Trash2 size={20} />
                             </IconButton>
                         </DialogConfirm>
                     )}

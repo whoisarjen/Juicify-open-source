@@ -1,9 +1,7 @@
 import IconButton from '@mui/material/IconButton'
-import DeleteIcon from '@mui/icons-material/Delete'
+import { Trash2, ArrowRight, Circle } from 'lucide-react'
 import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete'
-import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined'
-import ArrowRightAltOutlinedIcon from '@mui/icons-material/ArrowRightAltOutlined'
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm'
 import { useState, useEffect } from 'react'
 import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon'
@@ -185,14 +183,12 @@ const BoxResult = ({
                         </div>
                         <div className="flex-1">
                             <IconButton aria-label="arrow">
-                                <ArrowRightAltOutlinedIcon
-                                    sx={{ fontSize: 20 }}
-                                />
+                                <ArrowRight size={20} />
                             </IconButton>
                         </div>
                         <div className="flex-1">
                             <IconButton aria-label="save">
-                                <CircleOutlinedIcon sx={{ fontSize: 20 }} />
+                                <Circle size={20} />
                             </IconButton>
                         </div>
                     </div>
@@ -278,7 +274,7 @@ const BoxResult = ({
                         {isOwner && (
                             <DialogConfirm onConfirmed={deleteResult}>
                                 <IconButton aria-label="delete">
-                                    <DeleteIcon sx={{ fontSize: 20 }} />
+                                    <Trash2 size={20} />
                                 </IconButton>
                             </DialogConfirm>
                         )}

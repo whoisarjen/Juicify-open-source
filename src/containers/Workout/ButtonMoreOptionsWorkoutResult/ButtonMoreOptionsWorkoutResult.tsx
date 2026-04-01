@@ -1,4 +1,4 @@
-import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import { Dumbbell } from 'lucide-react';
 import { useState } from 'react';
 import DialogAddExercises from '@/containers/DialogAddExercises/DialogAddExercises';
 
@@ -29,7 +29,7 @@ const ButtonMoreOptionsWorkoutResult = ({ exercises, setExercises }: ButtonMoreO
                                 className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-600 text-white shadow-lg hover:bg-gray-500"
                                 title="Exercise"
                             >
-                                <FitnessCenterIcon />
+                                <Dumbbell />
                             </button>
                         </DialogAddExercises>
                     </div>

@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 import IconButton from '@mui/material/IconButton'
-import HistoryIcon from '@mui/icons-material/History'
-import RestartAltIcon from '@mui/icons-material/RestartAlt'
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
+import { History, RotateCcw, HelpCircle } from 'lucide-react'
 import useTranslation from 'next-translate/useTranslation'
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
 import moment from 'moment'
@@ -43,7 +41,7 @@ const Standard = ({ setStep }: StandardProps) => {
                     onClick={() => setStep('Welcome')}
                 >
                     <IconButton aria-label="reset">
-                        <RestartAltIcon color="primary" />
+                        <RotateCcw className="text-[#90caf9]" />
                     </IconButton>
                     <div>{t('NEW_GOAL')}</div>
                 </div>
@@ -52,7 +50,7 @@ const Standard = ({ setStep }: StandardProps) => {
                     onClick={() => setStep('Tutorial_1')}
                 >
                     <IconButton aria-label="help">
-                        <HelpOutlineIcon color="primary" />
+                        <HelpCircle className="text-[#90caf9]" />
                     </IconButton>
                     <div>{t('HELP')}</div>
                 </div>
@@ -61,7 +59,7 @@ const Standard = ({ setStep }: StandardProps) => {
                     onClick={() => router.push('/measurements')}
                 >
                     <IconButton aria-label="history">
-                        <HistoryIcon color="primary" />
+                        <History className="text-[#90caf9]" />
                     </IconButton>
                     <div>{t('HISTORY')}</div>
                 </div>
