@@ -57,7 +57,9 @@ const DialogAddProducts = ({ children, mealToAdd }: DialogAddProductsProps) => {
                 createConsumed.mutateAsync({
                     productId: product.id,
                     whenAdded: moment(router.query.date)
-                        .add(moment().format('hh:mm:ss'))
+                        .hour(moment().hour())
+                        .minute(moment().minute())
+                        .second(moment().second())
                         .toDate(),
                     howMany: product.howMany || 1,
                     meal,
