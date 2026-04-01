@@ -11,6 +11,8 @@ class MyDocument extends Document {
                     <link rel="alternate" hrefLang="en" href="https://juicify.app" />
                     <link rel="alternate" hrefLang="pl" href="https://juicify.app/pl" />
                     <link rel="alternate" hrefLang="x-default" href="https://juicify.app" />
+                    <link rel="manifest" href="/manifest.json" />
+                    <link rel="apple-touch-icon" href="/icons/apple-icon-180.png" />
                     <link rel="preconnect" href="https://www.googletagmanager.com" />
                     <link
                         rel="preload"
