@@ -1,7 +1,3 @@
-import { MobileDateTimePicker } from '@mui/x-date-pickers';
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { TextField } from "@mui/material"
 import useTranslation from 'next-translate/useTranslation'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
@@ -17,8 +13,6 @@ interface DatePickerProps {
     label?: string
 }
 
-const format = "YYYY/MM/DD hh:mm"
-
 export const DatePicker = ({
     sx,
     register,
@@ -30,36 +24,30 @@ export const DatePicker = ({
     label,
 }: DatePickerProps) => {
     const { t } = useTranslation('home')
-    const [date, setDate] = useState(moment(defaultDate).format(format))
+    const [date, setDate] = useState(moment(defaultDate).format('YYYY-MM-DDTHH:mm'))
 
-    const handleOnChange = (newDate: Date) => {
+    const handleOnChange = (value: string) => {
+        const newDate = moment(value).toDate()
         onChange(newDate)
-        setDate(moment(newDate).format(format))
+        setDate(value)
     }
 
     useEffect(() => {
-        setDate(moment(defaultDate).format(format))
+        setDate(moment(defaultDate).format('YYYY-MM-DDTHH:mm'))
     }, [defaultDate])
 
     return (
-        <LocalizationProvider dateAdapter={AdapterMoment}>
-            <MobileDateTimePicker
+        <div style={sx}>
+            <label className="mb-1 block text-sm text-gray-500">{label ?? t("DATE")}</label>
+            <input
+                type="datetime-local"
+                className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
                 value={date}
-                onChange={newDate => handleOnChange(moment(newDate).toDate())}
-                label={label ?? t("DATE")}
-                renderInput={params =>
-                    <TextField
-                        sx={sx}
-                        fullWidth
-                        focused={focused}
-                        {...params}
-                        {...register}
-                    />
-                }
-                maxDateTime={moment(maxDateTime)}
-                minDateTime={moment(minDateTime)}
-                inputFormat={format}
+                onChange={(e) => handleOnChange(e.target.value)}
+                max={moment(maxDateTime).format('YYYY-MM-DDTHH:mm')}
+                min={moment(minDateTime).format('YYYY-MM-DDTHH:mm')}
+                {...register}
             />
-        </LocalizationProvider>
+        </div>
     )
 }

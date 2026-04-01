@@ -1,12 +1,3 @@
-import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
-import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
-import DialogTitle from '@mui/material/DialogTitle'
-import LoadingButton from '@mui/lab/LoadingButton'
-import InputAdornment from '@mui/material/InputAdornment'
 import useTranslation from 'next-translate/useTranslation'
 import { useState, useEffect, ReactNode } from 'react'
 import { useForm } from 'react-hook-form'
@@ -63,176 +54,139 @@ const DialogCreateProduct = ({
                     {children}
                 </div>
             )}
-            <Dialog open={isDialog}>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <DialogTitle>{t('Create product')}</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            {t('Create product description')}
-                        </DialogContentText>
-                        <TextField
-                            type="text"
-                            fullWidth
-                            variant="standard"
-                            label={t('Name of product')}
-                            {...register('name')}
-                            error={
-                                typeof errors.name === 'undefined'
-                                    ? false
-                                    : true
-                            }
-                            helperText={errors.name?.message}
-                        />
-                        <TextField
-                            sx={{ marginTop: '12px' }}
-                            type="number"
-                            inputProps={{
-                                inputMode: 'numeric',
-                                pattern: '[0-9]*',
-                            }}
-                            fullWidth
-                            variant="standard"
-                            label="Barcode"
-                            {...register('barcode')}
-                            error={!!errors.barcode}
-                            helperText={errors.barcode?.message}
-                        />
-                        <TextField
-                            sx={{ marginTop: '12px' }}
-                            fullWidth
-                            variant="standard"
-                            label={t('Proteins')}
-                            {...register('proteins')}
-                            error={!!errors.proteins}
-                            helperText={errors.proteins?.message}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        {t('g in 100g/ml')}
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                        <TextField
-                            sx={{ marginTop: '12px' }}
-                            fullWidth
-                            variant="standard"
-                            label={t('Carbs')}
-                            {...register('carbs')}
-                            error={!!errors.carbs}
-                            helperText={errors.carbs?.message}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        {t('g in 100g/ml')}
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                        <TextField
-                            sx={{ marginTop: '12px' }}
-                            fullWidth
-                            variant="standard"
-                            label={t('Sugar')}
-                            {...register('sugar')}
-                            error={!!errors.sugar}
-                            helperText={errors.sugar?.message}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        {t('g in 100g/ml')}
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                        <TextField
-                            sx={{ marginTop: '12px' }}
-                            fullWidth
-                            variant="standard"
-                            label={t('Fats')}
-                            {...register('fats')}
-                            error={!!errors.fats}
-                            helperText={errors.fats?.message}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        {t('g in 100g/ml')}
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                        <TextField
-                            sx={{ marginTop: '12px' }}
-                            fullWidth
-                            variant="standard"
-                            label={t('Fiber')}
-                            {...register('fiber')}
-                            error={!!errors.fiber}
-                            helperText={errors.fiber?.message}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        {t('g in 100g/ml')}
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                        <TextField
-                            sx={{ marginTop: '12px' }}
-                            fullWidth
-                            variant="standard"
-                            label={t('Salt')}
-                            {...register('sodium')}
-                            error={!!errors.sodium}
-                            helperText={errors.sodium?.message}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        {t('g in 100g/ml')}
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                        <TextField
-                            sx={{ marginTop: '12px' }}
-                            fullWidth
-                            variant="standard"
-                            label={t('Ethanol')}
-                            {...register('ethanol')}
-                            error={!!errors.ethanol}
-                            helperText={errors.ethanol?.message}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        {t('g in 100g/ml')}
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                        <label className="flex items-center gap-2 py-2 text-sm">
-                            <input
-                                type="checkbox"
-                                role="switch"
-                                {...register('isExpectingCheck')}
-                                className="h-5 w-5 accent-blue-500"
-                            />
-                            {t('Should be available for all?')}
-                        </label>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => setIsDialog(false)}>
-                            {t('Cancel')}
-                        </Button>
-                        <LoadingButton
-                            loading={createProduct.isLoading}
-                            variant="contained"
-                            type="submit"
-                        >
-                            {t('Submit')}
-                        </LoadingButton>
-                    </DialogActions>
-                </form>
-            </Dialog>
+            {isDialog && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center">
+                    <div className="fixed inset-0 bg-black/50" />
+                    <div className="relative z-50 w-full max-w-lg rounded-lg bg-white p-0 shadow-xl dark:bg-gray-900">
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <div className="px-6 pt-6 text-lg font-semibold">{t('Create product')}</div>
+                            <div className="px-6 py-4">
+                                <p className="text-sm text-gray-500">
+                                    {t('Create product description')}
+                                </p>
+                                <div className="w-full">
+                                    <label className="mb-1 block text-sm text-gray-500">{t('Name of product')}</label>
+                                    <input
+                                        className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                                        type="text"
+                                        {...register('name')}
+                                    />
+                                    {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name?.message}</p>}
+                                </div>
+                                <div className="mt-3 w-full">
+                                    <label className="mb-1 block text-sm text-gray-500">Barcode</label>
+                                    <input
+                                        className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                                        type="number"
+                                        inputMode="numeric"
+                                        pattern="[0-9]*"
+                                        {...register('barcode')}
+                                    />
+                                    {errors.barcode && <p className="mt-1 text-xs text-red-500">{errors.barcode?.message}</p>}
+                                </div>
+                                <div className="mt-3 w-full">
+                                    <label className="mb-1 block text-sm text-gray-500">{t('Proteins')}</label>
+                                    <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-blue-500 dark:border-gray-600">
+                                        <input
+                                            className="flex-1 bg-transparent px-3 py-2 outline-none"
+                                            {...register('proteins')}
+                                        />
+                                        <span className="px-3 text-sm text-gray-500">{t('g in 100g/ml')}</span>
+                                    </div>
+                                    {errors.proteins && <p className="mt-1 text-xs text-red-500">{errors.proteins?.message}</p>}
+                                </div>
+                                <div className="mt-3 w-full">
+                                    <label className="mb-1 block text-sm text-gray-500">{t('Carbs')}</label>
+                                    <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-blue-500 dark:border-gray-600">
+                                        <input
+                                            className="flex-1 bg-transparent px-3 py-2 outline-none"
+                                            {...register('carbs')}
+                                        />
+                                        <span className="px-3 text-sm text-gray-500">{t('g in 100g/ml')}</span>
+                                    </div>
+                                    {errors.carbs && <p className="mt-1 text-xs text-red-500">{errors.carbs?.message}</p>}
+                                </div>
+                                <div className="mt-3 w-full">
+                                    <label className="mb-1 block text-sm text-gray-500">{t('Sugar')}</label>
+                                    <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-blue-500 dark:border-gray-600">
+                                        <input
+                                            className="flex-1 bg-transparent px-3 py-2 outline-none"
+                                            {...register('sugar')}
+                                        />
+                                        <span className="px-3 text-sm text-gray-500">{t('g in 100g/ml')}</span>
+                                    </div>
+                                    {errors.sugar && <p className="mt-1 text-xs text-red-500">{errors.sugar?.message}</p>}
+                                </div>
+                                <div className="mt-3 w-full">
+                                    <label className="mb-1 block text-sm text-gray-500">{t('Fats')}</label>
+                                    <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-blue-500 dark:border-gray-600">
+                                        <input
+                                            className="flex-1 bg-transparent px-3 py-2 outline-none"
+                                            {...register('fats')}
+                                        />
+                                        <span className="px-3 text-sm text-gray-500">{t('g in 100g/ml')}</span>
+                                    </div>
+                                    {errors.fats && <p className="mt-1 text-xs text-red-500">{errors.fats?.message}</p>}
+                                </div>
+                                <div className="mt-3 w-full">
+                                    <label className="mb-1 block text-sm text-gray-500">{t('Fiber')}</label>
+                                    <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-blue-500 dark:border-gray-600">
+                                        <input
+                                            className="flex-1 bg-transparent px-3 py-2 outline-none"
+                                            {...register('fiber')}
+                                        />
+                                        <span className="px-3 text-sm text-gray-500">{t('g in 100g/ml')}</span>
+                                    </div>
+                                    {errors.fiber && <p className="mt-1 text-xs text-red-500">{errors.fiber?.message}</p>}
+                                </div>
+                                <div className="mt-3 w-full">
+                                    <label className="mb-1 block text-sm text-gray-500">{t('Salt')}</label>
+                                    <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-blue-500 dark:border-gray-600">
+                                        <input
+                                            className="flex-1 bg-transparent px-3 py-2 outline-none"
+                                            {...register('sodium')}
+                                        />
+                                        <span className="px-3 text-sm text-gray-500">{t('g in 100g/ml')}</span>
+                                    </div>
+                                    {errors.sodium && <p className="mt-1 text-xs text-red-500">{errors.sodium?.message}</p>}
+                                </div>
+                                <div className="mt-3 w-full">
+                                    <label className="mb-1 block text-sm text-gray-500">{t('Ethanol')}</label>
+                                    <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-blue-500 dark:border-gray-600">
+                                        <input
+                                            className="flex-1 bg-transparent px-3 py-2 outline-none"
+                                            {...register('ethanol')}
+                                        />
+                                        <span className="px-3 text-sm text-gray-500">{t('g in 100g/ml')}</span>
+                                    </div>
+                                    {errors.ethanol && <p className="mt-1 text-xs text-red-500">{errors.ethanol?.message}</p>}
+                                </div>
+                                <label className="flex items-center gap-2 py-2 text-sm">
+                                    <input
+                                        type="checkbox"
+                                        role="switch"
+                                        {...register('isExpectingCheck')}
+                                        className="h-5 w-5 accent-blue-500"
+                                    />
+                                    {t('Should be available for all?')}
+                                </label>
+                            </div>
+                            <div className="flex justify-end gap-2 px-6 pb-6">
+                                <button className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800" onClick={() => setIsDialog(false)}>
+                                    {t('Cancel')}
+                                </button>
+                                <button
+                                    disabled={createProduct.isLoading}
+                                    className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
+                                    type="submit"
+                                >
+                                    {createProduct.isLoading ? <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" /> : t('Submit')}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </>
     )
 }

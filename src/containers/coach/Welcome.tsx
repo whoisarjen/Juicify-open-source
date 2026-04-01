@@ -1,4 +1,3 @@
-import Button from '@mui/material/Button'
 import useTranslation from 'next-translate/useTranslation'
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
 
@@ -11,12 +10,12 @@ const Welcome = ({ setStep }: { setStep: (arg0: string) => void }) => {
             <div className="flex flex-1 items-center justify-center text-center">
                 {t('WELCOME_DESCRIPTION')}
             </div>
-            <Button
-                variant="contained"
+            <button
+                className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
                 onClick={() => setStep('CheckingTodayData')}
             >
                 {t('WELCOME_BUTTON')}
-            </Button>
+            </button>
         </div>
     )
 }

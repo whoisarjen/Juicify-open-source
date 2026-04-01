@@ -1,11 +1,5 @@
 import useTranslation from "next-translate/useTranslation"
 import { useEffect, useState, type ReactNode } from 'react'
-import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
-import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogTitle from '@mui/material/DialogTitle'
 import ButtonPlusIcon from "@/components/ButtonPlusIcon/ButtonPlusIcon";
 import { DatePicker } from '@/components/DatePicker'
 import moment from 'moment'
@@ -17,7 +11,6 @@ import {
 } from "@/server/schema/measurement.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import InputAdornment from '@mui/material/InputAdornment';
 import { trpc } from "@/utils/trpc.utils"
 import { orderBy } from 'lodash'
 import { useSession } from "next-auth/react"
@@ -196,63 +189,67 @@ export const DialogMeasurement = ({
     return (
         <form onSubmit={handleSubmitProxy()}>
             {!hideButton && <ButtonPlusIcon onClick={handleClickOpen} />}
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>{t('home:ADD_WEIGHT')}</DialogTitle>
-                <DialogContent>
-                    <DatePicker
-                        defaultDate={getValues().whenAdded}
-                        onChange={newWhenAdded => setValue('whenAdded', moment(newWhenAdded).toDate())}
-                        sx={{ marginTop: '8px' }}
-                        register={register('whenAdded')}
-                        maxDateTime={moment().toDate()}
-                    />
-                    <TextField
-                        fullWidth
-                        type="number"
-                        margin="dense"
-                        label="Weight"
-                        variant="outlined"
-                        defaultValue={defaultWeight}
-                        {...register('weight')}
-                        error={!!errors.weight}
-                        helperText={errors.weight?.message}
-                        InputProps={{
-                            endAdornment: <InputAdornment position="end">kg</InputAdornment>,
-                        }}
-                    />
-                    <TextField
-                        fullWidth
-                        type="number"
-                        margin="dense"
-                        label="Waist"
-                        variant="outlined"
-                        {...register('waist')}
-                        InputProps={{
-                            endAdornment: <InputAdornment position="end">cm</InputAdornment>,
-                        }}
-                    />
-                    <TextField
-                        fullWidth
-                        type="number"
-                        margin="dense"
-                        label="Hips"
-                        variant="outlined"
-                        {...register('hips')}
-                        InputProps={{
-                            endAdornment: <InputAdornment position="end">cm</InputAdornment>,
-                        }}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>{t('deny')}</Button>
-                    {measurement &&
-                        <DialogConfirm onConfirmed={async () => await deleteMeasurement.mutateAsync({ id: measurement.id })}>
-                            <Button color="error">{t('remove')}</Button>
-                        </DialogConfirm>
-                    }
-                    <Button onClick={handleSubmitProxy()}>{t('accept')}</Button>
-                </DialogActions>
-            </Dialog>
+            {open && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center">
+                    <div className="fixed inset-0 bg-black/50" onClick={handleClose} />
+                    <div className="relative z-50 w-full max-w-lg rounded-lg bg-white p-0 shadow-xl dark:bg-gray-900">
+                        <div className="px-6 pt-6 text-lg font-semibold">{t('home:ADD_WEIGHT')}</div>
+                        <div className="px-6 py-4">
+                            <DatePicker
+                                defaultDate={getValues().whenAdded}
+                                onChange={newWhenAdded => setValue('whenAdded', moment(newWhenAdded).toDate())}
+                                sx={{ marginTop: '8px' }}
+                                register={register('whenAdded')}
+                                maxDateTime={moment().toDate()}
+                            />
+                            <div className="mt-2 w-full">
+                                <label className="mb-1 block text-sm text-gray-500">Weight</label>
+                                <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-blue-500 dark:border-gray-600">
+                                    <input
+                                        className="flex-1 bg-transparent px-3 py-2 outline-none"
+                                        type="number"
+                                        defaultValue={defaultWeight}
+                                        {...register('weight')}
+                                    />
+                                    <span className="px-3 text-sm text-gray-500">kg</span>
+                                </div>
+                                {errors.weight && <p className="mt-1 text-xs text-red-500">{errors.weight?.message}</p>}
+                            </div>
+                            <div className="mt-2 w-full">
+                                <label className="mb-1 block text-sm text-gray-500">Waist</label>
+                                <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-blue-500 dark:border-gray-600">
+                                    <input
+                                        className="flex-1 bg-transparent px-3 py-2 outline-none"
+                                        type="number"
+                                        {...register('waist')}
+                                    />
+                                    <span className="px-3 text-sm text-gray-500">cm</span>
+                                </div>
+                            </div>
+                            <div className="mt-2 w-full">
+                                <label className="mb-1 block text-sm text-gray-500">Hips</label>
+                                <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-blue-500 dark:border-gray-600">
+                                    <input
+                                        className="flex-1 bg-transparent px-3 py-2 outline-none"
+                                        type="number"
+                                        {...register('hips')}
+                                    />
+                                    <span className="px-3 text-sm text-gray-500">cm</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex justify-end gap-2 px-6 pb-6">
+                            <button className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800" onClick={handleClose}>{t('deny')}</button>
+                            {measurement &&
+                                <DialogConfirm onConfirmed={async () => await deleteMeasurement.mutateAsync({ id: measurement.id })}>
+                                    <button className="px-4 py-2 text-red-500 hover:bg-red-50 dark:hover:bg-gray-800">{t('remove')}</button>
+                                </DialogConfirm>
+                            }
+                            <button className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800" onClick={handleSubmitProxy()}>{t('accept')}</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </form>
     )
 }

@@ -1,4 +1,3 @@
-import Button from '@mui/material/Button';
 import { PieChart } from 'lucide-react';
 import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
@@ -9,17 +8,14 @@ const SectionDiaryManaging = () => {
 
     return (
         <div className="flex">
-            <Button
-                className="flex-1"
+            <button
+                className="flex flex-1 items-center justify-center gap-2 rounded border border-gray-300 px-4 py-2 hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-800"
                 onClick={() => router.push('/macronutrients')}
-                color="primary"
-                variant="outlined"
                 aria-label="macronutrients"
-                component="span"
-                startIcon={<PieChart />}
             >
+                <PieChart size={20} />
                 {t('Macronutrients')}
-            </Button>
+            </button>
         </div>
     )
 }

@@ -1,28 +1,18 @@
-import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
-import DialogTitle from '@mui/material/DialogTitle'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon'
-import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { TextField } from "@mui/material"
-import LoadingButton from '@mui/lab/LoadingButton'
 import { useSession } from 'next-auth/react'
 import { trpc } from '@/utils/trpc.utils'
 import { orderBy } from 'lodash'
+import moment from 'moment'
 
 const DialogAddWorkoutResult = () => {
     const { t } = useTranslation('workout')
     const router: any = useRouter()
     const [isOpen, setIsOpen] = useState(false)
     const { data: sessionData } = useSession()
-    const [whenAdded, setWhenAdded] = useState(new Date())
+    const [whenAdded, setWhenAdded] = useState(moment().format('YYYY-MM-DD'))
     const [choosenWorkoutPlan, setChoosenWorkoutPlan] = useState(0)
 
     const username = sessionData?.user?.username || ''
@@ -55,12 +45,12 @@ const DialogAddWorkoutResult = () => {
         .getAll
         .useQuery({ username }, { enabled: !!username })
 
-    const DialogAddWorkoutResult = () => {
+    const handleCreate = () => {
         const workoutPlan = workoutPlans.find(workoutPlan => workoutPlan.id === choosenWorkoutPlan)
 
         if (!workoutPlan) return
 
-        workoutResultCreate.mutate({ workoutPlanId: workoutPlan.id, whenAdded })
+        workoutResultCreate.mutate({ workoutPlanId: workoutPlan.id, whenAdded: moment(whenAdded).toDate() })
     }
 
     useEffect(() => {
@@ -72,53 +62,59 @@ const DialogAddWorkoutResult = () => {
     return (
         <>
             <ButtonPlusIcon onClick={() => setIsOpen(true)} />
-            <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
-                <DialogTitle>{t('CREATE_RESULT')}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText sx={{ marginBottom: '12px' }}>{t('CREATE_RESULT_DESCRIPTION')}</DialogContentText>
+            {isOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center">
+                    <div className="fixed inset-0 bg-black/50" onClick={() => setIsOpen(false)} />
+                    <div className="relative z-50 w-full max-w-lg rounded-lg bg-white p-0 shadow-xl dark:bg-gray-900">
+                        <div className="px-6 pt-6 text-lg font-semibold">{t('CREATE_RESULT')}</div>
+                        <div className="px-6 py-4">
+                            <p className="text-sm text-gray-500 mb-3">{t('CREATE_RESULT_DESCRIPTION')}</p>
 
-                    <LocalizationProvider dateAdapter={AdapterMoment}>
-                        <MobileDatePicker
-                            value={whenAdded}
-                            onChange={value => value && setWhenAdded(value)}
-                            label={t("Date")}
-                            inputFormat="DD.MM.YYYY"
-                            renderInput={(params: any) =>
-                                <TextField
-                                    sx={{ width: '100%' }}
-                                    {...params}
+                            <div>
+                                <label className="mb-1 block text-sm text-gray-500">{t("Date")}</label>
+                                <input
+                                    type="date"
+                                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                                    value={whenAdded}
+                                    onChange={(e) => setWhenAdded(e.target.value)}
                                 />
-                            }
-                        />
-                    </LocalizationProvider>
+                            </div>
 
-                    <div className="mt-3">
-                        <label className="mb-1 block text-sm text-gray-500">
-                            {t('Workout plan')}
-                        </label>
-                        <select
-                            className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 dark:border-gray-600"
-                            value={choosenWorkoutPlan || workoutPlans?.[0]?.id}
-                            onChange={event => setChoosenWorkoutPlan(parseInt(event.target.value.toString()))}
-                        >
-                            {workoutPlans?.map(workoutPlan =>
-                                <option
-                                    value={workoutPlan.id}
-                                    key={workoutPlan.id}
-                                >{workoutPlan.name}</option>
-                            )}
-                        </select>
+                            <div className="mt-3">
+                                <label className="mb-1 block text-sm text-gray-500">
+                                    {t('Workout plan')}
+                                </label>
+                                <select
+                                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 dark:border-gray-600"
+                                    value={choosenWorkoutPlan || workoutPlans?.[0]?.id}
+                                    onChange={event => setChoosenWorkoutPlan(parseInt(event.target.value.toString()))}
+                                >
+                                    {workoutPlans?.map(workoutPlan =>
+                                        <option
+                                            value={workoutPlan.id}
+                                            key={workoutPlan.id}
+                                        >{workoutPlan.name}</option>
+                                    )}
+                                </select>
+                            </div>
+                        </div>
+                        <div className="flex justify-end gap-2 px-6 pb-6">
+                            <button className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800" onClick={() => setIsOpen(false)}>{t('Cancel')}</button>
+                            <button
+                                disabled={workoutResultCreate.isLoading || !choosenWorkoutPlan || !whenAdded}
+                                onClick={handleCreate}
+                                className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
+                            >
+                                {workoutResultCreate.isLoading ? (
+                                    <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                                ) : (
+                                    t('Submit')
+                                )}
+                            </button>
+                        </div>
                     </div>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setIsOpen(false)}>{t('Cancel')}</Button>
-                    <LoadingButton
-                        loading={workoutResultCreate.isLoading}
-                        disabled={!choosenWorkoutPlan || !whenAdded}
-                        onClick={DialogAddWorkoutResult}
-                    >{t('Submit')}</LoadingButton>
-                </DialogActions>
-            </Dialog>
+                </div>
+            )}
         </>
     )
 }

@@ -1,11 +1,3 @@
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-
 import useTranslation from 'next-translate/useTranslation';
 import { cloneElement, useState, type ReactElement } from 'react';
 import { useRouter } from 'next/router';
@@ -54,44 +46,42 @@ const DialogAddProduct = ({
     return (
         <>
             {cloneElement(children, { onClick: () => setIsDialogOpen(true) })}
-            <Dialog
-                open={isDialogOpen}
-
-                keepMounted
-                onClose={() => setIsDialogOpen(false)}
-                aria-describedby="alert-dialog-slide-description"
-            >
-                <DialogTitle>{t('ADD_TO_DIARY')}</DialogTitle>
-                <DialogContent>
-                    <select
-                        className="mb-2.5 w-full rounded border border-gray-300 bg-transparent px-3 py-2 dark:border-gray-600"
-                        value={mealToAdd}
-                        onChange={(e) => setMealToAdd(Number(e.target.value))}
-                    >
-                        {
-                            [...Array(sessionData?.user?.numberOfMeals)].map((x, i) =>
-                                <option key={i} value={i}>{t('Meal')} {i + 1}</option>
-                            )
-                        }
-                    </select>
-                    <TextField
-                        value={howMany}
-                        onChange={(e) => setHowMany(e.target.value ? Number(e.target.value) : undefined)}
-                        id="outlined-basic"
-                        label={t('How many times 100g/ml')}
-                        variant="outlined"
-                        fullWidth
-                        sx={{ marginTop: '12px' }}
-                        InputProps={{
-                            endAdornment: <InputAdornment position="end">x 100g/ml</InputAdornment>,
-                        }}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setIsDialogOpen(false)}>{t('Deny')}</Button>
-                    <Button onClick={addNewProduct}>{t('Confirm')}</Button>
-                </DialogActions>
-            </Dialog>
+            {isDialogOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center">
+                    <div className="fixed inset-0 bg-black/50" onClick={() => setIsDialogOpen(false)} />
+                    <div className="relative z-50 w-full max-w-lg rounded-lg bg-white p-0 shadow-xl dark:bg-gray-900">
+                        <div className="px-6 pt-6 text-lg font-semibold">{t('ADD_TO_DIARY')}</div>
+                        <div className="px-6 py-4">
+                            <select
+                                className="mb-2.5 w-full rounded border border-gray-300 bg-transparent px-3 py-2 dark:border-gray-600"
+                                value={mealToAdd}
+                                onChange={(e) => setMealToAdd(Number(e.target.value))}
+                            >
+                                {
+                                    [...Array(sessionData?.user?.numberOfMeals)].map((x, i) =>
+                                        <option key={i} value={i}>{t('Meal')} {i + 1}</option>
+                                    )
+                                }
+                            </select>
+                            <div className="mt-3 w-full">
+                                <label className="mb-1 block text-sm text-gray-500">{t('How many times 100g/ml')}</label>
+                                <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-blue-500 dark:border-gray-600">
+                                    <input
+                                        className="flex-1 bg-transparent px-3 py-2 outline-none"
+                                        value={howMany}
+                                        onChange={(e) => setHowMany(e.target.value ? Number(e.target.value) : undefined)}
+                                    />
+                                    <span className="px-3 text-sm text-gray-500">x 100g/ml</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex justify-end gap-2 px-6 pb-6">
+                            <button className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800" onClick={() => setIsDialogOpen(false)}>{t('Deny')}</button>
+                            <button className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800" onClick={addNewProduct}>{t('Confirm')}</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     )
 }

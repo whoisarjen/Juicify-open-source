@@ -1,6 +1,5 @@
 import { getCalories, multipleProductByHowMany } from '@/utils/consumed.utils'
 import { Pencil, UtensilsCrossed } from 'lucide-react'
-import IconButton from '@mui/material/IconButton'
 import useTranslation from 'next-translate/useTranslation'
 import DialogEditConsumed from '@/containers/consumed/BoxMeal/BoxMealItem/DialogEditConsumed/DialogEditConsumed'
 
@@ -18,14 +17,14 @@ const BoxMealItem = ({ consumed, isOwner }: BoxMealItemProps) => {
             <div>
                 {isOwner ? (
                     <DialogEditConsumed consumed={consumed}>
-                        <IconButton aria-label="edit">
+                        <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="edit">
                             <Pencil size={20} />
-                        </IconButton>
+                        </button>
                     </DialogEditConsumed>
                 ) : (
-                    <IconButton aria-label="edit">
+                    <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="edit">
                         <UtensilsCrossed size={20} />
-                    </IconButton>
+                    </button>
                 )}
             </div>
             <div className="flex-1">

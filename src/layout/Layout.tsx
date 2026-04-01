@@ -5,7 +5,6 @@ import SidebarLeft from './SidebarLeft'
 import SidebarRight from './SidebarRight'
 import { useSession } from 'next-auth/react'
 import { DialogMissingSettings } from '@/components/DialogMissingSettings'
-import Button from '@mui/material/Button'
 import useTranslation from 'next-translate/useTranslation'
 import moment from 'moment'
 import { trpc } from '@/utils/trpc.utils'
@@ -175,15 +174,13 @@ const Layout = ({ children }: { children: any }) => {
             {!isLandingPage && <Footer />}
             {!sessionData?.user && !isNeutralPath && (
                 <div className="fixed bottom-24 left-0 flex w-full items-center justify-center">
-                    <Button
-                        component="div"
-                        color="primary"
-                        variant="contained"
+                    <button
+                        className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
                         aria-label="authorization"
                         onClick={() => router.push(SIGN_IN_PATH)}
                     >
                         {t('I_ALSO_WANT_TO_CHANGE_MY_BODY')}
-                    </Button>
+                    </button>
                 </div>
             )}
             {sessionData?.user?.height === 0 && !skippedSettings && (

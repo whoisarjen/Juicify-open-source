@@ -1,4 +1,3 @@
-import IconButton from '@mui/material/IconButton'
 import { Trash2 } from 'lucide-react'
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm'
 import { useState, useEffect } from 'react'
@@ -101,9 +100,9 @@ const BaseBoxExercise = ({
                 <div>
                     {isOwner && (
                         <DialogConfirm onConfirmed={deleteExerciseWithIndex}>
-                            <IconButton component="span">
+                            <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800">
                                 <Trash2 size={20} />
-                            </IconButton>
+                            </button>
                         </DialogConfirm>
                     )}
                 </div>

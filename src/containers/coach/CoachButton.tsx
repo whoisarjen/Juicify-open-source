@@ -1,17 +1,24 @@
-import Button from '@mui/material/Button'
-
 interface CoachButtonProps {
     onClick?: () => void
-    variant: 'contained'
     children: string
     color?: 'error'
     disabled?: boolean
 }
 
-const CoachButton = (props: CoachButtonProps) => {
+const CoachButton = ({ onClick, children, color, disabled }: CoachButtonProps) => {
     return (
         <div className="w-full max-w-sm">
-            <Button {...props} fullWidth />
+            <button
+                className={`w-full rounded px-4 py-2 text-white disabled:opacity-50 ${
+                    color === 'error'
+                        ? 'bg-red-500 hover:bg-red-600'
+                        : 'bg-blue-500 hover:bg-blue-600'
+                }`}
+                onClick={onClick}
+                disabled={disabled}
+            >
+                {children}
+            </button>
         </div>
     )
 }

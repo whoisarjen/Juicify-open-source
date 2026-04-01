@@ -1,7 +1,4 @@
-import IconButton from '@mui/material/IconButton'
 import { Trash2, ArrowRight, Circle } from 'lucide-react'
-import TextField from '@mui/material/TextField'
-import Autocomplete from '@mui/material/Autocomplete'
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm'
 import { useState, useEffect } from 'react'
 import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon'
@@ -110,9 +107,9 @@ const BoxResult = ({
     const [weight, setWeight] = useState(value.weight.toString())
     const [rir, setRir] = useState((value.rir || 0).toString())
     const [open, setOpen] = useState(value.open || false)
-    const [repsOptions, setRepsOptions] = useState(['0'])
+    const [repsOptions] = useState(() => range(0, 100).map(i => i.toString()))
     const [weightOptions, setWeightOptions] = useState(['0'])
-    const [rirOptions, setRirOptions] = useState(['0'])
+    const [rirOptions] = useState(() => range(0, 10).map(i => i.toString()))
     const [setAt, setSetAt] = useState(value.setAt || '')
     const [timezone] = useState(value.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone)
     const [localTimeDisplay, setLocalTimeDisplay] = useState(() =>
@@ -140,8 +137,6 @@ const BoxResult = ({
 
     useEffect(() => {
         loadWeight(value.weight.toString())
-        setRirOptions(range(0, 10).map(i => i.toString()))
-        setRepsOptions(range(0, 100).map(i => i.toString()))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -182,90 +177,92 @@ const BoxResult = ({
                             )}
                         </div>
                         <div className="flex-1">
-                            <IconButton aria-label="arrow">
+                            <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="arrow">
                                 <ArrowRight size={20} />
-                            </IconButton>
+                            </button>
                         </div>
                         <div className="flex-1">
-                            <IconButton aria-label="save">
+                            <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="save">
                                 <Circle size={20} />
-                            </IconButton>
+                            </button>
                         </div>
                     </div>
-                    <Autocomplete
-                        sx={{ marginTop: '8px' }}
-                        disablePortal
-                        value={weight}
-                        options={weightOptions}
-                        onChange={(_, value) =>
-                            changeResult(buildResult({
-                                weight: parseFloat(value || '0'),
-                                open,
-                            }))
-                        }
-                        onInputChange={(_, valueLocally) =>
-                            loadWeight(valueLocally)
-                        }
-                        getOptionLabel={(option) => option.toString()}
-                        renderInput={(params) => (
-                            <TextField {...params} label="Weight" />
-                        )}
-                    />
-                    <Autocomplete
-                        sx={{ marginTop: '8px' }}
-                        disablePortal
-                        value={reps}
-                        options={repsOptions}
-                        onChange={(_, value) =>
-                            changeResult(buildResult({
-                                reps: parseInt(value || '0'),
-                                open,
-                            }))
-                        }
-                        onInputChange={(_, valueLocally) =>
-                            setReps(valueLocally)
-                        }
-                        getOptionLabel={(option) => option.toString()}
-                        renderInput={(params) => (
-                            <TextField {...params} label="Reps" />
-                        )}
-                    />
-                    <Autocomplete
-                        sx={{ marginTop: '8px' }}
-                        disablePortal
-                        value={rir}
-                        options={rirOptions}
-                        onChange={(_, value) =>
-                            changeResult(buildResult({
-                                rir: parseInt(value || '0'),
-                                open,
-                            }))
-                        }
-                        onInputChange={(_, valueLocally) =>
-                            setRir(valueLocally)
-                        }
-                        getOptionLabel={(option) => option.toString()}
-                        renderInput={(params) => (
-                            <TextField {...params} label="RIR" />
-                        )}
-                    />
-                    {setAt && (
-                        <TextField
-                            sx={{ marginTop: '8px' }}
-                            label="Finished at (mm:ss)"
-                            placeholder="MM:SS"
-                            value={localTimeDisplay}
-                            onChange={(e) => setLocalTimeDisplay(e.target.value)}
-                            onBlur={(e) => {
-                                const val = e.target.value.trim()
-                                if (!val || !val.includes(':')) return
-                                const newISO = fromLocalMMSS(val, setAt, timezone)
-                                setSetAt(newISO)
-                                setLocalTimeDisplay(toLocalMMSS(newISO, timezone))
-                                changeResult(buildResult({ setAt: newISO, open }))
+                    <div className="mt-2">
+                        <label className="mb-1 block text-sm text-gray-500">Weight</label>
+                        <div className="flex items-center rounded border border-gray-300 focus-within:border-blue-500 dark:border-gray-600">
+                            <input
+                                className="flex-1 bg-transparent px-3 py-2 outline-none"
+                                list="weight-options"
+                                value={weight}
+                                onChange={(e) => {
+                                    loadWeight(e.target.value)
+                                    changeResult(buildResult({
+                                        weight: parseFloat(e.target.value || '0'),
+                                        open,
+                                    }))
+                                }}
+                            />
+                        </div>
+                        <datalist id="weight-options">
+                            {weightOptions.map((opt, idx) => (
+                                <option key={idx} value={opt} />
+                            ))}
+                        </datalist>
+                    </div>
+                    <div className="mt-2">
+                        <label className="mb-1 block text-sm text-gray-500">Reps</label>
+                        <select
+                            className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                            value={reps}
+                            onChange={(e) => {
+                                setReps(e.target.value)
+                                changeResult(buildResult({
+                                    reps: parseInt(e.target.value || '0'),
+                                    open,
+                                }))
                             }}
-                            fullWidth
-                        />
+                        >
+                            {repsOptions.map((opt) => (
+                                <option key={opt} value={opt}>{opt}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="mt-2">
+                        <label className="mb-1 block text-sm text-gray-500">RIR</label>
+                        <select
+                            className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                            value={rir}
+                            onChange={(e) => {
+                                setRir(e.target.value)
+                                changeResult(buildResult({
+                                    rir: parseInt(e.target.value || '0'),
+                                    open,
+                                }))
+                            }}
+                        >
+                            {rirOptions.map((opt) => (
+                                <option key={opt} value={opt}>{opt}</option>
+                            ))}
+                        </select>
+                    </div>
+                    {setAt && (
+                        <div className="mt-2">
+                            <label className="mb-1 block text-sm text-gray-500">Finished at (mm:ss)</label>
+                            <input
+                                className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                                placeholder="MM:SS"
+                                value={localTimeDisplay}
+                                onChange={(e) => setLocalTimeDisplay(e.target.value)}
+                                onBlur={(e) => {
+                                    const val = e.target.value.trim()
+                                    if (!val || !val.includes(':')) return
+                                    const newISO = fromLocalMMSS(val, setAt, timezone)
+                                    setSetAt(newISO)
+                                    setLocalTimeDisplay(toLocalMMSS(newISO, timezone))
+                                    changeResult(buildResult({ setAt: newISO, open }))
+                                }}
+                            />
+                        </div>
                     )}
                 </>
             ) : (
@@ -273,9 +270,9 @@ const BoxResult = ({
                     <div className="flex-1">
                         {isOwner && (
                             <DialogConfirm onConfirmed={deleteResult}>
-                                <IconButton aria-label="delete">
+                                <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="delete">
                                     <Trash2 size={20} />
-                                </IconButton>
+                                </button>
                             </DialogConfirm>
                         )}
                     </div>

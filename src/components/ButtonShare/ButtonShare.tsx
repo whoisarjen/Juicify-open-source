@@ -1,5 +1,4 @@
 import { Share2 } from 'lucide-react';
-import IconButton from '@mui/material/IconButton';
 
 const ButtonShare = () => {
     const shareLocation = () => {
@@ -11,9 +10,9 @@ const ButtonShare = () => {
 
     return (
         <div onClick={shareLocation}>
-            <IconButton aria-label="Share">
+            <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="Share">
                 <Share2 className="text-[#90caf9]" />
-            </IconButton>
+            </button>
         </div>
     )
 }

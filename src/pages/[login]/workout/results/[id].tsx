@@ -1,20 +1,10 @@
 import BottomFlyingGuestBanner from '@/components/BottomFlyingGuestBanner/BottomFlyingGuestBanner'
 import NavbarWorkout from '@/containers/Workout/NavbarWorkout/NavbarWorkout'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-    TextField,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogContentText,
-    DialogActions,
-    Button,
-} from '@mui/material'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
-import InputAdornment from '@mui/material/InputAdornment'
 import ButtonMoreOptionsWorkoutResult from '@/containers/Workout/ButtonMoreOptionsWorkoutResult/ButtonMoreOptionsWorkoutResult'
 import BoxResult from '@/containers/Workout/BoxExercise/BoxExercise'
 import { pick } from 'lodash'
@@ -181,16 +171,14 @@ const WorkoutResultPage = () => {
                 onArrowBack={() => router.push(`/${username}/workout/results`)}
             />
 
-            <TextField
-                variant="outlined"
-                label={t('Title')}
-                type="text"
-                focused
-                multiline
-                {...register('name')}
-                error={!!errors.name}
-                helperText={errors.name?.message}
-            />
+            <div>
+                <label className="mb-1 block text-sm text-gray-500">{t('Title')}</label>
+                <textarea
+                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                    {...register('name')}
+                />
+                {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name.message}</p>}
+            </div>
 
             <DatePicker
                 defaultDate={data?.whenAdded || moment().toDate()}
@@ -215,41 +203,37 @@ const WorkoutResultPage = () => {
                 maxDateTime={moment().add(2, 'hour').toDate()}
             />
 
-            <TextField
-                variant="outlined"
-                label={t('Burnt')}
-                type="number"
-                focused
-                {...register('burnedCalories')}
-                error={!!errors.burnedCalories}
-                helperText={errors.burnedCalories?.message}
-                InputProps={{
-                    endAdornment: (
-                        <InputAdornment position="end">kcal</InputAdornment>
-                    ),
-                }}
-            />
+            <div>
+                <label className="mb-1 block text-sm text-gray-500">{t('Burnt')}</label>
+                <div className="flex items-center rounded border border-gray-300 focus-within:border-blue-500 dark:border-gray-600">
+                    <input
+                        className="flex-1 bg-transparent px-3 py-2 outline-none"
+                        type="number"
+                        {...register('burnedCalories')}
+                    />
+                    <span className="px-3 text-sm text-gray-500">kcal</span>
+                </div>
+                {errors.burnedCalories && <p className="mt-1 text-xs text-red-500">{errors.burnedCalories.message}</p>}
+            </div>
 
-            <TextField
-                variant="outlined"
-                label={t('Notes')}
-                type="text"
-                multiline
-                focused
-                {...register('note')}
-                error={!!errors.note}
-                helperText={errors.note?.message}
-            />
+            <div>
+                <label className="mb-1 block text-sm text-gray-500">{t('Notes')}</label>
+                <textarea
+                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                    {...register('note')}
+                />
+                {errors.note && <p className="mt-1 text-xs text-red-500">{errors.note.message}</p>}
+            </div>
 
             {data?.workoutPlan?.description && (
-                <TextField
-                    variant="outlined"
-                    label={t('Description of workout plan')}
-                    type="text"
-                    disabled
-                    multiline
-                    defaultValue={data.workoutPlan.description}
-                />
+                <div>
+                    <label className="mb-1 block text-sm text-gray-500">{t('Description of workout plan')}</label>
+                    <textarea
+                        className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none dark:border-gray-600"
+                        disabled
+                        defaultValue={data.workoutPlan.description}
+                    />
+                </div>
             )}
 
             {sessionData?.user?.username == username && (
@@ -329,31 +313,33 @@ const WorkoutResultPage = () => {
                     />
                 )}
 
-            <Dialog
-                open={showFinishTimeModal}
-                onClose={handleCloseFinishTimeModal}
-            >
-                <DialogTitle>{t('Update workout finish time?')}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        {moment().format('YYYY-MM-DD HH:mm (Z)')}
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseFinishTimeModal}>
-                        {t('Close')}
-                    </Button>
-                    <Button onClick={handleSkipFinishTime}>
-                        {t('Skip')}
-                    </Button>
-                    <Button
-                        onClick={handleAcceptFinishTime}
-                        variant="contained"
-                    >
-                        {t('Accept')}
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            {showFinishTimeModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center">
+                    <div className="fixed inset-0 bg-black/50" onClick={handleCloseFinishTimeModal} />
+                    <div className="relative z-50 w-full max-w-lg rounded-lg bg-white p-0 shadow-xl dark:bg-gray-900">
+                        <div className="px-6 pt-6 text-lg font-semibold">{t('Update workout finish time?')}</div>
+                        <div className="px-6 py-4">
+                            <p className="text-sm text-gray-500">
+                                {moment().format('YYYY-MM-DD HH:mm (Z)')}
+                            </p>
+                        </div>
+                        <div className="flex justify-end gap-2 px-6 pb-6">
+                            <button className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800" onClick={handleCloseFinishTimeModal}>
+                                {t('Close')}
+                            </button>
+                            <button className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800" onClick={handleSkipFinishTime}>
+                                {t('Skip')}
+                            </button>
+                            <button
+                                className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
+                                onClick={handleAcceptFinishTime}
+                            >
+                                {t('Accept')}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </form>
     )
 }

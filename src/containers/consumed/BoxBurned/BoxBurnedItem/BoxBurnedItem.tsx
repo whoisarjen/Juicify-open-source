@@ -1,4 +1,3 @@
-import IconButton from '@mui/material/IconButton'
 import { Flame, Pencil, Info } from 'lucide-react'
 import { type ReactNode } from 'react'
 import { DialogEditBurnedCalories } from '../DialogEditBurnedCalories'
@@ -37,9 +36,9 @@ const BoxBurnedItem = ({
                             whenAdded,
                         }}
                     >
-                        <IconButton aria-label="edit">
+                        <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="edit">
                             <Pencil size={20} />
-                        </IconButton>
+                        </button>
                     </DialogEditBurnedCalories>
                 ) : (
                     icon || (
@@ -55,9 +54,9 @@ const BoxBurnedItem = ({
                 <div>{burnedCalories}kcal</div>
             </div>
             {redirectTo &&
-                <IconButton aria-label="edit" onClick={() => router.push(redirectTo)}>
+                <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="edit" onClick={() => router.push(redirectTo)}>
                     <Info size={20} />
-                </IconButton>
+                </button>
             }
         </div>
     )

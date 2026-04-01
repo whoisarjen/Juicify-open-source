@@ -1,5 +1,4 @@
 import { Plus } from 'lucide-react'
-import IconButton from '@mui/material/IconButton'
 import useTranslation from 'next-translate/useTranslation'
 import { Fragment, useMemo } from 'react'
 import BoxMealItem from '@/containers/consumed/BoxMeal/BoxMealItem/BoxMealItem'
@@ -37,13 +36,12 @@ const BoxMeal = ({ index, meal, isOwner }: BoxMealProps) => {
                 <div>
                     {isOwner ? (
                         <DialogAddProducts mealToAdd={index}>
-                            <IconButton
-                                sx={{ margin: 'auto' }}
+                            <button
+                                className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
                                 aria-label="Add"
-                                color="primary"
                             >
                                 <Plus size={20} />
-                            </IconButton>
+                            </button>
                         </DialogAddProducts>
                     ) : (
                         <div />

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import IconButton from '@mui/material/IconButton'
 import { History, RotateCcw, HelpCircle } from 'lucide-react'
 import useTranslation from 'next-translate/useTranslation'
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
@@ -40,27 +39,27 @@ const Standard = ({ setStep }: StandardProps) => {
                     className="flex flex-col items-center justify-center"
                     onClick={() => setStep('Welcome')}
                 >
-                    <IconButton aria-label="reset">
+                    <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="reset">
                         <RotateCcw className="text-[#90caf9]" />
-                    </IconButton>
+                    </button>
                     <div>{t('NEW_GOAL')}</div>
                 </div>
                 <div
                     className="flex flex-col items-center justify-center"
                     onClick={() => setStep('Tutorial_1')}
                 >
-                    <IconButton aria-label="help">
+                    <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="help">
                         <HelpCircle className="text-[#90caf9]" />
-                    </IconButton>
+                    </button>
                     <div>{t('HELP')}</div>
                 </div>
                 <div
                     className="flex flex-col items-center justify-center"
                     onClick={() => router.push('/measurements')}
                 >
-                    <IconButton aria-label="history">
+                    <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="history">
                         <History className="text-[#90caf9]" />
-                    </IconButton>
+                    </button>
                     <div>{t('HISTORY')}</div>
                 </div>
             </div>
@@ -103,7 +102,7 @@ const Standard = ({ setStep }: StandardProps) => {
                     <div>
                         {daysToCoach} {t('DAYS_UNTIL_NEXT')}
                     </div>
-                    <CoachButton disabled variant="contained">
+                    <CoachButton disabled>
                         {t('STANDARD_BUTTON')}
                     </CoachButton>
                 </>
@@ -112,7 +111,6 @@ const Standard = ({ setStep }: StandardProps) => {
                     <div>{t('STANDARD_TIME_TO_CHECK_PROGRESS')}</div>
                     <CoachButton
                         color="error"
-                        variant="contained"
                         onClick={() => setStep('ChooseAnalyzeSource')}
                     >
                         {t('STANDARD_BUTTON')}

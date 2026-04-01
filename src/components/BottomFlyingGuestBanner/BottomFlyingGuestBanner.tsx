@@ -1,4 +1,3 @@
-import Button from '@mui/material/Button';
 import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
 import CustomAvatar from '../CustomAvatar/CustomAvatar';
@@ -19,24 +18,18 @@ const BottomFlyingGuestBanner = ({ src, username }: BottomFlyingGuestBannerProps
     return (
         <>
             <div className="w-full h-9" />
-            <Button
+            <button
                 data-testid="BottomFlyingGuestBanner"
                 onClick={() => router.push(`/${router.query.login}`)}
-                sx={{
-                    maxWidth: 700,
-                    position: 'fixed',
-                    bottom: 52,
-                    width: 'calc( 100% - 24px )'
-                }}
-                variant="contained"
-                startIcon={<CustomAvatar
+                className="fixed bottom-[52px] flex w-[calc(100%-24px)] max-w-[700px] items-center justify-center gap-2 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
+            >
+                <CustomAvatar
                     src={src}
                     username={username}
                     size="24px"
-                />}
-            >
+                />
                 {t('WATCHING')} {username}
-            </Button>
+            </button>
         </>
     )
 }

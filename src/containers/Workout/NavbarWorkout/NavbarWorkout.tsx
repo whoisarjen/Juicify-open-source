@@ -1,6 +1,4 @@
 import { Save, Trash2, ArrowLeft } from 'lucide-react'
-import IconButton from '@mui/material/IconButton'
-import LoadingButton from '@mui/lab/LoadingButton'
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
@@ -27,27 +25,29 @@ const NavbarWorkout = ({
 
     return (
         <div className="flex w-full">
-            <IconButton aria-label="route" onClick={onArrowBack} sx={{ margin: 'auto' }}>
+            <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800 m-auto" aria-label="route" onClick={onArrowBack}>
                 <ArrowLeft />
-            </IconButton>
+            </button>
             <div className="flex-1" />
             {sessionData?.user?.username == router.query.login
                 ? <>
                     <DialogConfirm onConfirmed={onDelete} isDisabled={isDisabled}>
-                        <IconButton disabled={isDisabled} aria-label="delete" sx={{ margin: 'auto' }}>
+                        <button disabled={isDisabled} className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800 m-auto disabled:opacity-50" aria-label="delete">
                             <Trash2 />
-                        </IconButton>
+                        </button>
                     </DialogConfirm>
-                    <LoadingButton
-                        disabled={isDisabled}
-                        loading={isLoading}
-                        loadingPosition="start"
-                        startIcon={<Save />}
-                        variant="outlined"
+                    <button
+                        disabled={isDisabled || isLoading}
                         onClick={onSave}
+                        className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50 flex items-center gap-2"
                     >
+                        {isLoading ? (
+                            <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                        ) : (
+                            <Save size={18} />
+                        )}
                         {t('Save')}
-                    </LoadingButton>
+                    </button>
                 </>
                 : <>
                     <div />

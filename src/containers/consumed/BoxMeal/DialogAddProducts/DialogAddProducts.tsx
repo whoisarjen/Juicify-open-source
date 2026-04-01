@@ -1,6 +1,4 @@
 import { useState, type ReactNode, useEffect } from 'react'
-import Dialog from '@mui/material/Dialog'
-import Button from '@mui/material/Button'
 
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
 import useTranslation from 'next-translate/useTranslation'
@@ -82,118 +80,115 @@ const DialogAddProducts = ({ children, mealToAdd }: DialogAddProductsProps) => {
     return (
         <>
             <div onClick={() => setIsDialogOpen(true)}>{children}</div>
-            <Dialog
-                fullScreen
-                scroll="body"
-                open={isDialogOpen}
+            {isDialogOpen && (
+                <div className="fixed inset-0 z-50 bg-white dark:bg-gray-900 overflow-auto">
+                    <div className="flex flex-col items-center p-3">
+                        <div className="flex w-full max-w-3xl flex-1 flex-col gap-3">
+                            <NavbarOnlyTitle title="home:ADD_PRODUCTS" />
+                            <select
+                                className="mb-2.5 w-full rounded border border-gray-300 bg-transparent px-3 py-2 dark:border-gray-600"
+                                value={meal}
+                                onChange={(e) => setMeal(Number(e.target.value))}
+                            >
+                                {range(0, sessionData?.user?.numberOfMeals).map(
+                                    (index) => (
+                                        <option key={index} value={index}>
+                                            {t('Meal')} {index + 1}
+                                        </option>
+                                    )
+                                )}
+                            </select>
 
-            >
-                <div className="flex flex-col items-center p-3">
-                    <div className="flex w-full max-w-3xl flex-1 flex-col gap-3">
-                        <NavbarOnlyTitle title="home:ADD_PRODUCTS" />
-                        <select
-                            className="mb-2.5 w-full rounded border border-gray-300 bg-transparent px-3 py-2 dark:border-gray-600"
-                            value={meal}
-                            onChange={(e) => setMeal(Number(e.target.value))}
-                        >
-                            {range(0, sessionData?.user?.numberOfMeals).map(
-                                (index) => (
-                                    <option key={index} value={index}>
-                                        {t('Meal')} {index + 1}
-                                    </option>
+                            <CustomAutocomplete
+                                find={name}
+                                setFind={setName}
+                                isLoading={isFetching}
+                            />
+
+                            <TabsAddDialog
+                                changeTab={(value: number) => setTab(value)}
+                                checkedLength={checked.length}
+                            />
+
+                            {products.map((product) => {
+                                const isChecked = checked.some(
+                                    (x) => x.id === product.id
                                 )
-                            )}
-                        </select>
 
-                        <CustomAutocomplete
-                            find={name}
-                            setFind={setName}
-                            isLoading={isFetching}
-                        />
-
-                        <TabsAddDialog
-                            changeTab={(value: number) => setTab(value)}
-                            checkedLength={checked.length}
-                        />
-
-                        {products.map((product) => {
-                            const isChecked = checked.some(
-                                (x) => x.id === product.id
-                            )
-
-                            return (
-                                <BoxAddProduct
-                                    key={product.id}
-                                    product={product}
-                                    isChecked={isChecked}
-                                    onCheckClick={() =>
-                                        isChecked
-                                            ? setChecked(
-                                                  checked.filter(
-                                                      ({ id }) =>
-                                                          id !== product.id
+                                return (
+                                    <BoxAddProduct
+                                        key={product.id}
+                                        product={product}
+                                        isChecked={isChecked}
+                                        onCheckClick={() =>
+                                            isChecked
+                                                ? setChecked(
+                                                      checked.filter(
+                                                          ({ id }) =>
+                                                              id !== product.id
+                                                      )
                                                   )
-                                              )
-                                            : setChecked([...checked, product])
-                                    }
-                                    onValueChange={(howMany) => {
-                                        setLoadedProducts((state) =>
-                                            state.map((currentProduct) => {
-                                                if (
-                                                    currentProduct.id ===
-                                                    product.id
-                                                ) {
-                                                    return {
-                                                        ...currentProduct,
-                                                        howMany,
+                                                : setChecked([...checked, product])
+                                        }
+                                        onValueChange={(howMany) => {
+                                            setLoadedProducts((state) =>
+                                                state.map((currentProduct) => {
+                                                    if (
+                                                        currentProduct.id ===
+                                                        product.id
+                                                    ) {
+                                                        return {
+                                                            ...currentProduct,
+                                                            howMany,
+                                                        }
                                                     }
-                                                }
 
-                                                return currentProduct
-                                            })
-                                        )
+                                                    return currentProduct
+                                                })
+                                            )
 
-                                        setChecked(
-                                            checked.map((currentProduct) => {
-                                                if (
-                                                    currentProduct.id ===
-                                                    product.id
-                                                ) {
-                                                    return {
-                                                        ...currentProduct,
-                                                        howMany,
+                                            setChecked(
+                                                checked.map((currentProduct) => {
+                                                    if (
+                                                        currentProduct.id ===
+                                                        product.id
+                                                    ) {
+                                                        return {
+                                                            ...currentProduct,
+                                                            howMany,
+                                                        }
                                                     }
-                                                }
 
-                                                return currentProduct
-                                            })
-                                        )
-                                    }}
-                                />
-                            )
-                        })}
+                                                    return currentProduct
+                                                })
+                                            )
+                                        }}
+                                    />
+                                )
+                            })}
 
-                        <DialogCreateProduct
-                            created={(productName: string) =>
-                                setName(productName)
-                            }
-                        >
-                            <Button variant="outlined" sx={{ margin: 'auto' }}>
-                                {t('Create product')}
-                            </Button>
-                        </DialogCreateProduct>
+                            <DialogCreateProduct
+                                created={(productName: string) =>
+                                    setName(productName)
+                                }
+                            >
+                                <button className="mx-auto rounded border border-blue-500 px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800">
+                                    {t('Create product')}
+                                </button>
+                            </DialogCreateProduct>
 
-                        <ButtonSubmitItems
-                            clicked={addProductsToDiary}
-                            showNumber={checked.length}
-                        />
+                            <ButtonSubmitItems
+                                clicked={addProductsToDiary}
+                                showNumber={checked.length}
+                            />
 
-                        <ButtonCloseDialog
-                            clicked={() => setIsDialogOpen(false)}
-                        />
+                            <ButtonCloseDialog
+                                clicked={() => setIsDialogOpen(false)}
+                            />
+                        </div>
                     </div>
                 </div>
-            </Dialog>
+            )}
         </>
     )
 }

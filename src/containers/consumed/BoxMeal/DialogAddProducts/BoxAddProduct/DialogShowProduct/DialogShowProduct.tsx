@@ -1,6 +1,3 @@
-import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
-
 import useTranslation from 'next-translate/useTranslation'
 import {
     useState,
@@ -54,42 +51,42 @@ const DialogShowProduct = ({
                 cloneElement(children, {
                     onClick: () => handleSetIsDialog(true),
                 })}
-            <Dialog fullScreen open={isDialog}>
-                <div className="flex flex-col">
-                    <DialogShowProductDetails product={product} />
-                    <div className="h-20 w-full" />
-                    {isOwner && (
-                        <DialogConfirm
-                            isDisabled={!isOwner}
-                            onConfirmed={async () =>
-                                await deleteProduct.mutateAsync({
-                                    id: product.id,
-                                })
-                            }
-                        >
-                            <div className="fixed bottom-24 left-0 z-10 flex w-full items-center justify-center bg-black p-2">
-                                <Button
-                                    variant="contained"
-                                    className="flex-1"
-                                    color="error"
-                                >
-                                    {t('Delete')}
-                                </Button>
+            {isDialog && (
+                <div className="fixed inset-0 z-50 bg-white dark:bg-gray-900">
+                    <div className="flex flex-col">
+                        <DialogShowProductDetails product={product} />
+                        <div className="h-20 w-full" />
+                        {isOwner && (
+                            <DialogConfirm
+                                isDisabled={!isOwner}
+                                onConfirmed={async () =>
+                                    await deleteProduct.mutateAsync({
+                                        id: product.id,
+                                    })
+                                }
+                            >
+                                <div className="fixed bottom-24 left-0 z-10 flex w-full items-center justify-center bg-black p-2">
+                                    <button
+                                        className="flex-1 rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600 disabled:opacity-50"
+                                    >
+                                        {t('Delete')}
+                                    </button>
+                                </div>
+                            </DialogConfirm>
+                        )}
+                        <DialogAddProduct product={product}>
+                            <div className="fixed bottom-12 left-0 z-10 flex w-full items-center justify-center bg-black p-2">
+                                <button className="flex-1 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50">
+                                    {t('ADD_TO_DIARY')}
+                                </button>
                             </div>
-                        </DialogConfirm>
-                    )}
-                    <DialogAddProduct product={product}>
-                        <div className="fixed bottom-12 left-0 z-10 flex w-full items-center justify-center bg-black p-2">
-                            <Button variant="contained" className="flex-1">
-                                {t('ADD_TO_DIARY')}
-                            </Button>
-                        </div>
-                    </DialogAddProduct>
-                    <ButtonCloseDialog
-                        clicked={() => handleSetIsDialog(false)}
-                    />
+                        </DialogAddProduct>
+                        <ButtonCloseDialog
+                            clicked={() => handleSetIsDialog(false)}
+                        />
+                    </div>
                 </div>
-            </Dialog>
+            )}
         </>
     )
 }

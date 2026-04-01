@@ -1,5 +1,3 @@
-import Dialog from '@mui/material/Dialog'
-
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
 import { useState, ReactNode } from 'react'
 import ButtonCloseDialog from '@/components/ButtonCloseDialog/ButtonCloseDialog'
@@ -75,55 +73,52 @@ const DialogAddExercises = ({
                 )}
             </div>
 
-            <Dialog
-                fullScreen
-                scroll="body"
-                open={isDialog}
+            {isDialog && (
+                <div className="fixed inset-0 z-50 bg-white dark:bg-gray-900 overflow-auto">
+                    <div className="flex flex-col items-center p-3">
+                        <div className="flex w-full max-w-3xl flex-1 flex-col gap-3">
+                            <NavbarOnlyTitle title="workout:ADD_EXERCISES" />
 
-            >
-                <div className="flex flex-col items-center p-3">
-                    <div className="flex w-full max-w-3xl flex-1 flex-col gap-3">
-                        <NavbarOnlyTitle title="workout:ADD_EXERCISES" />
-
-                        <CustomAutocomplete
-                            find={name}
-                            setFind={setName}
-                            isLoading={isFetching}
-                        />
-
-                        <TabsAddDialog
-                            changeTab={(value: number) => setTab(value)}
-                            checkedLength={checked.length}
-                        />
-
-                        {exercises.map(exercise => (
-                            <BoxExercise
-                                isChecked={checked.some(
-                                    (x) => x.id === exercise.id
-                                )}
-                                onCheck={handleChangeCheckedState}
-                                exercise={exercise}
-                                key={exercise.id}
+                            <CustomAutocomplete
+                                find={name}
+                                setFind={setName}
+                                isLoading={isFetching}
                             />
-                        ))}
 
-                        <DialogCreateExercise
-                            onCreated={(createdName) =>
-                                createdName == name
-                                    ? setName('')
-                                    : setName(createdName)
-                            }
-                        />
+                            <TabsAddDialog
+                                changeTab={(value: number) => setTab(value)}
+                                checkedLength={checked.length}
+                            />
 
-                        <ButtonSubmitItems
-                            showNumber={checked.length}
-                            clicked={addExercisesToWorkoutPlan}
-                        />
+                            {exercises.map(exercise => (
+                                <BoxExercise
+                                    isChecked={checked.some(
+                                        (x) => x.id === exercise.id
+                                    )}
+                                    onCheck={handleChangeCheckedState}
+                                    exercise={exercise}
+                                    key={exercise.id}
+                                />
+                            ))}
 
-                        <ButtonCloseDialog clicked={() => setIsDialog(false)} />
+                            <DialogCreateExercise
+                                onCreated={(createdName) =>
+                                    createdName == name
+                                        ? setName('')
+                                        : setName(createdName)
+                                }
+                            />
+
+                            <ButtonSubmitItems
+                                showNumber={checked.length}
+                                clicked={addExercisesToWorkoutPlan}
+                            />
+
+                            <ButtonCloseDialog clicked={() => setIsDialog(false)} />
+                        </div>
                     </div>
                 </div>
-            </Dialog>
+            )}
         </>
     )
 }

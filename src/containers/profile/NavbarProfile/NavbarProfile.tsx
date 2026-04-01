@@ -1,5 +1,4 @@
 import { Settings, Facebook, Instagram, Twitter, Link } from 'lucide-react'
-import IconButton from '@mui/material/IconButton'
 import ButtonShare from '../../../components/ButtonShare/ButtonShare'
 import CustomAvatar from '../../../components/CustomAvatar/CustomAvatar'
 import { useRouter } from 'next/router'
@@ -38,15 +37,15 @@ const NavbarProfile = ({ tab }: { tab: number }) => {
                                 <>
                                     <ButtonShare />
                                     <div>
-                                        <IconButton
+                                        <button
+                                            className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
                                             onClick={() =>
                                                 router.push('/settings')
                                             }
                                             aria-label="settings"
-                                            color="primary"
                                         >
                                             <Settings />
-                                        </IconButton>
+                                        </button>
                                     </div>
                                 </>
                             ) : (
@@ -58,53 +57,53 @@ const NavbarProfile = ({ tab }: { tab: number }) => {
                     <div>{user?.description}</div>
                     <div>
                         {user?.facebook && (
-                            <IconButton
+                            <button
+                                className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
                                 onClick={() =>
                                     window.open(
                                         `https://facebook.com/${user?.facebook}`,
                                         '_blank'
                                     )
                                 }
-                                color="primary"
                             >
                                 <Facebook />
-                            </IconButton>
+                            </button>
                         )}
                         {user?.instagram && (
-                            <IconButton
+                            <button
+                                className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
                                 onClick={() =>
                                     window.open(
                                         `https://instagram.com/${user?.instagram}`,
                                         '_blank'
                                     )
                                 }
-                                color="primary"
                             >
                                 <Instagram />
-                            </IconButton>
+                            </button>
                         )}
                         {user?.twitter && (
-                            <IconButton
+                            <button
+                                className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
                                 onClick={() =>
                                     window.open(
                                         `https://twitter.com/${user?.twitter}`,
                                         '_blank'
                                     )
                                 }
-                                color="primary"
                             >
                                 <Twitter />
-                            </IconButton>
+                            </button>
                         )}
                         {user?.website && (
-                            <IconButton
+                            <button
+                                className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
                                 onClick={() =>
                                     window.open(`${user?.website}`, '_blank')
                                 }
-                                color="primary"
                             >
                                 <Link />
-                            </IconButton>
+                            </button>
                         )}
                     </div>
                 </div>

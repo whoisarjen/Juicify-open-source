@@ -1,4 +1,3 @@
-import Button from '@mui/material/Button'
 import useTranslation from 'next-translate/useTranslation'
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
 import moment from 'moment'
@@ -59,35 +58,32 @@ const CheckingTodayData = ({ setStep }: CheckingTodayDataProps) => {
                     <div className="flex flex-1 items-center justify-center text-center">
                         {t('CHECKING_TODAY_DESCRIPTION')}
                     </div>
-                    <Button
-                        sx={{ margin: 'auto 0', width: '100%' }}
-                        variant="contained"
+                    <button
+                        className="mt-auto w-full rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
                         onClick={() => router.push('/measurements')}
                     >
                         {t('ADD_WEIGHT')}
-                    </Button>
+                    </button>
                 </>
             ) : (
                 <>
                     <div />
                     <div>{t('CHECKING_TODAY_DESCRIPTION_ALTERNATIVE')}</div>
-                    <Button
-                        sx={{ width: '100%' }}
-                        variant="contained"
-                        color="error"
+                    <button
+                        className="w-full rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600 disabled:opacity-50"
                         onClick={() => router.push('/measurements')}
                     >
                         {t('ADD_WEIGHT')}
-                    </Button>
+                    </button>
                 </>
             )}
-            <Button
-                variant="contained"
+            <button
+                className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
                 onClick={() => setStep('ChooseDiet')}
                 disabled={weight == 0}
             >
                 {t('CHECKING_TODAY_BUTTON')}
-            </Button>
+            </button>
         </div>
     )
 }

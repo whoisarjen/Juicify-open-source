@@ -1,5 +1,4 @@
 
-import TextField from '@mui/material/TextField'
 import { Trash2, ArrowUpDown } from 'lucide-react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -10,7 +9,6 @@ import { useForm, useFieldArray } from 'react-hook-form'
 import BottomFlyingGuestBanner from '@/components/BottomFlyingGuestBanner/BottomFlyingGuestBanner'
 import NavbarWorkout from '@/containers/Workout/NavbarWorkout/NavbarWorkout'
 import DialogAddExercises from '@/containers/DialogAddExercises/DialogAddExercises'
-import InputAdornment from '@mui/material/InputAdornment'
 import { useSession } from 'next-auth/react'
 import { trpc } from '@/utils/trpc.utils'
 import {
@@ -18,7 +16,6 @@ import {
     workoutPlanSchema,
 } from '@/server/schema/workoutPlan.schema'
 import { updateArray } from '@/utils/global.utils'
-import Autocomplete from '@mui/material/Autocomplete'
 import { range } from 'lodash'
 import { CustomTextField } from '@/components/CustomTextField'
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm'
@@ -147,43 +144,40 @@ const WorkoutPlan = () => {
                     router.push(`/${sessionData?.user?.username}/workout/plans`)
                 }
             />
-            <TextField
-                focused
-                disabled={!isOwner}
-                label={t('NAME_OF_WORKOUT')}
-                {...register('name')}
-                type="text"
-                error={typeof errors.name === 'undefined' ? false : true}
-                helperText={errors.name?.message}
-            />
+            <div>
+                <label className="mb-1 block text-sm text-gray-500">{t('NAME_OF_WORKOUT')}</label>
+                <input
+                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                    disabled={!isOwner}
+                    type="text"
+                    {...register('name')}
+                />
+                {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name.message}</p>}
+            </div>
 
-            <TextField
-                variant="outlined"
-                label={t('BURNT_CALORIES')}
-                type="number"
-                focused
-                fullWidth
-                disabled={!isOwner}
-                {...register('burnedCalories')}
-                error={!!errors.burnedCalories}
-                helperText={errors.burnedCalories?.message}
-                InputProps={{
-                    endAdornment: (
-                        <InputAdornment position="end">kcal</InputAdornment>
-                    ),
-                }}
-            />
+            <div>
+                <label className="mb-1 block text-sm text-gray-500">{t('BURNT_CALORIES')}</label>
+                <div className="flex items-center rounded border border-gray-300 focus-within:border-blue-500 dark:border-gray-600">
+                    <input
+                        className="flex-1 bg-transparent px-3 py-2 outline-none"
+                        type="number"
+                        disabled={!isOwner}
+                        {...register('burnedCalories')}
+                    />
+                    <span className="px-3 text-sm text-gray-500">kcal</span>
+                </div>
+                {errors.burnedCalories && <p className="mt-1 text-xs text-red-500">{errors.burnedCalories.message}</p>}
+            </div>
 
-            <TextField
-                focused
-                multiline
-                disabled={!isOwner}
-                label={t('DESCRIPTION')}
-                type="text"
-                {...register('description')}
-                error={typeof errors.description === 'undefined' ? false : true}
-                helperText={errors.description?.message}
-            />
+            <div>
+                <label className="mb-1 block text-sm text-gray-500">{t('DESCRIPTION')}</label>
+                <textarea
+                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                    disabled={!isOwner}
+                    {...register('description')}
+                />
+                {errors.description && <p className="mt-1 text-xs text-red-500">{errors.description.message}</p>}
+            </div>
 
             <DragDropContext onDragEnd={handleOnDragEnd}>
                 <Droppable droppableId="exercises">
@@ -222,75 +216,60 @@ const WorkoutPlan = () => {
                                                 </DialogConfirm>
                                             </div>
                                             <div>
-                                                <Autocomplete
-                                                    sx={{ marginTop: '10px' }}
-                                                    disablePortal
-                                                    value={exercise.series ?? 1}
-                                                    options={SERIES}
-                                                    onChange={(_, series) =>
-                                                        update(i, {
-                                                            ...exercise,
-                                                            series,
-                                                        })
-                                                    }
-                                                    disableClearable
-                                                    disabled={!isOwner}
-                                                    getOptionLabel={(option) =>
-                                                        option.toString()
-                                                    }
-                                                    renderInput={(params) => (
-                                                        <TextField
-                                                            {...params}
-                                                            label="Series"
-                                                        />
-                                                    )}
-                                                />
-                                                <Autocomplete
-                                                    sx={{ marginTop: '10px' }}
-                                                    disablePortal
-                                                    value={exercise.reps ?? 1}
-                                                    options={REPS}
-                                                    onChange={(_, reps) =>
-                                                        update(i, {
-                                                            ...exercise,
-                                                            reps,
-                                                        })
-                                                    }
-                                                    disableClearable
-                                                    disabled={!isOwner}
-                                                    getOptionLabel={(option) =>
-                                                        option.toString()
-                                                    }
-                                                    renderInput={(params) => (
-                                                        <TextField
-                                                            {...params}
-                                                            label="Reps"
-                                                        />
-                                                    )}
-                                                />
-                                                <Autocomplete
-                                                    sx={{ marginTop: '10px' }}
-                                                    disablePortal
-                                                    value={exercise.rir ?? 1}
-                                                    options={RIR}
-                                                    onChange={(_, rir) =>
-                                                        update(i, {
-                                                            ...exercise,
-                                                            rir,
-                                                        })
-                                                    }
-                                                    disableClearable
-                                                    disabled={!isOwner}
-                                                    getOptionLabel={(option) =>
-                                                        option.toString()
-                                                    }
-                                                    renderInput={(params) => (
-                                                        <TextField
-                                                            {...params}
-                                                            label="RIR"
-                                                        />
-                                                    )}
-                                                />
+                                                <div className="mt-2.5">
+                                                    <label className="mb-1 block text-sm text-gray-500">Series</label>
+                                                    <select
+                                                        className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                                                        value={exercise.series ?? 1}
+                                                        onChange={(e) =>
+                                                            update(i, {
+                                                                ...exercise,
+                                                                series: Number(e.target.value),
+                                                            })
+                                                        }
+                                                        disabled={!isOwner}
+                                                    >
+                                                        {SERIES.map((opt) => (
+                                                            <option key={opt} value={opt}>{opt}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div className="mt-2.5">
+                                                    <label className="mb-1 block text-sm text-gray-500">Reps</label>
+                                                    <select
+                                                        className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                                                        value={exercise.reps ?? 1}
+                                                        onChange={(e) =>
+                                                            update(i, {
+                                                                ...exercise,
+                                                                reps: Number(e.target.value),
+                                                            })
+                                                        }
+                                                        disabled={!isOwner}
+                                                    >
+                                                        {REPS.map((opt) => (
+                                                            <option key={opt} value={opt}>{opt}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div className="mt-2.5">
+                                                    <label className="mb-1 block text-sm text-gray-500">RIR</label>
+                                                    <select
+                                                        className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                                                        value={exercise.rir ?? 1}
+                                                        onChange={(e) =>
+                                                            update(i, {
+                                                                ...exercise,
+                                                                rir: Number(e.target.value),
+                                                            })
+                                                        }
+                                                        disabled={!isOwner}
+                                                    >
+                                                        {RIR.map((opt) => (
+                                                            <option key={opt} value={opt}>{opt}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
                                             </div>
 
                                             <CustomTextField
@@ -298,10 +277,7 @@ const WorkoutPlan = () => {
                                                 disabled={!isOwner}
                                                 label={t('Notes')}
                                                 type="text"
-                                                sx={{
-                                                    width: '100%',
-                                                    marginTop: '10px',
-                                                }}
+                                                className="mt-2.5 w-full"
                                                 defaultValue={exercise.note}
                                                 onChange={(note) =>
                                                     update(i, {

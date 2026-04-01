@@ -1,5 +1,4 @@
 import Logo from '@/components/Logo/Logo'
-import Button from '@mui/material/Button'
 
 const Offline = () => {
     return (
@@ -24,13 +23,12 @@ const Offline = () => {
             <p style={{ marginTop: '12px', color: '#7a7a7a', maxWidth: '400px' }}>
                 Check your internet connection and try again. Your data will sync when you are back online.
             </p>
-            <Button
-                variant="outlined"
+            <button
+                className="mt-6 rounded border border-[#90caf9] px-4 py-2 text-[#90caf9] hover:bg-gray-800"
                 onClick={() => window.location.reload()}
-                sx={{ mt: 3, borderColor: '#90caf9', color: '#90caf9' }}
             >
                 Try again
-            </Button>
+            </button>
         </div>
     )
 }

@@ -1,5 +1,4 @@
 import { LockOpen } from 'lucide-react'
-import Button from '@mui/material/Button'
 import useTranslation from 'next-translate/useTranslation'
 import { useEffect, useState } from 'react'
 import ButtonSubmitItems from '@/components/ButtonSubmitItems/ButtonSubmitItems'
@@ -201,12 +200,12 @@ const MacronutrientsPage = () => {
                                     {t('DESCRIPTION_2')}
                                 </div>
                             </div>
-                            <Button
-                                variant="contained"
+                            <button
+                                className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
                                 onClick={() => setIsOwnMacro(true)}
                             >
                                 {t('BUTTON')}
-                            </Button>
+                            </button>
                         </div>
                     )}
                 </div>

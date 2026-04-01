@@ -1,4 +1,3 @@
-import Button from '@mui/material/Button'
 import useTranslation from 'next-translate/useTranslation'
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
 import { type GetMacronutrientsReturn } from '@/utils/coach.utils'
@@ -31,16 +30,18 @@ const Result = ({ setStep, data }: Result) => {
             <div className="flex flex-1 items-center justify-center text-center">
                 {t('RESULT_TITLE_DESCIPRION')}
             </div>
-            <Button
-                variant="contained"
-                color="error"
+            <button
+                className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600 disabled:opacity-50"
                 onClick={() => setStep('Tutorial_1')}
             >
                 {t('DONT_GET_IT')}
-            </Button>
-            <Button variant="contained" onClick={() => setStep('Standard')}>
+            </button>
+            <button
+                className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
+                onClick={() => setStep('Standard')}
+            >
                 {t('GOT_IT')}
-            </Button>
+            </button>
         </div>
     )
 }

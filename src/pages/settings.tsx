@@ -3,9 +3,6 @@ import { type UserSchema, userSchema } from '@/server/schema/user.schema'
 import { reloadSession } from '@/utils/global.utils'
 import { trpc } from '@/utils/trpc.utils'
 import { zodResolver } from '@hookform/resolvers/zod'
-import Button from '@mui/material/Button'
-import InputAdornment from '@mui/material/InputAdornment'
-import TextField from '@mui/material/TextField'
 import { useSession } from 'next-auth/react'
 import useTranslation from 'next-translate/useTranslation'
 import { useEffect } from 'react'
@@ -51,61 +48,52 @@ const SettingsPage = () => {
             <div>{t('Preferences')}</div>
             <SelectLanguage />
             <div>{t('Diary')}</div>
-            <TextField
-                variant="outlined"
-                label={t('Number of meals')}
-                type="number"
-                {...register('numberOfMeals')}
-                error={
-                    typeof errors.numberOfMeals === 'undefined' ? false : true
-                }
-                helperText={errors.numberOfMeals?.message}
-            />
-            <TextField
-                label={t('Fiber')}
-                type="number"
-                InputProps={{
-                    endAdornment: (
-                        <InputAdornment position="start">
-                            g / 1000 kcal
-                        </InputAdornment>
-                    ),
-                }}
-                {...register('fiber')}
-                error={typeof errors.fiber === 'undefined' ? false : true}
-                helperText={errors.fiber?.message}
-            />
-            <TextField
-                label={t('Sugar')}
-                type="number"
-                InputProps={{
-                    endAdornment: (
-                        <InputAdornment position="start">
-                            % / {t('Carbs')}
-                        </InputAdornment>
-                    ),
-                }}
-                {...register('carbsPercentAsSugar')}
-                error={
-                    typeof errors.carbsPercentAsSugar === 'undefined'
-                        ? false
-                        : true
-                }
-                helperText={errors.carbsPercentAsSugar?.message}
-            />
+            <div>
+                <label className="mb-1 block text-sm text-gray-500">{t('Number of meals')}</label>
+                <input
+                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                    type="number"
+                    {...register('numberOfMeals')}
+                />
+                {errors.numberOfMeals && <p className="mt-1 text-xs text-red-500">{errors.numberOfMeals.message}</p>}
+            </div>
+            <div>
+                <label className="mb-1 block text-sm text-gray-500">{t('Fiber')}</label>
+                <div className="flex items-center rounded border border-gray-300 focus-within:border-blue-500 dark:border-gray-600">
+                    <input
+                        className="flex-1 bg-transparent px-3 py-2 outline-none"
+                        type="number"
+                        {...register('fiber')}
+                    />
+                    <span className="px-3 text-sm text-gray-500">g / 1000 kcal</span>
+                </div>
+                {errors.fiber && <p className="mt-1 text-xs text-red-500">{errors.fiber.message}</p>}
+            </div>
+            <div>
+                <label className="mb-1 block text-sm text-gray-500">{t('Sugar')}</label>
+                <div className="flex items-center rounded border border-gray-300 focus-within:border-blue-500 dark:border-gray-600">
+                    <input
+                        className="flex-1 bg-transparent px-3 py-2 outline-none"
+                        type="number"
+                        {...register('carbsPercentAsSugar')}
+                    />
+                    <span className="px-3 text-sm text-gray-500">% / {t('Carbs')}</span>
+                </div>
+                {errors.carbsPercentAsSugar && <p className="mt-1 text-xs text-red-500">{errors.carbsPercentAsSugar.message}</p>}
+            </div>
             <div>{t('Profile')}</div>
-            <TextField
-                label={t('Height')}
-                type="number"
-                InputProps={{
-                    endAdornment: (
-                        <InputAdornment position="start">cm</InputAdornment>
-                    ),
-                }}
-                {...register('height')}
-                error={typeof errors.height === 'undefined' ? false : true}
-                helperText={errors.height?.message}
-            />
+            <div>
+                <label className="mb-1 block text-sm text-gray-500">{t('Height')}</label>
+                <div className="flex items-center rounded border border-gray-300 focus-within:border-blue-500 dark:border-gray-600">
+                    <input
+                        className="flex-1 bg-transparent px-3 py-2 outline-none"
+                        type="number"
+                        {...register('height')}
+                    />
+                    <span className="px-3 text-sm text-gray-500">cm</span>
+                </div>
+                {errors.height && <p className="mt-1 text-xs text-red-500">{errors.height.message}</p>}
+            </div>
 
             <DatePicker
                 defaultDate={getValues().birth}
@@ -115,77 +103,66 @@ const SettingsPage = () => {
                 register={register('birth')}
             />
 
-            <TextField
-                label={t('Description')}
-                variant="outlined"
-                type="text"
-                {...register('description')}
-                error={typeof errors.description === 'undefined' ? false : true}
-                helperText={errors.description?.message}
-            />
-            <TextField
-                label={t('Website')}
-                variant="outlined"
-                InputProps={{
-                    startAdornment: (
-                        <InputAdornment position="start">
-                            https://
-                        </InputAdornment>
-                    ),
-                }}
-                type="text"
-                {...register('website')}
-                error={typeof errors.website === 'undefined' ? false : true}
-                helperText={errors.website?.message}
-            />
-            <TextField
-                label="Facebook"
-                variant="outlined"
-                InputProps={{
-                    startAdornment: (
-                        <InputAdornment position="start">
-                            https://facebook.com/
-                        </InputAdornment>
-                    ),
-                }}
-                type="text"
-                {...register('facebook')}
-                error={typeof errors.facebook === 'undefined' ? false : true}
-                helperText={errors.facebook?.message}
-            />
-            <TextField
-                label="Instagram"
-                variant="outlined"
-                InputProps={{
-                    startAdornment: (
-                        <InputAdornment position="start">
-                            https://instagram.com/
-                        </InputAdornment>
-                    ),
-                }}
-                type="text"
-                {...register('instagram')}
-                error={typeof errors.instagram === 'undefined' ? false : true}
-                helperText={errors.instagram?.message}
-            />
-            <TextField
-                label="Twitter"
-                variant="outlined"
-                InputProps={{
-                    startAdornment: (
-                        <InputAdornment position="start">
-                            https://twitter.com/
-                        </InputAdornment>
-                    ),
-                }}
-                type="text"
-                {...register('twitter')}
-                error={typeof errors.twitter === 'undefined' ? false : true}
-                helperText={errors.twitter?.message}
-            />
-            <Button color="error" onClick={() => handleSignOut()}>
+            <div>
+                <label className="mb-1 block text-sm text-gray-500">{t('Description')}</label>
+                <input
+                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
+                    type="text"
+                    {...register('description')}
+                />
+                {errors.description && <p className="mt-1 text-xs text-red-500">{errors.description.message}</p>}
+            </div>
+            <div>
+                <label className="mb-1 block text-sm text-gray-500">{t('Website')}</label>
+                <div className="flex items-center rounded border border-gray-300 focus-within:border-blue-500 dark:border-gray-600">
+                    <span className="px-3 text-sm text-gray-500">https://</span>
+                    <input
+                        className="flex-1 bg-transparent px-3 py-2 outline-none"
+                        type="text"
+                        {...register('website')}
+                    />
+                </div>
+                {errors.website && <p className="mt-1 text-xs text-red-500">{errors.website.message}</p>}
+            </div>
+            <div>
+                <label className="mb-1 block text-sm text-gray-500">Facebook</label>
+                <div className="flex items-center rounded border border-gray-300 focus-within:border-blue-500 dark:border-gray-600">
+                    <span className="px-3 text-sm text-gray-500">https://facebook.com/</span>
+                    <input
+                        className="flex-1 bg-transparent px-3 py-2 outline-none"
+                        type="text"
+                        {...register('facebook')}
+                    />
+                </div>
+                {errors.facebook && <p className="mt-1 text-xs text-red-500">{errors.facebook.message}</p>}
+            </div>
+            <div>
+                <label className="mb-1 block text-sm text-gray-500">Instagram</label>
+                <div className="flex items-center rounded border border-gray-300 focus-within:border-blue-500 dark:border-gray-600">
+                    <span className="px-3 text-sm text-gray-500">https://instagram.com/</span>
+                    <input
+                        className="flex-1 bg-transparent px-3 py-2 outline-none"
+                        type="text"
+                        {...register('instagram')}
+                    />
+                </div>
+                {errors.instagram && <p className="mt-1 text-xs text-red-500">{errors.instagram.message}</p>}
+            </div>
+            <div>
+                <label className="mb-1 block text-sm text-gray-500">Twitter</label>
+                <div className="flex items-center rounded border border-gray-300 focus-within:border-blue-500 dark:border-gray-600">
+                    <span className="px-3 text-sm text-gray-500">https://twitter.com/</span>
+                    <input
+                        className="flex-1 bg-transparent px-3 py-2 outline-none"
+                        type="text"
+                        {...register('twitter')}
+                    />
+                </div>
+                {errors.twitter && <p className="mt-1 text-xs text-red-500">{errors.twitter.message}</p>}
+            </div>
+            <button type="button" className="px-4 py-2 text-red-500 hover:bg-red-50 dark:hover:bg-gray-800" onClick={() => handleSignOut()}>
                 {t('LOGOUT')}
-            </Button>
+            </button>
             {isDirty && (
                 <button onClick={() => handleSubmit(changeSettings)}>
                     Submit

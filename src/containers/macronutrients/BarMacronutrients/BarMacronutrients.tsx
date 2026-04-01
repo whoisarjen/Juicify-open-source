@@ -1,5 +1,4 @@
 import { LockOpen, Lock } from 'lucide-react'
-import IconButton from '@mui/material/IconButton'
 import moment from 'moment'
 
 interface BarMacronutrientsProps {
@@ -53,23 +52,23 @@ const BarMacronutrients = ({
             <div className="flex w-full items-center justify-center">
                 <div className="flex h-10 w-10 items-center justify-center">
                     {object.locked ? (
-                        <IconButton
+                        <button
                             data-testid="button"
                             onClick={toggleLock}
-                            color="secondary"
+                            className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
                             style={{ margin: 'auto' }}
                         >
                             <Lock data-testid="LockOutlinedIcon" />
-                        </IconButton>
+                        </button>
                     ) : (
-                        <IconButton
+                        <button
                             data-testid="button"
                             onClick={toggleLock}
-                            color="primary"
+                            className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
                             style={{ margin: 'auto' }}
                         >
                             <LockOpen data-testid="LockOpenIcon" />
-                        </IconButton>
+                        </button>
                     )}
                 </div>
             </div>

@@ -1,5 +1,3 @@
-import TextField from '@mui/material/TextField'
-import IconButton from '@mui/material/IconButton'
 import { Info } from 'lucide-react'
 import useTranslation from 'next-translate/useTranslation'
 import { useState } from 'react'
@@ -46,12 +44,12 @@ const BoxAddProduct = ({
             </div>
             <DialogShowProduct product={product}>
                 <div>
-                    <IconButton>
+                    <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800">
                         <Info size={20} className="text-[#90caf9]" />
-                    </IconButton>
+                    </button>
                 </div>
             </DialogShowProduct>
-            <TextField
+            <input
                 type="number"
                 value={howMany}
                 onChange={(e) =>
@@ -59,11 +57,9 @@ const BoxAddProduct = ({
                         e.target.value ? Number(e.target.value) : undefined
                     )
                 }
-                inputProps={{
-                    inputMode: 'numeric',
-                    pattern: '[0-9]*',
-                }}
-                className="max-w-[52px]"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                className="max-w-[52px] rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
             />
             <input
                 data-testid="checked"

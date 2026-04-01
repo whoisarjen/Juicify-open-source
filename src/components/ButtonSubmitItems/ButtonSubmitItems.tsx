@@ -1,4 +1,3 @@
-import LoadingButton from '@mui/lab/LoadingButton'
 import useTranslation from 'next-translate/useTranslation'
 
 interface ButtonSubmitItemsProps {
@@ -24,15 +23,15 @@ const ButtonSubmitItems = ({
         <>
             <div className="h-11 w-full" />
             <div className="fixed bottom-14 left-0 z-10 flex w-full items-center justify-center">
-                <LoadingButton
+                <button
                     data-testid="ButtonSubmitItems"
                     onClick={clicked}
-                    variant="contained"
+                    className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
                     type="submit"
                 >
                     {t(text)}
                     {showNumber > 0 && ` (${showNumber})`}
-                </LoadingButton>
+                </button>
             </div>
         </>
     )

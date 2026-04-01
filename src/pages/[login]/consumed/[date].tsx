@@ -11,7 +11,6 @@ import BoxBurned from "@/containers/consumed/BoxBurned/BoxBurned";
 import { env } from "@/env/client.mjs";
 import useConsumed from "@/hooks/useConsumed";
 import { useRouter } from "next/router";
-import IconButton from '@mui/material/IconButton'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import CustomAvatar from '@/components/CustomAvatar/CustomAvatar'
@@ -47,13 +46,13 @@ const Consumed = () => {
                 <DateChanger />
                 {username === sessionData?.user?.username &&
                     <Link href={`/${sessionData?.user?.username}`}>
-                        <IconButton color="primary">
+                        <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800">
                             <CustomAvatar
                                 src={sessionData?.user?.image}
                                 username={sessionData?.user?.username}
                                 size="28px"
                             />
-                        </IconButton>
+                        </button>
                     </Link>
                 }
             </div>

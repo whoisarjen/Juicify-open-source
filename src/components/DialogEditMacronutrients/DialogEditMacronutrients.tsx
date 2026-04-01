@@ -1,12 +1,3 @@
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm';
 import { useSession } from 'next-auth/react';
 import useTranslation from 'next-translate/useTranslation';
@@ -49,73 +40,63 @@ const DialogEditMacronutrients = ({
         })
 
     return (
-        <Dialog
-            open={isOwnMacro}
-
-            keepMounted
-            onClose={onClose}
-        >
-            <DialogTitle>{t('BUTTON')}</DialogTitle>
-            <DialogContent>
-                <DialogContentText id="alert-dialog-slide-description">
-                    {t('OWN_MACRO_DESCRIPTION')}
-                </DialogContentText>
-                <TextField
-                    fullWidth
-                    sx={{ marginTop: '5px' }}
-                    id="outlined-basic"
-                    label={t('PROTEINS')}
-                    value={proteins}
-                    onChange={(e) => setProteins(parseInt(e.target.value.toString()))}
-                    variant="outlined"
-                    type="number"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    InputProps={{
-                        endAdornment: <InputAdornment position="start">g/day</InputAdornment>,
-                    }}
-                />
-                <TextField
-                    fullWidth
-                    sx={{ marginTop: '5px' }}
-                    id="outlined-basic"
-                    label={t('CARBS')}
-                    value={carbs}
-                    onChange={(e) => setCarbs(parseInt(e.target.value.toString()))}
-                    variant="outlined"
-                    type="number"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    InputProps={{
-                        endAdornment: <InputAdornment position="start">g/day</InputAdornment>,
-                    }}
-                />
-                <TextField
-                    fullWidth
-                    sx={{ marginTop: '5px' }}
-                    id="outlined-basic"
-                    label={t('FATS')}
-                    value={fats}
-                    onChange={(e) => setFats(parseInt(e.target.value.toString()))}
-                    variant="outlined"
-                    type="number"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    InputProps={{
-                        endAdornment: <InputAdornment position="start">g/day</InputAdornment>,
-                    }}
-                />
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={onClose}>{t('CLOSE')}</Button>
-                <DialogConfirm onConfirmed={handleConfirm}>
-                    <Button onClick={() => setIsDialog(true)}>{t('CHANGE_ALL_DAYS')}</Button>
-                </DialogConfirm>
-            </DialogActions>
-        </Dialog>
+        <>
+            {isOwnMacro && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center">
+                    <div className="fixed inset-0 bg-black/50" onClick={onClose} />
+                    <div className="relative z-50 w-full max-w-lg rounded-lg bg-white p-0 shadow-xl dark:bg-gray-900">
+                        <div className="px-6 pt-6 text-lg font-semibold">{t('BUTTON')}</div>
+                        <div className="px-6 py-4">
+                            <p className="text-sm text-gray-500">
+                                {t('OWN_MACRO_DESCRIPTION')}
+                            </p>
+                            <div className="mt-1 w-full">
+                                <label className="mb-1 block text-sm text-gray-500">{t('PROTEINS')}</label>
+                                <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-blue-500 dark:border-gray-600">
+                                    <input
+                                        className="flex-1 bg-transparent px-3 py-2 outline-none"
+                                        type="number"
+                                        value={proteins}
+                                        onChange={(e) => setProteins(parseInt(e.target.value.toString()))}
+                                    />
+                                    <span className="px-3 text-sm text-gray-500">g/day</span>
+                                </div>
+                            </div>
+                            <div className="mt-1 w-full">
+                                <label className="mb-1 block text-sm text-gray-500">{t('CARBS')}</label>
+                                <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-blue-500 dark:border-gray-600">
+                                    <input
+                                        className="flex-1 bg-transparent px-3 py-2 outline-none"
+                                        type="number"
+                                        value={carbs}
+                                        onChange={(e) => setCarbs(parseInt(e.target.value.toString()))}
+                                    />
+                                    <span className="px-3 text-sm text-gray-500">g/day</span>
+                                </div>
+                            </div>
+                            <div className="mt-1 w-full">
+                                <label className="mb-1 block text-sm text-gray-500">{t('FATS')}</label>
+                                <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-blue-500 dark:border-gray-600">
+                                    <input
+                                        className="flex-1 bg-transparent px-3 py-2 outline-none"
+                                        type="number"
+                                        value={fats}
+                                        onChange={(e) => setFats(parseInt(e.target.value.toString()))}
+                                    />
+                                    <span className="px-3 text-sm text-gray-500">g/day</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex justify-end gap-2 px-6 pb-6">
+                            <button className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800" onClick={onClose}>{t('CLOSE')}</button>
+                            <DialogConfirm onConfirmed={handleConfirm}>
+                                <button className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800" onClick={() => setIsDialog(true)}>{t('CHANGE_ALL_DAYS')}</button>
+                            </DialogConfirm>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
     )
 }
 

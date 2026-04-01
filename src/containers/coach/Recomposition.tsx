@@ -1,8 +1,6 @@
 import { useState } from 'react'
-import Button from '@mui/material/Button'
 import useTranslation from 'next-translate/useTranslation'
 import { ArrowLeft } from 'lucide-react'
-import IconButton from '@mui/material/IconButton'
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
 import { DIET_ACTIVITY, DIET_KIND } from './constants'
 import { goals, activityLevels, kindOfDiets } from '@prisma/client'
@@ -33,13 +31,14 @@ const Recomposition = ({
     return (
         <div className="flex h-full flex-col gap-4">
             <div>
-                <IconButton
+                <button
+                    className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
                     aria-label="back"
                     onClick={() => handlePreviousStep('ChooseDiet')}
                 >
                     <ArrowLeft />
                     <div />
-                </IconButton>
+                </button>
             </div>
             <NavbarOnlyTitle title="coach:RECOMPOSITION" />
             <div className="flex flex-1 items-center justify-center text-center">
@@ -87,9 +86,12 @@ const Recomposition = ({
                     ))}
                 </select>
             </div>
-            <Button variant="contained" onClick={handleNextStep}>
+            <button
+                className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
+                onClick={handleNextStep}
+            >
                 {t('COUNT_DIET')}
-            </Button>
+            </button>
         </div>
     )
 }
