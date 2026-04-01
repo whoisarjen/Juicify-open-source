@@ -9,7 +9,6 @@ import CardMedia from '@mui/material/CardMedia'
 import CardContent from '@mui/material/CardContent'
 import Chip from '@mui/material/Chip'
 import Skeleton from '@mui/material/Skeleton'
-import Pagination from '@mui/material/Pagination'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
@@ -436,20 +435,35 @@ const BlogPage = ({ initialArticles, initialTotalPages }: BlogPageProps) => {
 
                     {/* Pagination */}
                     {totalPages > 1 && (
-                        <Box className="flex justify-center pb-8 pt-4">
-                            <Pagination
-                                count={totalPages}
-                                page={page}
-                                onChange={(_, value) => setPage(value)}
-                                color="primary"
-                                size="large"
-                                sx={{
-                                    '& .MuiPaginationItem-root': {
-                                        color: 'text.secondary',
-                                    },
-                                }}
-                            />
-                        </Box>
+                        <div className="flex justify-center gap-2 pb-8 pt-4">
+                            <button
+                                onClick={() => setPage(page - 1)}
+                                disabled={page === 1}
+                                className="rounded-lg px-3 py-2 text-sm text-gray-400 transition-colors hover:bg-white/10 disabled:opacity-30 disabled:hover:bg-transparent"
+                            >
+                                &lsaquo;
+                            </button>
+                            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                                <button
+                                    key={p}
+                                    onClick={() => setPage(p)}
+                                    className={`min-w-[40px] rounded-lg px-3 py-2 text-sm transition-colors ${
+                                        p === page
+                                            ? 'bg-blue-500 text-white'
+                                            : 'text-gray-400 hover:bg-white/10'
+                                    }`}
+                                >
+                                    {p}
+                                </button>
+                            ))}
+                            <button
+                                onClick={() => setPage(page + 1)}
+                                disabled={page === totalPages}
+                                className="rounded-lg px-3 py-2 text-sm text-gray-400 transition-colors hover:bg-white/10 disabled:opacity-30 disabled:hover:bg-transparent"
+                            >
+                                &rsaquo;
+                            </button>
+                        </div>
                     )}
                 </div>
             )}

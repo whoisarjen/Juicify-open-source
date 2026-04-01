@@ -2,8 +2,6 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { type GetServerSideProps } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import Breadcrumbs from '@mui/material/Breadcrumbs'
-import MuiLink from '@mui/material/Link'
 import Chip from '@mui/material/Chip'
 import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
@@ -240,41 +238,25 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
                 </Link>
 
                 {/* Breadcrumbs */}
-                <Breadcrumbs
-                    aria-label="breadcrumb"
-                    sx={{ mb: 3, fontSize: '0.85rem' }}
-                >
-                    <Link href="/" passHref legacyBehavior>
-                        <MuiLink
-                            underline="hover"
-                            color="text.secondary"
-                            sx={{ fontSize: 'inherit' }}
-                        >
-                            Home
-                        </MuiLink>
-                    </Link>
-                    <Link href="/blog" passHref legacyBehavior>
-                        <MuiLink
-                            underline="hover"
-                            color="text.secondary"
-                            sx={{ fontSize: 'inherit' }}
-                        >
-                            Blog
-                        </MuiLink>
-                    </Link>
-                    <Typography
-                        color="text.primary"
-                        sx={{
-                            fontSize: 'inherit',
-                            maxWidth: 300,
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                        }}
-                    >
-                        {article.title}
-                    </Typography>
-                </Breadcrumbs>
+                <nav aria-label="breadcrumb" className="mb-6 text-[0.85rem]">
+                    <ol className="flex items-center gap-1 text-gray-400">
+                        <li>
+                            <Link href="/" className="hover:underline">
+                                Home
+                            </Link>
+                        </li>
+                        <li>/</li>
+                        <li>
+                            <Link href="/blog" className="hover:underline">
+                                Blog
+                            </Link>
+                        </li>
+                        <li>/</li>
+                        <li className="max-w-[300px] truncate text-gray-200">
+                            {article.title}
+                        </li>
+                    </ol>
+                </nav>
 
                 {/* Hero Image */}
                 {article.featuredImageUrl && (
