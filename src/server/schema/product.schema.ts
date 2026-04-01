@@ -16,7 +16,7 @@ export const createProductSchema = z.object({
 export type CreateProductSchema = z.infer<typeof createProductSchema>
 
 export const productSchema = z.object({
-    id: z.number(),
+    id: z.coerce.number(),
 })
     .merge(createProductSchema)
 

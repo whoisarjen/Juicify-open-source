@@ -7,7 +7,7 @@ export const productRouter = router({
     getById: publicProcedure
         .input(
             z.object({
-                id: z.number(),
+                id: z.coerce.number(),
             })
         )
         .query(async ({ ctx, input: { id } }) => {
@@ -59,8 +59,8 @@ export const productRouter = router({
         .input(
             z.object({
                 name: z.string(),
-                take: z.number().optional().default(10),
-                skip: z.number().optional().default(0),
+                take: z.coerce.number().optional().default(10),
+                skip: z.coerce.number().optional().default(0),
             })
         )
         .query(async ({ ctx, input: { name, take, skip } }) => {
@@ -108,7 +108,7 @@ export const productRouter = router({
     delete: protectedProcedure
         .input(
             z.object({
-                id: z.number(),
+                id: z.coerce.number(),
             })
         )
         .mutation(async ({ ctx, input: { id } }) => {

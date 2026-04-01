@@ -8,7 +8,7 @@ export const workoutPlanRouter = router({
     get: publicProcedure
         .input(
             z.object({
-                id: z.number(),
+                id: z.coerce.number(),
                 username: z.string(),
             })
         )
@@ -74,7 +74,7 @@ export const workoutPlanRouter = router({
     delete: protectedProcedure
         .input(
             z.object({
-                id: z.number(),
+                id: z.coerce.number(),
             })
         )
         .mutation(async ({ ctx, input: { id } }) => {

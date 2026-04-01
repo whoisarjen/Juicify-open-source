@@ -9,7 +9,7 @@ export const createBurnedCaloriesSchema = z.object({
 export type CreateBurnedCaloriesSchema = z.infer<typeof createBurnedCaloriesSchema>
 
 export const burnedCaloriesSchema = z.object({
-    id: z.number(),
+    id: z.coerce.number(),
 })
     .merge(createBurnedCaloriesSchema)
 

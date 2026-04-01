@@ -24,7 +24,7 @@ export const coachRouter = router({
     getLastByUserId: protectedProcedure
         .input(
             z.object({
-                userId: z.number(),
+                userId: z.coerce.number(),
             })
         )
         .query(async ({ ctx, input: { userId } }) => {

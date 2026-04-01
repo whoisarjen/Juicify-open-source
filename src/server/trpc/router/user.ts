@@ -23,7 +23,7 @@ export const userRouter = router({
     getAll: publicProcedure
         .input(
             z.object({
-                take: z.number(),
+                take: z.coerce.number(),
             })
         )
         .query(async ({ ctx, input: { take } }) => {

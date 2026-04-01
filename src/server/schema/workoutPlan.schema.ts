@@ -3,9 +3,9 @@ import { z } from "zod";
 import { exerciseSchema } from "./exercise.schema";
 
 export const workoutPlanExerciseSchema = z.object({
-    series: z.number().min(1).max(10).optional(),
-    reps: z.number().min(1).max(100).optional(),
-    rir: z.number().min(0).max(5).optional(),
+    series: z.coerce.number().min(1).max(10).optional(),
+    reps: z.coerce.number().min(1).max(100).optional(),
+    rir: z.coerce.number().min(0).max(5).optional(),
     note: z.string().max(255).optional(),
 }).merge(exerciseSchema.pick({ id: true, name: true }))
 
@@ -18,7 +18,7 @@ export const createWorkoutPlanSchema = z.object({
 export type CreateWorkoutPlanSchema = z.infer<typeof createWorkoutPlanSchema>
 
 export const workoutPlanSchema = z.object({
-    id: z.number(),
+    id: z.coerce.number(),
     description: z.string().max(500).nullable(),
     burnedCalories: z.coerce.number().min(0).max(9999).optional().default(0),
     exercises: z.array(workoutPlanExerciseSchema)

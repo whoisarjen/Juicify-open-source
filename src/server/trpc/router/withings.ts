@@ -5,7 +5,7 @@ export const withingsRouter = router({
     dashboard: protectedProcedure
         .input(
             z.object({
-                days: z.number().min(1).max(365).default(30),
+                days: z.coerce.number().min(1).max(365).default(30),
             })
         )
         .query(async ({ ctx, input: { days } }) => {

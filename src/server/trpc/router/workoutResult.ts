@@ -9,7 +9,7 @@ export const workoutResultRouter = router({
     get: publicProcedure
         .input(
             z.object({
-                id: z.number(),
+                id: z.coerce.number(),
                 username: z.string(),
                 searchAllPlans: z.boolean().optional().default(true),
             })
@@ -134,8 +134,8 @@ export const workoutResultRouter = router({
         .input(
             z.object({
                 username: z.string(),
-                take: z.number().min(1).max(100).optional().default(50),
-                cursor: z.number().optional(),
+                take: z.coerce.number().min(1).max(100).optional().default(50),
+                cursor: z.coerce.number().optional(),
             })
         )
         .query(async ({ ctx, input: { username, take, cursor } }) => {
@@ -166,8 +166,8 @@ export const workoutResultRouter = router({
     create: protectedProcedure
         .input(
             z.object({
-                workoutPlanId: z.number(),
-                whenAdded: z.date().optional().default(new Date())
+                workoutPlanId: z.coerce.number(),
+                whenAdded: z.coerce.date().optional().default(new Date())
             })
         )
         .mutation(async ({ ctx, input: { workoutPlanId } }) => {
@@ -204,7 +204,7 @@ export const workoutResultRouter = router({
     delete: protectedProcedure
         .input(
             z.object({
-                id: z.number(),
+                id: z.coerce.number(),
             })
         )
         .mutation(async ({ ctx, input: { id } }) => {

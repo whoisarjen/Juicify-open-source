@@ -7,8 +7,8 @@ export const createExerciseSchema = z.object({
 export type CreateExerciseSchema = z.infer<typeof createExerciseSchema>
 
 export const exerciseSchema = z.object({
-    id: z.number(),
-    userId: z.number().optional(),
+    id: z.coerce.number(),
+    userId: z.coerce.number().optional(),
 })
     .merge(createExerciseSchema)
 

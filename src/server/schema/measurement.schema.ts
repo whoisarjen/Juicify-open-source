@@ -11,7 +11,7 @@ export const createMeasurementSchema = z.object({
 export type CreateMeasurementSchema = z.infer<typeof createMeasurementSchema>
 
 export const measurementSchema = z.object({
-    id: z.number(),
+    id: z.coerce.number(),
 })
     .merge(createMeasurementSchema)
 
