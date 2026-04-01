@@ -166,7 +166,7 @@ const WorkoutResultPage = () => {
         deleteWorkoutResult.isPending
 
     return (
-        <form className="flex flex-1 flex-col gap-3">
+        <form className="flex flex-1 flex-col gap-2">
             <NavbarWorkout
                 isDisabled={isLoading}
                 isLoading={isLoading}
@@ -175,94 +175,100 @@ const WorkoutResultPage = () => {
                 onArrowBack={() => router.push(`/${username}/workout/results`)}
             />
 
-            <div>
-                <label className="mb-1 block text-sm text-gray-500">{t('Title')}</label>
-                <textarea
-                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
-                    {...register('name')}
-                />
-                {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name.message}</p>}
-            </div>
-
-            <DatePicker
-                defaultDate={data?.whenAdded || moment().toDate()}
-                onChange={(newWhenAdded) => setValue('whenAdded', newWhenAdded)}
-                register={register('whenAdded')}
-                focused
-                maxDateTime={moment().add(2, 'hour').toDate()}
-            />
-
-            <DatePicker
-                label={t('Finished at')}
-                defaultDate={
-                    data?.finishedAt
-                        ? moment(data.finishedAt as unknown as Date).toDate()
-                        : moment().toDate()
-                }
-                onChange={(newFinishedAt) =>
-                    setValue('finishedAt', newFinishedAt)
-                }
-                register={register('finishedAt')}
-                focused
-                maxDateTime={moment().add(2, 'hour').toDate()}
-            />
-
-            <div>
-                <label className="mb-1 block text-sm text-gray-500">{t('Burnt')}</label>
-                <div className="flex items-center rounded border border-gray-300 focus-within:border-primary-dark dark:border-gray-600">
-                    <input
-                        className="flex-1 bg-transparent px-3 py-2 outline-none"
-                        type="number"
-                        {...register('burnedCalories')}
-                    />
-                    <span className="px-3 text-sm text-gray-500">kcal</span>
-                </div>
-                {errors.burnedCalories && <p className="mt-1 text-xs text-red-500">{errors.burnedCalories.message}</p>}
-            </div>
-
-            <div>
-                <label className="mb-1 block text-sm text-gray-500">{t('Notes')}</label>
-                <textarea
-                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
-                    {...register('note')}
-                />
-                {errors.note && <p className="mt-1 text-xs text-red-500">{errors.note.message}</p>}
-            </div>
-
-            {data?.workoutPlan?.description && (
+            {/* Win2k window body */}
+            <div className="win2k-window p-3 flex flex-col gap-2">
                 <div>
-                    <label className="mb-1 block text-sm text-gray-500">{t('Description of workout plan')}</label>
+                    <label className="mb-px block text-[10px] text-[#444444]">{t('Title')}</label>
                     <textarea
-                        className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none dark:border-gray-600"
-                        disabled
-                        defaultValue={data.workoutPlan.description}
+                        className="w-full win2k-sunken bg-white px-2 py-1 text-[11px] text-black outline-none resize-none"
+                        rows={2}
+                        {...register('name')}
                     />
+                    {errors.name && <p className="mt-1 text-[10px] text-red-600">{errors.name.message}</p>}
                 </div>
-            )}
 
-            {sessionData?.user?.username == username && (
-                <label className="flex items-center gap-2 text-sm">
-                    <div
-                        role="switch"
-                        aria-checked={searchAllPlans}
-                        onClick={() => {
-                            const newValue = !searchAllPlans
-                            setSearchAllPlans(newValue)
-                            updateUser.mutate(
-                                { searchAllPlans: newValue },
-                                {
-                                    onError: () =>
-                                        setSearchAllPlans(!newValue),
-                                }
-                            )
-                        }}
-                        className={`relative h-6 w-11 cursor-pointer rounded-full transition-colors ${searchAllPlans ? 'bg-primary-dark' : 'bg-gray-300 dark:bg-gray-600'}`}
-                    >
-                        <span className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${searchAllPlans ? 'translate-x-5' : ''}`} />
+                <DatePicker
+                    defaultDate={data?.whenAdded || moment().toDate()}
+                    onChange={(newWhenAdded) => setValue('whenAdded', newWhenAdded)}
+                    register={register('whenAdded')}
+                    focused
+                    maxDateTime={moment().add(2, 'hour').toDate()}
+                />
+
+                <DatePicker
+                    label={t('Finished at')}
+                    defaultDate={
+                        data?.finishedAt
+                            ? moment(data.finishedAt as unknown as Date).toDate()
+                            : moment().toDate()
+                    }
+                    onChange={(newFinishedAt) =>
+                        setValue('finishedAt', newFinishedAt)
+                    }
+                    register={register('finishedAt')}
+                    focused
+                    maxDateTime={moment().add(2, 'hour').toDate()}
+                />
+
+                <div>
+                    <label className="mb-px block text-[10px] text-[#444444]">{t('Burnt')}</label>
+                    <div className="flex items-center win2k-sunken">
+                        <input
+                            className="flex-1 bg-white px-2 py-1 text-[11px] text-black outline-none"
+                            type="number"
+                            {...register('burnedCalories')}
+                        />
+                        <span className="px-2 text-[10px] text-[#444444]">kcal</span>
                     </div>
-                    {t('SEARCH_ALL_PLANS')}
-                </label>
-            )}
+                    {errors.burnedCalories && <p className="mt-1 text-[10px] text-red-600">{errors.burnedCalories.message}</p>}
+                </div>
+
+                <div>
+                    <label className="mb-px block text-[10px] text-[#444444]">{t('Notes')}</label>
+                    <textarea
+                        className="w-full win2k-sunken bg-white px-2 py-1 text-[11px] text-black outline-none resize-none"
+                        rows={2}
+                        {...register('note')}
+                    />
+                    {errors.note && <p className="mt-1 text-[10px] text-red-600">{errors.note.message}</p>}
+                </div>
+
+                {data?.workoutPlan?.description && (
+                    <div>
+                        <label className="mb-px block text-[10px] text-[#444444]">{t('Description of workout plan')}</label>
+                        <textarea
+                            className="w-full win2k-sunken bg-[#e8e4d8] px-2 py-1 text-[11px] text-[#444444] outline-none resize-none"
+                            rows={2}
+                            disabled
+                            defaultValue={data.workoutPlan.description}
+                        />
+                    </div>
+                )}
+
+                {sessionData?.user?.username == username && (
+                    <label className="flex items-center gap-2 text-[11px] text-black cursor-pointer">
+                        <div
+                            role="switch"
+                            aria-checked={searchAllPlans}
+                            onClick={() => {
+                                const newValue = !searchAllPlans
+                                setSearchAllPlans(newValue)
+                                updateUser.mutate(
+                                    { searchAllPlans: newValue },
+                                    {
+                                        onError: () =>
+                                            setSearchAllPlans(!newValue),
+                                    }
+                                )
+                            }}
+                            className={`relative h-5 w-10 cursor-pointer transition-colors win2k-sunken ${searchAllPlans ? 'bg-[#0a246a]' : 'bg-[#d4d0c8]'}`}
+                        >
+                            <span className={`absolute top-0.5 left-0.5 h-4 w-4 bg-[#d4d0c8] shadow win2k-raised transition-transform ${searchAllPlans ? 'translate-x-5' : ''}`} />
+                        </div>
+                        {t('SEARCH_ALL_PLANS')}
+                    </label>
+                )}
+            </div>
 
             {fields.map((exercise, index: number) => (
                 <div
@@ -320,24 +326,33 @@ const WorkoutResultPage = () => {
             {showFinishTimeModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center">
                     <div className="fixed inset-0 bg-black/50" onClick={handleCloseFinishTimeModal} />
-                    <div className="relative z-50 w-full max-w-lg rounded-lg bg-white p-0 shadow-xl dark:bg-gray-900">
-                        <div className="px-6 pt-6 text-lg font-semibold">{t('Update workout finish time?')}</div>
-                        <div className="px-6 py-4">
-                            <p className="text-sm text-gray-500">
+                    {/* Win2k dialog window */}
+                    <div className="relative z-50 w-full max-w-sm win2k-window">
+                        {/* Title bar */}
+                        <div className="win2k-titlebar px-2 py-1">
+                            <span className="text-[11px]">⚠️</span>
+                            <span className="flex-1 text-[11px] font-bold text-white">{t('Update workout finish time?')}</span>
+                            <button
+                                className="win2k-btn !px-1 !py-0 !min-h-0 h-[14px] w-[16px] text-[10px] font-bold leading-none flex items-center justify-center text-black"
+                                onClick={handleCloseFinishTimeModal}
+                                aria-label="close"
+                            >✕</button>
+                        </div>
+                        {/* Content */}
+                        <div className="px-4 py-3 bg-[#d4d0c8]">
+                            <p className="text-[11px] text-black">
                                 {moment().format('YYYY-MM-DD HH:mm (Z)')}
                             </p>
                         </div>
-                        <div className="flex justify-end gap-2 px-6 pb-6">
-                            <button className="px-4 py-2 text-primary-dark hover:bg-[rgba(255,255,255,0.04)]" onClick={handleCloseFinishTimeModal}>
+                        {/* Footer buttons */}
+                        <div className="flex justify-end gap-2 px-4 pb-3 bg-[#d4d0c8]">
+                            <button className="win2k-btn" onClick={handleCloseFinishTimeModal}>
                                 {t('Close')}
                             </button>
-                            <button className="px-4 py-2 text-primary-dark hover:bg-[rgba(255,255,255,0.04)]" onClick={handleSkipFinishTime}>
+                            <button className="win2k-btn" onClick={handleSkipFinishTime}>
                                 {t('Skip')}
                             </button>
-                            <button
-                                className="rounded bg-primary-dark px-4 py-2 text-[#121212] hover:bg-[#64b5f6] disabled:opacity-50"
-                                onClick={handleAcceptFinishTime}
-                            >
+                            <button className="win2k-btn font-bold" onClick={handleAcceptFinishTime}>
                                 {t('Accept')}
                             </button>
                         </div>
