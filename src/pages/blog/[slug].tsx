@@ -2,10 +2,6 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { type GetServerSideProps } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import Chip from '@mui/material/Chip'
-import Card from '@mui/material/Card'
-import CardMedia from '@mui/material/CardMedia'
-import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
@@ -293,17 +289,9 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
                 )}
 
                 {/* Article Title */}
-                <Typography
-                    variant="h3"
-                    component="h1"
-                    className="!mb-4 !font-bold"
-                    sx={{
-                        fontSize: { xs: '1.75rem', md: '2.5rem' },
-                        lineHeight: 1.2,
-                    }}
-                >
+                <h1 className="mb-4 text-[1.75rem] font-bold leading-[1.2] md:text-[2.5rem]">
                     {article.title}
-                </Typography>
+                </h1>
 
                 {/* Meta Bar */}
                 <div className="mb-8 flex flex-wrap items-center gap-4 text-sm text-gray-400">
@@ -323,16 +311,9 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
                         </span>
                     )}
                     {article.niche && (
-                        <Chip
-                            label={t(`NICHE_${article.niche}`)}
-                            size="small"
-                            sx={{
-                                bgcolor: 'rgba(144, 202, 249, 0.12)',
-                                color: '#90caf9',
-                                fontWeight: 600,
-                                fontSize: '0.75rem',
-                            }}
-                        />
+                        <span className="rounded-full bg-[#90caf9]/10 px-2.5 py-0.5 text-xs font-semibold text-[#90caf9]">
+                            {t(`NICHE_${article.niche}`)}
+                        </span>
                     )}
                 </div>
 
@@ -345,13 +326,9 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
                 {/* References */}
                 {article.references.length > 0 && (
                     <div className="mt-12 border-t border-white/10 pt-8">
-                        <Typography
-                            variant="h5"
-                            component="h2"
-                            className="!mb-4 !font-bold"
-                        >
+                        <h2 className="mb-4 text-xl font-bold">
                             {t('REFERENCES')}
-                        </Typography>
+                        </h2>
                         <ol className="list-decimal space-y-2 pl-6 text-sm text-gray-400">
                             {article.references.map((ref, i) => (
                                 <li key={i}>
@@ -378,13 +355,9 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
                 {/* FAQ */}
                 {article.faqs.length > 0 && (
                     <div className="mt-12 border-t border-white/10 pt-8">
-                        <Typography
-                            variant="h5"
-                            component="h2"
-                            className="!mb-4 !font-bold"
-                        >
+                        <h2 className="mb-4 text-xl font-bold">
                             {t('FAQ')}
-                        </Typography>
+                        </h2>
                         <div className="space-y-2">
                             {article.faqs.map((faq, i) => (
                                 <details
@@ -418,13 +391,9 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
                 {/* Related Articles */}
                 {article.relatedArticles.length > 0 && (
                     <div className="mt-12 border-t border-white/10 pt-8">
-                        <Typography
-                            variant="h5"
-                            component="h2"
-                            className="!mb-6 !font-bold"
-                        >
+                        <h2 className="mb-6 text-xl font-bold">
                             {t('RELATED_ARTICLES')}
-                        </Typography>
+                        </h2>
                         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                             {article.relatedArticles.map((related) => (
                                 <Link
@@ -432,93 +401,31 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
                                     href={`/blog/${related.slug}`}
                                     className="group block"
                                 >
-                                    <Card
-                                        sx={{
-                                            bgcolor: 'background.paper',
-                                            borderRadius: 3,
-                                            overflow: 'hidden',
-                                            height: '100%',
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            transition:
-                                                'transform 0.2s ease, box-shadow 0.2s ease',
-                                            '&:hover': {
-                                                transform: 'translateY(-2px)',
-                                                boxShadow:
-                                                    '0 8px 30px rgba(0,0,0,0.3)',
-                                            },
-                                        }}
-                                    >
+                                    <div className="flex h-full flex-col overflow-hidden rounded-xl bg-white shadow transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] dark:bg-gray-800">
                                         {related.featuredImageUrl && (
-                                            <CardMedia
-                                                component="img"
-                                                height={180}
-                                                image={
-                                                    related.featuredImageUrl
-                                                }
+                                            <img
+                                                src={related.featuredImageUrl}
                                                 alt={
                                                     related.featuredImageAlt ||
                                                     related.title
                                                 }
-                                                sx={{
-                                                    height: 180,
-                                                    objectFit: 'cover',
-                                                }}
+                                                className="h-[180px] w-full object-cover"
                                             />
                                         )}
-                                        <CardContent
-                                            sx={{
-                                                p: 2.5,
-                                                flex: 1,
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                            }}
-                                        >
+                                        <div className="flex flex-1 flex-col p-2.5">
                                             <div className="mb-2 flex flex-wrap items-center gap-2">
                                                 {related.niche && (
-                                                    <Chip
-                                                        label={t(
-                                                            `NICHE_${related.niche}`
-                                                        )}
-                                                        size="small"
-                                                        sx={{
-                                                            bgcolor:
-                                                                'rgba(144, 202, 249, 0.12)',
-                                                            color: '#90caf9',
-                                                            fontWeight: 600,
-                                                            fontSize: '0.7rem',
-                                                        }}
-                                                    />
+                                                    <span className="rounded-full bg-[#90caf9]/10 px-2.5 py-0.5 text-[0.7rem] font-semibold text-[#90caf9]">
+                                                        {t(`NICHE_${related.niche}`)}
+                                                    </span>
                                                 )}
                                             </div>
-                                            <Typography
-                                                variant="subtitle1"
-                                                component="h3"
-                                                className="!mb-1 !font-bold"
-                                                sx={{
-                                                    display: '-webkit-box',
-                                                    WebkitLineClamp: 2,
-                                                    WebkitBoxOrient: 'vertical',
-                                                    overflow: 'hidden',
-                                                    lineHeight: 1.3,
-                                                }}
-                                            >
+                                            <h3 className="mb-1 line-clamp-2 text-base font-bold leading-[1.3]">
                                                 {related.title}
-                                            </Typography>
-                                            <Typography
-                                                variant="body2"
-                                                className="!text-gray-400"
-                                                sx={{
-                                                    display: '-webkit-box',
-                                                    WebkitLineClamp: 2,
-                                                    WebkitBoxOrient: 'vertical',
-                                                    overflow: 'hidden',
-                                                    mb: 'auto',
-                                                    pb: 1.5,
-                                                }}
-                                            >
+                                            </h3>
+                                            <p className="mb-auto pb-3 text-sm text-gray-400 line-clamp-2">
                                                 {related.excerpt}
-                                            </Typography>
+                                            </p>
                                             <div className="flex items-center gap-4 text-xs text-gray-500">
                                                 {related.readingTimeMinutes >
                                                     0 && (
@@ -548,8 +455,8 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
                                                     </span>
                                                 )}
                                             </div>
-                                        </CardContent>
-                                    </Card>
+                                        </div>
+                                    </div>
                                 </Link>
                             ))}
                         </div>

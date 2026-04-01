@@ -6,12 +6,6 @@ import { trpc } from '@/utils/trpc.utils'
 import NavbarProfile from '@/containers/profile/NavbarProfile/NavbarProfile'
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
 import { BoxWorkoutLoader } from '@/containers/Workout/BoxWorkoutLoader'
-import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import Typography from '@mui/material/Typography'
-import Grid from '@mui/material/Grid'
-import Chip from '@mui/material/Chip'
 import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
@@ -44,7 +38,7 @@ const WorkoutStatisticsPage = () => {
     } : null
 
     // Get available years from data
-    const availableYears = allStatistics 
+    const availableYears = allStatistics
         ? Array.from(new Set(allStatistics.months.map(month => month.year.toString())))
             .sort((a, b) => parseInt(b) - parseInt(a))
         : []
@@ -71,7 +65,7 @@ const WorkoutStatisticsPage = () => {
                         <>
                             {/* Year Selector Tabs */}
                             <TabContext value={selectedYear}>
-                                <Box sx={{ width: '100%' }}>
+                                <div className="w-full">
                                     <TabList
                                         onChange={(_, newValue: string) => setSelectedYear(newValue)}
                                         value={selectedYear}
@@ -85,154 +79,123 @@ const WorkoutStatisticsPage = () => {
                                             <Tab label={year} value={year} key={year} />
                                         ))}
                                     </TabList>
-                                </Box>
+                                </div>
 
                                 {availableYears.map(year => (
                                     <TabPanel key={year} value={year} sx={{ padding: '0 !important' }}>
                                         {/* Year Overview Stats */}
-                                        <Grid container spacing={2} sx={{ mb: 2 }}>
-                                            <Grid item xs={6}>
-                                                <Card>
-                                                    <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
-                                                        <Typography variant="overline" color="text.secondary" display="block">
-                                                            {t('TOTAL_WORKOUTS')}
-                                                        </Typography>
-                                                        <Box display="flex" alignItems="baseline">
-                                                            <Typography variant="h5" color="primary.main" fontWeight="bold">
-                                                                {statistics?.totalWorkouts || 0}
-                                                            </Typography>
-                                                            <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
-                                                                in {year}
-                                                            </Typography>
-                                                        </Box>
-                                                    </CardContent>
-                                                </Card>
-                                            </Grid>
-                                            
-                                            <Grid item xs={6}>
-                                                <Card>
-                                                    <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
-                                                        <Typography variant="overline" color="text.secondary" display="block">
-                                                            {t('CALORIES_BURNED')}
-                                                        </Typography>
-                                                        <Box display="flex" alignItems="baseline">
-                                                            <Typography variant="h5" color="error.main" fontWeight="bold">
-                                                                {(statistics?.totalCaloriesBurned || 0).toLocaleString()}
-                                                            </Typography>
-                                                            <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
-                                                                cal
-                                                            </Typography>
-                                                        </Box>
-                                                    </CardContent>
-                                                </Card>
-                                            </Grid>
-                                        </Grid>
+                                        <div className="mb-4 grid grid-cols-2 gap-4">
+                                            <div className="rounded-lg bg-white p-4 shadow dark:bg-gray-800">
+                                                <span className="text-xs uppercase tracking-wide text-gray-500">
+                                                    {t('TOTAL_WORKOUTS')}
+                                                </span>
+                                                <div className="flex items-baseline">
+                                                    <span className="text-xl font-bold text-blue-500">
+                                                        {statistics?.totalWorkouts || 0}
+                                                    </span>
+                                                    <span className="ml-2 text-xs text-gray-500">
+                                                        in {year}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div className="rounded-lg bg-white p-4 shadow dark:bg-gray-800">
+                                                <span className="text-xs uppercase tracking-wide text-gray-500">
+                                                    {t('CALORIES_BURNED')}
+                                                </span>
+                                                <div className="flex items-baseline">
+                                                    <span className="text-xl font-bold text-red-500">
+                                                        {(statistics?.totalCaloriesBurned || 0).toLocaleString()}
+                                                    </span>
+                                                    <span className="ml-2 text-xs text-gray-500">
+                                                        cal
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
 
                                         {/* Monthly Breakdown for Selected Year */}
                                         {statistics && statistics.months.length > 0 ? (
-                                            <Card>
-                                                <CardContent>
-                                                    <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
-                                                        {t('MONTHLY_BREAKDOWN')} {year}
-                                                    </Typography>
-                                                    <Grid container spacing={2}>
-                                                        {statistics.months
-                                                            .sort((a, b) => b.month.localeCompare(a.month))
-                                                            .map((month) => (
-                                                            <Grid item xs={12} sm={6} key={month.month}>
-                                                                <Box border={1} borderColor="divider" borderRadius={2} p={2}>
-                                                                    {/* Month Header */}
-                                                                    <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                                                                        <Typography variant="subtitle1" fontWeight="medium">
-                                                                            {month.monthName}
-                                                                        </Typography>
-                                                                        <Box textAlign="right">
-                                                                            <Chip 
-                                                                                label={`${month.totalWorkouts} ${t('WORKOUTS')}`}
-                                                                                size="small"
-                                                                                color={month.totalWorkouts > 0 ? "primary" : "default"}
-                                                                            />
-                                                                            <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.5 }}>
-                                                                                {month.totalCaloriesBurned} cal
-                                                                            </Typography>
-                                                                        </Box>
-                                                                    </Box>
+                                            <div className="rounded-lg bg-white p-4 shadow dark:bg-gray-800">
+                                                <h3 className="mb-4 text-lg font-semibold">
+                                                    {t('MONTHLY_BREAKDOWN')} {year}
+                                                </h3>
+                                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                                    {statistics.months
+                                                        .sort((a, b) => b.month.localeCompare(a.month))
+                                                        .map((month) => (
+                                                        <div key={month.month} className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+                                                            {/* Month Header */}
+                                                            <div className="mb-4 flex items-center justify-between">
+                                                                <span className="text-base font-medium">
+                                                                    {month.monthName}
+                                                                </span>
+                                                                <div className="text-right">
+                                                                    <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${month.totalWorkouts > 0 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400'}`}>
+                                                                        {month.totalWorkouts} {t('WORKOUTS')}
+                                                                    </span>
+                                                                    <span className="mt-1 block text-xs text-gray-500">
+                                                                        {month.totalCaloriesBurned} cal
+                                                                    </span>
+                                                                </div>
+                                                            </div>
 
-                                                                    {/* Daily Calendar Grid */}
-                                                                    <Box mb={1}>
-                                                                        <Box display="grid" gridTemplateColumns="repeat(7, 1fr)" gap={0.5} mb={0.5}>
-                                                                            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(day => (
-                                                                                <Box key={day} textAlign="center" py={0.25}>
-                                                                                    <Typography variant="caption" color="text.secondary" fontWeight="medium">
-                                                                                        {day}
-                                                                                    </Typography>
-                                                                                </Box>
-                                                                            ))}
-                                                                        </Box>
-                                                                        <Box display="grid" gridTemplateColumns="repeat(7, 1fr)" gap={0.5}>
-                                                                            {month.dailyBreakdown.map(day => {
-                                                                                const styles = getWorkoutIntensityStyles(day.workouts)
-                                                                                return (
-                                                                                    <Box
-                                                                                        key={day.date}
-                                                                                        sx={{
-                                                                                            ...styles,
-                                                                                            aspectRatio: '1',
-                                                                                            display: 'flex',
-                                                                                            flexDirection: 'column',
-                                                                                            alignItems: 'center',
-                                                                                            justifyContent: 'center',
-                                                                                            borderRadius: 1,
-                                                                                            cursor: 'pointer',
-                                                                                            transition: 'transform 0.2s',
-                                                                                            minHeight: '28px',
-                                                                                            '&:hover': {
-                                                                                                transform: 'scale(1.05)',
-                                                                                            }
-                                                                                        }}
-                                                                                        title={`${day.date}: ${day.workouts} workouts, ${day.caloriesBurned} cal`}
-                                                                                    >
-                                                                                        <Typography variant="caption" fontWeight="medium" sx={{ fontSize: '0.7rem' }}>
-                                                                                            {new Date(day.date).getDate()}
-                                                                                        </Typography>
-                                                                                        {day.workouts > 0 && (
-                                                                                            <Typography variant="caption" fontWeight="bold" sx={{ fontSize: '0.6rem' }}>
-                                                                                                {day.workouts}
-                                                                                            </Typography>
-                                                                                        )}
-                                                                                    </Box>
-                                                                                )
-                                                                            })}
-                                                                        </Box>
-                                                                    </Box>
+                                                            {/* Daily Calendar Grid */}
+                                                            <div className="mb-2">
+                                                                <div className="mb-1 grid grid-cols-7 gap-0.5">
+                                                                    {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(day => (
+                                                                        <div key={day} className="py-0.5 text-center text-xs font-medium text-gray-500">
+                                                                            {day}
+                                                                        </div>
+                                                                    ))}
+                                                                </div>
+                                                                <div className="grid grid-cols-7 gap-0.5">
+                                                                    {month.dailyBreakdown.map(day => {
+                                                                        const styles = getWorkoutIntensityStyles(day.workouts)
+                                                                        return (
+                                                                            <div
+                                                                                key={day.date}
+                                                                                style={styles}
+                                                                                className="flex aspect-square min-h-[28px] cursor-pointer flex-col items-center justify-center rounded transition-transform hover:scale-105"
+                                                                                title={`${day.date}: ${day.workouts} workouts, ${day.caloriesBurned} cal`}
+                                                                            >
+                                                                                <span className="text-[0.7rem] font-medium">
+                                                                                    {new Date(day.date).getDate()}
+                                                                                </span>
+                                                                                {day.workouts > 0 && (
+                                                                                    <span className="text-[0.6rem] font-bold">
+                                                                                        {day.workouts}
+                                                                                    </span>
+                                                                                )}
+                                                                            </div>
+                                                                        )
+                                                                    })}
+                                                                </div>
+                                                            </div>
 
-                                                                    {/* Weekly Summary */}
-                                                                    <Box>
-                                                                        {month.weeks.slice(0, 5).map(week => (
-                                                                            <Box key={week.week} display="flex" justifyContent="space-between" py={0.1}>
-                                                                                <Typography variant="caption" color="text.secondary" noWrap sx={{ fontSize: '0.7rem' }}>
-                                                                                    {week.week}
-                                                                                </Typography>
-                                                                                <Typography variant="caption" fontWeight="medium" sx={{ fontSize: '0.7rem' }}>
-                                                                                    {week.workouts}w
-                                                                                </Typography>
-                                                                            </Box>
-                                                                        ))}
-                                                                    </Box>
-                                                                </Box>
-                                                            </Grid>
-                                                        ))}
-                                                    </Grid>
-                                                </CardContent>
-                                            </Card>
+                                                            {/* Weekly Summary */}
+                                                            <div>
+                                                                {month.weeks.slice(0, 5).map(week => (
+                                                                    <div key={week.week} className="flex justify-between py-px">
+                                                                        <span className="truncate text-[0.7rem] text-gray-500">
+                                                                            {week.week}
+                                                                        </span>
+                                                                        <span className="text-[0.7rem] font-medium">
+                                                                            {week.workouts}w
+                                                                        </span>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
                                         ) : (
-                                            <Card>
-                                                <CardContent sx={{ textAlign: 'center', py: 4 }}>
-                                                    <Typography variant="body1" color="text.secondary">
-                                                        {t('NO_WORKOUTS_FOUND')} {year}
-                                                    </Typography>
-                                                </CardContent>
-                                            </Card>
+                                            <div className="rounded-lg bg-white py-8 text-center shadow dark:bg-gray-800">
+                                                <p className="text-gray-500">
+                                                    {t('NO_WORKOUTS_FOUND')} {year}
+                                                </p>
+                                            </div>
                                         )}
                                     </TabPanel>
                                 ))}
@@ -241,13 +204,11 @@ const WorkoutStatisticsPage = () => {
                     )}
 
                     {allStatistics && availableYears.length === 0 && (
-                        <Card>
-                            <CardContent sx={{ textAlign: 'center', py: 6 }}>
-                                <Typography variant="body1" color="text.secondary">
-                                    {t('NO_WORKOUTS_FOUND_HISTORY')}
-                                </Typography>
-                            </CardContent>
-                        </Card>
+                        <div className="rounded-lg bg-white py-12 text-center shadow dark:bg-gray-800">
+                            <p className="text-gray-500">
+                                {t('NO_WORKOUTS_FOUND_HISTORY')}
+                            </p>
+                        </div>
                     )}
                 </>
             </BoxWorkoutLoader>

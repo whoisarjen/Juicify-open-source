@@ -4,12 +4,7 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { type GetServerSideProps } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import Card from '@mui/material/Card'
-import CardMedia from '@mui/material/CardMedia'
-import CardContent from '@mui/material/CardContent'
-import Chip from '@mui/material/Chip'
 import Typography from '@mui/material/Typography'
-import Box from '@mui/material/Box'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import moment from 'moment'
@@ -157,14 +152,14 @@ const BlogPage = ({ initialArticles, initialTotalPages }: BlogPageProps) => {
 
             {/* Empty State */}
             {!isPageLoading && articles.length === 0 && (
-                <Box className="flex flex-col items-center justify-center py-20">
+                <div className="flex flex-col items-center justify-center py-20">
                     <Typography
                         variant="h6"
                         className="!text-gray-400 dark:!text-gray-500"
                     >
                         {t('NO_ARTICLES')}
                     </Typography>
-                </Box>
+                </div>
             )}
 
             {/* Content */}
@@ -176,68 +171,28 @@ const BlogPage = ({ initialArticles, initialTotalPages }: BlogPageProps) => {
                             href={`/blog/${featuredArticle.slug}`}
                             className="group block"
                         >
-                            <Card
-                                sx={{
-                                    bgcolor: 'background.paper',
-                                    borderRadius: 3,
-                                    overflow: 'hidden',
-                                    transition:
-                                        'transform 0.2s ease, box-shadow 0.2s ease',
-                                    '&:hover': {
-                                        transform: 'translateY(-2px)',
-                                        boxShadow:
-                                            '0 8px 30px rgba(0,0,0,0.3)',
-                                    },
-                                }}
-                            >
+                            <div className="overflow-hidden rounded-xl bg-white shadow transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] dark:bg-gray-800">
                                 {featuredArticle.featuredImageUrl && (
-                                    <CardMedia
-                                        component="img"
-                                        height={320}
-                                        image={
-                                            featuredArticle.featuredImageUrl
-                                        }
+                                    <img
+                                        src={featuredArticle.featuredImageUrl}
                                         alt={
                                             featuredArticle.featuredImageAlt ||
                                             featuredArticle.title
                                         }
-                                        sx={{
-                                            height: { xs: 220, md: 320 },
-                                            objectFit: 'cover',
-                                        }}
+                                        className="h-[220px] w-full object-cover md:h-[320px]"
                                     />
                                 )}
-                                <CardContent sx={{ p: { xs: 2.5, md: 3 } }}>
+                                <div className="p-2.5 md:p-3">
                                     <div className="mb-2 flex flex-wrap items-center gap-2">
                                         {featuredArticle.niche && (
-                                            <Chip
-                                                label={t(
-                                                    `NICHE_${featuredArticle.niche}`
-                                                )}
-                                                size="small"
-                                                sx={{
-                                                    bgcolor:
-                                                        'rgba(144, 202, 249, 0.12)',
-                                                    color: '#90caf9',
-                                                    fontWeight: 600,
-                                                    fontSize: '0.75rem',
-                                                }}
-                                            />
+                                            <span className="rounded-full bg-[#90caf9]/10 px-2.5 py-0.5 text-xs font-semibold text-[#90caf9]">
+                                                {t(`NICHE_${featuredArticle.niche}`)}
+                                            </span>
                                         )}
                                     </div>
-                                    <Typography
-                                        variant="h5"
-                                        component="h2"
-                                        className="!mb-2 !font-bold"
-                                        sx={{
-                                            display: '-webkit-box',
-                                            WebkitLineClamp: 2,
-                                            WebkitBoxOrient: 'vertical',
-                                            overflow: 'hidden',
-                                        }}
-                                    >
+                                    <h2 className="mb-2 line-clamp-2 text-xl font-bold">
                                         {featuredArticle.title}
-                                    </Typography>
+                                    </h2>
                                     <p className="mb-4 text-sm text-gray-400 line-clamp-2">
                                         {featuredArticle.excerpt}
                                     </p>
@@ -263,8 +218,8 @@ const BlogPage = ({ initialArticles, initialTotalPages }: BlogPageProps) => {
                                             </span>
                                         )}
                                     </div>
-                                </CardContent>
-                            </Card>
+                                </div>
+                            </div>
                         </Link>
                     )}
 
@@ -278,83 +233,28 @@ const BlogPage = ({ initialArticles, initialTotalPages }: BlogPageProps) => {
                                         href={`/blog/${article.slug}`}
                                         className="group block"
                                     >
-                                        <Card
-                                            sx={{
-                                                bgcolor: 'background.paper',
-                                                borderRadius: 3,
-                                                overflow: 'hidden',
-                                                height: '100%',
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                transition:
-                                                    'transform 0.2s ease, box-shadow 0.2s ease',
-                                                '&:hover': {
-                                                    transform:
-                                                        'translateY(-2px)',
-                                                    boxShadow:
-                                                        '0 8px 30px rgba(0,0,0,0.3)',
-                                                },
-                                            }}
-                                        >
+                                        <div className="flex h-full flex-col overflow-hidden rounded-xl bg-white shadow transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] dark:bg-gray-800">
                                             {article.featuredImageUrl && (
-                                                <CardMedia
-                                                    component="img"
-                                                    height={180}
-                                                    image={
-                                                        article.featuredImageUrl
-                                                    }
+                                                <img
+                                                    src={article.featuredImageUrl}
                                                     alt={
                                                         article.featuredImageAlt ||
                                                         article.title
                                                     }
-                                                    sx={{
-                                                        height: 180,
-                                                        objectFit: 'cover',
-                                                    }}
+                                                    className="h-[180px] w-full object-cover"
                                                 />
                                             )}
-                                            <CardContent
-                                                sx={{
-                                                    p: 2.5,
-                                                    flex: 1,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                }}
-                                            >
+                                            <div className="flex flex-1 flex-col p-2.5">
                                                 <div className="mb-2 flex flex-wrap items-center gap-2">
                                                     {article.niche && (
-                                                        <Chip
-                                                            label={t(
-                                                                `NICHE_${article.niche}`
-                                                            )}
-                                                            size="small"
-                                                            sx={{
-                                                                bgcolor:
-                                                                    'rgba(144, 202, 249, 0.12)',
-                                                                color: '#90caf9',
-                                                                fontWeight: 600,
-                                                                fontSize:
-                                                                    '0.7rem',
-                                                            }}
-                                                        />
+                                                        <span className="rounded-full bg-[#90caf9]/10 px-2.5 py-0.5 text-[0.7rem] font-semibold text-[#90caf9]">
+                                                            {t(`NICHE_${article.niche}`)}
+                                                        </span>
                                                     )}
                                                 </div>
-                                                <Typography
-                                                    variant="subtitle1"
-                                                    component="h2"
-                                                    className="!mb-1 !font-bold"
-                                                    sx={{
-                                                        display:
-                                                            '-webkit-box',
-                                                        WebkitLineClamp: 2,
-                                                        WebkitBoxOrient:
-                                                            'vertical',
-                                                        overflow: 'hidden',
-                                                        lineHeight: 1.3,
-                                                    }}
-                                                >
+                                                <h2 className="mb-1 line-clamp-2 text-base font-bold leading-[1.3]">
                                                     {article.title}
-                                                </Typography>
+                                                </h2>
                                                 <p className="mb-auto pb-3 text-sm text-gray-400 line-clamp-2">
                                                     {article.excerpt}
                                                 </p>
@@ -389,8 +289,8 @@ const BlogPage = ({ initialArticles, initialTotalPages }: BlogPageProps) => {
                                                         </span>
                                                     )}
                                                 </div>
-                                            </CardContent>
-                                        </Card>
+                                            </div>
+                                        </div>
                                     </Link>
                                 )
                             )}

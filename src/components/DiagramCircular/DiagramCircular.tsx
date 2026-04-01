@@ -13,7 +13,7 @@ const DiagramCircular = ({ text, value }: DiagramCircularProps) => {
         textColor: 'rgba(122, 122, 122, 1',
         trailColor: '#d6d6d6',
         backgroundColor: '#90caf9',
-        textSize: 11,
+        textSize: 10,
     })
 
     return (
