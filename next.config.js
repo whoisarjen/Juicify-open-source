@@ -1,23 +1,17 @@
 /** @type {import("next").NextConfig} */
 
 const nextTranslate = require('next-translate-plugin');
+const withSerwist = require("@serwist/next").default;
 
 const isProduction = process.env.NODE_ENV === 'production'
 
-const withPWA = require("next-pwa")({
-    dest: 'public',
-    disable: !isProduction,
-    register: isProduction,
-    skipWaiting: isProduction,
-})
-
 const nextConfig = {
-    reactStrictMode: false, // react-beautiful-dnd is not working, when true
+    reactStrictMode: false,
     images: {
-        domains: [
-            'localhost',
-            'juicify.app',
-            'images.unsplash.com',
+        remotePatterns: [
+            { hostname: 'localhost' },
+            { hostname: 'juicify.app' },
+            { hostname: 'images.unsplash.com' },
         ],
     },
     ...nextTranslate(),
@@ -32,4 +26,10 @@ const nextConfig = {
     },
 }
 
-module.exports = withPWA(nextConfig);
+module.exports = isProduction
+    ? withSerwist({
+        swSrc: "src/sw.ts",
+        swDest: "public/sw.js",
+        disable: false,
+    })(nextConfig)
+    : nextConfig;
