@@ -8,7 +8,6 @@ import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
 import CardContent from '@mui/material/CardContent'
 import Chip from '@mui/material/Chip'
-import Skeleton from '@mui/material/Skeleton'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
@@ -129,63 +128,28 @@ const BlogPage = ({ initialArticles, initialTotalPages }: BlogPageProps) => {
             {isPageLoading && (
                 <div className="flex flex-col gap-6">
                     {/* Featured skeleton */}
-                    <Card
-                        sx={{
-                            bgcolor: 'background.paper',
-                            borderRadius: 3,
-                        }}
-                    >
-                        <Skeleton
-                            variant="rectangular"
-                            height={320}
-                            animation="wave"
-                        />
-                        <CardContent>
-                            <Skeleton
-                                width={80}
-                                height={28}
-                                sx={{ mb: 1 }}
-                            />
-                            <Skeleton
-                                width="70%"
-                                height={36}
-                                sx={{ mb: 1 }}
-                            />
-                            <Skeleton width="90%" height={20} />
-                            <Skeleton width="60%" height={20} />
-                        </CardContent>
-                    </Card>
+                    <div className="overflow-hidden rounded-xl bg-white dark:bg-gray-800">
+                        <div className="h-[320px] animate-pulse bg-gray-200 dark:bg-gray-700" />
+                        <div className="p-4">
+                            <div className="mb-2 h-7 w-20 animate-pulse rounded bg-gray-200 dark:bg-gray-700" />
+                            <div className="mb-2 h-9 w-[70%] animate-pulse rounded bg-gray-200 dark:bg-gray-700" />
+                            <div className="mb-1 h-5 w-[90%] animate-pulse rounded bg-gray-200 dark:bg-gray-700" />
+                            <div className="h-5 w-[60%] animate-pulse rounded bg-gray-200 dark:bg-gray-700" />
+                        </div>
+                    </div>
 
                     {/* Grid skeletons */}
                     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                         {Array.from({ length: 6 }).map((_, i) => (
-                            <Card
-                                key={i}
-                                sx={{
-                                    bgcolor: 'background.paper',
-                                    borderRadius: 3,
-                                }}
-                            >
-                                <Skeleton
-                                    variant="rectangular"
-                                    height={180}
-                                    animation="wave"
-                                />
-                                <CardContent>
-                                    <Skeleton
-                                        width={60}
-                                        height={24}
-                                        sx={{ mb: 1 }}
-                                    />
-                                    <Skeleton
-                                        width="80%"
-                                        height={28}
-                                        sx={{ mb: 1 }}
-                                    />
-                                    <Skeleton width="100%" height={18} />
-                                    <Skeleton width="40%" height={18} />
-                                </CardContent>
-                            </Card>
+                            <div key={i} className="overflow-hidden rounded-xl bg-white dark:bg-gray-800">
+                                <div className="h-[180px] animate-pulse bg-gray-200 dark:bg-gray-700" />
+                                <div className="p-4">
+                                    <div className="mb-2 h-6 w-16 animate-pulse rounded bg-gray-200 dark:bg-gray-700" />
+                                    <div className="mb-2 h-7 w-[80%] animate-pulse rounded bg-gray-200 dark:bg-gray-700" />
+                                    <div className="mb-1 h-[18px] w-full animate-pulse rounded bg-gray-200 dark:bg-gray-700" />
+                                    <div className="h-[18px] w-[40%] animate-pulse rounded bg-gray-200 dark:bg-gray-700" />
+                                </div>
+                            </div>
                         ))}
                     </div>
                 </div>

@@ -1,5 +1,4 @@
 import TextField from '@mui/material/TextField'
-import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
 import InfoIcon from '@mui/icons-material/Info'
 import useTranslation from 'next-translate/useTranslation'
@@ -66,13 +65,14 @@ const BoxAddProduct = ({
                 }}
                 className="max-w-[52px]"
             />
-            <div onChange={onCheckClick}>
-                <Checkbox
-                    data-testid="checked"
-                    checked={isChecked}
-                    inputProps={{ 'aria-label': 'controlled' }}
-                />
-            </div>
+            <input
+                data-testid="checked"
+                type="checkbox"
+                checked={isChecked}
+                onChange={onCheckClick}
+                aria-label="controlled"
+                className="h-5 w-5 accent-blue-500"
+            />
         </div>
     )
 }

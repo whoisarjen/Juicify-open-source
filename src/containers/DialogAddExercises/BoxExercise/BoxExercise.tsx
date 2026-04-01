@@ -1,4 +1,3 @@
-import Checkbox from '@mui/material/Checkbox'
 import { Exercise } from '@prisma/client'
 
 interface BoxExerciseProps {
@@ -13,11 +12,13 @@ const BoxExercise = ({ exercise, isChecked, onCheck }: BoxExerciseProps) => {
             <div className="flex-1 font-bold text-primary-dark">
                 {exercise.name}
             </div>
-            <Checkbox
+            <input
                 data-testid="checkBox"
+                type="checkbox"
                 checked={isChecked}
-                onClick={() => onCheck(!isChecked, exercise)}
-                inputProps={{ 'aria-label': 'controlled' }}
+                onChange={() => onCheck(!isChecked, exercise)}
+                aria-label="controlled"
+                className="h-5 w-5 accent-blue-500"
             />
         </div>
     )

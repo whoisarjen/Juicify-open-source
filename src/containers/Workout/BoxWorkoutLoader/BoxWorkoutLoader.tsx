@@ -1,4 +1,3 @@
-import Skeleton from '@mui/material/Skeleton';
 import { range } from 'lodash';
 import { type ReactElement } from 'react';
 
@@ -17,10 +16,9 @@ export const BoxWorkoutLoader = ({
         return (
             <div>
                 {range(0, numberOfLoaders).map(index => (
-                    <Skeleton
+                    <div
                         key={index}
-                        height={160}
-                        variant="rounded"
+                        className="mb-2 h-[160px] animate-pulse rounded-lg bg-gray-200 dark:bg-gray-700"
                     />
                 ))}
             </div>
