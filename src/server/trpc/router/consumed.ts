@@ -35,7 +35,7 @@ export const consumedRouter = router({
                     }
                 },
                 orderBy: {
-                    meal: 'asc',
+                    createdAt: 'asc',
                 },
             })
         }),
