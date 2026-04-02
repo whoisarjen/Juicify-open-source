@@ -1,9 +1,19 @@
-import { Plus, ChevronDown } from 'lucide-react'
+import { Plus, ChevronDown, MoreHorizontal, Copy, ClipboardPaste } from 'lucide-react'
 import useTranslation from 'next-translate/useTranslation'
-import { Fragment, useEffect, useMemo, useState } from 'react'
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
 import BoxMealItem from '@/containers/consumed/BoxMeal/BoxMealItem/BoxMealItem'
 import { sumMacroFromConsumed } from '@/utils/consumed.utils'
 import DialogAddProducts from './DialogAddProducts/DialogAddProducts'
+import { trpc } from '@/utils/trpc.utils'
+import { useRouter } from 'next/router'
+import moment from 'moment'
+
+const CLIPBOARD_KEY = 'juicify_meal_clipboard'
+
+interface ClipboardItem {
+    productId: number
+    howMany: number
+}
 
 interface BoxMealProps {
     index: number
@@ -13,7 +23,9 @@ interface BoxMealProps {
 
 const BoxMeal = ({ index, meal, isOwner }: BoxMealProps) => {
     const { t } = useTranslation('nutrition-diary')
+    const router = useRouter()
     const [isOpen, setIsOpen] = useState(meal.length > 0)
+    const [menuOpen, setMenuOpen] = useState(false)
 
     const { proteins, carbs, fats, calories } = useMemo(
         () => sumMacroFromConsumed(meal),
@@ -24,6 +36,54 @@ const BoxMeal = ({ index, meal, isOwner }: BoxMealProps) => {
     useEffect(() => {
         if (meal.length > 0) setIsOpen(true)
     }, [meal.length])
+
+    const [hasClipboard, setHasClipboard] = useState(false)
+
+    // Check clipboard when menu opens
+    useEffect(() => {
+        if (menuOpen) {
+            setHasClipboard(!!localStorage.getItem(CLIPBOARD_KEY))
+        }
+    }, [menuOpen])
+
+    const utils = trpc.useUtils()
+    const createConsumed = trpc.consumed.create.useMutation({
+        onSuccess() {
+            utils.consumed.getPeriod.refetch()
+        },
+    })
+
+    const handleCopy = useCallback(() => {
+        const items: ClipboardItem[] = meal.map((c) => ({
+            productId: c.productId,
+            howMany: Number(c.howMany),
+        }))
+        localStorage.setItem(CLIPBOARD_KEY, JSON.stringify(items))
+        setMenuOpen(false)
+    }, [meal])
+
+    const handlePaste = useCallback(async () => {
+        const raw = localStorage.getItem(CLIPBOARD_KEY)
+        if (!raw) return
+        const items: ClipboardItem[] = JSON.parse(raw)
+        const whenAdded = moment(router.query.date as string)
+            .hour(moment().hour())
+            .minute(moment().minute())
+            .second(moment().second())
+            .toDate()
+
+        await Promise.all(
+            items.map((item) =>
+                createConsumed.mutateAsync({
+                    productId: item.productId,
+                    howMany: item.howMany,
+                    meal: index,
+                    whenAdded,
+                })
+            )
+        )
+        setMenuOpen(false)
+    }, [createConsumed, index, router.query.date])
 
     const hasMeal = meal.length > 0
 
@@ -37,7 +97,7 @@ const BoxMeal = ({ index, meal, isOwner }: BoxMealProps) => {
     const fPct = totalMacroCals > 0 ? (fatCals / totalMacroCals) * 100 : 0
 
     return (
-        <div className={`glass overflow-hidden ${!hasMeal ? 'opacity-50' : ''}`}>
+        <div className="glass">
             {/* Header */}
             <div
                 className="flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors hover:bg-[rgba(255,255,255,0.02)]"
@@ -79,16 +139,50 @@ const BoxMeal = ({ index, meal, isOwner }: BoxMealProps) => {
                 </span>
 
                 {isOwner && (
-                    <div onClick={(e) => e.stopPropagation()}>
-                        <DialogAddProducts mealToAdd={index}>
+                    <>
+                        <div onClick={(e) => e.stopPropagation()}>
+                            <DialogAddProducts mealToAdd={index}>
+                                <button
+                                    className="w-[28px] h-[28px] rounded-lg border border-glass-border bg-glass flex items-center justify-center text-[#7a7a7a] hover:border-glass-border-accent hover:text-primary-dark transition-all duration-300 shrink-0 cursor-pointer"
+                                    aria-label="Add"
+                                >
+                                    <Plus size={14} />
+                                </button>
+                            </DialogAddProducts>
+                        </div>
+                        <div className="relative shrink-0" onClick={(e) => e.stopPropagation()}>
                             <button
-                                className="w-[28px] h-[28px] rounded-lg border border-glass-border bg-glass flex items-center justify-center text-[#7a7a7a] hover:border-glass-border-accent hover:text-primary-dark transition-all duration-300 shrink-0 cursor-pointer"
-                                aria-label="Add"
+                                className="w-[28px] h-[28px] rounded-lg border border-glass-border bg-glass flex items-center justify-center text-[#7a7a7a] hover:border-glass-border-accent hover:text-primary-dark transition-all duration-300 cursor-pointer"
+                                aria-label="More options"
+                                onClick={() => setMenuOpen(!menuOpen)}
                             >
-                                <Plus size={14} />
+                                <MoreHorizontal size={14} />
                             </button>
-                        </DialogAddProducts>
-                    </div>
+                            {menuOpen && (
+                                <>
+                                    <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
+                                    <div className="absolute right-0 top-full mt-1 z-50 min-w-[160px] rounded-lg border border-glass-border bg-[#1a1a1a] shadow-xl overflow-hidden">
+                                        <button
+                                            className="flex w-full items-center gap-3 px-4 py-3 text-xs text-zinc-300 hover:bg-[rgba(255,255,255,0.06)] transition-colors disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
+                                            onClick={handleCopy}
+                                            disabled={!hasMeal}
+                                        >
+                                            <Copy size={14} />
+                                            {t('Copy meal')}
+                                        </button>
+                                        <button
+                                            className="flex w-full items-center gap-3 px-4 py-3 text-xs text-zinc-300 hover:bg-[rgba(255,255,255,0.06)] transition-colors disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
+                                            onClick={handlePaste}
+                                            disabled={!hasClipboard}
+                                        >
+                                            <ClipboardPaste size={14} />
+                                            {t('Paste meal')}
+                                        </button>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    </>
                 )}
 
                 <ChevronDown

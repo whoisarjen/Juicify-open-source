@@ -55,5 +55,7 @@
     "Code": "Barcode",
     "Verified": "Verified",
     "g in 100g/ml": "g in 100g/ml",
-    "SCAN_BARCODE": "Scan barcode"
+    "SCAN_BARCODE": "Scan barcode",
+    "Copy meal": "Copy meal",
+    "Paste meal": "Paste meal"
 }
