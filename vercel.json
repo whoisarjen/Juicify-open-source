@@ -15,6 +15,34 @@
       {
         "path": "/api/withings/sync",
         "schedule": "0 0 * * *"
+      },
+      {
+        "path": "/api/withings/sync",
+        "schedule": "0 3 * * *"
+      },
+      {
+        "path": "/api/withings/sync",
+        "schedule": "0 6 * * *"
+      },
+      {
+        "path": "/api/withings/sync",
+        "schedule": "0 9 * * *"
+      },
+      {
+        "path": "/api/withings/sync",
+        "schedule": "0 12 * * *"
+      },
+      {
+        "path": "/api/withings/sync",
+        "schedule": "0 15 * * *"
+      },
+      {
+        "path": "/api/withings/sync",
+        "schedule": "0 18 * * *"
+      },
+      {
+        "path": "/api/withings/sync",
+        "schedule": "0 21 * * *"
       }
     ]
 }
