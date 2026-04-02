@@ -37,7 +37,7 @@ const BoxMeal = ({ index, meal, isOwner }: BoxMealProps) => {
     const fPct = totalMacroCals > 0 ? (fatCals / totalMacroCals) * 100 : 0
 
     return (
-        <div className={`glass ${!hasMeal ? 'opacity-50' : ''}`}>
+        <div className={`glass overflow-hidden ${!hasMeal ? 'opacity-50' : ''}`}>
             {/* Header */}
             <div
                 className="flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors hover:bg-[rgba(255,255,255,0.02)]"

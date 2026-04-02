@@ -40,7 +40,7 @@ const Consumed = () => {
             .filter(({ meal }) => meal === index))
 
     return (
-        <div className="flex flex-col gap-4 flex-1">
+        <div className="flex flex-col gap-4 flex-1 min-w-0">
             <NavbarOnlyTitle title="nutrition-diary:title">
                 <ButtonShare />
                 <DateChanger />

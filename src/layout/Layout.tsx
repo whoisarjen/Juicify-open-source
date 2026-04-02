@@ -169,7 +169,7 @@ const Layout = ({ children }: { children: any }) => {
                                 <SidebarLeft />
                             </div>
                         )}
-                        <div className="pb-safe flex flex-1 items-stretch">{children}</div>
+                        <div className="pb-safe flex flex-1 min-w-0 items-stretch">{children}</div>
                         {isSidebarGrid && !isLandingPage && (
                             <div className="w-64 max-lg:hidden">
                                 <SidebarRight />
