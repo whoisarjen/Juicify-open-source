@@ -5,26 +5,17 @@ import { prisma } from '../../server/db/client'
 const LOCALES = ['en', 'pl', 'es', 'de', 'pt', 'fr', 'ko', 'ar', 'tr', 'ja', 'it']
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const [users, articles] = await Promise.all([
-        prisma.user.findMany({
-            select: { username: true },
-        }),
-        prisma.article.findMany({
-            where: { isPublished: true },
-            select: { slug: true, updatedAt: true },
-            orderBy: { publishedAt: 'desc' },
-        }),
-    ])
+    const articles = await prisma.article.findMany({
+        where: { isPublished: true },
+        select: { slug: true, updatedAt: true },
+        orderBy: { publishedAt: 'desc' },
+    })
 
     res.statusCode = 200
     res.setHeader('Content-Type', 'text/xml')
     res.setHeader('Cache-control', 'stale-while-revalidate, s-maxage=3600')
 
     const baseUrl = env.NEXTAUTH_URL
-
-    const userUrls = users
-        .map(({ username }) => `<url><loc>${baseUrl}/${username}</loc></url>`)
-        .join('')
 
     const articleUrls = articles
         .map(({ slug, updatedAt }) => {
@@ -43,7 +34,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
         <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
                 xmlns:xhtml="http://www.w3.org/1999/xhtml">
-        ${userUrls}
         ${articleUrls}
         </urlset>
     `
