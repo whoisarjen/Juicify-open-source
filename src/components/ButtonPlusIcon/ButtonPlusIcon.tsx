@@ -43,7 +43,7 @@ const ButtonPlusIcon = ({
         <button
             type="button"
             onClick={onClick}
-            className={`${sizeClasses[size]} fixed bottom-8 right-8 z-40 flex items-center justify-center rounded-full bg-primary-dark text-[#121212] shadow-lg hover:bg-[#64b5f6] active:shadow-xl transition-all cursor-pointer`}
+            className={`${sizeClasses[size]} fixed bottom-20 right-8 xl:bottom-8 z-40 flex items-center justify-center rounded-full bg-primary-dark text-[#121212] shadow-lg hover:bg-[#64b5f6] active:shadow-xl transition-all cursor-pointer`}
             aria-label="add"
         >
             {icon || (
