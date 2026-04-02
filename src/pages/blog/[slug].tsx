@@ -100,7 +100,7 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
 
     const pageTitle = article.metaTitle || article.title
     const pageDescription = article.metaDesc || article.excerpt
-    const canonicalUrl = `https://juicify.app/blog/${article.slug}`
+    const canonicalUrl = `https://juicify.whoisarjen.com/blog/${article.slug}`
 
     const articleJsonLd = {
         '@context': 'https://schema.org',
@@ -114,7 +114,7 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
             name: 'Juicify',
             logo: {
                 '@type': 'ImageObject',
-                url: 'https://juicify.app/images/logo.png',
+                url: 'https://juicify.whoisarjen.com/images/logo.png',
             },
         },
         mainEntityOfPage: {
@@ -147,13 +147,13 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
                 '@type': 'ListItem',
                 position: 1,
                 name: 'Home',
-                item: 'https://juicify.app',
+                item: 'https://juicify.whoisarjen.com',
             },
             {
                 '@type': 'ListItem',
                 position: 2,
                 name: 'Blog',
-                item: 'https://juicify.app/blog',
+                item: 'https://juicify.whoisarjen.com/blog',
             },
             {
                 '@type': 'ListItem',

@@ -11,7 +11,7 @@ const nextConfig = {
     images: {
         remotePatterns: [
             { hostname: 'localhost' },
-            { hostname: 'juicify.app' },
+            { hostname: 'juicify.whoisarjen.com' },
             { hostname: 'images.unsplash.com' },
         ],
     },

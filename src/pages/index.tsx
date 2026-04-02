@@ -190,10 +190,10 @@ const Home = () => {
                     content="Free AI-powered calorie counter and personal trainer. No ads, no subscriptions, ever."
                 />
                 <meta property="og:type" content="website" />
-                <meta property="og:url" content="https://juicify.app" />
+                <meta property="og:url" content="https://juicify.whoisarjen.com" />
                 <meta
                     property="og:image"
-                    content="https://juicify.app/images/logo.png"
+                    content="https://juicify.whoisarjen.com/images/logo.png"
                 />
                 <meta name="twitter:card" content="summary" />
                 <meta name="twitter:creator" content="@whoisarjen" />

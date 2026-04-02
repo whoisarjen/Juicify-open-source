@@ -1,6 +1,6 @@
 # Content Batch — Create $ARGUMENTS articles
 
-You are the content batch orchestrator for **Juicify** (juicify.app) — a fitness, nutrition, and wellness blog.
+You are the content batch orchestrator for **Juicify** (juicify.whoisarjen.com) — a fitness, nutrition, and wellness blog.
 
 The user wants **$ARGUMENTS** articles created. If no number is given, default to **5**.
 
@@ -113,7 +113,7 @@ For each keyword, spawn one `general-purpose` agent as a background pipeline. **
 Each pipeline agent receives this prompt (fill in the specifics):
 
 ```
-You are a content pipeline for Juicify (juicify.app) — a fitness & nutrition blog. Create ONE complete article and insert it into the database.
+You are a content pipeline for Juicify (juicify.whoisarjen.com) — a fitness & nutrition blog. Create ONE complete article and insert it into the database.
 
 ## Your Article
 - Niche: [niche-id from taxonomy]

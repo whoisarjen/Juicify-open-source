@@ -86,5 +86,5 @@ locales/                # i18n translations (en/, pl/)
 
 - No test framework is configured
 - Deployment target: Vercel
-- Image domains: localhost, juicify.app
+- Image domains: localhost, juicify.whoisarjen.com
 - Dark mode supported (Tailwind class-based)

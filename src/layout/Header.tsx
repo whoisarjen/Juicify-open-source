@@ -39,17 +39,17 @@ const Header = () => {
             {/* <link rel='mask-icon' href='/icons/safari-pinned-tab.svg' color='#5bbad5' /> */}
 
             <meta name='twitter:card' content='summary' />
-            <meta name='twitter:url' content='https://juicify.app' />
+            <meta name='twitter:url' content='https://juicify.whoisarjen.com' />
             <meta name='twitter:title' content='Juicify' />
             <meta name='twitter:description' content="Lets make your body juicy!" />
-            <meta name='twitter:image' content='https://juicify.app/icons/android-chrome-192x192.png' />
+            <meta name='twitter:image' content='https://juicify.whoisarjen.com/icons/android-chrome-192x192.png' />
             <meta name='twitter:creator' content='@whoisarjen' />
             <meta property='og:type' content='website' />
             <meta property='og:title' content='Juicify' />
             <meta property='og:description' content="Lets make your body juicy!" />
             <meta property='og:site_name' content='Juicify' />
-            <meta property='og:url' content='https://juicify.app' />
-            <meta property='og:image' content='https://juicify.app/icons/apple-touch-icon.png' />
+            <meta property='og:url' content='https://juicify.whoisarjen.com' />
+            <meta property='og:image' content='https://juicify.whoisarjen.com/icons/apple-touch-icon.png' />
 
             {/* apple splash screen images */}
             <meta name="apple-mobile-web-app-capable" content="yes" />

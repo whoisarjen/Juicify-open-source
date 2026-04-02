@@ -98,11 +98,11 @@ const BlogPage = ({ initialArticles, initialTotalPages }: BlogPageProps) => {
                 <meta property="og:type" content="website" />
                 <meta
                     property="og:url"
-                    content="https://juicify.app/blog"
+                    content="https://juicify.whoisarjen.com/blog"
                 />
                 <meta
                     property="og:image"
-                    content="https://juicify.app/images/logo.png"
+                    content="https://juicify.whoisarjen.com/images/logo.png"
                 />
             </Head>
 

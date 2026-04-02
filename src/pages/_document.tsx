@@ -8,9 +8,9 @@ class MyDocument extends Document {
                     <meta charSet="utf-8" />
                     <meta name="description" content="Free AI-powered calorie counter and personal trainer. Track calories, plan workouts, and reach your fitness goals — no ads, no subscriptions." />
                     <meta name="theme-color" content="#121212" />
-                    <link rel="alternate" hrefLang="en" href="https://juicify.app" />
-                    <link rel="alternate" hrefLang="pl" href="https://juicify.app/pl" />
-                    <link rel="alternate" hrefLang="x-default" href="https://juicify.app" />
+                    <link rel="alternate" hrefLang="en" href="https://juicify.whoisarjen.com" />
+                    <link rel="alternate" hrefLang="pl" href="https://juicify.whoisarjen.com/pl" />
+                    <link rel="alternate" hrefLang="x-default" href="https://juicify.whoisarjen.com" />
                     <link rel="manifest" href="/manifest.json" />
                     <link rel="apple-touch-icon" href="/icons/apple-icon-180.png" />
                     <link rel="preconnect" href="https://www.googletagmanager.com" />
