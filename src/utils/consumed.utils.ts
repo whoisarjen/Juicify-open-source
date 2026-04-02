@@ -36,7 +36,7 @@ export const multipleProductByHowMany = (consumed: Consumed) => {
         .reduce((previous, key) => ({
             ...previous,
             [key]: Number(defaultProduct[key])
-                ? Number(defaultProduct[key]) * Number(consumed.howMany)
+                ? Math.round(Number(defaultProduct[key]) * Number(consumed.howMany) * 10) / 10
                 : defaultProduct[key],
         }), {}) as Product
 
