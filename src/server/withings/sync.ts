@@ -263,7 +263,7 @@ async function syncMeasurements(
 async function syncActivityData(
     accessToken: string,
     userId: number,
-    startOfDay: moment.Moment,
+    _startOfDay: moment.Moment,
     dateYmd: string,
 ) {
     const activities = await getActivity(accessToken, dateYmd, dateYmd)
@@ -271,7 +271,7 @@ async function syncActivityData(
     if (activities.length === 0) return
 
     const activity = activities[0]!
-    const date = startOfDay.toDate()
+    const date = moment(activity.date, 'YYYY-MM-DD').startOf('day').toDate()
 
     await prisma.withingsActivity.upsert({
         where: { userId_date: { userId, date } },
@@ -316,13 +316,14 @@ async function syncActivityData(
     // Also create a BurnedCalories entry for the existing UI
     const activeCalories = Math.round(activity.calories || 0)
     if (activeCalories > 0) {
+        const activityDay = moment(activity.date, 'YYYY-MM-DD').startOf('day')
         const existingBurned = await prisma.burnedCalories.findFirst({
             where: {
                 userId,
                 source: 'withings',
                 whenAdded: {
-                    gte: startOfDay.toDate(),
-                    lte: startOfDay.clone().endOf('day').toDate(),
+                    gte: activityDay.toDate(),
+                    lte: activityDay.clone().endOf('day').toDate(),
                 },
             },
         })
@@ -340,7 +341,7 @@ async function syncActivityData(
                     userId,
                     name: 'Withings Activity',
                     burnedCalories: activeCalories,
-                    whenAdded: startOfDay.toDate(),
+                    whenAdded: activityDay.toDate(),
                     source: 'withings',
                 },
             })
@@ -416,28 +417,33 @@ async function syncWorkouts(
 async function syncSleepData(
     accessToken: string,
     userId: number,
-    startOfDay: moment.Moment,
+    _startOfDay: moment.Moment,
     dateYmd: string,
 ) {
     const sleepSummaries = await getSleep(accessToken, dateYmd, dateYmd)
 
     if (sleepSummaries.length === 0) return
 
-    const sleep = sleepSummaries.reduce(
-        (longest: WithingsSleepSummary, s: WithingsSleepSummary) =>
-            (s.data?.total_timeinbed || 0) > (longest.data?.total_timeinbed || 0)
-                ? s
-                : longest,
-    )
+    // Group by Withings-reported date, keep longest session per date
+    const byDate = new Map<string, WithingsSleepSummary>()
+    for (const s of sleepSummaries) {
+        const existing = byDate.get(s.date)
+        if (!existing || (s.data?.total_timeinbed || 0) > (existing.data?.total_timeinbed || 0)) {
+            byDate.set(s.date, s)
+        }
+    }
 
-    const date = startOfDay.toDate()
-    const dbData = sleepDataToDb(sleep)
+    for (const dateStr of Array.from(byDate.keys())) {
+        const sleep = byDate.get(dateStr)!
+        const date = moment(dateStr, 'YYYY-MM-DD').startOf('day').toDate()
+        const dbData = sleepDataToDb(sleep)
 
-    await prisma.withingsSleep.upsert({
-        where: { userId_date: { userId, date } },
-        update: dbData,
-        create: { userId, date, ...dbData },
-    })
+        await prisma.withingsSleep.upsert({
+            where: { userId_date: { userId, date } },
+            update: dbData,
+            create: { userId, date, ...dbData },
+        })
+    }
 }
 
 async function syncActivityRange(
