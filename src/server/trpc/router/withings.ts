@@ -1,7 +1,35 @@
 import { z } from 'zod'
+import moment from 'moment'
 import { router, protectedProcedure } from '../trpc'
 
 export const withingsRouter = router({
+    dayStats: protectedProcedure
+        .input(z.object({ date: z.string() }))
+        .query(async ({ ctx, input: { date } }) => {
+            const userId = ctx.session.user.id
+            const dayStart = moment(date, 'YYYY-MM-DD').startOf('day').toDate()
+            const dayEnd = moment(date, 'YYYY-MM-DD').endOf('day').toDate()
+
+            const [activity, sleep] = await Promise.all([
+                ctx.prisma.withingsActivity.findFirst({
+                    where: { userId, date: { gte: dayStart, lte: dayEnd } },
+                }),
+                ctx.prisma.withingsSleep.findFirst({
+                    where: { userId, date: { gte: dayStart, lte: dayEnd } },
+                }),
+            ])
+
+            if (!activity && !sleep) return null
+
+            return {
+                steps: activity?.steps ?? null,
+                totalCalories: activity ? Math.round(Number(activity.totalCalories)) : null,
+                activeCalories: activity ? Math.round(Number(activity.activeCalories)) : null,
+                totalSleepTime: sleep?.totalSleepTime ?? null,
+                sleepScore: sleep?.sleepScore ?? null,
+                hrAverage: sleep?.hrAverage ?? null,
+            }
+        }),
     dashboard: protectedProcedure
         .input(
             z.object({
