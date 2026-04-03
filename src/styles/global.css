@@ -110,6 +110,14 @@
     --theme-background: #121212;
 }
 
+* {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+*::-webkit-scrollbar {
+    display: none;
+}
+
 html {
     background: var(--theme-background);
     background-color: var(--theme-background);
