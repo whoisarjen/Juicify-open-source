@@ -17,5 +17,9 @@
     "New password": "New password",
     "Repeat new password": "Repeat new password",
     "Current password": "Current password",
-    "LOGOUT": "Logout"
+    "LOGOUT": "Logout",
+    "Proteins": "Proteins",
+    "Fats": "Fats",
+    "Macronutrients": "Macronutrients",
+    "Save": "Save"
 }

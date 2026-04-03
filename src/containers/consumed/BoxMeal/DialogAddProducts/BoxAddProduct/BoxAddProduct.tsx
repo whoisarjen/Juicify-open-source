@@ -57,8 +57,7 @@ const BoxAddProduct = ({
                         e.target.value ? Number(e.target.value) : undefined
                     )
                 }
-                inputMode="numeric"
-                pattern="[0-9]*"
+                inputMode="decimal"
                 className="max-w-[52px] rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
             />
             <input

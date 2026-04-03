@@ -72,8 +72,7 @@ const DialogEditConsumed = ({
                                 <input
                                     className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
                                     type="number"
-                                    inputMode="numeric"
-                                    pattern="[0-9]*"
+                                    inputMode="decimal"
                                     {...register('howMany')}
                                 />
                                 {errors.howMany && <p className="mt-1 text-xs text-red-500">{errors.howMany?.message}</p>}

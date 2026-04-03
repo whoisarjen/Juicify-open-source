@@ -26,7 +26,7 @@ export const userSchema = z.object({
     fiber: z.coerce.number().min(0).max(100).optional(),
     carbsPercentAsSugar: z.coerce.number().min(0).max(100).optional(),
     birth: z.coerce.date().optional(),
-    height: z.coerce.number().min(120).max(250).optional(),
+    height: z.coerce.number().min(0).max(250).optional(),
     description: z.string().max(255).optional(),
     website: z.string().max(150).optional(),
     facebook: z.string().max(150).optional(),
