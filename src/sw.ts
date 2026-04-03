@@ -1,6 +1,6 @@
 import { defaultCache } from "@serwist/next/worker";
 import type { PrecacheEntry, SerwistGlobalConfig } from "serwist";
-import { CacheFirst, NetworkFirst, Serwist, ExpirationPlugin } from "serwist";
+import { CacheFirst, StaleWhileRevalidate, Serwist, ExpirationPlugin } from "serwist";
 
 declare global {
     interface WorkerGlobalScope extends SerwistGlobalConfig {
@@ -16,18 +16,17 @@ const serwist = new Serwist({
     clientsClaim: true,
     navigationPreload: true,
     runtimeCaching: [
-        // tRPC API calls — network first, fall back to cache for offline
+        // tRPC API calls — serve cached instantly, refresh in background
         {
             matcher: /\/api\/trpc\/.*/i,
-            handler: new NetworkFirst({
+            handler: new StaleWhileRevalidate({
                 cacheName: 'trpc-api',
                 plugins: [
                     new ExpirationPlugin({
                         maxEntries: 64,
-                        maxAgeSeconds: 60 * 60, // 1 hour
+                        maxAgeSeconds: 604800,
                     }),
                 ],
-                networkTimeoutSeconds: 10,
             }),
         },
         // Fonts — cache first, long TTL
@@ -38,7 +37,7 @@ const serwist = new Serwist({
                 plugins: [
                     new ExpirationPlugin({
                         maxEntries: 16,
-                        maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+                        maxAgeSeconds: 31536000,
                     }),
                 ],
             }),
@@ -51,7 +50,7 @@ const serwist = new Serwist({
                 plugins: [
                     new ExpirationPlugin({
                         maxEntries: 128,
-                        maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+                        maxAgeSeconds: 2592000,
                     }),
                 ],
             }),
@@ -64,7 +63,7 @@ const serwist = new Serwist({
                 plugins: [
                     new ExpirationPlugin({
                         maxEntries: 64,
-                        maxAgeSeconds: 60 * 60 * 24 * 7, // 7 days
+                        maxAgeSeconds: 604800,
                     }),
                 ],
             }),
