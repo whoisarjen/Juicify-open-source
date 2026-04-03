@@ -16,6 +16,19 @@ const serwist = new Serwist({
     clientsClaim: true,
     navigationPreload: true,
     runtimeCaching: [
+        // NextAuth session — serve cached instantly, refresh in background
+        {
+            matcher: /\/api\/auth\/session$/i,
+            handler: new StaleWhileRevalidate({
+                cacheName: 'auth-session',
+                plugins: [
+                    new ExpirationPlugin({
+                        maxEntries: 1,
+                        maxAgeSeconds: 604800,
+                    }),
+                ],
+            }),
+        },
         // tRPC API calls — serve cached instantly, refresh in background
         {
             matcher: /\/api\/trpc\/.*/i,
