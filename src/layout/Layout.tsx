@@ -155,10 +155,10 @@ const Layout = ({ children }: { children: any }) => {
     const isLandingPage = router.pathname === SIGN_IN_PATH && status !== 'loading' && !sessionData?.user
 
     return (
-        <main className={`pb-safe dark container flex max-w-7xl 2xl:max-w-[1536px] flex-col ${isLandingPage ? 'min-h-screen' : 'h-screen'}`}>
+        <main className={`pb-safe dark container flex max-w-5xl flex-col ${isLandingPage ? 'min-h-screen' : 'h-screen'}`}>
             <div className={`flex flex-1 ${isLandingPage ? '' : 'flex-row gap-4'} p-4`}>
                 {status !== 'loading' && !isLandingPage && (
-                    <div className="relative w-64 max-xl:hidden 2xl:w-auto 2xl:flex-[1_1_0%]">
+                    <div className="relative max-xl:hidden w-52 shrink-0">
                         <SidebarLeft />
                     </div>
                 )}
