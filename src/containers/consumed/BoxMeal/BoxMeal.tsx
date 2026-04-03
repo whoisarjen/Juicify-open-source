@@ -63,6 +63,7 @@ const BoxMeal = ({ index, meal, isOwner }: BoxMealProps) => {
     }, [meal])
 
     const handlePaste = useCallback(async () => {
+        if (createConsumed.isPending) return
         const raw = localStorage.getItem(CLIPBOARD_KEY)
         if (!raw) return
         const items: ClipboardItem[] = JSON.parse(raw)
@@ -173,7 +174,7 @@ const BoxMeal = ({ index, meal, isOwner }: BoxMealProps) => {
                                         <button
                                             className="flex w-full items-center gap-3 px-4 py-3 text-xs text-zinc-300 hover:bg-[rgba(255,255,255,0.06)] transition-colors disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
                                             onClick={handlePaste}
-                                            disabled={!hasClipboard}
+                                            disabled={!hasClipboard || createConsumed.isPending}
                                         >
                                             <ClipboardPaste size={14} />
                                             {t('Paste meal')}
