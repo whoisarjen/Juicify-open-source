@@ -28,6 +28,8 @@ export const withingsRouter = router({
                 totalSleepTime: sleep?.totalSleepTime ?? null,
                 sleepScore: sleep?.sleepScore ?? null,
                 hrAverage: sleep?.hrAverage ?? null,
+                hrMin: sleep?.hrMin ?? null,
+                hrMax: sleep?.hrMax ?? null,
             }
         }),
     dashboard: protectedProcedure

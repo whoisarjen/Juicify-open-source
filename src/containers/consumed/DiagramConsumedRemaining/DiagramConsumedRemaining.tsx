@@ -137,6 +137,9 @@ const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
                     {dayStats.hrAverage != null && (
                         <span className="flex items-center gap-1 text-[10px] font-semibold text-[#9ca3af] bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)] rounded-full px-2.5 py-1">
                             ❤️ <span className="text-primary-dark">{dayStats.hrAverage}</span> bpm
+                            {dayStats.hrMin != null && dayStats.hrMax != null && (
+                                <span className="text-[#7a7a7a]">({dayStats.hrMin}–{dayStats.hrMax})</span>
+                            )}
                         </span>
                     )}
                     {dayStats.steps != null && (
