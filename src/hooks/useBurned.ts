@@ -41,7 +41,8 @@ const useBurned = ({
     return {
         burnedCalories,
         workoutResults,
-        burnedCaloriesSum: [...burnedCalories, ...workoutResults].reduce((previous, { burnedCalories }) => previous + burnedCalories, 0),
+        burnedCaloriesSum: workoutResults.reduce((previous, { burnedCalories }) => previous + burnedCalories, 0),
+        burnedCaloriesTotalSum: [...burnedCalories, ...workoutResults].reduce((previous, { burnedCalories }) => previous + burnedCalories, 0),
     }
 }
 
