@@ -33,9 +33,7 @@ const getCookie = async (cookieName: string) => {
 const Layout = ({ children }: { children: any }) => {
     const { t } = useTranslation('home')
     const router = useRouter()
-    const [isAllowedLocation, setIsAllowedLocation] = useState(
-        () => !REQUIRED_AUTH_PATHS.includes(router.pathname)
-    )
+    const [isAllowedLocation, setIsAllowedLocation] = useState(true)
     const [skippedSettings, setSkippedSettings] = useState(false)
     const { data: sessionData, status } = useSession()
 
@@ -90,14 +88,11 @@ const Layout = ({ children }: { children: any }) => {
                 return
             }
 
-            if (status === 'loading') {
-                return
-            }
-
             if (
                 status === 'unauthenticated' &&
                 REQUIRED_AUTH_PATHS.includes(router.pathname)
             ) {
+                setIsAllowedLocation(false)
                 router.push(SIGN_IN_PATH)
                 return
             }
@@ -152,18 +147,18 @@ const Layout = ({ children }: { children: any }) => {
 
     const isBlog = router.pathname.includes('blog')
     const isNeutralPath = isBlog || router.pathname === SIGN_IN_PATH
-    const isLandingPage = router.pathname === SIGN_IN_PATH && status !== 'loading' && !sessionData?.user
+    const isLandingPage = router.pathname === SIGN_IN_PATH && status === 'unauthenticated'
 
     return (
         <main className={`pb-safe dark container flex max-w-5xl flex-col ${isLandingPage ? 'min-h-screen' : 'h-screen'}`}>
             <div className={`flex flex-1 ${isLandingPage ? '' : 'flex-row gap-4'} p-4`}>
-                {status !== 'loading' && !isLandingPage && (
+                {!isLandingPage && (
                     <div className="relative max-xl:hidden w-52 shrink-0">
                         <SidebarLeft />
                     </div>
                 )}
                 <div className="pb-safe flex flex-[1.618_1_0%] min-w-0 items-stretch">
-                    {status === 'loading' ? null : children}
+                    {children}
                 </div>
             </div>
             {!isLandingPage && <Footer />}
