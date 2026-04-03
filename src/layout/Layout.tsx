@@ -2,7 +2,6 @@ import Footer from './Footer'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 import SidebarLeft from './SidebarLeft'
-import SidebarRight from './SidebarRight'
 import { useSession } from 'next-auth/react'
 import { DialogMissingSettings } from '@/components/DialogMissingSettings'
 import useTranslation from 'next-translate/useTranslation'
@@ -155,24 +154,17 @@ const Layout = ({ children }: { children: any }) => {
     const isNeutralPath = isBlog || router.pathname === SIGN_IN_PATH
     const isLandingPage = router.pathname === SIGN_IN_PATH && status !== 'loading' && !sessionData?.user
 
-    const isSidebarGrid = !isBlog
-
     return (
-        <main className={`pb-safe dark container flex max-w-7xl flex-col ${isLandingPage ? 'min-h-screen' : 'h-screen'}`}>
+        <main className={`pb-safe dark container flex max-w-7xl 2xl:max-w-[1536px] flex-col ${isLandingPage ? 'min-h-screen' : 'h-screen'}`}>
             <div className={`flex flex-1 ${isLandingPage ? '' : 'flex-row gap-4'} p-4`}>
                 {status !== 'loading' && !isLandingPage && (
-                    <div className="relative w-64 max-xl:hidden">
+                    <div className="relative w-64 max-xl:hidden 2xl:w-auto 2xl:flex-[1_1_0%]">
                         <SidebarLeft />
                     </div>
                 )}
-                <div className="pb-safe flex flex-1 min-w-0 items-stretch">
+                <div className="pb-safe flex flex-[1.618_1_0%] min-w-0 items-stretch">
                     {status === 'loading' ? null : children}
                 </div>
-                {status !== 'loading' && isSidebarGrid && !isLandingPage && (
-                    <div className="w-64 max-lg:hidden">
-                        <SidebarRight />
-                    </div>
-                )}
             </div>
             {!isLandingPage && <Footer />}
             {status === 'unauthenticated' && !isNeutralPath && (
