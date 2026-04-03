@@ -161,7 +161,7 @@ const BoxMeal = ({ index, meal, isOwner }: BoxMealProps) => {
                             {menuOpen && (
                                 <>
                                     <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
-                                    <div className="absolute right-0 top-full mt-1 z-50 min-w-[160px] rounded-lg border border-glass-border bg-[#1a1a1a] shadow-xl overflow-hidden">
+                                    <div className="absolute right-0 bottom-full mb-1 z-50 min-w-[160px] rounded-lg border border-glass-border bg-[#1a1a1a] shadow-xl overflow-hidden">
                                         <button
                                             className="flex w-full items-center gap-3 px-4 py-3 text-xs text-zinc-300 hover:bg-[rgba(255,255,255,0.06)] transition-colors disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
                                             onClick={handleCopy}
