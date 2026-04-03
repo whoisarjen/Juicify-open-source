@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { exerciseSchema } from "./exercise.schema";
+import { decimal } from "./decimal";
 
 export const workoutPlanExerciseSchema = z.object({
     series: z.coerce.number().min(1).max(10).optional(),
@@ -20,7 +21,7 @@ export type CreateWorkoutPlanSchema = z.infer<typeof createWorkoutPlanSchema>
 export const workoutPlanSchema = z.object({
     id: z.coerce.number(),
     description: z.string().max(500).nullable(),
-    burnedCalories: z.coerce.number().min(0).max(9999).optional().default(0),
+    burnedCalories: decimal(z.coerce.number().min(0).max(9999)).optional().default(0),
     exercises: z.array(workoutPlanExerciseSchema)
         .optional()
         .default([])

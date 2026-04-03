@@ -76,7 +76,8 @@ export const DialogEditBurnedCalories = ({
                                 <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-primary-dark dark:border-gray-600">
                                     <input
                                         className="flex-1 bg-transparent px-3 py-2 outline-none"
-                                        type="number"
+                                        type="text"
+                                        inputMode="decimal"
                                         {...register('burnedCalories')}
                                     />
                                     <span className="px-3 text-sm text-gray-500">kcal</span>

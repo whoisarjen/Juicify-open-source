@@ -1,9 +1,10 @@
 import { z } from "zod";
+import { decimal } from "./decimal";
 
 export const createConsumedSchema = z.object({
     productId: z.coerce.number(),
     whenAdded: z.coerce.date().optional().default(() => new Date()),
-    howMany: z.coerce.number().min(0.1).max(999).optional().default(1),
+    howMany: decimal(z.coerce.number().min(0.1).max(999)).optional().default(1),
     meal: z.coerce.number().min(0).max(10),
 })
 

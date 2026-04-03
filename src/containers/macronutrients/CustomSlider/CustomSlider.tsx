@@ -37,7 +37,7 @@ const CustomSlider = ({ title, macro, beginValue, changed, day }: CustomSliderPr
     };
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setValue(event.target.value === '' ? '' : Number(event.target.value));
+        setValue(event.target.value === '' ? '' : Number(event.target.value.replace(',', '.')));
     };
 
     const handleBlur = () => {
@@ -74,9 +74,8 @@ const CustomSlider = ({ title, macro, beginValue, changed, day }: CustomSliderPr
                     className="flex-1 accent-blue-500"
                 />
                 <input
-                    type="number"
-                    min={0}
-                    max={maxValue}
+                    type="text"
+                    inputMode="decimal"
                     value={value}
                     onChange={handleInputChange}
                     onBlur={handleBlur}

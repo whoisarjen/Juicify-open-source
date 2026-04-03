@@ -71,7 +71,7 @@ const DialogEditConsumed = ({
                                 <label className="mb-1 block text-sm text-gray-500">{t('How many times 100g/ml')}</label>
                                 <input
                                     className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
-                                    type="number"
+                                    type="text"
                                     inputMode="decimal"
                                     {...register('howMany')}
                                 />

@@ -73,7 +73,8 @@ const SettingsPage = () => {
                         <div className="flex items-center rounded-lg bg-[rgba(255,255,255,0.03)] border border-glass-border focus-within:border-glass-border-accent transition-all duration-300">
                             <input
                                 className="flex-1 min-w-0 bg-transparent px-3 py-2 outline-none text-sm font-bold text-zinc-200"
-                                type="number"
+                                type="text"
+                                inputMode="decimal"
                                 {...register('proteinsDay0')}
                             />
                             <span className="pr-3 text-[11px] text-[#7a7a7a]">g</span>
@@ -85,7 +86,8 @@ const SettingsPage = () => {
                         <div className="flex items-center rounded-lg bg-[rgba(255,255,255,0.03)] border border-glass-border focus-within:border-glass-border-accent transition-all duration-300">
                             <input
                                 className="flex-1 min-w-0 bg-transparent px-3 py-2 outline-none text-sm font-bold text-zinc-200"
-                                type="number"
+                                type="text"
+                                inputMode="decimal"
                                 {...register('carbsDay0')}
                             />
                             <span className="pr-3 text-[11px] text-[#7a7a7a]">g</span>
@@ -97,7 +99,8 @@ const SettingsPage = () => {
                         <div className="flex items-center rounded-lg bg-[rgba(255,255,255,0.03)] border border-glass-border focus-within:border-glass-border-accent transition-all duration-300">
                             <input
                                 className="flex-1 min-w-0 bg-transparent px-3 py-2 outline-none text-sm font-bold text-zinc-200"
-                                type="number"
+                                type="text"
+                                inputMode="decimal"
                                 {...register('fatsDay0')}
                             />
                             <span className="pr-3 text-[11px] text-[#7a7a7a]">g</span>
@@ -120,7 +123,8 @@ const SettingsPage = () => {
                         <label className="mb-1 block text-[11px] font-semibold text-[#9ca3af]">{t('Number of meals')}</label>
                         <input
                             className="w-full rounded-lg bg-[rgba(255,255,255,0.03)] border border-glass-border px-3 py-2 outline-none text-sm text-zinc-200 focus:border-glass-border-accent transition-all duration-300"
-                            type="number"
+                            type="text"
+                            inputMode="numeric"
                             {...register('numberOfMeals')}
                         />
                         {errors.numberOfMeals && <p className="mt-1 text-[10px] text-red-400">{errors.numberOfMeals.message}</p>}
@@ -130,7 +134,8 @@ const SettingsPage = () => {
                         <div className="flex items-center rounded-lg bg-[rgba(255,255,255,0.03)] border border-glass-border focus-within:border-glass-border-accent transition-all duration-300">
                             <input
                                 className="flex-1 min-w-0 bg-transparent px-3 py-2 outline-none text-sm text-zinc-200"
-                                type="number"
+                                type="text"
+                                inputMode="decimal"
                                 {...register('fiber')}
                             />
                             <span className="pr-3 text-[11px] text-[#7a7a7a]">g / 1000 kcal</span>
@@ -142,7 +147,8 @@ const SettingsPage = () => {
                         <div className="flex items-center rounded-lg bg-[rgba(255,255,255,0.03)] border border-glass-border focus-within:border-glass-border-accent transition-all duration-300">
                             <input
                                 className="flex-1 min-w-0 bg-transparent px-3 py-2 outline-none text-sm text-zinc-200"
-                                type="number"
+                                type="text"
+                                inputMode="decimal"
                                 {...register('carbsPercentAsSugar')}
                             />
                             <span className="pr-3 text-[11px] text-[#7a7a7a]">% / {t('Carbs')}</span>
@@ -171,7 +177,8 @@ const SettingsPage = () => {
                         <div className="flex items-center rounded-lg bg-[rgba(255,255,255,0.03)] border border-glass-border focus-within:border-glass-border-accent transition-all duration-300">
                             <input
                                 className="flex-1 min-w-0 bg-transparent px-3 py-2 outline-none text-sm text-zinc-200"
-                                type="number"
+                                type="text"
+                                inputMode="decimal"
                                 {...register('height')}
                             />
                             <span className="pr-3 text-[11px] text-[#7a7a7a]">cm</span>

@@ -1,11 +1,12 @@
 import { z } from "zod"
 
 import { workoutPlanExerciseSchema } from './workoutPlan.schema'
+import { decimal } from "./decimal"
 
 export const workoutResultExerciseResultSchema = z.object({
     open: z.coerce.boolean().optional(),
-    reps: z.coerce.number(),
-    weight: z.coerce.number(),
+    reps: decimal(z.coerce.number()),
+    weight: decimal(z.coerce.number()),
     rir: z.coerce.number().optional(), // RIR wasn't supported before 20.07.2023
     setAt: z.string().optional(), // UTC ISO timestamp when set was opened/recorded
     timezone: z.string().optional(), // IANA timezone e.g. "Europe/Warsaw" - stored for future tz-aware display
@@ -26,7 +27,7 @@ export const workoutResultSchema = z.object({
     whenAdded: z.coerce.date(),
     finishedAt: z.coerce.date().optional().nullable(),
     note: z.string().optional().nullable(),
-    burnedCalories: z.coerce.number().min(0).max(5000),
+    burnedCalories: decimal(z.coerce.number().min(0).max(5000)),
     exercises: z.array(workoutResultExerciseSchema).optional().default([]),
 })
 

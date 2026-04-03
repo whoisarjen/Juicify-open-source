@@ -50,11 +50,11 @@ const BoxAddProduct = ({
                 </div>
             </DialogShowProduct>
             <input
-                type="number"
+                type="text"
                 value={howMany}
                 onChange={(e) =>
                     handleHowManyChange(
-                        e.target.value ? Number(e.target.value) : undefined
+                        e.target.value ? Number(e.target.value.replace(',', '.')) : undefined
                     )
                 }
                 inputMode="decimal"

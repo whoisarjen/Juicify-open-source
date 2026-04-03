@@ -55,9 +55,10 @@ const DialogEditMacronutrients = ({
                                 <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-primary-dark dark:border-gray-600">
                                     <input
                                         className="flex-1 bg-transparent px-3 py-2 outline-none"
-                                        type="number"
+                                        type="text"
+                                        inputMode="decimal"
                                         value={proteins}
-                                        onChange={(e) => setProteins(parseInt(e.target.value.toString()))}
+                                        onChange={(e) => setProteins(parseInt(e.target.value.replace(',', '.')))}
                                     />
                                     <span className="px-3 text-sm text-gray-500">g/day</span>
                                 </div>
@@ -67,9 +68,10 @@ const DialogEditMacronutrients = ({
                                 <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-primary-dark dark:border-gray-600">
                                     <input
                                         className="flex-1 bg-transparent px-3 py-2 outline-none"
-                                        type="number"
+                                        type="text"
+                                        inputMode="decimal"
                                         value={carbs}
-                                        onChange={(e) => setCarbs(parseInt(e.target.value.toString()))}
+                                        onChange={(e) => setCarbs(parseInt(e.target.value.replace(',', '.')))}
                                     />
                                     <span className="px-3 text-sm text-gray-500">g/day</span>
                                 </div>
@@ -79,9 +81,10 @@ const DialogEditMacronutrients = ({
                                 <div className="flex items-center rounded border border-gray-300 bg-transparent focus-within:border-primary-dark dark:border-gray-600">
                                     <input
                                         className="flex-1 bg-transparent px-3 py-2 outline-none"
-                                        type="number"
+                                        type="text"
+                                        inputMode="decimal"
                                         value={fats}
-                                        onChange={(e) => setFats(parseInt(e.target.value.toString()))}
+                                        onChange={(e) => setFats(parseInt(e.target.value.replace(',', '.')))}
                                     />
                                     <span className="px-3 text-sm text-gray-500">g/day</span>
                                 </div>
