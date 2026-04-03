@@ -36,12 +36,23 @@ const BoxAddProduct = ({
                     {product.name}
                 </div>
                 <div>
-                    <>
-                        {product.proteins || 0}
-                        {t('P')} {product.carbs || 0}
-                        {t('C')} {product.fats || 0}
-                        {t('F')} {getCalories(product)}kcal
-                    </>
+                    {(() => {
+                        const qty = parseFloat(howMany.replace(',', '.')) || 1
+                        const p = (Number(product.proteins) * qty).toFixed(1)
+                        const c = (Number(product.carbs) * qty).toFixed(1)
+                        const f = (Number(product.fats) * qty).toFixed(1)
+                        const kcal = Math.round(getCalories(product) * qty)
+                        const grams = Math.round(qty * 100)
+                        return (
+                            <>
+                                <span className="text-macro-protein">{p}{t('P')}</span>{' '}
+                                <span className="text-macro-carbs">{c}{t('C')}</span>{' '}
+                                <span className="text-macro-fat">{f}{t('F')}</span>{' '}
+                                <span className="text-macro-kcal">{kcal}kcal</span>
+                                <span className="text-[#7a7a7a] text-[10px] ml-1">per {grams}g/ml</span>
+                            </>
+                        )
+                    })()}
                 </div>
             </div>
             <DialogShowProduct product={product}>
