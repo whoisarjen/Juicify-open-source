@@ -159,26 +159,22 @@ const Layout = ({ children }: { children: any }) => {
 
     return (
         <main className={`pb-safe dark container flex max-w-7xl flex-col ${isLandingPage ? 'min-h-screen' : 'h-screen'}`}>
-            {status === 'loading' ? (
-                <div className="flex flex-1" />
-            ) : (
-                <>
-                    <div className={`flex flex-1 ${isLandingPage ? '' : 'flex-row gap-4'} p-4`}>
-                        {!isLandingPage && (
-                            <div className="relative w-64 max-xl:hidden">
-                                <SidebarLeft />
-                            </div>
-                        )}
-                        <div className="pb-safe flex flex-1 min-w-0 items-stretch">{children}</div>
-                        {isSidebarGrid && !isLandingPage && (
-                            <div className="w-64 max-lg:hidden">
-                                <SidebarRight />
-                            </div>
-                        )}
+            <div className={`flex flex-1 ${isLandingPage ? '' : 'flex-row gap-4'} p-4`}>
+                {status !== 'loading' && !isLandingPage && (
+                    <div className="relative w-64 max-xl:hidden">
+                        <SidebarLeft />
                     </div>
-                    {!isLandingPage && <Footer />}
-                </>
-            )}
+                )}
+                <div className="pb-safe flex flex-1 min-w-0 items-stretch">
+                    {status === 'loading' ? null : children}
+                </div>
+                {status !== 'loading' && isSidebarGrid && !isLandingPage && (
+                    <div className="w-64 max-lg:hidden">
+                        <SidebarRight />
+                    </div>
+                )}
+            </div>
+            {!isLandingPage && <Footer />}
             {status === 'unauthenticated' && !isNeutralPath && (
                 <div className="fixed bottom-24 left-0 flex w-full items-center justify-center">
                     <button
