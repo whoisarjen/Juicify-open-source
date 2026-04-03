@@ -11,6 +11,7 @@ import { burnedCaloriesRouter } from "./burnedCalories";
 import { versionRouter } from "./version";
 import { articleRouter } from "./article";
 import { withingsRouter } from "./withings";
+import { fatigueRouter } from "./fatigue";
 
 export const appRouter = router({
     user: userRouter,
@@ -25,6 +26,7 @@ export const appRouter = router({
     version: versionRouter,
     article: articleRouter,
     withings: withingsRouter,
+    fatigue: fatigueRouter,
 });
 
 // export type definition of API

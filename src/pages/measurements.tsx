@@ -16,6 +16,7 @@ import {
 } from 'recharts'
 import { DialogMeasurement } from '@/containers/DialogMeasurement'
 import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon'
+import BoxFatigue from '@/containers/consumed/BoxFatigue/BoxFatigue'
 
 const fmt = (d: Date | string) => moment(d).format('MMM D')
 const fmtTime = (seconds: number) => {
@@ -318,6 +319,9 @@ export default function MeasurementsPage() {
                             />
                         </Card>
                     </div>
+
+                    {/* Recovery status */}
+                    <BoxFatigue />
 
                     {/* TDEE */}
                     <Card>
