@@ -37,7 +37,7 @@ const BoxMealItem = ({ consumed, isOwner }: BoxMealItemProps) => {
             </div>
             <div className="text-right shrink-0">
                 <div className="text-xs font-bold">{getCalories(product)}kcal</div>
-                <div className="text-[11px] text-[#7a7a7a]">{Number(consumed.howMany) * 100}g/ml</div>
+                <div className="text-[11px] text-[#7a7a7a]">{Math.round(Number(consumed.howMany) * 100)}g/ml</div>
             </div>
         </div>
     )
