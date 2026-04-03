@@ -21,6 +21,7 @@ const useDaily = (props: useDailyProps) => {
         burnedCalories,
         workoutResults,
         burnedCaloriesSum,
+        burnedCaloriesTotalSum,
     } = useBurned(props)
 
     const consumedMacro = sumMacroFromConsumed(consumed)
@@ -33,6 +34,7 @@ const useDaily = (props: useDailyProps) => {
         burnedCalories,
         workoutResults,
         burnedCaloriesSum,
+        burnedCaloriesTotalSum,
     }
 }
 

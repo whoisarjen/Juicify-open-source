@@ -24,9 +24,9 @@ const BoxBurned = () => {
             <div className="flex w-full items-center justify-between mb-2">
                 <div>
                     <div className="text-[11px] font-bold uppercase tracking-wide text-[#7a7a7a]">
-                        Burned calories <span className="normal-case font-normal">(not included)</span>
+                        Burned calories
                     </div>
-                    <div className="text-sm font-bold text-macro-fat">
+                    <div className="text-sm font-bold text-burned">
                         {burnedCaloriesTotalSum}kcal
                     </div>
                 </div>

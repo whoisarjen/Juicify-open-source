@@ -4,12 +4,13 @@ import 'react-circular-progressbar/dist/styles.css'
 interface DiagramCircularProps {
     text: string
     value: number
+    pathColor?: string
 }
 
-const DiagramCircular = ({ text, value }: DiagramCircularProps) => {
+const DiagramCircular = ({ text, value, pathColor = '#34d399' }: DiagramCircularProps) => {
     const styles = buildStyles({
         pathTransitionDuration: 0.5,
-        pathColor: '#34d399',
+        pathColor,
         textColor: '#9ca3af',
         trailColor: 'rgba(255, 255, 255, 0.04)',
         textSize: 9,

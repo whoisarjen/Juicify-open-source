@@ -11,10 +11,11 @@
     --color-glass-border: rgba(255, 255, 255, 0.06);
     --color-glass-border-hover: rgba(255, 255, 255, 0.12);
     --color-glass-border-accent: rgba(144, 202, 249, 0.20);
-    --color-macro-protein: #fb7185;
-    --color-macro-carbs: #60a5fa;
-    --color-macro-fat: #fb923c;
+    --color-macro-protein: #d946ef;
+    --color-macro-carbs: #22d3ee;
+    --color-macro-fat: #fbbf24;
     --color-macro-kcal: #34d399;
+    --color-burned: #fb923c;
 }
 
 @utility glass {
