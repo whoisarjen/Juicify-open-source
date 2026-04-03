@@ -1,4 +1,4 @@
-import { Info } from 'lucide-react'
+import { Info, UtensilsCrossed } from 'lucide-react'
 import useTranslation from 'next-translate/useTranslation'
 import { useState } from 'react'
 import { getCalories } from '@/utils/consumed.utils'
@@ -18,16 +18,45 @@ const BoxAddProduct = ({
     onValueChange,
 }: BoxProductProps) => {
     const { t } = useTranslation('nutrition-diary')
-    const [howMany, setHowMany] = useState(
+    const [portionMode, setPortionMode] = useState(false)
+    const [rawValue, setRawValue] = useState(
         String(product.howMany || 1)
     )
 
-    const handleHowManyChange = (raw: string) => {
+    const hasPortion = product.gramsPerPortion != null && product.gramsPerPortion > 0
+    const gramsPerPortion = product.gramsPerPortion ?? 0
+
+    const handleValueChange = (raw: string) => {
         const cleaned = raw.replace(',', '.')
-        setHowMany(cleaned)
+        setRawValue(cleaned)
         const num = parseFloat(cleaned)
-        onValueChange(isNaN(num) ? undefined : num)
+        if (isNaN(num)) {
+            onValueChange(undefined)
+            return
+        }
+        // Convert portions to howMany (× 100g multiplier)
+        const howMany = portionMode ? (num * gramsPerPortion) / 100 : num
+        onValueChange(howMany)
     }
+
+    const togglePortionMode = () => {
+        const currentNum = parseFloat(rawValue.replace(',', '.')) || 1
+        if (portionMode) {
+            // Switching to grams: convert portions → howMany
+            const howMany = (currentNum * gramsPerPortion) / 100
+            setRawValue(String(Math.round(howMany * 100) / 100))
+        } else {
+            // Switching to portions: convert howMany → portions
+            const portions = (currentNum * 100) / gramsPerPortion
+            setRawValue(String(Math.round(portions * 10) / 10))
+        }
+        setPortionMode(!portionMode)
+    }
+
+    // Calculate display values
+    const num = parseFloat(rawValue.replace(',', '.')) || 1
+    const howManyForCalc = portionMode ? (num * gramsPerPortion) / 100 : num
+    const totalGrams = Math.round(howManyForCalc * 100)
 
     return (
         <div className="border-left-4 flex w-full flex-row items-center justify-center gap-2 rounded border p-2 text-sm border-l-4">
@@ -36,23 +65,13 @@ const BoxAddProduct = ({
                     {product.name}
                 </div>
                 <div>
-                    {(() => {
-                        const qty = parseFloat(howMany.replace(',', '.')) || 1
-                        const p = (Number(product.proteins) * qty).toFixed(1)
-                        const c = (Number(product.carbs) * qty).toFixed(1)
-                        const f = (Number(product.fats) * qty).toFixed(1)
-                        const kcal = Math.round(getCalories(product) * qty)
-                        const grams = Math.round(qty * 100)
-                        return (
-                            <>
-                                <span className="text-macro-protein">{p}{t('P')}</span>{' '}
-                                <span className="text-macro-carbs">{c}{t('C')}</span>{' '}
-                                <span className="text-macro-fat">{f}{t('F')}</span>{' '}
-                                <span className="text-macro-kcal">{kcal}kcal</span>
-                                <span className="text-[#7a7a7a] text-[10px] ml-1">per {grams}g/ml</span>
-                            </>
-                        )
-                    })()}
+                    <span className="text-macro-protein">{(Number(product.proteins) * howManyForCalc).toFixed(1)}{t('P')}</span>{' '}
+                    <span className="text-macro-carbs">{(Number(product.carbs) * howManyForCalc).toFixed(1)}{t('C')}</span>{' '}
+                    <span className="text-macro-fat">{(Number(product.fats) * howManyForCalc).toFixed(1)}{t('F')}</span>{' '}
+                    <span className="text-macro-kcal">{Math.round(getCalories(product) * howManyForCalc)}kcal</span>
+                    <span className="text-[#7a7a7a] text-[10px] ml-1">
+                        per {totalGrams}g{portionMode && num !== 1 ? ` · ${num}pt` : ''}
+                    </span>
                 </div>
             </div>
             <DialogShowProduct product={product}>
@@ -62,10 +81,24 @@ const BoxAddProduct = ({
                     </button>
                 </div>
             </DialogShowProduct>
+            {hasPortion && (
+                <button
+                    type="button"
+                    onClick={togglePortionMode}
+                    className={`w-[28px] h-[28px] rounded-lg flex items-center justify-center transition-all cursor-pointer shrink-0 ${
+                        portionMode
+                            ? 'bg-[rgba(144,202,249,0.10)] border border-[rgba(144,202,249,0.25)] text-primary-dark'
+                            : 'bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.08)] text-[#7a7a7a] hover:bg-[rgba(255,255,255,0.06)]'
+                    }`}
+                    aria-label="Toggle portion mode"
+                >
+                    <UtensilsCrossed size={13} />
+                </button>
+            )}
             <input
                 type="text"
-                value={howMany}
-                onChange={(e) => handleHowManyChange(e.target.value)}
+                value={rawValue}
+                onChange={(e) => handleValueChange(e.target.value)}
                 inputMode="decimal"
                 className="max-w-[52px] rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
             />
