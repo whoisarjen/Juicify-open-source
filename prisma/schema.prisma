@@ -216,6 +216,7 @@ model Product {
   fiber            Decimal    @default(0) @db.Decimal(4, 1)
   sodium           Decimal    @default(0) @db.Decimal(4, 1)
   ethanol          Decimal    @default(0) @db.Decimal(4, 1)
+  gramsPerPortion  Int?
   barcode          String?
   isVerified       Boolean?   @default(false)
   isDeleted        Boolean?   @default(false)
