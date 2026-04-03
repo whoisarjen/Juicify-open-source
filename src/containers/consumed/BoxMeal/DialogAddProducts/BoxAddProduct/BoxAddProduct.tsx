@@ -18,13 +18,15 @@ const BoxAddProduct = ({
     onValueChange,
 }: BoxProductProps) => {
     const { t } = useTranslation('nutrition-diary')
-    const [howMany, setHowMany] = useState<number | undefined>(
-        product.howMany || 1.0
+    const [howMany, setHowMany] = useState(
+        String(product.howMany || 1)
     )
 
-    const handleHowManyChange = async (howMany: number | undefined) => {
-        setHowMany(howMany)
-        onValueChange(howMany)
+    const handleHowManyChange = (raw: string) => {
+        const cleaned = raw.replace(',', '.')
+        setHowMany(cleaned)
+        const num = parseFloat(cleaned)
+        onValueChange(isNaN(num) ? undefined : num)
     }
 
     return (
@@ -52,11 +54,7 @@ const BoxAddProduct = ({
             <input
                 type="text"
                 value={howMany}
-                onChange={(e) =>
-                    handleHowManyChange(
-                        e.target.value ? Number(e.target.value.replace(',', '.')) : undefined
-                    )
-                }
+                onChange={(e) => handleHowManyChange(e.target.value)}
                 inputMode="decimal"
                 className="max-w-[52px] rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
             />

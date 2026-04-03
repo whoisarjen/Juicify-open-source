@@ -16,7 +16,7 @@ const DialogAddProduct = ({
 }: DialogAddProductProps) => {
     const { t } = useTranslation('nutrition-diary')
     const { data: sessionData } = useSession()
-    const [howMany, setHowMany] = useState<number | undefined>(1.0)
+    const [howMany, setHowMany] = useState('1')
     const [mealToAdd, setMealToAdd] = useState(0)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const router: any = useRouter()
@@ -37,7 +37,7 @@ const DialogAddProduct = ({
     const addNewProduct = async () => {
         await createConsumed.mutateAsync({
             whenAdded: moment(router.query.date).add(moment().format("hh:mm:ss")).toDate(), // TODO It has to be local date
-            howMany: howMany || 1,
+            howMany: parseFloat(howMany.replace(',', '.')) || 1,
             productId: product.id,
             meal: mealToAdd || 0, // TODO should also get from props
         })
@@ -69,7 +69,8 @@ const DialogAddProduct = ({
                                     <input
                                         className="flex-1 bg-transparent px-3 py-2 outline-none"
                                         value={howMany}
-                                        onChange={(e) => setHowMany(e.target.value ? Number(e.target.value) : undefined)}
+                                        inputMode="decimal"
+                                        onChange={(e) => setHowMany(e.target.value)}
                                     />
                                     <span className="px-3 text-sm text-gray-500">x 100g/ml</span>
                                 </div>
