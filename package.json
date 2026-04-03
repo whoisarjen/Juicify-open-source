@@ -7,7 +7,8 @@
 		"build": "npx prisma generate && next build --webpack",
 		"start": "next start",
 		"lint": "eslint src/",
-		"generate": "npx prisma generate"
+		"generate": "npx prisma generate",
+		"db:push": "vercel env pull .env -y --environment=production && npx prisma db push --config prisma/prisma.config.mjs && vercel env pull .env -y --environment=development"
 	},
 	"dependencies": {
 		"@ericblade/quagga2": "1.8.2",
