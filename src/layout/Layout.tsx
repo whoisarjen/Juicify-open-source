@@ -18,6 +18,7 @@ const REQUIRED_AUTH_PATHS = [
     '/coach',
     '/macronutrients',
     '/measurements',
+    '/supplements',
     '/settings',
 ]
 

@@ -1,0 +1,20 @@
+{
+    "title": "Supplements",
+    "Add supplement": "Add supplement",
+    "Edit supplement": "Edit supplement",
+    "Name": "Name",
+    "Ingredients": "Ingredients",
+    "Add ingredient": "Add ingredient",
+    "Time of day": "Time of day",
+    "Frequency": "Frequency",
+    "morning": "Morning",
+    "preworkout": "Pre-workout",
+    "evening": "Evening",
+    "bedtime": "Before bed",
+    "Every day": "Every day",
+    "Every X days": "Every {{count}} days",
+    "No supplements yet": "No supplements yet",
+    "No supplements description": "Add your first supplement to start tracking your stack.",
+    "ingredient": "{{count}} ingredient",
+    "ingredients": "{{count}} ingredients"
+}

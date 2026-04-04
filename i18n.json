@@ -13,6 +13,7 @@
         "/coach": ["coach"],
         "/macronutrients": ["macronutrients"],
         "/settings": ["settings"],
+        "/supplements": ["supplements"],
         "/[login]": ["profile"],
         "/blog": ["blog"],
         "/blog/[slug]": ["blog"]

@@ -12,6 +12,7 @@ import { versionRouter } from "./version";
 import { articleRouter } from "./article";
 import { withingsRouter } from "./withings";
 import { fatigueRouter } from "./fatigue";
+import { supplementRouter } from "./supplement";
 
 export const appRouter = router({
     user: userRouter,
@@ -27,6 +28,7 @@ export const appRouter = router({
     article: articleRouter,
     withings: withingsRouter,
     fatigue: fatigueRouter,
+    supplement: supplementRouter,
 });
 
 // export type definition of API

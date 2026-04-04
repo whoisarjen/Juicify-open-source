@@ -1,0 +1,20 @@
+{
+    "title": "Suplementy",
+    "Add supplement": "Dodaj suplement",
+    "Edit supplement": "Edytuj suplement",
+    "Name": "Nazwa",
+    "Ingredients": "Skladniki",
+    "Add ingredient": "Dodaj skladnik",
+    "Time of day": "Pora dnia",
+    "Frequency": "Czestotliwosc",
+    "morning": "Rano",
+    "preworkout": "Przed treningiem",
+    "evening": "Wieczorem",
+    "bedtime": "Przed snem",
+    "Every day": "Codziennie",
+    "Every X days": "Co {{count}} dni",
+    "No supplements yet": "Brak suplementow",
+    "No supplements description": "Dodaj pierwszy suplement, aby zaczac sledzic swoj stos.",
+    "ingredient": "{{count}} skladnik",
+    "ingredients": "{{count}} skladnikow"
+}
