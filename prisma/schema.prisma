@@ -209,6 +209,7 @@ model Product {
   userId           Int?
   name             String     @db.VarChar(255)
   nameLength       Int
+  nameNormalized   String?    @db.VarChar(255)
   proteins         Decimal    @default(0) @db.Decimal(4, 1)
   carbs            Decimal    @default(0) @db.Decimal(4, 1)
   sugar            Decimal    @default(0) @db.Decimal(4, 1)
