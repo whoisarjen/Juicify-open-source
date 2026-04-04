@@ -21,10 +21,10 @@ function getQueryClient() {
         _queryClient = new QueryClient({
             defaultOptions: {
                 queries: {
-                    staleTime: 1000 * 60 * 5, // 5 min — data stays fresh, no refetch on navigation
+                    staleTime: 0, // always stale — show cache instantly, refetch in background
                     gcTime: 1000 * 60 * 60 * 24, // 24h — keep in memory for persistence
-                    refetchOnWindowFocus: false,
-                    retryOnMount: false,
+                    refetchOnWindowFocus: true,
+                    refetchOnReconnect: true,
                     retry: false,
                 },
                 mutations: {

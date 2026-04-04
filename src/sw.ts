@@ -29,19 +29,6 @@ const serwist = new Serwist({
                 ],
             }),
         },
-        // tRPC API calls — serve cached instantly, refresh in background
-        {
-            matcher: /\/api\/trpc\/.*/i,
-            handler: new StaleWhileRevalidate({
-                cacheName: 'trpc-api',
-                plugins: [
-                    new ExpirationPlugin({
-                        maxEntries: 64,
-                        maxAgeSeconds: 604800,
-                    }),
-                ],
-            }),
-        },
         // Fonts — cache first, long TTL
         {
             matcher: /\/fonts\/.*/i,
