@@ -82,6 +82,21 @@ locales/                # i18n translations (en/, pl/)
 - Key models: User, Product, Consumed, Exercise, WorkoutPlan, WorkoutResult, Measurement, Coach, BurnedCalories, Post
 - Enums: `kindOfDiets` (REGULAR, KETOGENIC), `activityLevels`, `goals` (weight change per week)
 
+## AI User Snapshot Endpoint
+
+`GET /api/user-snapshot?userId=<int>&days=<int>` — returns ALL user data for AI consumption.
+
+**When adding a new Prisma model that stores user data, you MUST also add it to `src/pages/api/user-snapshot.ts`.** This endpoint is the AI's single window into user data. If it's not here, the AI can't see it.
+
+Checklist for new data models:
+1. Add the Prisma query to the `Promise.all` block in `user-snapshot.ts`
+2. Add the new field to the response `snapshot` object
+3. Add a JSDoc section at the top of the file documenting what data is included
+4. Use date filtering (`gte: periodStart, lte: now`) for time-series data
+5. Use `orderBy` chronologically (oldest first) so AI can reason about trends
+
+Auth: `?token=<CRON_SECRET>` query param
+
 ## Important Notes
 
 - No test framework is configured
