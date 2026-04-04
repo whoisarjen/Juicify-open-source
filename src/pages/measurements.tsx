@@ -17,6 +17,7 @@ import {
 import { DialogMeasurement } from '@/containers/DialogMeasurement'
 import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon'
 import BoxFatigue from '@/containers/consumed/BoxFatigue/BoxFatigue'
+import { RefreshCw } from 'lucide-react'
 
 const fmt = (d: Date | string) => moment(d).format('MMM D')
 const fmtTime = (seconds: number) => {
@@ -131,11 +132,20 @@ export default function MeasurementsPage() {
         (p: any) => p.name === 'Administration'
     )
 
+    const utils = trpc.useUtils()
+
     const { data: healthData, isLoading: healthLoading } =
         trpc.withings.dashboard.useQuery(
             { days },
             { enabled: !!isAdmin && !!sessionData?.user, trpc: { ssr: false } }
         )
+
+    const syncWithings = trpc.withings.sync.useMutation({
+        onSuccess() {
+            utils.withings.dashboard.invalidate()
+            utils.measurement.getAll.invalidate()
+        },
+    })
 
     const showHealth = isAdmin && !!healthData
 
@@ -261,11 +271,22 @@ export default function MeasurementsPage() {
 
             {showHealth && (
                 <>
-                    {lastSyncedAt && (
-                        <p className="text-right text-[11px] text-zinc-600">
-                            Last synced: {new Date(lastSyncedAt).toLocaleString()}
-                        </p>
-                    )}
+                    <div className="flex items-center justify-end gap-2">
+                        {lastSyncedAt && (
+                            <span className="text-[11px] text-zinc-600">
+                                Last synced: {new Date(lastSyncedAt).toLocaleString()}
+                            </span>
+                        )}
+                        <button
+                            type="button"
+                            onClick={() => syncWithings.mutate()}
+                            disabled={syncWithings.isPending}
+                            className="flex items-center gap-1 rounded-md bg-zinc-800/60 px-2 py-1 text-[11px] text-zinc-400 transition-colors hover:bg-zinc-700/60 hover:text-zinc-200 disabled:opacity-50"
+                        >
+                            <RefreshCw size={12} className={syncWithings.isPending ? 'animate-spin' : ''} />
+                            {syncWithings.isPending ? 'Syncing...' : 'Sync'}
+                        </button>
+                    </div>
                     {/* Key metrics */}
                     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                         <Card>

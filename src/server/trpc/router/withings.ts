@@ -1,8 +1,29 @@
 import { z } from 'zod'
 import moment from 'moment'
 import { router, protectedProcedure } from '../trpc'
+import { syncWithingsData } from '@/server/withings/sync'
 
 export const withingsRouter = router({
+    sync: protectedProcedure.mutation(async ({ ctx }) => {
+        const userId = ctx.session.user.id
+
+        const hasWithings = await ctx.prisma.account.findFirst({
+            where: { userId, provider: 'withings' },
+            select: { userId: true },
+        })
+
+        if (!hasWithings) {
+            throw new Error('No Withings account connected')
+        }
+
+        await syncWithingsData(userId)
+
+        await ctx.prisma.withingsSyncLog.create({
+            data: { userId, status: 'ok', message: 'manual sync' },
+        })
+
+        return { success: true }
+    }),
     dayStats: protectedProcedure
         .input(z.object({ date: z.string() }))
         .query(async ({ ctx, input: { date } }) => {

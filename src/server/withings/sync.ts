@@ -47,8 +47,8 @@ function sleepDataToDb(sleep: WithingsSleepSummary) {
 export async function syncWithingsData(userId: number) {
     const accessToken = await getValidAccessToken(userId)
 
-    const today = moment()
-    const yesterday = moment().subtract(1, 'day')
+    const today = moment.utc()
+    const yesterday = moment.utc().subtract(1, 'day')
 
     // Sync yesterday (catches late-arriving data from Withings)
     const yStart = yesterday.clone().startOf('day')
@@ -76,8 +76,8 @@ export async function syncWithingsRange(userId: number, days: number) {
     const accessToken = await getValidAccessToken(userId)
 
     // Measurements — single range call, then upsert per day
-    const rangeStart = moment().subtract(days, 'days').startOf('day')
-    const rangeEnd = moment().subtract(1, 'day').endOf('day')
+    const rangeStart = moment.utc().subtract(days, 'days').startOf('day')
+    const rangeEnd = moment.utc().subtract(1, 'day').endOf('day')
     try {
         const allGroups = await getMeasurements(
             accessToken,
@@ -87,14 +87,14 @@ export async function syncWithingsRange(userId: number, days: number) {
         // Group by date, take latest per day
         const byDay = new Map<string, typeof allGroups>()
         for (const g of allGroups) {
-            const dayKey = moment.unix(g.date).format('YYYY-MM-DD')
+            const dayKey = moment.unix(g.date).utc().format('YYYY-MM-DD')
             const existing = byDay.get(dayKey) || []
             existing.push(g)
             byDay.set(dayKey, existing)
         }
         for (const dayKey of Array.from(byDay.keys())) {
             const groups = byDay.get(dayKey)!
-            const dayStart = moment(dayKey, 'YYYY-MM-DD').startOf('day')
+            const dayStart = moment.utc(dayKey, 'YYYY-MM-DD').startOf('day')
             const dayEnd = dayStart.clone().endOf('day')
             // Reuse existing syncMeasurements by passing the groups directly
             // But syncMeasurements fetches from API, so we do inline upsert
@@ -156,10 +156,10 @@ export async function syncWithingsRange(userId: number, days: number) {
     // Activity, sleep, workouts in 30-day chunks with delay to avoid rate limits
     const chunkSize = 30
     for (let offset = days; offset > 0; offset -= chunkSize) {
-        const chunkStart = moment()
+        const chunkStart = moment.utc()
             .subtract(offset, 'days')
             .startOf('day')
-        const chunkEnd = moment()
+        const chunkEnd = moment.utc()
             .subtract(Math.max(offset - chunkSize, 1), 'days')
             .endOf('day')
         const chunkStartYmd = chunkStart.format('YYYY-MM-DD')
@@ -271,7 +271,7 @@ async function syncActivityData(
     if (activities.length === 0) return
 
     const activity = activities[0]!
-    const date = moment(activity.date, 'YYYY-MM-DD').startOf('day').toDate()
+    const date = moment.utc(activity.date, 'YYYY-MM-DD').startOf('day').toDate()
 
     await prisma.withingsActivity.upsert({
         where: { userId_date: { userId, date } },
@@ -316,7 +316,7 @@ async function syncActivityData(
     // Also create a BurnedCalories entry for the existing UI
     const activeCalories = Math.round(activity.calories || 0)
     if (activeCalories > 0) {
-        const activityDay = moment(activity.date, 'YYYY-MM-DD').startOf('day')
+        const activityDay = moment.utc(activity.date, 'YYYY-MM-DD').startOf('day')
         const existingBurned = await prisma.burnedCalories.findFirst({
             where: {
                 userId,
@@ -435,7 +435,7 @@ async function syncSleepData(
 
     for (const dateStr of Array.from(byDate.keys())) {
         const sleep = byDate.get(dateStr)!
-        const date = moment(dateStr, 'YYYY-MM-DD').startOf('day').toDate()
+        const date = moment.utc(dateStr, 'YYYY-MM-DD').startOf('day').toDate()
         const dbData = sleepDataToDb(sleep)
 
         await prisma.withingsSleep.upsert({
@@ -455,7 +455,7 @@ async function syncActivityRange(
     const activities = await getActivity(accessToken, startYmd, endYmd)
 
     for (const activity of activities) {
-        const date = moment(activity.date, 'YYYY-MM-DD').startOf('day').toDate()
+        const date = moment.utc(activity.date, 'YYYY-MM-DD').startOf('day').toDate()
 
         await prisma.withingsActivity.upsert({
             where: { userId_date: { userId, date } },
@@ -499,7 +499,7 @@ async function syncActivityRange(
 
         const activeCalories = Math.round(activity.calories || 0)
         if (activeCalories > 0) {
-            const startOfDay = moment(activity.date, 'YYYY-MM-DD').startOf('day')
+            const startOfDay = moment.utc(activity.date, 'YYYY-MM-DD').startOf('day')
             const existingBurned = await prisma.burnedCalories.findFirst({
                 where: {
                     userId,
@@ -552,7 +552,7 @@ async function syncSleepRange(
 
     for (const dateStr of Array.from(byDate.keys())) {
         const sleep = byDate.get(dateStr)!
-        const date = moment(dateStr, 'YYYY-MM-DD').startOf('day').toDate()
+        const date = moment.utc(dateStr, 'YYYY-MM-DD').startOf('day').toDate()
         const dbData = sleepDataToDb(sleep)
 
         await prisma.withingsSleep.upsert({
