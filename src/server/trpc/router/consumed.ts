@@ -5,6 +5,31 @@ import { consumedSchema, createConsumedSchema } from '@/server/schema/consumed.s
 import { omit } from "lodash";
 
 export const consumedRouter = router({
+    getRecentlyUsed: protectedProcedure
+        .input(
+            z.object({
+                take: z.coerce.number().optional().default(10),
+            })
+        )
+        .query(async ({ ctx, input: { take } }) => {
+            const consumed = await ctx.prisma.consumed.findMany({
+                where: {
+                    userId: ctx.session.user.id,
+                },
+                distinct: ['productId'],
+                orderBy: {
+                    whenAdded: 'desc',
+                },
+                take,
+                include: {
+                    product: true,
+                },
+            })
+
+            return consumed
+                .filter((c) => !c.product.isDeleted)
+                .map((c) => c.product)
+        }),
     getPeriod: publicProcedure
         .input(
             z.object({

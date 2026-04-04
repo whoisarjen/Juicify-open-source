@@ -40,6 +40,14 @@ const DialogAddProducts = ({ children, mealToAdd }: DialogAddProductsProps) => {
         { enabled }
     )
 
+    const { data: recentProducts = [] } =
+        trpc.consumed.getRecentlyUsed.useQuery(
+            { take: 10 },
+            { enabled: isDialogOpen }
+        )
+
+    const showRecent = !enabled && tab === 0 && recentProducts.length > 0
+
     const utils = trpc.useUtils()
 
     const createConsumed = trpc.consumed.create.useMutation({
@@ -48,6 +56,7 @@ const DialogAddProducts = ({ children, mealToAdd }: DialogAddProductsProps) => {
             setIsDialogOpen(false)
 
             utils.consumed.getPeriod.refetch() // TODO
+            utils.consumed.getRecentlyUsed.invalidate()
         },
     })
 
@@ -68,7 +77,12 @@ const DialogAddProducts = ({ children, mealToAdd }: DialogAddProductsProps) => {
         )
     }
 
-    const products = tab === 1 ? checked : loadedProducts
+    const products =
+        tab === 1
+            ? checked
+            : showRecent
+              ? recentProducts
+              : loadedProducts
 
     useEffect(() => {
         setMeal(mealToAdd)
@@ -111,6 +125,14 @@ const DialogAddProducts = ({ children, mealToAdd }: DialogAddProductsProps) => {
                                 changeTab={(value: number) => setTab(value)}
                                 checkedLength={checked.length}
                             />
+
+                            {showRecent && (
+                                <div className="flex items-center gap-2 text-xs text-gray-500">
+                                    <div className="h-px flex-1 bg-gray-700" />
+                                    <span>{t('RECENTLY_USED')}</span>
+                                    <div className="h-px flex-1 bg-gray-700" />
+                                </div>
+                            )}
 
                             {products.map((product) => {
                                 const isChecked = checked.some(
