@@ -18,5 +18,7 @@
     "FATS": "Tłuszcze",
     "OWN_MACRO_DESCRIPTION": "Możesz ustawić własne makro, ale jest to opcja dla osób, które wiedzą, co robią. W większości przypakdów lepiej postawić na zalecenia trenera.",
     "CLOSE": "Zamknij",
-    "CHANGE_ALL_DAYS": "Zmień wszystkie dni"
+    "CHANGE_ALL_DAYS": "Zmień wszystkie dni",
+    "TARGET": "Cel",
+    "MINIMUM": "Minimum"
 }

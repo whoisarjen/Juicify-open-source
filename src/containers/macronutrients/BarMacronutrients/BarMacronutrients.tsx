@@ -6,6 +6,9 @@ interface BarMacronutrientsProps {
         proteins: number
         carbs: number
         fats: number
+        minProteins?: number
+        minCarbs?: number
+        minFats?: number
         day: number
         locked: boolean
         choosen?: boolean
@@ -21,6 +24,13 @@ const BarMacronutrients = ({
     toggleLock,
     t,
 }: BarMacronutrientsProps) => {
+    const hasMin = (object.minProteins || 0) > 0 || (object.minCarbs || 0) > 0 || (object.minFats || 0) > 0
+
+    const fmtRange = (min: number | undefined, target: number) => {
+        if (min && min > 0) return `${min}–${target}`
+        return `${target}`
+    }
+
     return (
         <div className="flex flex-1 flex-col">
             <div className="flex w-full items-center justify-center">
@@ -36,17 +46,20 @@ const BarMacronutrients = ({
                 }
                 onClick={onClick}
             >
-                <div className="flex h-[30%] items-center justify-center rounded-t bg-orange-400 text-white">
-                    {object.proteins} {t('P')}
+                <div className="flex h-[30%] items-center justify-center rounded-t bg-orange-400 text-white text-[11px]">
+                    {fmtRange(object.minProteins, object.proteins)} {t('P')}
                 </div>
-                <div className="flex h-[30%] items-center justify-center bg-yellow-400 text-white">
-                    {object.carbs} {t('C')}
+                <div className="flex h-[30%] items-center justify-center bg-yellow-400 text-white text-[11px]">
+                    {fmtRange(object.minCarbs, object.carbs)} {t('C')}
                 </div>
-                <div className="flex h-[30%] items-center justify-center bg-green-400 text-white">
-                    {object.fats} {t('F')}
+                <div className="flex h-[30%] items-center justify-center bg-green-400 text-white text-[11px]">
+                    {fmtRange(object.minFats, object.fats)} {t('F')}
                 </div>
-                <div className="flex h-[10%] items-center justify-center rounded-b bg-primary-dark text-[#121212]">
-                    {object.proteins * 4 + object.carbs * 4 + object.fats * 9}
+                <div className="flex h-[10%] items-center justify-center rounded-b bg-primary-dark text-[#121212] text-[11px]">
+                    {hasMin
+                        ? `${(object.minProteins || 0) * 4 + (object.minCarbs || 0) * 4 + (object.minFats || 0) * 9}–${object.proteins * 4 + object.carbs * 4 + object.fats * 9}`
+                        : object.proteins * 4 + object.carbs * 4 + object.fats * 9
+                    }
                 </div>
             </div>
             <div className="flex w-full items-center justify-center">

@@ -50,6 +50,7 @@
  * ── user ──────────────────────────────────────────────────────────
  *   Profile basics (name, email, locale, birth, height, sex)
  *   Per-day-of-week macro targets (proteins/carbs/fats for Mon–Sun)
+ *   Per-day-of-week minimum macro targets (minProteins/minCarbs/minFats)
  *   Fiber & sugar percentage targets
  *   Goal (weight change rate), diet type, activity level
  *   Coach scheduling (nextCoach, isCoachAnalyze)
@@ -186,6 +187,14 @@ export default async function handler(
             proteinsDay4: true, carbsDay4: true, fatsDay4: true,
             proteinsDay5: true, carbsDay5: true, fatsDay5: true,
             proteinsDay6: true, carbsDay6: true, fatsDay6: true,
+            // Per-day-of-week minimum macro targets
+            minProteinsDay0: true, minCarbsDay0: true, minFatsDay0: true,
+            minProteinsDay1: true, minCarbsDay1: true, minFatsDay1: true,
+            minProteinsDay2: true, minCarbsDay2: true, minFatsDay2: true,
+            minProteinsDay3: true, minCarbsDay3: true, minFatsDay3: true,
+            minProteinsDay4: true, minCarbsDay4: true, minFatsDay4: true,
+            minProteinsDay5: true, minCarbsDay5: true, minFatsDay5: true,
+            minProteinsDay6: true, minCarbsDay6: true, minFatsDay6: true,
             fiber: true,
             carbsPercentAsSugar: true,
             height: true,

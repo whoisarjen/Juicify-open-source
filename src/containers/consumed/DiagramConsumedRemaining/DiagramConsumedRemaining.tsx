@@ -37,7 +37,7 @@ const fmtTime = (seconds: number) => {
 const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
     const [mode, setMode] = useState<'consumed' | 'remaining'>('consumed')
     const { t } = useTranslation('nutrition-diary')
-    const { consumedMacro, expectedMacro, burnedCaloriesTotalSum } = useDaily(props)
+    const { consumedMacro, expectedMacro, minMacro, burnedCaloriesTotalSum } = useDaily(props)
     const { data: sessionData } = useSession()
 
     const isOwner = props.username === sessionData?.user?.username
@@ -63,6 +63,14 @@ const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
         pct(consumedMacro.fats as number, expectedMacro.fats as number),
     ]
 
+    // Minimum threshold percentages for rings
+    const ringMinPercents = [
+        pct(minMacro.calories, expectedMacro.calories),
+        pct(minMacro.proteins as number, expectedMacro.proteins as number),
+        pct(minMacro.carbs as number, expectedMacro.carbs as number),
+        pct(minMacro.fats as number, expectedMacro.fats as number),
+    ]
+
     const calPercent = pct(consumedMacro.calories, expectedMacro.calories)
 
     // Macro helpers
@@ -76,12 +84,35 @@ const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
     const getMacroExpected = (key: string) =>
         expectedMacro[key as keyof typeof expectedMacro] as number
 
+    const getMacroMin = (key: string) =>
+        minMacro[key as keyof typeof minMacro] as number
+
     const getMacroPercent = (key: string) => {
         const expected = getMacroExpected(key)
         if (expected === 0) return 0
         const consumed = consumedMacro[key as keyof typeof consumedMacro] as number
         return Math.min((consumed / expected) * 100, 100)
     }
+
+    const getMacroMinPercent = (key: string) => {
+        const expected = getMacroExpected(key)
+        const min = getMacroMin(key)
+        if (expected === 0 || min === 0) return 0
+        return Math.min((min / expected) * 100, 100)
+    }
+
+    const isBelowMin = (key: string) => {
+        const min = getMacroMin(key)
+        if (min === 0) return false
+        const consumed = consumedMacro[key as keyof typeof consumedMacro] as number
+        return consumed < min
+    }
+
+    const calMinPercent = expectedMacro.calories > 0 && minMacro.calories > 0
+        ? Math.min((minMacro.calories / expectedMacro.calories) * 100, 100)
+        : 0
+
+    const calBelowMin = minMacro.calories > 0 && consumedMacro.calories < minMacro.calories
 
     const hasTdee = dayStats?.totalCalories != null
     const hasPills = dayStats && (dayStats.hrAverage != null || dayStats.steps != null || dayStats.totalSleepTime != null)
@@ -119,6 +150,13 @@ const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
                     <svg viewBox="0 0 100 100" className="w-full h-full">
                         {RING_TRACKS.map(({ r, sw, color }, i) => {
                             const c = 2 * Math.PI * r
+                            const minPct = ringMinPercents[i]!
+                            const hasMin = minPct > 0
+                            // Min threshold tick: a small dot on the ring at the min angle
+                            const minAngle = (minPct / 100) * 360 - 90 // -90 because rings start at top
+                            const minRad = (minAngle * Math.PI) / 180
+                            const dotX = 50 + r * Math.cos(minRad)
+                            const dotY = 50 + r * Math.sin(minRad)
                             return (
                                 <g key={i}>
                                     <circle cx="50" cy="50" r={r} fill="none"
@@ -128,8 +166,15 @@ const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
                                         strokeDasharray={c}
                                         strokeDashoffset={c * (1 - clamp01(ringPercents[i]!))}
                                         transform="rotate(-90 50 50)"
-                                        style={{ transition: 'stroke-dashoffset 0.5s ease-in-out' }}
+                                        opacity={hasMin && ringPercents[i]! < minPct ? 0.4 : 1}
+                                        style={{ transition: 'stroke-dashoffset 0.5s ease-in-out, opacity 0.3s ease' }}
                                     />
+                                    {hasMin && (
+                                        <circle cx={dotX} cy={dotY} r={1.2}
+                                            fill="rgba(255,255,255,0.35)"
+                                            style={{ transition: 'all 0.3s ease' }}
+                                        />
+                                    )}
                                 </g>
                             )
                         })}
@@ -148,24 +193,45 @@ const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
 
                 {/* Macro bars + calorie bars */}
                 <div className="flex-1 flex flex-col gap-2">
-                    {MACROS.map(({ key, label, color, textColor }) => (
-                        <div key={key} className="flex items-center gap-2">
-                            <span className={`text-[11px] font-semibold w-[46px] shrink-0 ${textColor}`}>
-                                {label}
-                            </span>
-                            <div className="flex-1 h-[4px] rounded-full bg-[rgba(255,255,255,0.04)] overflow-hidden">
-                                <div
-                                    className={`h-full rounded-full transition-all duration-500 ${color}`}
-                                    style={{ width: `${getMacroPercent(key)}%` }}
-                                />
+                    {MACROS.map(({ key, label, color, textColor }) => {
+                        const minPct = getMacroMinPercent(key)
+                        const hasMin = minPct > 0
+                        const below = isBelowMin(key)
+                        const min = getMacroMin(key)
+                        return (
+                            <div key={key} className="flex items-center gap-2">
+                                <span className={`text-[11px] font-semibold w-[46px] shrink-0 ${textColor}`}>
+                                    {label}
+                                </span>
+                                <div className="relative flex-1">
+                                    <div className="h-[4px] rounded-full bg-[rgba(255,255,255,0.04)] overflow-hidden">
+                                        <div
+                                            className={`h-full rounded-full transition-all duration-500 ${color}`}
+                                            style={{
+                                                width: `${getMacroPercent(key)}%`,
+                                                opacity: below ? 0.4 : 1,
+                                            }}
+                                        />
+                                    </div>
+                                    {hasMin && (
+                                        <div
+                                            className="absolute top-[-2px] h-[8px] w-[1.5px] rounded-full bg-[rgba(255,255,255,0.25)] transition-all duration-500"
+                                            style={{ left: `${minPct}%` }}
+                                        />
+                                    )}
+                                </div>
+                                <span className="text-[11px] font-semibold text-[#9ca3af] w-[88px] text-right shrink-0">
+                                    {getMacroValue(key).toFixed(0)}
+                                    {isConsumed && (
+                                        min > 0
+                                            ? ` / ${min}–${getMacroExpected(key)}g`
+                                            : ` / ${getMacroExpected(key)}g`
+                                    )}
+                                    {!isConsumed && 'g'}
+                                </span>
                             </div>
-                            <span className="text-[11px] font-semibold text-[#9ca3af] w-[72px] text-right shrink-0">
-                                {getMacroValue(key).toFixed(0)}
-                                {isConsumed && ` / ${getMacroExpected(key)}g`}
-                                {!isConsumed && 'g'}
-                            </span>
-                        </div>
-                    ))}
+                        )
+                    })}
 
                     <div className="h-px bg-[rgba(255,255,255,0.06)]" />
 
@@ -174,16 +240,29 @@ const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
                         <span className="text-[11px] font-semibold w-[46px] shrink-0 text-macro-kcal">
                             {t('Kcal')}
                         </span>
-                        <div className="flex-1 h-[4px] rounded-full bg-[rgba(255,255,255,0.04)] overflow-hidden">
-                            <div
-                                className="h-full rounded-full transition-all duration-500 bg-macro-kcal"
-                                style={{ width: `${calPercent}%` }}
-                            />
+                        <div className="relative flex-1">
+                            <div className="h-[4px] rounded-full bg-[rgba(255,255,255,0.04)] overflow-hidden">
+                                <div
+                                    className="h-full rounded-full transition-all duration-500 bg-macro-kcal"
+                                    style={{
+                                        width: `${calPercent}%`,
+                                        opacity: calBelowMin ? 0.4 : 1,
+                                    }}
+                                />
+                            </div>
+                            {calMinPercent > 0 && (
+                                <div
+                                    className="absolute top-[-2px] h-[8px] w-[1.5px] rounded-full bg-[rgba(255,255,255,0.25)] transition-all duration-500"
+                                    style={{ left: `${calMinPercent}%` }}
+                                />
+                            )}
                         </div>
                         <div className="flex items-baseline gap-1 shrink-0 text-right">
                             <span className="text-[11px] font-semibold text-[#9ca3af]">
                                 {isConsumed
-                                    ? `${consumedMacro.calories} / ${expectedMacro.calories}`
+                                    ? minMacro.calories > 0
+                                        ? `${consumedMacro.calories} / ${minMacro.calories}–${expectedMacro.calories}`
+                                        : `${consumedMacro.calories} / ${expectedMacro.calories}`
                                     : expectedMacro.calories - consumedMacro.calories}
                             </span>
                             {burnedCaloriesTotalSum > 0 && (

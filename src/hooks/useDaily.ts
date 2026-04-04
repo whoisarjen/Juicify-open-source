@@ -1,4 +1,4 @@
-import { sumMacroFromConsumed, getExpectedMacro } from "@/utils/consumed.utils"
+import { sumMacroFromConsumed, getExpectedMacro, getMinMacro } from "@/utils/consumed.utils"
 import { useSession } from "next-auth/react"
 import useBurned from "./useBurned"
 import useConsumed from "./useConsumed"
@@ -16,7 +16,7 @@ const useDaily = (props: useDailyProps) => {
     } = useConsumed(props)
 
     const { username, startDate } = props
-    
+
     const {
         burnedCalories,
         workoutResults,
@@ -24,13 +24,16 @@ const useDaily = (props: useDailyProps) => {
         burnedCaloriesTotalSum,
     } = useBurned(props)
 
+    const user = username == sessionData?.user?.username ? sessionData?.user : null
     const consumedMacro = sumMacroFromConsumed(consumed)
-    const expectedMacro = getExpectedMacro(username == sessionData?.user?.username ? sessionData?.user : null, startDate)
+    const expectedMacro = getExpectedMacro(user, startDate)
+    const minMacro = getMinMacro(user, startDate)
 
     return {
         consumed,
         consumedMacro,
         expectedMacro,
+        minMacro,
         burnedCalories,
         workoutResults,
         burnedCaloriesSum,

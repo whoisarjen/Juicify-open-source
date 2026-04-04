@@ -1,7 +1,7 @@
 import SelectLanguage from '@/containers/settings/SelectLanguage/SelectLanguage'
 import { type UserSchema, userSchema } from '@/server/schema/user.schema'
 import { reloadSession } from '@/utils/global.utils'
-import { updateMacronutrientsInUser } from '@/utils/coach.utils'
+import { updateMacronutrientsInUser, updateMinMacronutrientsInUser } from '@/utils/coach.utils'
 import { trpc } from '@/utils/trpc.utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useSession } from 'next-auth/react'
@@ -29,7 +29,12 @@ const SettingsPage = () => {
             newUserSettings.carbsDay0 ?? 0,
             newUserSettings.fatsDay0 ?? 0,
         )
-        await updateUser.mutateAsync({ ...newUserSettings, ...expanded })
+        const expandedMin = updateMinMacronutrientsInUser(
+            newUserSettings.minProteinsDay0 ?? 0,
+            newUserSettings.minCarbsDay0 ?? 0,
+            newUserSettings.minFatsDay0 ?? 0,
+        )
+        await updateUser.mutateAsync({ ...newUserSettings, ...expanded, ...expandedMin })
     }
 
     const {
@@ -46,6 +51,11 @@ const SettingsPage = () => {
     const carbs = watch('carbsDay0') ?? 0
     const fats = watch('fatsDay0') ?? 0
     const totalKcal = proteins * 4 + carbs * 4 + fats * 9
+
+    const minProteins = watch('minProteinsDay0') ?? 0
+    const minCarbs = watch('minCarbsDay0') ?? 0
+    const minFats = watch('minFatsDay0') ?? 0
+    const minTotalKcal = minProteins * 4 + minCarbs * 4 + minFats * 9
 
     useEffect(() => {
         if (!sessionData?.user) {
@@ -67,6 +77,9 @@ const SettingsPage = () => {
                 <div className="text-[11px] font-bold uppercase tracking-wide text-[#7a7a7a] mb-3">
                     {t('Macronutrients')}
                 </div>
+
+                {/* Target row */}
+                <div className="text-[10px] font-bold uppercase tracking-wider text-[#555] mb-1.5">{t('Target')}</div>
                 <div className="grid grid-cols-3 gap-3">
                     <div>
                         <label className="mb-1 block text-[11px] font-semibold text-macro-protein">{t('Proteins')}</label>
@@ -108,8 +121,59 @@ const SettingsPage = () => {
                         {errors.fatsDay0 && <p className="mt-1 text-[10px] text-red-400">{errors.fatsDay0.message}</p>}
                     </div>
                 </div>
-                <div className="mt-3 text-center text-sm font-bold text-macro-kcal">
+                <div className="mt-2 text-center text-sm font-bold text-macro-kcal">
                     {totalKcal} kcal
+                </div>
+
+                {/* Min row */}
+                <div className="mt-3 pt-3 border-t border-[rgba(255,255,255,0.04)]">
+                    <div className="text-[10px] font-bold uppercase tracking-wider text-[#555] mb-1.5">{t('Minimum')}</div>
+                    <div className="grid grid-cols-3 gap-3">
+                        <div>
+                            <label className="mb-1 block text-[11px] font-semibold text-macro-protein/60">{t('Proteins')}</label>
+                            <div className="flex items-center rounded-lg bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.04)] focus-within:border-glass-border-accent transition-all duration-300">
+                                <input
+                                    className="flex-1 min-w-0 bg-transparent px-3 py-1.5 outline-none text-xs font-bold text-zinc-400"
+                                    type="text"
+                                    inputMode="decimal"
+                                    {...register('minProteinsDay0')}
+                                />
+                                <span className="pr-3 text-[10px] text-[#555]">g</span>
+                            </div>
+                            {errors.minProteinsDay0 && <p className="mt-1 text-[10px] text-red-400">{errors.minProteinsDay0.message}</p>}
+                        </div>
+                        <div>
+                            <label className="mb-1 block text-[11px] font-semibold text-macro-carbs/60">{t('Carbs')}</label>
+                            <div className="flex items-center rounded-lg bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.04)] focus-within:border-glass-border-accent transition-all duration-300">
+                                <input
+                                    className="flex-1 min-w-0 bg-transparent px-3 py-1.5 outline-none text-xs font-bold text-zinc-400"
+                                    type="text"
+                                    inputMode="decimal"
+                                    {...register('minCarbsDay0')}
+                                />
+                                <span className="pr-3 text-[10px] text-[#555]">g</span>
+                            </div>
+                            {errors.minCarbsDay0 && <p className="mt-1 text-[10px] text-red-400">{errors.minCarbsDay0.message}</p>}
+                        </div>
+                        <div>
+                            <label className="mb-1 block text-[11px] font-semibold text-macro-fat/60">{t('Fats')}</label>
+                            <div className="flex items-center rounded-lg bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.04)] focus-within:border-glass-border-accent transition-all duration-300">
+                                <input
+                                    className="flex-1 min-w-0 bg-transparent px-3 py-1.5 outline-none text-xs font-bold text-zinc-400"
+                                    type="text"
+                                    inputMode="decimal"
+                                    {...register('minFatsDay0')}
+                                />
+                                <span className="pr-3 text-[10px] text-[#555]">g</span>
+                            </div>
+                            {errors.minFatsDay0 && <p className="mt-1 text-[10px] text-red-400">{errors.minFatsDay0.message}</p>}
+                        </div>
+                    </div>
+                    {(minProteins > 0 || minCarbs > 0 || minFats > 0) && (
+                        <div className="mt-2 text-center text-xs font-bold text-macro-kcal/50">
+                            {minTotalKcal} kcal min
+                        </div>
+                    )}
                 </div>
             </div>
 

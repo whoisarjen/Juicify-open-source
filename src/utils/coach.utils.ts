@@ -46,6 +46,30 @@ export const updateMacronutrientsInUser = (proteins: number, carbs: number, fats
     fatsDay6: fats,
 })
 
+export const updateMinMacronutrientsInUser = (proteins: number, carbs: number, fats: number) => ({
+    minProteinsDay0: proteins,
+    minCarbsDay0: carbs,
+    minFatsDay0: fats,
+    minProteinsDay1: proteins,
+    minCarbsDay1: carbs,
+    minFatsDay1: fats,
+    minProteinsDay2: proteins,
+    minCarbsDay2: carbs,
+    minFatsDay2: fats,
+    minProteinsDay3: proteins,
+    minCarbsDay3: carbs,
+    minFatsDay3: fats,
+    minProteinsDay4: proteins,
+    minCarbsDay4: carbs,
+    minFatsDay4: fats,
+    minProteinsDay5: proteins,
+    minCarbsDay5: carbs,
+    minFatsDay5: fats,
+    minProteinsDay6: proteins,
+    minCarbsDay6: carbs,
+    minFatsDay6: fats,
+})
+
 type GetMacronutrients = {
     age: number
     isExtraProteins: boolean
