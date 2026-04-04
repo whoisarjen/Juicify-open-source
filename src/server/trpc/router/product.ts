@@ -1,29 +1,7 @@
 import { createProductSchema } from "@/server/schema/product.schema";
-import { Prisma } from "@prisma/client";
 import { z } from "zod"
 
 import { router, publicProcedure, protectedProcedure } from "../trpc";
-
-const removeDiacritics = (str: string) =>
-    str
-        .replace(/ł/g, 'l')
-        .replace(/Ł/g, 'L')
-        .normalize('NFD')
-        // eslint-disable-next-line no-control-regex
-        .replace(/[\u0300-\u036f]/g, '')
-
-const buildTsQuery = (input: string): string | null => {
-    const terms = removeDiacritics(input.trim().toLowerCase())
-        .split(/\s+/)
-        .map((t) => t.replace(/\W/g, ''))
-        .filter((t) => t.length > 0)
-
-    if (terms.length === 0) return null
-
-    return terms
-        .map((t) => (t.length > 3 ? `${t.slice(0, -1)}:*` : `${t}:*`))
-        .join(' & ')
-}
 
 export const productRouter = router({
     getById: publicProcedure
@@ -86,46 +64,35 @@ export const productRouter = router({
             })
         )
         .query(async ({ ctx, input: { name, take, skip } }) => {
-            const trimmed = name.trim()
+            const contains = name.trim()
 
-            if (!trimmed) {
-                return await ctx.prisma.product.findMany({
-                    take,
-                    skip,
-                    where: {
-                        OR: [
-                            { isDeleted: false, userId: null },
-                            { isDeleted: false, userId: ctx.session?.user?.id || null },
-                        ],
-                    },
-                    orderBy: { nameLength: 'asc' },
-                })
-            }
-
-            const tsQuery = buildTsQuery(trimmed)
-            if (!tsQuery) return []
-
-            const normalizedName = removeDiacritics(trimmed).toLowerCase()
-            const userId = ctx.session?.user?.id ?? null
-
-            return await ctx.prisma.$queryRaw<Prisma.ProductGetPayload<{}>[]>`
-                SELECT *
-                FROM "Product"
-                WHERE
-                    "isDeleted" IS NOT TRUE
-                    AND ("userId" IS NULL OR "userId" = ${userId})
-                    AND to_tsvector('simple', coalesce("nameNormalized", ''))
-                        @@ to_tsquery('simple', ${tsQuery})
-                ORDER BY
-                    CASE
-                        WHEN lower("nameNormalized") = ${normalizedName} THEN 0
-                        WHEN lower("nameNormalized") LIKE ${normalizedName + '%'} THEN 1
-                        ELSE 2
-                    END ASC,
-                    "nameLength" ASC
-                LIMIT ${take}
-                OFFSET ${skip}
-            `
+            return await ctx.prisma.product.findMany({
+                take,
+                skip,
+                where: {
+                    OR: [
+                        {
+                            isDeleted: false,
+                            userId: null,
+                            name: {
+                                contains,
+                                mode: 'insensitive',
+                            },
+                        },
+                        {
+                            isDeleted: false,
+                            userId: ctx.session?.user?.id || null,
+                            name: {
+                                contains,
+                                mode: 'insensitive',
+                            },
+                        },
+                    ]
+                },
+                orderBy: {
+                    nameLength: 'asc',
+                },
+            })
         }),
     create: protectedProcedure
         .input(createProductSchema)
@@ -134,7 +101,6 @@ export const productRouter = router({
                 data: {
                     ...input,
                     nameLength: input.name.length,
-                    nameNormalized: removeDiacritics(input.name).toLowerCase(),
                     userId: ctx.session.user.id,
                 }
             })
