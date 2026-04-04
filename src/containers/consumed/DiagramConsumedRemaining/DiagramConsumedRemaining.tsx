@@ -48,12 +48,10 @@ const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
 
     const isConsumed = mode === 'consumed'
 
-    // Net calories (after all burns)
-    const netCal = consumedMacro.calories - burnedCaloriesTotalSum
-    const netRemaining = expectedMacro.calories - consumedMacro.calories + burnedCaloriesTotalSum
+    const remaining = expectedMacro.calories - consumedMacro.calories
 
-    // Center text — net consumed or net remaining
-    const centerValue = isConsumed ? netCal : netRemaining
+    // Center text — consumed or remaining (without burned offset)
+    const centerValue = isConsumed ? consumedMacro.calories : remaining
 
     // Ring percentages (always consumed-based for visual fill)
     const pct = (v: number, t: number) => (t > 0 ? Math.min((v / t) * 100, 100) : 0)
