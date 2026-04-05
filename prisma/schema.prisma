@@ -295,6 +295,12 @@ model Measurement {
   waist             Decimal? @db.Decimal(4, 1)
   hips              Decimal? @db.Decimal(4, 1)
   source            String?  @db.VarChar(20)
+  pulseSleep        Int?
+  pulseFatigue      Int?
+  pulseMood         Int?
+  pulseSoreness     Int?
+  pulseStress       Int?
+  pulseErection     Int?
 
   @@unique([id, userId])
   @@index([userId])

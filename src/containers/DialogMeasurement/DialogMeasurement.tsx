@@ -181,6 +181,12 @@ export const DialogMeasurement = ({
             weight: Number(measurement.weight),
             waist: measurement.waist ? Number(measurement.waist) : undefined,
             hips: measurement.hips ? Number(measurement.hips) : undefined,
+            pulseSleep: measurement.pulseSleep ?? undefined,
+            pulseFatigue: measurement.pulseFatigue ?? undefined,
+            pulseMood: measurement.pulseMood ?? undefined,
+            pulseSoreness: measurement.pulseSoreness ?? undefined,
+            pulseStress: measurement.pulseStress ?? undefined,
+            pulseErection: measurement.pulseErection ?? undefined,
         })
         handleClickOpen()
         // eslint-disable-next-line react-hooks/exhaustive-deps

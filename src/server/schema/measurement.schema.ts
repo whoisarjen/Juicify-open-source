@@ -7,6 +7,12 @@ export const createMeasurementSchema = z.object({
     weight: decimal(z.coerce.number().min(0).max(999)).optional().default(0),
     waist: decimal(z.coerce.number().min(0).max(300)).optional(),
     hips: decimal(z.coerce.number().min(0).max(300)).optional(),
+    pulseSleep: z.coerce.number().int().min(1).max(5).optional(),
+    pulseFatigue: z.coerce.number().int().min(1).max(5).optional(),
+    pulseMood: z.coerce.number().int().min(1).max(5).optional(),
+    pulseSoreness: z.coerce.number().int().min(1).max(5).optional(),
+    pulseStress: z.coerce.number().int().min(1).max(5).optional(),
+    pulseErection: z.coerce.number().int().min(1).max(5).optional(),
 })
 
 export type CreateMeasurementSchema = z.infer<typeof createMeasurementSchema>

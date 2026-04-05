@@ -8,6 +8,7 @@ import DateChanger from '@/containers/consumed/DateChanger/DateChanger';
 import DateChangerFast from "@/containers/consumed/DateChangerFast/DateChangerFast";
 import useTranslation from "next-translate/useTranslation";
 import BoxBurned from "@/containers/consumed/BoxBurned/BoxBurned";
+import BoxMorningPulse from "@/containers/consumed/BoxMorningPulse/BoxMorningPulse";
 import BoxSupplements from "@/containers/consumed/BoxSupplements/BoxSupplements";
 import { env } from "@/env/client.mjs";
 import useConsumed from "@/hooks/useConsumed";
@@ -67,6 +68,8 @@ const Consumed = () => {
                     {isOwner && <SectionDiaryManaging />}
 
                     {isOwner && <BoxSupplements whenAdded={whenAdded} />}
+
+                    {isOwner && <BoxMorningPulse whenAdded={whenAdded} />}
 
                     <BoxBurned />
                 </div>

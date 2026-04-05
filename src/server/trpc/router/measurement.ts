@@ -11,6 +11,8 @@ async function syncUserWeight(
     measurementWeight: number,
     measurementDate: Date,
 ) {
+    if (measurementWeight <= 0) return
+
     const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } })
     if (measurementDate >= user.weightUpdatedAt) {
         await prisma.user.update({
@@ -95,17 +97,46 @@ export const measurementRouter = router({
     create: protectedProcedure
         .input(createMeasurementSchema)
         .mutation(async ({ ctx, input }) => {
-            const measurement = await ctx.prisma.measurement.create({
-                data: {
-                    ...input,
+            const whenAdded = input.whenAdded ?? new Date()
+            const dayStart = new Date(whenAdded)
+            dayStart.setHours(0, 0, 0, 0)
+            const dayEnd = new Date(whenAdded)
+            dayEnd.setHours(23, 59, 59, 999)
+
+            const existing = await ctx.prisma.measurement.findFirst({
+                where: {
                     userId: ctx.session.user.id,
-                }
+                    whenAdded: { gte: dayStart, lte: dayEnd },
+                },
             })
+
+            const measurement = existing
+                ? await ctx.prisma.measurement.update({
+                    data: {
+                        ...input,
+                        weight: Number(input.weight) > 0
+                            ? input.weight
+                            : existing.weight,
+                    },
+                    where: {
+                        id_userId: {
+                            id: existing.id,
+                            userId: ctx.session.user.id,
+                        },
+                    },
+                })
+                : await ctx.prisma.measurement.create({
+                    data: {
+                        ...input,
+                        userId: ctx.session.user.id,
+                    },
+                })
+
             await syncUserWeight(
                 ctx.prisma,
                 ctx.session.user.id,
-                Number(input.weight),
-                input.whenAdded ?? new Date(),
+                Number(measurement.weight),
+                measurement.whenAdded,
             )
             return measurement
         }),

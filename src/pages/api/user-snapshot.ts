@@ -82,6 +82,7 @@
  *   Body weight, fat ratio, muscle mass, bone mass, water mass
  *   Vital signs: heart pulse, blood pressure, temperature, SpO2, VO2max
  *   Body measurements: waist, hips
+ *   Morning Pulse: pulseSleep, pulseFatigue, pulseMood, pulseSoreness, pulseStress, pulseErection (1-5 scales)
  *   Source field distinguishes manual vs Withings-synced entries
  *
  * ── burnedCalories ────────────────────────────────────────────────
@@ -337,6 +338,12 @@ export default async function handler(
                 waist: true,
                 hips: true,
                 source: true,
+                pulseSleep: true,
+                pulseFatigue: true,
+                pulseMood: true,
+                pulseSoreness: true,
+                pulseStress: true,
+                pulseErection: true,
             },
             orderBy: { whenAdded: 'asc' },
         }),
