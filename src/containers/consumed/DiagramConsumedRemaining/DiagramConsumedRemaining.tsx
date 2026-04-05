@@ -4,6 +4,7 @@ import useDaily from '@/hooks/useDaily'
 import { trpc } from '@/utils/trpc.utils'
 import { useSession } from 'next-auth/react'
 import { Zap } from 'lucide-react'
+import moment from 'moment'
 
 const RING_TRACKS = [
     { r: 44, sw: 4, color: '#34d399' },  // Calories
@@ -45,6 +46,21 @@ const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
         { date: props.startDate },
         { enabled: isOwner && !!props.startDate }
     )
+
+    // TDEE calculation
+    const user = sessionData?.user
+    const userWeight = user?.weight ? Number(user.weight) : 0
+    const canCalcTdee = userWeight > 0 && (user?.height ?? 0) > 0
+    const bmr = canCalcTdee
+        ? Math.round(
+            10 * userWeight +
+            6.25 * (user?.height ?? 0) -
+            5 * moment().diff(user?.birth, 'years') +
+            (user?.sex ? 5 : -161)
+        )
+        : 0
+    const tef = Math.round(consumedMacro.calories * 0.10)
+    const tdee = bmr + tef + burnedCaloriesTotalSum
 
     const isConsumed = mode === 'consumed'
 
@@ -114,7 +130,7 @@ const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
 
     const calBelowMin = minMacro.calories > 0 && consumedMacro.calories < minMacro.calories
 
-    const hasTdee = dayStats?.totalCalories != null
+    const hasTdee = canCalcTdee
     const hasPills = dayStats && (dayStats.hrAverage != null || dayStats.steps != null || dayStats.totalSleepTime != null)
 
     return (
@@ -279,9 +295,9 @@ const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
             {hasTdee && (
                 <div className="flex items-center justify-center gap-1 pt-3 pb-1 text-[10px] font-bold text-macro-kcal tracking-wide">
                     <Zap size={12} />
-                    TDEE {dayStats.totalCalories!.toLocaleString()} kcal
+                    TDEE {tdee.toLocaleString()} kcal
                     <span className="text-[#7a7a7a] font-semibold">
-                        ({(dayStats.totalCalories! - dayStats.activeCalories!).toLocaleString()} + {dayStats.activeCalories!.toLocaleString()} active)
+                        ({bmr.toLocaleString()} BMR + {tef.toLocaleString()} TEF + {burnedCaloriesTotalSum.toLocaleString()} burned)
                     </span>
                 </div>
             )}
