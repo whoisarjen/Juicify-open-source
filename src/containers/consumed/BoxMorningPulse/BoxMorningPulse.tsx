@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import { Sun, ChevronDown, Check } from 'lucide-react'
 import { trpc } from '@/utils/trpc.utils'
 import { useSession } from 'next-auth/react'
@@ -51,7 +51,14 @@ const BoxMorningPulse = ({ whenAdded }: BoxMorningPulseProps) => {
     const answered = Object.keys(pulseValues).length
     const isDone = answered === total
 
-    const [expanded, setExpanded] = useState(!isDone)
+    const [expanded, setExpanded] = useState(false)
+    const [hasLoaded, setHasLoaded] = useState(false)
+
+    useEffect(() => {
+        if (hasLoaded || measurement === undefined) return
+        setHasLoaded(true)
+        if (!isDone) setExpanded(true)
+    }, [measurement, isDone, hasLoaded])
 
     const utils = trpc.useUtils()
 
