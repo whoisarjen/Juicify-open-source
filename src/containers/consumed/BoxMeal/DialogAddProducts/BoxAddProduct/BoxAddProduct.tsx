@@ -40,17 +40,12 @@ const BoxAddProduct = ({
     }
 
     const togglePortionMode = () => {
-        const currentNum = parseFloat(rawValue.replace(',', '.')) || 1
-        if (portionMode) {
-            // Switching to grams: convert portions → howMany
-            const howMany = (currentNum * gramsPerPortion) / 100
-            setRawValue(String(Math.round(howMany * 100) / 100))
-        } else {
-            // Switching to portions: convert howMany → portions
-            const portions = (currentNum * 100) / gramsPerPortion
-            setRawValue(String(Math.round(portions * 10) / 10))
-        }
-        setPortionMode(!portionMode)
+        const newPortionMode = !portionMode
+        setPortionMode(newPortionMode)
+        // Reset to 1 portion or 100g (howMany=1) on toggle
+        setRawValue('1')
+        const howMany = newPortionMode ? gramsPerPortion / 100 : 1
+        onValueChange(howMany)
     }
 
     // Calculate display values

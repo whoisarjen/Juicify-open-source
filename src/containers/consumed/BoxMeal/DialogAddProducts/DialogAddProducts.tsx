@@ -32,6 +32,7 @@ const DialogAddProducts = ({ children, mealToAdd }: DialogAddProductsProps) => {
         useCache<(Product & { howMany?: number })[]>('CHECKED_PRODUCTS')
     const [meal, setMeal] = useState(mealToAdd)
     const [loadedProducts, setLoadedProducts] = useState<Product[]>([])
+    const [howManyMap, setHowManyMap] = useState<Record<number, number | undefined>>({})
 
     const enabled = name.length >= env.NEXT_PUBLIC_SEARCH_MIN_NAME_LENGTH
 
@@ -53,6 +54,7 @@ const DialogAddProducts = ({ children, mealToAdd }: DialogAddProductsProps) => {
     const createConsumed = trpc.consumed.create.useMutation({
         onSuccess(data, variables, context) {
             setChecked([])
+            setHowManyMap({})
             setIsDialogOpen(false)
 
             utils.consumed.getPeriod.refetch() // TODO
@@ -70,7 +72,7 @@ const DialogAddProducts = ({ children, mealToAdd }: DialogAddProductsProps) => {
                         .minute(moment().minute())
                         .second(moment().second())
                         .toDate(),
-                    howMany: product.howMany || 1,
+                    howMany: howManyMap[product.id] ?? product.howMany ?? 1,
                     meal,
                 })
             )
@@ -152,9 +154,11 @@ const DialogAddProducts = ({ children, mealToAdd }: DialogAddProductsProps) => {
                                                               id !== product.id
                                                       )
                                                   )
-                                                : setChecked([...checked, product])
+                                                : setChecked([...checked, { ...product, howMany: howManyMap[product.id] }])
                                         }
                                         onValueChange={(howMany) => {
+                                            setHowManyMap((prev) => ({ ...prev, [product.id]: howMany }))
+
                                             setLoadedProducts((state) =>
                                                 state.map((currentProduct) => {
                                                     if (
