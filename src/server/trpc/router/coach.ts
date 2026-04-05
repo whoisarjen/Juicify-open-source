@@ -58,6 +58,8 @@ export const coachRouter = router({
                     ...updateMacronutrientsInUser(proteins, carbs, fats),
                     isCoachAnalyze: true,
                     nextCoach: moment().add(NUMBER_OF_DAYS_BETWEEN_COACHES + 1, 'days').toDate(),
+                    weight,
+                    weightUpdatedAt: new Date(),
                 },
                 where: {
                     id,
@@ -147,6 +149,8 @@ export const coachRouter = router({
                     ...updateMacronutrientsInUser(proteins, carbs, fats),
                     isCoachAnalyze: true,
                     nextCoach: moment().add(8, 'days').toDate(),
+                    weight: averageWeight,
+                    weightUpdatedAt: new Date(),
                 },
                 where: {
                     id,
