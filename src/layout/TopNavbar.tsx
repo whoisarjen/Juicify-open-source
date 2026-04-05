@@ -29,7 +29,12 @@ const TopNavbar = () => {
 
     return (
         <nav className="max-lg:hidden flex items-center gap-3 py-3">
-            <img src="/images/logo.png" alt="Juicify" className="h-8 w-8" />
+            <img
+                src="/images/logo.png"
+                alt="Juicify"
+                className="h-8 w-8 cursor-pointer"
+                onClick={() => navigate(`/${username}/consumed/${moment().format('YYYY-MM-DD')}`)}
+            />
             <div className="flex flex-1 items-center justify-center gap-0.5 rounded-[14px] bg-glass border border-glass-border p-1">
                 {navItems.map(({ key, link, text, icon }) => (
                     <button
