@@ -104,6 +104,8 @@ const useBurned = ({
     const burnedCalories = rawBurnedCalories.filter(b => b.source !== 'withings')
 
     const userWeight = sessionData?.user?.weight ? Number(sessionData.user.weight) : 0
+    const userHeight = sessionData?.user?.height ?? 0 // cm
+    const userSex = sessionData?.user?.sex ?? true // true = male
 
     // Calculate Withings workout calories using MET formulas
     // Exclude walks (category 1) — walk MET ≈ step formula, no added accuracy
@@ -135,7 +137,10 @@ const useBurned = ({
     // Deduct workout steps from daily total to avoid double-counting
     const workoutSteps = withingsWorkouts.reduce((sum, w) => sum + w.steps, 0)
     const netSteps = Math.max(0, (dayStats?.steps ?? 0) - workoutSteps)
-    const stepCalories = Math.round(netSteps * 0.00057 * userWeight)
+    // Margaria walking (0.5 kcal/kg/km) + height-based stride length
+    // Matches ACSM VO2 walking equation within 1%
+    const strideKm = (userHeight / 100) * (userSex ? 0.414 : 0.413) / 1000
+    const stepCalories = Math.round(netSteps * strideKm * 0.5 * userWeight)
     const withingsWorkoutCalories = withingsWorkouts.reduce((sum, w) => sum + w.netCalories, 0)
 
     return {
