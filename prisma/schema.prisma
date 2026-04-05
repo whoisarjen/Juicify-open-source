@@ -132,6 +132,8 @@ model User {
   nextCoach           DateTime         @default(now())
   isCoachAnalyze      Boolean          @default(false)
   height              Int              @default(0)
+  weight              Decimal          @default(0) @db.Decimal(4, 1)
+  weightUpdatedAt     DateTime         @default(now())
   birth               DateTime         @default(now())
   description         String           @default("")
   website             String           @default("")
