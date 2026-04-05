@@ -14,7 +14,7 @@ const Footer = () => {
             <div
                 role="navigation"
                 aria-label="Mobile navigation"
-                className="footer fixed bottom-0 left-0 z-50 flex w-full items-center justify-evenly bg-gray-200 shadow dark:bg-black xl:hidden"
+                className="footer fixed bottom-0 left-0 z-50 flex w-full items-center justify-evenly bg-gray-200 shadow dark:bg-black lg:hidden"
             >
                 <Link href="/coach">
                     <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="Coach">

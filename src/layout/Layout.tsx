@@ -1,7 +1,7 @@
 import Footer from './Footer'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
-import SidebarLeft from './SidebarLeft'
+import TopNavbar from './TopNavbar'
 import { useSession } from 'next-auth/react'
 import { DialogMissingSettings } from '@/components/DialogMissingSettings'
 import useTranslation from 'next-translate/useTranslation'
@@ -157,13 +157,9 @@ const Layout = ({ children }: { children: any }) => {
 
     return (
         <main className={`pb-safe dark container flex max-w-5xl flex-col ${isLandingPage ? 'min-h-screen' : 'h-screen'}`}>
-            <div className={`flex flex-1 ${isLandingPage ? '' : 'flex-row gap-4'} p-4`}>
-                {status !== 'loading' && !isLandingPage && (
-                    <div className="relative max-xl:hidden w-52 shrink-0">
-                        <SidebarLeft />
-                    </div>
-                )}
-                <div className="pb-safe flex flex-[1.618_1_0%] min-w-0 items-stretch">
+            {status !== 'loading' && !isLandingPage && <TopNavbar />}
+            <div className={`flex flex-1 ${isLandingPage ? '' : 'flex-row pt-4'} px-4`}>
+                <div className="pb-safe mx-auto flex w-full max-w-3xl min-w-0 items-stretch">
                     {status === 'loading' ? null : children}
                 </div>
             </div>
