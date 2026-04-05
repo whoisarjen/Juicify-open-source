@@ -321,7 +321,7 @@ const WorkoutResultPage = () => {
             {showFinishTimeModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center">
                     <div className="fixed inset-0 bg-black/50" onClick={handleCloseFinishTimeModal} />
-                    <div className="relative z-50 w-full max-w-lg rounded-lg bg-white p-0 shadow-xl dark:bg-gray-900">
+                    <div className="relative z-50 mx-4 w-full max-w-lg rounded-lg bg-white p-0 shadow-xl dark:bg-gray-900">
                         <div className="px-6 pt-6 text-lg font-semibold">{t('Update workout finish time?')}</div>
                         <div className="px-6 py-4">
                             <p className="text-sm text-gray-500">

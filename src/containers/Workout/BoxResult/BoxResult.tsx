@@ -117,7 +117,7 @@ const BoxResult = ({
     )
 
     const loadWeight = (choosenWeight: string) => {
-        const choosenWeightLocally = parseFloat(choosenWeight)
+        const choosenWeightLocally = parseFloat(choosenWeight.replace(',', '.'))
         const weights = [value.weight.toString()]
         if (choosenWeightLocally) {
             if (choosenWeight != value.weight.toString()) {
@@ -192,18 +192,22 @@ const BoxResult = ({
                         <div className="flex items-center rounded border border-gray-300 focus-within:border-primary-dark dark:border-gray-600">
                             <input
                                 className="flex-1 bg-transparent px-3 py-2 outline-none"
-                                list="weight-options"
+                                inputMode="decimal"
+                                list={`weight-options-${index}`}
                                 value={weight}
                                 onChange={(e) => {
                                     loadWeight(e.target.value)
+                                }}
+                                onBlur={(e) => {
+                                    const val = e.target.value.replace(',', '.')
                                     changeResult(buildResult({
-                                        weight: parseFloat(e.target.value || '0'),
+                                        weight: parseFloat(val || '0'),
                                         open,
                                     }))
                                 }}
                             />
                         </div>
-                        <datalist id="weight-options">
+                        <datalist id={`weight-options-${index}`}>
                             {weightOptions.map((opt, idx) => (
                                 <option key={idx} value={opt} />
                             ))}

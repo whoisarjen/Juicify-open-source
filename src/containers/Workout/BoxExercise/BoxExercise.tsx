@@ -128,7 +128,7 @@ const BaseBoxExercise = ({
             {values.map(
                 (value: WorkoutResultExerciseResultSchema, index: number) => (
                     <BoxResult
-                        key={index + ' ' + value.open}
+                        key={index}
                         value={value}
                         index={index}
                         deleteResult={() => deleteResult(index)}
