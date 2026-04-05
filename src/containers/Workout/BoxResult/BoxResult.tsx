@@ -1,5 +1,4 @@
 import { Trash2 } from 'lucide-react'
-import DialogConfirm from '@/components/DialogConfirm/DialogConfirm'
 import { useState, useEffect } from 'react'
 import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon'
 import { type WorkoutResultExerciseResultSchema } from '@/server/schema/workoutResult.schema'
@@ -186,14 +185,18 @@ const BoxResult = ({
                         <div className="mb-4 flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <span className="text-base font-semibold">Set #{index + 1}</span>
-                                <DialogConfirm onConfirmed={() => { setOpen(false); deleteResult() }}>
-                                    <button
-                                        className="rounded-full p-2 text-red-500 hover:bg-red-500/10"
-                                        aria-label="delete"
-                                    >
-                                        <Trash2 size={18} />
-                                    </button>
-                                </DialogConfirm>
+                                <button
+                                    className="rounded-full p-2 text-red-500 hover:bg-red-500/10"
+                                    aria-label="delete"
+                                    onClick={() => {
+                                        if (window.confirm('Delete this set?')) {
+                                            setOpen(false)
+                                            deleteResult()
+                                        }
+                                    }}
+                                >
+                                    <Trash2 size={18} />
+                                </button>
                             </div>
                             <button
                                 className="rounded bg-primary-dark px-4 py-2 text-base text-[#121212] hover:bg-[#64b5f6]"
