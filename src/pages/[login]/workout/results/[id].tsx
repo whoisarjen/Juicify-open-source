@@ -1,4 +1,3 @@
-import BottomFlyingGuestBanner from '@/components/BottomFlyingGuestBanner/BottomFlyingGuestBanner'
 import NavbarWorkout from '@/containers/Workout/NavbarWorkout/NavbarWorkout'
 import { zodResolver } from '@hookform/resolvers/zod'
 import useTranslation from 'next-translate/useTranslation'
@@ -309,14 +308,6 @@ const WorkoutResultPage = () => {
                     }
                 />
             )}
-
-            {data?.user.username &&
-                sessionData?.user?.username != data?.user.username && (
-                    <BottomFlyingGuestBanner
-                        src={data?.user.image}
-                        username={data?.user.username}
-                    />
-                )}
 
             {showFinishTimeModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center">

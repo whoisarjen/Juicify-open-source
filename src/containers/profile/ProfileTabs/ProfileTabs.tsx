@@ -1,4 +1,4 @@
-import { Dumbbell, BookOpen, CircleUser, FileText } from 'lucide-react'
+import { Dumbbell, BookOpen, FileText } from 'lucide-react'
 import { useRouter } from 'next/router';
 import moment from 'moment';
 
@@ -6,7 +6,6 @@ const ProfileTabs = ({ tab }: { tab: number }) => {
     const router: any = useRouter()
 
     const tabs = [
-        { testId: 'target_profile', icon: <CircleUser />, onClick: () => router.push(`/${router.query.login}`) },
         { testId: 'target_nutrition_diary', icon: <BookOpen />, onClick: () => router.push(`/${router.query.login}/consumed/${moment().format('YYYY-MM-DD')}`) },
         { testId: 'target_workout_results', icon: <Dumbbell />, onClick: () => router.push(`/${router.query.login}/workout/results`) },
         { testId: 'target_workout_plans', icon: <FileText />, onClick: () => router.push(`/${router.query.login}/workout/plans`) },

@@ -1,7 +1,6 @@
-import { Trophy, Dumbbell, GraduationCap, BookOpen, Settings, Bot, LogOut, FileText, Camera, BarChart3, UtensilsCrossed } from 'lucide-react'
+import { Trophy, Dumbbell, GraduationCap, BookOpen, Settings, Bot, LogOut, FileText, BarChart3 } from 'lucide-react'
 import { useRouter } from 'next/router'
 import useTranslation from 'next-translate/useTranslation'
-import CustomAvatar from '@/components/CustomAvatar/CustomAvatar'
 import moment from 'moment'
 import { useSession, signIn } from 'next-auth/react'
 import { type Translate } from 'next-translate'
@@ -12,28 +11,11 @@ const getRouterPushOptions = (sessionData: Session | null, t: Translate) => {
     const username = sessionData?.user?.username
 
     return {
-        profile: {
-            link: `/${username}`,
-            text: t('Profile'),
-            children: (
-                <CustomAvatar
-                    src={sessionData?.user?.image}
-                    username={username}
-                    size="28px"
-                    margin="auto auto auto 0"
-                />
-            ),
-        },
         blog: {
             link: `/blog`,
             text: t('Blog'),
             children: <GraduationCap className="text-[#90caf9]" />,
         },
-        // products: {
-        //     link: `/products`,
-        //     text: t('PRODUCTS'),
-        //     children: <UtensilsCrossed className="text-[#90caf9]" />,
-        // },
         diary: {
             link: `/${username}/consumed/${moment().format('YYYY-MM-DD')}`,
             text: t('Diary'),

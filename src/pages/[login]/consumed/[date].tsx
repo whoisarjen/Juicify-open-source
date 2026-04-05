@@ -1,4 +1,3 @@
-import BottomFlyingGuestBanner from "@/components/BottomFlyingGuestBanner/BottomFlyingGuestBanner";
 import NavbarOnlyTitle from "@/components/NavbarOnlyTitle/NavbarOnlyTitle";
 import DiagramConsumedRemaining from "@/containers/consumed/DiagramConsumedRemaining/DiagramConsumedRemaining";
 import SectionDiaryManaging from "@/containers/consumed/SectionDiaryManaging/SectionDiaryManaging";
@@ -15,7 +14,7 @@ import useConsumed from "@/hooks/useConsumed";
 import { useRouter } from "next/router";
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
-import CustomAvatar from '@/components/CustomAvatar/CustomAvatar'
+import { Settings } from 'lucide-react'
 
 const Consumed = () => {
     const { t } = useTranslation('nutrition-diary')
@@ -46,13 +45,9 @@ const Consumed = () => {
                 <ButtonShare />
                 <DateChanger />
                 {username === sessionData?.user?.username &&
-                    <Link href={`/${sessionData?.user?.username}`}>
+                    <Link href="/settings">
                         <button className="rounded-full p-2 hover:bg-[rgba(255,255,255,0.04)] transition-all cursor-pointer">
-                            <CustomAvatar
-                                src={sessionData?.user?.image}
-                                username={sessionData?.user?.username}
-                                size="28px"
-                            />
+                            <Settings size={20} className="text-primary-dark" />
                         </button>
                     </Link>
                 }
@@ -89,12 +84,6 @@ const Consumed = () => {
                 </div>
             </div>
 
-            {!isOwner && lastMeal &&
-                <BottomFlyingGuestBanner
-                    src={lastMeal.user.image}
-                    username={lastMeal.user.username}
-                />
-            }
         </div>
     );
 };

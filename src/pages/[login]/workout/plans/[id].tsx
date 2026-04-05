@@ -6,7 +6,6 @@ import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
-import BottomFlyingGuestBanner from '@/components/BottomFlyingGuestBanner/BottomFlyingGuestBanner'
 import NavbarWorkout from '@/containers/Workout/NavbarWorkout/NavbarWorkout'
 import DialogAddExercises from '@/containers/DialogAddExercises/DialogAddExercises'
 import { useSession } from 'next-auth/react'
@@ -303,12 +302,6 @@ const WorkoutPlan = () => {
                 <DialogAddExercises
                     skipThoseIDS={fields as unknown as WorkoutPlanExercise[]}
                     addThoseExercises={(exercises) => append(exercises)}
-                />
-            )}
-            {data?.userId && !isOwner && (
-                <BottomFlyingGuestBanner
-                    src={data.user.image}
-                    username={data.user.username}
                 />
             )}
         </form>

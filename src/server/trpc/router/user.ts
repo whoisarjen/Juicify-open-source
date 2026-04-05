@@ -20,23 +20,6 @@ export const userRouter = router({
                 })
             )
         }),
-    getAll: publicProcedure
-        .input(
-            z.object({
-                take: z.coerce.number(),
-            })
-        )
-        .query(async ({ ctx, input: { take } }) => {
-            const users = await ctx.prisma.user.findMany({
-                take,
-                skip: 0,
-                orderBy: {
-                    id: 'desc',
-                },
-            })
-
-            return users.map(prepareUserForFE)
-        }),
     update: protectedProcedure
         .input(userSchema)
         .mutation(async ({ ctx, input }) => {
