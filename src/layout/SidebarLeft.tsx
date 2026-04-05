@@ -1,4 +1,4 @@
-import { Trophy, Dumbbell, GraduationCap, BookOpen, Settings, Bot, LogOut, FileText, BarChart3 } from 'lucide-react'
+import { Trophy, Dumbbell, GraduationCap, BookOpen, Settings, Bot, LogOut } from 'lucide-react'
 import { useRouter } from 'next/router'
 import useTranslation from 'next-translate/useTranslation'
 import moment from 'moment'
@@ -11,11 +11,6 @@ const getRouterPushOptions = (sessionData: Session | null, t: Translate) => {
     const username = sessionData?.user?.username
 
     return {
-        blog: {
-            link: `/blog`,
-            text: t('Blog'),
-            children: <GraduationCap className="text-[#90caf9]" />,
-        },
         diary: {
             link: `/${username}/consumed/${moment().format('YYYY-MM-DD')}`,
             text: t('Diary'),
@@ -26,25 +21,20 @@ const getRouterPushOptions = (sessionData: Session | null, t: Translate) => {
             text: t('Measurements'),
             children: <Trophy className="text-[#90caf9]" />,
         },
-        results: {
-            link: `/${username}/workout/results`,
-            text: t('WORKOUT_RESULTS'),
+        workout: {
+            link: `/${username}/workout`,
+            text: t('Workout'),
             children: <Dumbbell className="text-[#90caf9]" />,
-        },
-        plans: {
-            link: `/${username}/workout/plans`,
-            text: t('WORKOUT_PLANS'),
-            children: <FileText className="text-[#90caf9]" />,
-        },
-        statistics: {
-            link: `/${username}/workout/statistics`,
-            text: t('WORKOUT_STATISTICS'),
-            children: <BarChart3 className="text-[#90caf9]" />,
         },
         coach: {
             link: `/coach`,
             text: t('Coach'),
             children: <Bot className="text-[#90caf9]" />,
+        },
+        blog: {
+            link: `/blog`,
+            text: t('Blog'),
+            children: <GraduationCap className="text-[#90caf9]" />,
         },
     }
 }
