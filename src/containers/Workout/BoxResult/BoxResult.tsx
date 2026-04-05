@@ -1,4 +1,4 @@
-import { Trash2, ArrowRight, Circle } from 'lucide-react'
+import { Trash2 } from 'lucide-react'
 import DialogConfirm from '@/components/DialogConfirm/DialogConfirm'
 import { useState, useEffect } from 'react'
 import ButtonPlusIcon from '@/components/ButtonPlusIcon/ButtonPlusIcon'
@@ -154,142 +154,124 @@ const BoxResult = ({
         ? formatDiff(new Date(setAt).getTime() - new Date(previousSetAt).getTime())
         : ''
 
+    const handleSave = () => {
+        const val = weight.replace(',', '.')
+        setOpen(false)
+        changeResult(buildResult({
+            weight: parseFloat(val || '0'),
+            open: false,
+        }))
+    }
+
     return (
         <>
-            {open && isOwner ? (
-                <>
-                    <div
-                        className="flex flex-row border p-2 rounded items-center justify-center overflow-hidden"
-                        onClick={() => {
-                            setOpen(false)
-                            changeResult(buildResult({ open: false }))
-                        }}
-                    >
-                        <div className="min-w-0 flex-1 truncate">Click to save</div>
-                        <div className="min-w-0 flex-1 flex flex-col items-center text-xs opacity-60">
-                            {mmss ? (
-                                <>
-                                    <span>{mmss}</span>
-                                    {diff && <span>rest {diff}</span>}
-                                </>
-                            ) : (
-                                <span>{`#${index + 1}`}</span>
-                            )}
-                        </div>
-                        <div className="flex-1">
-                            <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="arrow">
-                                <ArrowRight size={20} />
+            <div
+                onClick={() => isOwner && setOpen(true)}
+                className="flex flex-row border p-2 rounded items-center justify-center overflow-hidden"
+            >
+                <div className="min-w-0 flex-1 truncate">
+                    {isOwner && (
+                        <DialogConfirm onConfirmed={deleteResult}>
+                            <button
+                                className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
+                                aria-label="delete"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <Trash2 size={20} />
                             </button>
-                        </div>
-                        <div className="flex-1">
-                            <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="save">
-                                <Circle size={20} />
-                            </button>
-                        </div>
-                    </div>
-                    <div className="mt-2">
-                        <label className="mb-1 block text-sm text-gray-500">Weight</label>
-                        <div className="flex items-center rounded border border-gray-300 focus-within:border-primary-dark dark:border-gray-600">
-                            <input
-                                className="flex-1 bg-transparent px-3 py-2 outline-none"
-                                inputMode="decimal"
-                                list={`weight-options-${index}`}
-                                value={weight}
-                                onChange={(e) => {
-                                    loadWeight(e.target.value)
-                                }}
-                                onBlur={(e) => {
-                                    const val = e.target.value.replace(',', '.')
-                                    changeResult(buildResult({
-                                        weight: parseFloat(val || '0'),
-                                        open,
-                                    }))
-                                }}
-                            />
-                        </div>
-                        <datalist id={`weight-options-${index}`}>
-                            {weightOptions.map((opt, idx) => (
-                                <option key={idx} value={opt} />
-                            ))}
-                        </datalist>
-                    </div>
-                    <div className="mt-2">
-                        <label className="mb-1 block text-sm text-gray-500">Reps</label>
-                        <select
-                            className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
-                            value={reps}
-                            onChange={(e) => {
-                                setReps(e.target.value)
-                                changeResult(buildResult({
-                                    reps: parseInt(e.target.value || '0'),
-                                    open,
-                                }))
-                            }}
-                        >
-                            {repsOptions.map((opt) => (
-                                <option key={opt} value={opt}>{opt}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="mt-2">
-                        <label className="mb-1 block text-sm text-gray-500">RIR</label>
-                        <select
-                            className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
-                            value={rir}
-                            onChange={(e) => {
-                                setRir(e.target.value)
-                                changeResult(buildResult({
-                                    rir: parseInt(e.target.value || '0'),
-                                    open,
-                                }))
-                            }}
-                        >
-                            {rirOptions.map((opt) => (
-                                <option key={opt} value={opt}>{opt}</option>
-                            ))}
-                        </select>
-                    </div>
-                    {setAt && (
-                        <div className="mt-2">
-                            <label className="mb-1 block text-sm text-gray-500">Finished at (mm:ss)</label>
-                            <input
-                                className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
-                                placeholder="MM:SS"
-                                value={localTimeDisplay}
-                                onChange={(e) => setLocalTimeDisplay(e.target.value)}
-                                onBlur={(e) => {
-                                    const val = e.target.value.trim()
-                                    if (!val || !val.includes(':')) return
-                                    const newISO = fromLocalMMSS(val, setAt, timezone)
-                                    setSetAt(newISO)
-                                    setLocalTimeDisplay(toLocalMMSS(newISO, timezone))
-                                    changeResult(buildResult({ setAt: newISO, open }))
-                                }}
-                            />
-                        </div>
+                        </DialogConfirm>
                     )}
-                </>
-            ) : (
-                <div onClick={() => setOpen(true)} className="flex flex-row border p-2 rounded items-center justify-center overflow-hidden">
-                    <div className="min-w-0 flex-1 truncate">
-                        {isOwner && (
-                            <DialogConfirm onConfirmed={deleteResult}>
-                                <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="delete">
-                                    <Trash2 size={20} />
-                                </button>
-                            </DialogConfirm>
+                </div>
+                <div className="min-w-0 flex-1 truncate">{weight}kg</div>
+                <div className="min-w-0 flex-1 flex flex-col items-center text-xs">
+                    <span className="font-semibold">#{index + 1}</span>
+                    {mmss && <span className="truncate opacity-60">{mmss}</span>}
+                    {diff && <span className="truncate opacity-60">rest {diff}</span>}
+                </div>
+                <div className="min-w-0 flex-1 truncate">{reps}r.</div>
+                <div className="min-w-0 flex-1 truncate">{rir} RIR</div>
+            </div>
+
+            {open && isOwner && (
+                <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+                    <div className="fixed inset-0 bg-black/50" onClick={handleSave} />
+                    <div className="relative z-50 w-full max-w-lg rounded-t-2xl sm:rounded-lg bg-white p-4 shadow-xl dark:bg-gray-900 sm:mx-4">
+                        <div className="mb-4 flex items-center justify-between">
+                            <span className="text-base font-semibold">Set #{index + 1}</span>
+                            <button
+                                className="rounded bg-primary-dark px-4 py-2 text-base text-[#121212] hover:bg-[#64b5f6]"
+                                onClick={handleSave}
+                            >
+                                Save
+                            </button>
+                        </div>
+                        <div className="mt-2">
+                            <label className="mb-1 block text-sm text-gray-500">Weight</label>
+                            <div className="flex items-center rounded border border-gray-300 focus-within:border-primary-dark dark:border-gray-600">
+                                <input
+                                    className="flex-1 bg-transparent px-3 py-2 text-base outline-none"
+                                    inputMode="decimal"
+                                    list={`weight-options-${index}`}
+                                    value={weight}
+                                    onChange={(e) => loadWeight(e.target.value)}
+                                />
+                            </div>
+                            <datalist id={`weight-options-${index}`}>
+                                {weightOptions.map((opt, idx) => (
+                                    <option key={idx} value={opt} />
+                                ))}
+                            </datalist>
+                        </div>
+                        <div className="mt-3">
+                            <label className="mb-1 block text-sm text-gray-500">Reps</label>
+                            <select
+                                className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 text-base outline-none focus:border-primary-dark dark:border-gray-600"
+                                value={reps}
+                                onChange={(e) => {
+                                    setReps(e.target.value)
+                                }}
+                            >
+                                {repsOptions.map((opt) => (
+                                    <option key={opt} value={opt}>{opt}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="mt-3">
+                            <label className="mb-1 block text-sm text-gray-500">RIR</label>
+                            <select
+                                className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 text-base outline-none focus:border-primary-dark dark:border-gray-600"
+                                value={rir}
+                                onChange={(e) => {
+                                    setRir(e.target.value)
+                                }}
+                            >
+                                {rirOptions.map((opt) => (
+                                    <option key={opt} value={opt}>{opt}</option>
+                                ))}
+                            </select>
+                        </div>
+                        {setAt && (
+                            <div className="mt-3">
+                                <label className="mb-1 block text-sm text-gray-500">Finished at (mm:ss)</label>
+                                <input
+                                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 text-base outline-none focus:border-primary-dark dark:border-gray-600"
+                                    placeholder="MM:SS"
+                                    value={localTimeDisplay}
+                                    onChange={(e) => setLocalTimeDisplay(e.target.value)}
+                                    onBlur={(e) => {
+                                        const val = e.target.value.trim()
+                                        if (!val || !val.includes(':')) return
+                                        const newISO = fromLocalMMSS(val, setAt, timezone)
+                                        setSetAt(newISO)
+                                        setLocalTimeDisplay(toLocalMMSS(newISO, timezone))
+                                    }}
+                                />
+                            </div>
                         )}
                     </div>
-                    <div className="min-w-0 flex-1 truncate">{weight}kg</div>
-                    <div className="min-w-0 flex-1 flex flex-col items-center text-xs">
-                        <span className="font-semibold">#{index + 1}</span>
-                        {mmss && <span className="truncate opacity-60">{mmss}</span>}
-                        {diff && <span className="truncate opacity-60">rest {diff}</span>}
-                    </div>
-                    <div className="min-w-0 flex-1 truncate">{reps}r.</div>
-                    <div className="min-w-0 flex-1 truncate">{rir} RIR</div>
                 </div>
             )}
+
             {isOwner && isLast && (
                 <ButtonPlusIcon
                     size="small"
@@ -297,7 +279,7 @@ const BoxResult = ({
                     onClick={() =>
                         openNewResult({
                             reps: parseInt(reps),
-                            weight: parseFloat(weight),
+                            weight: parseFloat(weight.replace(',', '.')),
                             rir: parseInt(rir),
                         })
                     }
