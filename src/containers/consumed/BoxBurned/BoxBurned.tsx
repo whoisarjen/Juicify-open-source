@@ -17,6 +17,8 @@ const BoxBurned = () => {
         burnedCalories = [],
         workoutResults = [],
         burnedCaloriesTotalSum,
+        steps,
+        stepCalories,
     } = useBurned({ username, startDate: whenAdded, endDate: whenAdded })
 
     return (
@@ -40,6 +42,25 @@ const BoxBurned = () => {
                     <div />
                 )}
             </div>
+
+            {stepCalories > 0 && (
+                <>
+                    <div className="h-px w-full bg-glass-border my-1" />
+                    <div className="flex items-center justify-between py-1.5">
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs font-semibold text-[#9ca3af]">
+                                {steps.toLocaleString()} steps
+                            </span>
+                            <span className="text-[9px] text-[#7a7a7a] bg-[rgba(255,255,255,0.04)] rounded px-1.5 py-0.5">
+                                auto
+                            </span>
+                        </div>
+                        <span className="text-xs font-bold text-burned">
+                            {stepCalories} kcal
+                        </span>
+                    </div>
+                </>
+            )}
 
             {workoutResults.map(({ id, name, burnedCalories, whenAdded }) => (
                 <Fragment key={id}>
