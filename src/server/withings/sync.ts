@@ -312,41 +312,6 @@ async function syncActivityData(
             hrZone3: activity.hr_zone_3 || 0,
         },
     })
-
-    // Also create a BurnedCalories entry for the existing UI
-    const activeCalories = Math.round(activity.calories || 0)
-    if (activeCalories > 0) {
-        const activityDay = moment.utc(activity.date, 'YYYY-MM-DD').startOf('day')
-        const existingBurned = await prisma.burnedCalories.findFirst({
-            where: {
-                userId,
-                source: 'withings',
-                whenAdded: {
-                    gte: activityDay.toDate(),
-                    lte: activityDay.clone().endOf('day').toDate(),
-                },
-            },
-        })
-
-        if (existingBurned) {
-            await prisma.burnedCalories.update({
-                where: {
-                    id_userId: { id: existingBurned.id, userId },
-                },
-                data: { burnedCalories: activeCalories },
-            })
-        } else {
-            await prisma.burnedCalories.create({
-                data: {
-                    userId,
-                    name: 'Withings Activity',
-                    burnedCalories: activeCalories,
-                    whenAdded: activityDay.toDate(),
-                    source: 'withings',
-                },
-            })
-        }
-    }
 }
 
 async function syncWorkouts(
@@ -496,38 +461,6 @@ async function syncActivityRange(
                 hrZone3: activity.hr_zone_3 || 0,
             },
         })
-
-        const activeCalories = Math.round(activity.calories || 0)
-        if (activeCalories > 0) {
-            const startOfDay = moment.utc(activity.date, 'YYYY-MM-DD').startOf('day')
-            const existingBurned = await prisma.burnedCalories.findFirst({
-                where: {
-                    userId,
-                    source: 'withings',
-                    whenAdded: {
-                        gte: startOfDay.toDate(),
-                        lte: startOfDay.clone().endOf('day').toDate(),
-                    },
-                },
-            })
-
-            if (existingBurned) {
-                await prisma.burnedCalories.update({
-                    where: { id_userId: { id: existingBurned.id, userId } },
-                    data: { burnedCalories: activeCalories },
-                })
-            } else {
-                await prisma.burnedCalories.create({
-                    data: {
-                        userId,
-                        name: 'Withings Activity',
-                        burnedCalories: activeCalories,
-                        whenAdded: startOfDay.toDate(),
-                        source: 'withings',
-                    },
-                })
-            }
-        }
     }
 }
 
