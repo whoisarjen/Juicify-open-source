@@ -1,8 +1,43 @@
 import { z } from "zod"
 import { omit } from "lodash"
+import { type PrismaClient } from '@prisma/client'
 
 import { router, publicProcedure, protectedProcedure } from "../trpc"
 import { measurementSchema, createMeasurementSchema } from "@/server/schema/measurement.schema"
+
+async function syncUserWeight(
+    prisma: PrismaClient,
+    userId: number,
+    measurementWeight: number,
+    measurementDate: Date,
+) {
+    const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } })
+    if (measurementDate >= user.weightUpdatedAt) {
+        await prisma.user.update({
+            where: { id: userId },
+            data: {
+                weight: measurementWeight,
+                weightUpdatedAt: measurementDate,
+            },
+        })
+    }
+}
+
+async function recalcUserWeight(prisma: PrismaClient, userId: number) {
+    const latest = await prisma.measurement.findFirst({
+        where: { userId },
+        orderBy: { whenAdded: 'desc' },
+    })
+    if (latest) {
+        await prisma.user.update({
+            where: { id: userId },
+            data: {
+                weight: latest.weight,
+                weightUpdatedAt: latest.whenAdded,
+            },
+        })
+    }
+}
 
 export const measurementRouter = router({
     getDay: publicProcedure
@@ -60,17 +95,24 @@ export const measurementRouter = router({
     create: protectedProcedure
         .input(createMeasurementSchema)
         .mutation(async ({ ctx, input }) => {
-            return await ctx.prisma.measurement.create({
+            const measurement = await ctx.prisma.measurement.create({
                 data: {
                     ...input,
                     userId: ctx.session.user.id,
                 }
             })
+            await syncUserWeight(
+                ctx.prisma,
+                ctx.session.user.id,
+                Number(input.weight),
+                input.whenAdded ?? new Date(),
+            )
+            return measurement
         }),
     update: protectedProcedure
         .input(measurementSchema)
         .mutation(async ({ ctx, input }) => {
-            return await ctx.prisma.measurement.update({
+            const measurement = await ctx.prisma.measurement.update({
                 data: omit(input, ['id']),
                 where: {
                     id_userId: {
@@ -79,6 +121,13 @@ export const measurementRouter = router({
                     }
                 }
             })
+            await syncUserWeight(
+                ctx.prisma,
+                ctx.session.user.id,
+                Number(measurement.weight),
+                measurement.whenAdded,
+            )
+            return measurement
         }),
     delete: protectedProcedure
         .input(
@@ -87,7 +136,7 @@ export const measurementRouter = router({
             })
         )
         .mutation(async ({ ctx, input: { id } }) => {
-            return await ctx.prisma.measurement.delete({
+            const deleted = await ctx.prisma.measurement.delete({
                 where: {
                     id_userId: {
                         id,
@@ -95,5 +144,9 @@ export const measurementRouter = router({
                     }
                 }
             })
+            if (deleted.whenAdded.getTime() >= ctx.session.user.weightUpdatedAt.getTime()) {
+                await recalcUserWeight(ctx.prisma, ctx.session.user.id)
+            }
+            return deleted
         }),
 })
