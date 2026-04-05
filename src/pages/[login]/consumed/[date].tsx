@@ -67,9 +67,9 @@ const Consumed = () => {
 
                     {isOwner && <SectionDiaryManaging />}
 
-                    {isOwner && <BoxSupplements whenAdded={whenAdded} />}
-
                     {isOwner && <BoxMorningPulse whenAdded={whenAdded} />}
+
+                    {isOwner && <BoxSupplements whenAdded={whenAdded} />}
 
                     <BoxBurned />
                 </div>
