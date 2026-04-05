@@ -169,18 +169,6 @@ const BoxResult = ({
                 onClick={() => isOwner && setOpen(true)}
                 className="flex flex-row border p-2 rounded items-center justify-center overflow-hidden"
             >
-                <div className="min-w-0 flex-1 truncate" onClick={(e) => e.stopPropagation()}>
-                    {isOwner && (
-                        <DialogConfirm onConfirmed={deleteResult}>
-                            <button
-                                className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
-                                aria-label="delete"
-                            >
-                                <Trash2 size={20} />
-                            </button>
-                        </DialogConfirm>
-                    )}
-                </div>
                 <div className="min-w-0 flex-1 truncate">{weight}kg</div>
                 <div className="min-w-0 flex-1 flex flex-col items-center text-xs">
                     <span className="font-semibold">#{index + 1}</span>
@@ -196,7 +184,17 @@ const BoxResult = ({
                     <div className="fixed inset-0 bg-black/50" onClick={handleSave} />
                     <div className="relative z-50 w-full max-w-lg rounded-t-2xl sm:rounded-lg bg-white p-4 shadow-xl dark:bg-gray-900 sm:mx-4">
                         <div className="mb-4 flex items-center justify-between">
-                            <span className="text-base font-semibold">Set #{index + 1}</span>
+                            <div className="flex items-center gap-2">
+                                <span className="text-base font-semibold">Set #{index + 1}</span>
+                                <DialogConfirm onConfirmed={() => { setOpen(false); deleteResult() }}>
+                                    <button
+                                        className="rounded-full p-2 text-red-500 hover:bg-red-500/10"
+                                        aria-label="delete"
+                                    >
+                                        <Trash2 size={18} />
+                                    </button>
+                                </DialogConfirm>
+                            </div>
                             <button
                                 className="rounded bg-primary-dark px-4 py-2 text-base text-[#121212] hover:bg-[#64b5f6]"
                                 onClick={handleSave}
