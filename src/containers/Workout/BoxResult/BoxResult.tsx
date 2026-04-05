@@ -159,14 +159,14 @@ const BoxResult = ({
             {open && isOwner ? (
                 <>
                     <div
-                        className="flex flex-row border p-2 rounded items-center justify-center"
+                        className="flex flex-row border p-2 rounded items-center justify-center overflow-hidden"
                         onClick={() => {
                             setOpen(false)
                             changeResult(buildResult({ open: false }))
                         }}
                     >
-                        <div className="flex-1">Click to save</div>
-                        <div className="flex-1 flex flex-col items-center text-xs opacity-60">
+                        <div className="min-w-0 flex-1 truncate">Click to save</div>
+                        <div className="min-w-0 flex-1 flex flex-col items-center text-xs opacity-60">
                             {mmss ? (
                                 <>
                                     <span>{mmss}</span>
@@ -270,8 +270,8 @@ const BoxResult = ({
                     )}
                 </>
             ) : (
-                <div onClick={() => setOpen(true)} className="flex flex-row border p-2 rounded items-center justify-center">
-                    <div className="flex-1">
+                <div onClick={() => setOpen(true)} className="flex flex-row border p-2 rounded items-center justify-center overflow-hidden">
+                    <div className="min-w-0 flex-1 truncate">
                         {isOwner && (
                             <DialogConfirm onConfirmed={deleteResult}>
                                 <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="delete">
@@ -280,14 +280,14 @@ const BoxResult = ({
                             </DialogConfirm>
                         )}
                     </div>
-                    <div className="flex-1">{weight}kg</div>
-                    <div className="flex-1 flex flex-col items-center text-xs">
+                    <div className="min-w-0 flex-1 truncate">{weight}kg</div>
+                    <div className="min-w-0 flex-1 flex flex-col items-center text-xs">
                         <span className="font-semibold">#{index + 1}</span>
-                        {mmss && <span className="opacity-60">{mmss}</span>}
-                        {diff && <span className="opacity-60">rest {diff}</span>}
+                        {mmss && <span className="truncate opacity-60">{mmss}</span>}
+                        {diff && <span className="truncate opacity-60">rest {diff}</span>}
                     </div>
-                    <div className="flex-1">{reps}r.</div>
-                    <div className="flex-1">{rir} RIR</div>
+                    <div className="min-w-0 flex-1 truncate">{reps}r.</div>
+                    <div className="min-w-0 flex-1 truncate">{rir} RIR</div>
                 </div>
             )}
             {isOwner && isLast && (

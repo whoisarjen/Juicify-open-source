@@ -166,7 +166,7 @@ const WorkoutResultPage = () => {
         deleteWorkoutResult.isPending
 
     return (
-        <form className="flex flex-1 flex-col gap-3">
+        <form className="flex min-w-0 flex-1 flex-col gap-3 overflow-hidden">
             <NavbarWorkout
                 isDisabled={isLoading}
                 isLoading={isLoading}

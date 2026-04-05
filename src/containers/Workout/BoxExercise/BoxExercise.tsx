@@ -116,11 +116,11 @@ const BaseBoxExercise = ({
             {!!previousExercise?.results?.length && (
                 <div className="flex flex-col gap-1 opacity-50">
                     {previousExercise.results.map((result, index) => (
-                        <div key={index} className="flex flex-row border border-dashed p-2 rounded items-center justify-center">
-                            <div className="flex-1">{result.weight}kg</div>
-                            <div className="flex-1">#{index + 1}</div>
-                            <div className="flex-1">{result.reps}r.</div>
-                            <div className="flex-1">{result.rir ?? 0} RIR</div>
+                        <div key={index} className="flex flex-row border border-dashed p-2 rounded items-center justify-center overflow-hidden">
+                            <div className="min-w-0 flex-1 truncate">{result.weight}kg</div>
+                            <div className="min-w-0 flex-1 truncate">#{index + 1}</div>
+                            <div className="min-w-0 flex-1 truncate">{result.reps}r.</div>
+                            <div className="min-w-0 flex-1 truncate">{result.rir ?? 0} RIR</div>
                         </div>
                     ))}
                 </div>
