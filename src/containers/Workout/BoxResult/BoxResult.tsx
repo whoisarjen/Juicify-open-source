@@ -169,13 +169,12 @@ const BoxResult = ({
                 onClick={() => isOwner && setOpen(true)}
                 className="flex flex-row border p-2 rounded items-center justify-center overflow-hidden"
             >
-                <div className="min-w-0 flex-1 truncate">
+                <div className="min-w-0 flex-1 truncate" onClick={(e) => e.stopPropagation()}>
                     {isOwner && (
                         <DialogConfirm onConfirmed={deleteResult}>
                             <button
                                 className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
                                 aria-label="delete"
-                                onClick={(e) => e.stopPropagation()}
                             >
                                 <Trash2 size={20} />
                             </button>
