@@ -1,8 +1,7 @@
-import { Info, UtensilsCrossed } from 'lucide-react'
+import { UtensilsCrossed } from 'lucide-react'
 import useTranslation from 'next-translate/useTranslation'
 import { useState } from 'react'
 import { getCalories } from '@/utils/consumed.utils'
-import DialogShowProduct from './DialogShowProduct/DialogShowProduct'
 
 interface BoxProductProps {
     product: Product & { howMany?: number }
@@ -69,13 +68,6 @@ const BoxAddProduct = ({
                     </span>
                 </div>
             </div>
-            <DialogShowProduct product={product}>
-                <div>
-                    <button className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800">
-                        <Info size={20} className="text-[#90caf9]" />
-                    </button>
-                </div>
-            </DialogShowProduct>
             {hasPortion && (
                 <button
                     type="button"
