@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from 'react'
 import TopNavbar from './TopNavbar'
 import { useSession } from 'next-auth/react'
 import { DialogMissingSettings } from '@/components/DialogMissingSettings'
-import useTranslation from 'next-translate/useTranslation'
 import moment from 'moment'
 import { trpc } from '@/utils/trpc.utils'
 import { handleSignOut } from '@/utils/user.utils'
@@ -32,7 +31,6 @@ const getCookie = async (cookieName: string) => {
 }
 
 const Layout = ({ children }: { children: any }) => {
-    const { t } = useTranslation('home')
     const router = useRouter()
     const [isAllowedLocation, setIsAllowedLocation] = useState(
         () => !REQUIRED_AUTH_PATHS.includes(router.pathname)
@@ -164,17 +162,6 @@ const Layout = ({ children }: { children: any }) => {
                 </div>
             </div>
             {!isLandingPage && <Footer />}
-            {status === 'unauthenticated' && !isNeutralPath && (
-                <div className="fixed bottom-24 left-0 flex w-full items-center justify-center">
-                    <button
-                        className="rounded bg-primary-dark px-4 py-2 text-[#121212] hover:bg-[#64b5f6] disabled:opacity-50"
-                        aria-label="authorization"
-                        onClick={() => router.push(SIGN_IN_PATH)}
-                    >
-                        {t('I_ALSO_WANT_TO_CHANGE_MY_BODY')}
-                    </button>
-                </div>
-            )}
             {sessionData?.user?.height === 0 && !skippedSettings && (
                 <DialogMissingSettings onSkip={handleSkipMissingSettings} />
             )}
