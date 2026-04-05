@@ -31,21 +31,43 @@ export const withingsRouter = router({
             const dayStart = moment(date, 'YYYY-MM-DD').startOf('day').toDate()
             const dayEnd = moment(date, 'YYYY-MM-DD').endOf('day').toDate()
 
-            const [activity, sleep] = await Promise.all([
+            const [activity, sleep, workouts] = await Promise.all([
                 ctx.prisma.withingsActivity.findFirst({
                     where: { userId, date: { gte: dayStart, lte: dayEnd } },
                 }),
                 ctx.prisma.withingsSleep.findFirst({
                     where: { userId, date: { gte: dayStart, lte: dayEnd } },
                 }),
+                ctx.prisma.withingsWorkout.findMany({
+                    where: { userId, startDate: { gte: dayStart, lte: dayEnd } },
+                    orderBy: { startDate: 'asc' },
+                    select: {
+                        category: true,
+                        categoryName: true,
+                        startDate: true,
+                        endDate: true,
+                        steps: true,
+                        distance: true,
+                        calories: true,
+                    },
+                }),
             ])
 
-            if (!activity && !sleep) return null
+            if (!activity && !sleep && workouts.length === 0) return null
 
             return {
                 steps: activity?.steps ?? null,
                 totalCalories: activity ? Math.round(Number(activity.totalCalories)) : null,
                 activeCalories: activity ? Math.round(Number(activity.activeCalories)) : null,
+                workouts: workouts.map(w => ({
+                    category: w.category,
+                    categoryName: w.categoryName,
+                    startDate: w.startDate,
+                    endDate: w.endDate,
+                    steps: w.steps,
+                    distance: Number(w.distance),
+                    durationMin: (w.endDate.getTime() - w.startDate.getTime()) / 60000,
+                })),
                 totalSleepTime: sleep?.totalSleepTime ?? null,
                 sleepScore: sleep?.sleepScore ?? null,
                 hrAverage: sleep?.hrAverage ?? null,

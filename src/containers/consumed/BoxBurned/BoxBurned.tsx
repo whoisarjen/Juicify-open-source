@@ -19,6 +19,7 @@ const BoxBurned = () => {
         burnedCaloriesTotalSum,
         steps,
         stepCalories,
+        withingsWorkouts = [],
     } = useBurned({ username, startDate: whenAdded, endDate: whenAdded })
 
     return (
@@ -61,6 +62,26 @@ const BoxBurned = () => {
                     </div>
                 </>
             )}
+
+            {withingsWorkouts.map((w, i) => (
+                <Fragment key={`withings-${i}`}>
+                    <div className="h-px w-full bg-glass-border my-1" />
+                    <div className="flex items-center justify-between py-1.5">
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs font-semibold text-[#9ca3af]">
+                                {w.categoryName ?? 'Activity'} · {w.durationMin}min
+                                {w.distance > 0 && ` · ${(w.distance / 1000).toFixed(1)}km`}
+                            </span>
+                            <span className="text-[9px] text-[#7a7a7a] bg-[rgba(255,255,255,0.04)] rounded px-1.5 py-0.5">
+                                auto
+                            </span>
+                        </div>
+                        <span className="text-xs font-bold text-burned">
+                            {w.netCalories} kcal
+                        </span>
+                    </div>
+                </Fragment>
+            ))}
 
             {workoutResults.map(({ id, name, burnedCalories, whenAdded }) => (
                 <Fragment key={id}>
