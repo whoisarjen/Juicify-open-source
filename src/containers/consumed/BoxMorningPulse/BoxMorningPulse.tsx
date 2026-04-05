@@ -31,7 +31,7 @@ const BoxMorningPulse = ({ whenAdded }: BoxMorningPulseProps) => {
 
     const bounds = useMemo(() => getLocalDayBounds(whenAdded), [whenAdded])
 
-    const { data: measurement } = trpc.measurement.getDay.useQuery(
+    const { data: measurement, isFetched } = trpc.measurement.getDay.useQuery(
         { username, whenAdded: bounds.startDate, whenAddedEnd: bounds.endDate },
         { enabled: !!username && !!whenAdded },
     )
@@ -52,13 +52,10 @@ const BoxMorningPulse = ({ whenAdded }: BoxMorningPulseProps) => {
     const isDone = answered === total
 
     const [expanded, setExpanded] = useState(false)
-    const [hasLoaded, setHasLoaded] = useState(false)
 
     useEffect(() => {
-        if (hasLoaded || measurement === undefined) return
-        setHasLoaded(true)
-        if (!isDone) setExpanded(true)
-    }, [measurement, isDone, hasLoaded])
+        setExpanded(isFetched && !isDone)
+    }, [isFetched, isDone, whenAdded])
 
     const utils = trpc.useUtils()
 
