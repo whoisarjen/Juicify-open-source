@@ -49,11 +49,6 @@ export const userSchema = z.object({
     carbsPercentAsSugar: decimal(z.coerce.number().min(0).max(100)).optional(),
     birth: z.coerce.date().optional(),
     height: decimal(z.coerce.number().min(0).max(250)).optional(),
-    description: z.string().max(255).optional(),
-    website: z.string().max(150).optional(),
-    facebook: z.string().max(150).optional(),
-    instagram: z.string().max(150).optional(),
-    twitter: z.string().max(150).optional(),
     searchAllPlans: z.boolean().optional(),
 })
 

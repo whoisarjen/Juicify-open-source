@@ -258,63 +258,6 @@ const SettingsPage = () => {
                         register={register('birth')}
                     />
 
-                    <div>
-                        <label className="mb-1 block text-[11px] font-semibold text-[#9ca3af]">{t('Description')}</label>
-                        <input
-                            className="w-full rounded-lg bg-[rgba(255,255,255,0.03)] border border-glass-border px-3 py-2 outline-none text-sm text-zinc-200 focus:border-glass-border-accent transition-all duration-300"
-                            type="text"
-                            {...register('description')}
-                        />
-                        {errors.description && <p className="mt-1 text-[10px] text-red-400">{errors.description.message}</p>}
-                    </div>
-                    <div>
-                        <label className="mb-1 block text-[11px] font-semibold text-[#9ca3af]">{t('Website')}</label>
-                        <div className="flex items-center rounded-lg bg-[rgba(255,255,255,0.03)] border border-glass-border focus-within:border-glass-border-accent transition-all duration-300">
-                            <span className="pl-3 text-[11px] text-[#7a7a7a]">https://</span>
-                            <input
-                                className="flex-1 min-w-0 bg-transparent px-3 py-2 outline-none text-sm text-zinc-200"
-                                type="text"
-                                {...register('website')}
-                            />
-                        </div>
-                        {errors.website && <p className="mt-1 text-[10px] text-red-400">{errors.website.message}</p>}
-                    </div>
-                    <div>
-                        <label className="mb-1 block text-[11px] font-semibold text-[#9ca3af]">Facebook</label>
-                        <div className="flex items-center rounded-lg bg-[rgba(255,255,255,0.03)] border border-glass-border focus-within:border-glass-border-accent transition-all duration-300">
-                            <span className="pl-3 text-[11px] text-[#7a7a7a]">facebook.com/</span>
-                            <input
-                                className="flex-1 min-w-0 bg-transparent px-3 py-2 outline-none text-sm text-zinc-200"
-                                type="text"
-                                {...register('facebook')}
-                            />
-                        </div>
-                        {errors.facebook && <p className="mt-1 text-[10px] text-red-400">{errors.facebook.message}</p>}
-                    </div>
-                    <div>
-                        <label className="mb-1 block text-[11px] font-semibold text-[#9ca3af]">Instagram</label>
-                        <div className="flex items-center rounded-lg bg-[rgba(255,255,255,0.03)] border border-glass-border focus-within:border-glass-border-accent transition-all duration-300">
-                            <span className="pl-3 text-[11px] text-[#7a7a7a]">instagram.com/</span>
-                            <input
-                                className="flex-1 min-w-0 bg-transparent px-3 py-2 outline-none text-sm text-zinc-200"
-                                type="text"
-                                {...register('instagram')}
-                            />
-                        </div>
-                        {errors.instagram && <p className="mt-1 text-[10px] text-red-400">{errors.instagram.message}</p>}
-                    </div>
-                    <div>
-                        <label className="mb-1 block text-[11px] font-semibold text-[#9ca3af]">Twitter</label>
-                        <div className="flex items-center rounded-lg bg-[rgba(255,255,255,0.03)] border border-glass-border focus-within:border-glass-border-accent transition-all duration-300">
-                            <span className="pl-3 text-[11px] text-[#7a7a7a]">twitter.com/</span>
-                            <input
-                                className="flex-1 min-w-0 bg-transparent px-3 py-2 outline-none text-sm text-zinc-200"
-                                type="text"
-                                {...register('twitter')}
-                            />
-                        </div>
-                        {errors.twitter && <p className="mt-1 text-[10px] text-red-400">{errors.twitter.message}</p>}
-                    </div>
                 </div>
             </div>
 
