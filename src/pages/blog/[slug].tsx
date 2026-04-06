@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { type GetServerSideProps } from 'next'
 import useTranslation from 'next-translate/useTranslation'
+import { useEffect } from 'react'
 
 import { Clock, Calendar, ArrowLeft } from 'lucide-react'
 import moment from 'moment'
@@ -102,6 +103,24 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
     const pageDescription = article.metaDesc || article.excerpt
     const canonicalUrl = `https://juicify.whoisarjen.com/blog/${article.slug}`
 
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed')
+                        observer.unobserve(entry.target)
+                    }
+                })
+            },
+            { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
+        )
+        document
+            .querySelectorAll('.reveal-on-scroll')
+            .forEach((el) => observer.observe(el))
+        return () => observer.disconnect()
+    }, [])
+
     const articleJsonLd = {
         '@context': 'https://schema.org',
         '@type': 'Article',
@@ -165,7 +184,27 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
     }
 
     return (
-        <div className="flex w-full flex-col">
+        <div
+            className="flex w-full flex-col overflow-x-hidden"
+            style={{
+                backgroundImage:
+                    'radial-gradient(circle, rgba(144, 202, 249, 0.035) 1px, transparent 1px)',
+                backgroundSize: '32px 32px',
+            }}
+        >
+            <style>{`
+                .reveal-on-scroll {
+                    opacity: 0;
+                    transform: translateY(28px);
+                    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+                }
+                .reveal-on-scroll.revealed {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            `}</style>
+
             <Head>
                 <title>{pageTitle}</title>
                 <meta name="description" content={pageDescription} />
@@ -217,7 +256,16 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
                 />
             </Head>
 
-            <div className="mx-auto w-full max-w-4xl py-6">
+            {/* Floating ambient orb */}
+            <div
+                className="pointer-events-none fixed right-[5%] top-[20%] h-[220px] w-[220px] rounded-full opacity-[0.08] blur-[80px] will-change-transform md:h-[360px] md:w-[360px] md:blur-[120px]"
+                style={{
+                    background:
+                        'radial-gradient(circle, #90caf9, #42a5f5, transparent)',
+                }}
+            />
+
+            <div className="mx-auto w-full max-w-4xl px-6 py-6">
                 {/* Back to Blog */}
                 <Link
                     href="/blog"
@@ -250,7 +298,7 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
 
                 {/* Hero Image */}
                 {article.featuredImageUrl && (
-                    <div className="mb-6 overflow-hidden rounded-2xl">
+                    <div className="reveal-on-scroll mb-6 overflow-hidden rounded-2xl">
                         <img
                             src={article.featuredImageUrl}
                             alt={article.featuredImageAlt || article.title}
@@ -287,7 +335,7 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
                 )}
 
                 {/* Article Title */}
-                <h1 className="mb-4 text-[1.75rem] font-bold leading-[1.2] md:text-[2.5rem]">
+                <h1 className="mb-4 text-[1.75rem] font-bold leading-[1.2] text-white md:text-[2.5rem]">
                     {article.title}
                 </h1>
 
@@ -323,8 +371,8 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
 
                 {/* References */}
                 {article.references.length > 0 && (
-                    <div className="mt-12 border-t border-white/10 pt-8">
-                        <h2 className="mb-4 text-xl font-bold">
+                    <div className="reveal-on-scroll mt-12 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 backdrop-blur-sm md:p-8">
+                        <h2 className="mb-4 text-xl font-bold text-white">
                             {t('REFERENCES')}
                         </h2>
                         <ol className="list-decimal space-y-2 pl-6 text-sm text-gray-400">
@@ -352,17 +400,17 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
 
                 {/* FAQ */}
                 {article.faqs.length > 0 && (
-                    <div className="mt-12 border-t border-white/10 pt-8">
-                        <h2 className="mb-4 text-xl font-bold">
+                    <div className="reveal-on-scroll mt-12">
+                        <h2 className="mb-4 text-xl font-bold text-white">
                             {t('FAQ')}
                         </h2>
                         <div className="space-y-2">
                             {article.faqs.map((faq, i) => (
                                 <details
                                     key={i}
-                                    className="group rounded-xl border border-white/5 bg-white/[0.02]"
+                                    className="group rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-sm"
                                 >
-                                    <summary className="flex cursor-pointer items-center justify-between p-4 text-[0.95rem] font-semibold [&::-webkit-details-marker]:hidden">
+                                    <summary className="flex cursor-pointer items-center justify-between p-4 text-[0.95rem] font-semibold text-white [&::-webkit-details-marker]:hidden">
                                         {faq.question}
                                         <svg
                                             className="h-5 w-5 shrink-0 text-[#90caf9] transition-transform group-open:rotate-180"
@@ -385,11 +433,14 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
                         </div>
                     </div>
                 )}
+            </div>
 
-                {/* Related Articles */}
-                {article.relatedArticles.length > 0 && (
-                    <div className="mt-12 border-t border-white/10 pt-8">
-                        <h2 className="mb-6 text-xl font-bold">
+            {/* Related Articles — full width section */}
+            {article.relatedArticles.length > 0 && (
+                <section className="px-6 pb-8 pt-4">
+                    <div className="reveal-on-scroll mx-auto max-w-6xl">
+                        <div className="mb-4 h-px w-full bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+                        <h2 className="mb-6 text-xl font-bold text-white">
                             {t('RELATED_ARTICLES')}
                         </h2>
                         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -399,7 +450,7 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
                                     href={`/blog/${related.slug}`}
                                     className="group block"
                                 >
-                                    <div className="flex h-full flex-col overflow-hidden rounded-xl bg-white shadow transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] dark:bg-gray-800">
+                                    <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-white/[0.12] hover:bg-white/[0.04]">
                                         {related.featuredImageUrl && (
                                             <img
                                                 src={related.featuredImageUrl}
@@ -410,7 +461,7 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
                                                 className="h-[180px] w-full object-cover"
                                             />
                                         )}
-                                        <div className="flex flex-1 flex-col p-2.5">
+                                        <div className="flex flex-1 flex-col p-4">
                                             <div className="mb-2 flex flex-wrap items-center gap-2">
                                                 {related.niche && (
                                                     <span className="rounded-full bg-[#90caf9]/10 px-2.5 py-0.5 text-[0.7rem] font-semibold text-[#90caf9]">
@@ -418,19 +469,17 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
                                                     </span>
                                                 )}
                                             </div>
-                                            <h3 className="mb-1 line-clamp-2 text-base font-bold leading-[1.3]">
+                                            <h3 className="mb-1 line-clamp-2 text-base font-bold leading-[1.3] text-white">
                                                 {related.title}
                                             </h3>
-                                            <p className="mb-auto pb-3 text-sm text-gray-400 line-clamp-2">
+                                            <p className="mb-auto pb-3 text-sm leading-relaxed text-gray-400 line-clamp-2">
                                                 {related.excerpt}
                                             </p>
                                             <div className="flex items-center gap-4 text-xs text-gray-500">
                                                 {related.readingTimeMinutes >
                                                     0 && (
                                                     <span className="flex items-center gap-1">
-                                                        <Clock
-                                                            size={14}
-                                                        />
+                                                        <Clock size={14} />
                                                         {t('MINUTES_READ', {
                                                             count: related.readingTimeMinutes,
                                                         })}
@@ -438,9 +487,7 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
                                                 )}
                                                 {related.publishedAt && (
                                                     <span className="flex items-center gap-1">
-                                                        <Calendar
-                                                            size={14}
-                                                        />
+                                                        <Calendar size={14} />
                                                         {moment(
                                                             related.publishedAt
                                                         ).format(
@@ -455,10 +502,13 @@ const ArticlePage = ({ article, locale }: ArticlePageProps) => {
                             ))}
                         </div>
                     </div>
-                )}
+                </section>
+            )}
 
-                {/* Bottom Back to Blog */}
-                <div className="mt-12 border-t border-white/10 pt-6">
+            {/* Bottom Back to Blog */}
+            <div className="mx-auto w-full max-w-4xl px-6 pb-8">
+                <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+                <div className="pt-6">
                     <Link
                         href="/blog"
                         className="inline-flex items-center gap-1 text-sm text-[#90caf9] transition-colors hover:text-[#64b5f6]"

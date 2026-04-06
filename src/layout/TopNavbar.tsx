@@ -11,13 +11,17 @@ const TopNavbar = () => {
     const { data: sessionData } = useSession()
     const username = sessionData?.user?.username
 
-    const navItems = [
-        { key: 'diary', link: `/${username}/consumed/${moment().format('YYYY-MM-DD')}`, text: t('Diary'), icon: <BookOpen size={16} /> },
-        { key: 'measurements', link: '/measurements', text: t('Measurements'), icon: <Trophy size={16} /> },
-        { key: 'workout', link: `/${username}/workout`, text: t('Workout'), icon: <Dumbbell size={16} /> },
-        { key: 'coach', link: '/coach', text: t('Coach'), icon: <Bot size={16} /> },
-        { key: 'blog', link: '/blog', text: t('Blog'), icon: <GraduationCap size={16} /> },
+    const allNavItems = [
+        { key: 'diary', link: `/${username}/consumed/${moment().format('YYYY-MM-DD')}`, text: t('Diary'), icon: <BookOpen size={16} />, requiresAuth: true },
+        { key: 'measurements', link: '/measurements', text: t('Measurements'), icon: <Trophy size={16} />, requiresAuth: true },
+        { key: 'workout', link: `/${username}/workout`, text: t('Workout'), icon: <Dumbbell size={16} />, requiresAuth: true },
+        { key: 'coach', link: '/coach', text: t('Coach'), icon: <Bot size={16} />, requiresAuth: true },
+        { key: 'blog', link: '/blog', text: t('Blog'), icon: <GraduationCap size={16} />, requiresAuth: false },
     ]
+
+    const navItems = sessionData
+        ? allNavItems
+        : allNavItems.filter((item) => !item.requiresAuth)
 
     const navigate = (link: string) => {
         if (sessionData?.user || link === '/blog') {

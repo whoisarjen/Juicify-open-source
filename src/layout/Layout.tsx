@@ -153,15 +153,25 @@ const Layout = ({ children }: { children: any }) => {
     const isNeutralPath = isBlog || router.pathname === SIGN_IN_PATH
     const isLandingPage = router.pathname === SIGN_IN_PATH && status !== 'loading' && !sessionData?.user
 
+    const isFullWidthPage = isLandingPage || isBlog
+
     return (
-        <main className={`pb-safe dark container flex max-w-5xl flex-col ${isLandingPage ? 'min-h-screen' : 'h-screen'}`}>
-            {status !== 'loading' && !isLandingPage && <TopNavbar />}
-            <div className={`flex flex-1 ${isLandingPage ? '' : 'flex-row pt-4'} px-4`}>
-                <div className="pb-safe mx-auto flex w-full max-w-3xl min-w-0 items-stretch">
+        <main className={`pb-safe dark container flex flex-col ${isFullWidthPage ? 'min-h-screen' : 'max-w-5xl h-screen'}`}>
+            {status !== 'loading' && (
+                isFullWidthPage ? (
+                    <div className="mx-auto w-full max-w-5xl px-4">
+                        <TopNavbar />
+                    </div>
+                ) : (
+                    <TopNavbar />
+                )
+            )}
+            <div className={`flex flex-1 ${isLandingPage ? '' : 'flex-row pt-4'} ${isFullWidthPage ? '' : 'px-4'}`}>
+                <div className={`pb-safe mx-auto flex w-full min-w-0 items-stretch ${isFullWidthPage ? '' : 'max-w-3xl'}`}>
                     {status === 'loading' ? null : children}
                 </div>
             </div>
-            {!isLandingPage && <Footer />}
+            <Footer />
             {sessionData?.user?.height === 0 && !skippedSettings && (
                 <DialogMissingSettings onSkip={handleSkipMissingSettings} />
             )}
