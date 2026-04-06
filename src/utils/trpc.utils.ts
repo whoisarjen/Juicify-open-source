@@ -1,4 +1,4 @@
-import { httpBatchLink, loggerLink } from "@trpc/client";
+import { httpBatchLink, loggerLink, TRPCClientError } from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
 import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
 import { QueryClient } from "@tanstack/react-query";
@@ -26,6 +26,15 @@ function getQueryClient() {
                     refetchOnWindowFocus: true,
                     refetchOnReconnect: true,
                     retry: false,
+                    throwOnError: (error) => {
+                        if (error instanceof TRPCClientError) {
+                            const httpStatus = error.data?.httpStatus
+                            if (httpStatus && httpStatus >= 400 && httpStatus < 500) {
+                                return true
+                            }
+                        }
+                        return false
+                    },
                 },
                 mutations: {
                     retry: false,

@@ -2,11 +2,11 @@ import { z } from "zod";
 import { omit } from "lodash";
 import moment from "moment"
 
-import { router, publicProcedure, protectedProcedure } from "../trpc";
+import { router, protectedProcedure } from "../trpc";
 import { workoutResultSchema } from "@/server/schema/workoutResult.schema";
 
 export const workoutResultRouter = router({
-    get: publicProcedure
+    get: protectedProcedure
         .input(
             z.object({
                 id: z.coerce.number(),
@@ -15,6 +15,7 @@ export const workoutResultRouter = router({
             })
         )
         .query(async ({ ctx, input: { id, username, searchAllPlans } }) => {
+
             const workoutResult = await ctx.prisma.workoutResult.findFirstOrThrow({
                 where: {
                     id,
@@ -83,7 +84,7 @@ export const workoutResultRouter = router({
                 previousWorkoutResult,
             } as unknown as Omit<WorkoutResult<typeof workoutResult>, 'workoutPlan'> & { workoutPlan?: WorkoutPlan } & { previousWorkoutResult?: WorkoutResult<typeof workoutResult> }
         }),
-    getDay: publicProcedure
+    getDay: protectedProcedure
         .input(
             z.object({
                 username: z.string(),
@@ -91,6 +92,7 @@ export const workoutResultRouter = router({
             })
         )
         .query(async ({ ctx, input: { username, whenAdded } }) => {
+
             return await ctx.prisma.workoutResult.findMany({
                 where: {
                     whenAdded: {
@@ -106,7 +108,7 @@ export const workoutResultRouter = router({
                 }
             }) as unknown as WorkoutResult[]
         }),
-    getPeriod: publicProcedure
+    getPeriod: protectedProcedure
         .input(
             z.object({
                 username: z.string(),
@@ -115,6 +117,7 @@ export const workoutResultRouter = router({
             })
         )
         .query(async ({ ctx, input: { username, startDate, endDate } }) => {
+
             return await ctx.prisma.workoutResult.findMany({
                 where: {
                     whenAdded: {
@@ -130,7 +133,7 @@ export const workoutResultRouter = router({
                 }
             }) as unknown as WorkoutResult[]
         }),
-    getAll: publicProcedure
+    getAll: protectedProcedure
         .input(
             z.object({
                 username: z.string(),
@@ -139,6 +142,7 @@ export const workoutResultRouter = router({
             })
         )
         .query(async ({ ctx, input: { username, take, cursor } }) => {
+
             const items = await ctx.prisma.workoutResult.findMany({
                 where: {
                     user: {
@@ -217,13 +221,14 @@ export const workoutResultRouter = router({
                 }
             })
         }),
-    getStatistics: publicProcedure
+    getStatistics: protectedProcedure
         .input(
             z.object({
                 username: z.string(),
             })
         )
         .query(async ({ ctx, input: { username } }) => {
+
             // Get ALL workout results for the user (no year filter)
             const workoutResults = await ctx.prisma.workoutResult.findMany({
                 where: {
@@ -259,12 +264,12 @@ export const workoutResultRouter = router({
             }
 
             // Get date range
-            const sortedWorkouts = workoutResults.sort((a, b) => 
+            const sortedWorkouts = workoutResults.sort((a, b) =>
                 new Date(a.whenAdded).getTime() - new Date(b.whenAdded).getTime()
             );
             const earliestDate = moment(sortedWorkouts[0].whenAdded);
             const latestDate = moment(sortedWorkouts[sortedWorkouts.length - 1].whenAdded);
-            
+
             // Initialize detailed statistics structure
             const statistics = {
                 totalWorkouts: workoutResults.length,
@@ -328,7 +333,7 @@ export const workoutResultRouter = router({
                 // Generate all weeks for this month
                 const weeks = [];
                 let weekStart = monthStart.clone().startOf('isoWeek');
-                
+
                 while (weekStart.isBefore(monthEnd) || weekStart.isSame(monthEnd, 'week')) {
                     const weekEnd = weekStart.clone().endOf('isoWeek');
                     const weekNumber = weekStart.isoWeek();
@@ -345,10 +350,10 @@ export const workoutResultRouter = router({
                     for (let day = 0; day < 7; day++) {
                         const currentDay = weekStart.clone().add(day, 'days');
                         if (currentDay.month() === monthStart.month() && currentDay.year() === year) {
-                            const dayWorkouts = weekWorkouts.filter(workout => 
+                            const dayWorkouts = weekWorkouts.filter(workout =>
                                 moment(workout.whenAdded).isSame(currentDay, 'day')
                             );
-                            
+
                             workoutDays.push({
                                 date: currentDay.format('YYYY-MM-DD'),
                                 workouts: dayWorkouts.length,
@@ -376,7 +381,7 @@ export const workoutResultRouter = router({
                 const dailyBreakdown = [];
                 for (let day = 1; day <= monthEnd.date(); day++) {
                     const currentDay = moment([year, monthStart.month(), day]);
-                    const dayWorkouts = monthWorkouts.filter(workout => 
+                    const dayWorkouts = monthWorkouts.filter(workout =>
                         moment(workout.whenAdded).isSame(currentDay, 'day')
                     );
 
@@ -412,7 +417,7 @@ export const workoutResultRouter = router({
             const yearsArray = workoutResults.map(workout => moment(workout.whenAdded).year());
             const uniqueYears = Array.from(new Set(yearsArray));
             for (const year of uniqueYears) {
-                const yearWorkouts = workoutResults.filter(workout => 
+                const yearWorkouts = workoutResults.filter(workout =>
                     moment(workout.whenAdded).year() === year
                 ).length;
                 statistics.yearlyComparison[year.toString()] = yearWorkouts;

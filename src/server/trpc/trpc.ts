@@ -49,8 +49,17 @@ const isAuthed = t.middleware(({ ctx, next }) => {
     })
 })
 
+const isOwner = t.middleware(async ({ ctx, getRawInput, next }) => {
+    const input = await getRawInput() as { username?: string }
+    if (input?.username && ctx.session?.user?.username !== input.username) {
+        throw new TRPCError({ code: 'FORBIDDEN' })
+    }
+    return next()
+})
+
 export const publicProcedure = t.procedure.use(errorHandlingMiddleware)
 
 export const protectedProcedure = t.procedure
     .use(errorHandlingMiddleware)
     .use(isAuthed)
+    .use(isOwner)

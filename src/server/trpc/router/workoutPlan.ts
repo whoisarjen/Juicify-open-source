@@ -1,11 +1,11 @@
 import { z } from "zod";
 import { omit } from "lodash";
 
-import { router, publicProcedure, protectedProcedure } from "../trpc";
+import { router, protectedProcedure } from "../trpc";
 import { createWorkoutPlanSchema, workoutPlanSchema } from "@/server/schema/workoutPlan.schema";
 
 export const workoutPlanRouter = router({
-    get: publicProcedure
+    get: protectedProcedure
         .input(
             z.object({
                 id: z.coerce.number(),
@@ -13,6 +13,7 @@ export const workoutPlanRouter = router({
             })
         )
         .query(async ({ ctx, input: { id, username } }) => {
+
             const workoutPlan = await ctx.prisma.workoutPlan.findFirstOrThrow({
                 where: {
                     id,
@@ -28,13 +29,14 @@ export const workoutPlanRouter = router({
 
             return workoutPlan as unknown as WorkoutPlan<typeof workoutPlan>
         }),
-    getAll: publicProcedure
+    getAll: protectedProcedure
         .input(
             z.object({
                 username: z.string(),
             })
         )
         .query(async ({ ctx, input: { username } }) => {
+
             return await ctx.prisma.workoutPlan.findMany({
                 where: {
                     isDeleted: false,

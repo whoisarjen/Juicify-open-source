@@ -2,7 +2,7 @@ import { z } from "zod"
 import { omit } from "lodash"
 import { type PrismaClient } from '@prisma/client'
 
-import { router, publicProcedure, protectedProcedure } from "../trpc"
+import { router, protectedProcedure } from "../trpc"
 import { measurementSchema, createMeasurementSchema } from "@/server/schema/measurement.schema"
 
 async function syncUserWeight(
@@ -42,7 +42,7 @@ async function recalcUserWeight(prisma: PrismaClient, userId: number) {
 }
 
 export const measurementRouter = router({
-    getDay: publicProcedure
+    getDay: protectedProcedure
         .input(
             z.object({
                 username: z.string(),
@@ -51,6 +51,7 @@ export const measurementRouter = router({
             })
         )
         .query(async ({ ctx, input: { username, whenAdded, whenAddedEnd } }) => {
+
             return await ctx.prisma.measurement.findFirst({
                 where: {
                     weight: {
@@ -69,13 +70,14 @@ export const measurementRouter = router({
                 }
             })
         }),
-    getAll: publicProcedure
+    getAll: protectedProcedure
         .input(
             z.object({
                 username: z.string(),
             })
         )
         .query(async ({ ctx, input: { username } }) => {
+
             return await ctx.prisma.measurement.findMany({
                 take: 30,
                 where: {

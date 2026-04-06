@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-import { router, publicProcedure, protectedProcedure } from "../trpc";
+import { router, protectedProcedure } from "../trpc";
 import { consumedSchema, createConsumedSchema } from '@/server/schema/consumed.schema'
 import { omit } from "lodash";
 
@@ -30,7 +30,7 @@ export const consumedRouter = router({
                 .filter((c) => !c.product.isDeleted)
                 .map((c) => c.product)
         }),
-    getPeriod: publicProcedure
+    getPeriod: protectedProcedure
         .input(
             z.object({
                 username: z.string(),

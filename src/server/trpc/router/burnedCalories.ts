@@ -2,10 +2,10 @@ import { createBurnedCaloriesSchema, burnedCaloriesSchema } from "@/server/schem
 import { omit } from "lodash";
 import { z } from "zod"
 
-import { router, publicProcedure, protectedProcedure } from "../trpc";
+import { router, protectedProcedure } from "../trpc";
 
 export const burnedCaloriesRouter = router({
-    getPeriod: publicProcedure
+    getPeriod: protectedProcedure
         .input(
             z.object({
                 username: z.string(),

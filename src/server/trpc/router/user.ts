@@ -1,11 +1,11 @@
 import { z } from 'zod'
 
-import { router, publicProcedure, protectedProcedure } from "../trpc";
+import { router, protectedProcedure } from "../trpc";
 import { userSchema } from "../../schema/user.schema";
 import { prepareUserForFE } from "@/utils/user.utils";
 
 export const userRouter = router({
-    getByUsername: publicProcedure
+    getByUsername: protectedProcedure
         .input(
             z.object({
                 username: z.string(),
