@@ -6,6 +6,7 @@ import { prisma } from "../../../server/db/client";
 import { prepareUserForFE } from "@/utils/user.utils";
 
 export const authOptions: NextAuthOptions = {
+    session: { strategy: "jwt" },
     callbacks: {
         async signIn({ user }) {
             if ((user as unknown as User).isBanned) {
@@ -14,7 +15,14 @@ export const authOptions: NextAuthOptions = {
 
             return true
         },
-        async session({ session, user: { id } }) {
+        async jwt({ token, user }) {
+            if (user) {
+                token.userId = user.id
+                token.username = (user as unknown as User).username
+            }
+            return token
+        },
+        async session({ session, token }) {
             return {
                 ...session,
                 user: prepareUserForFE(
@@ -23,7 +31,7 @@ export const authOptions: NextAuthOptions = {
                             permissions: true,
                         },
                         where: {
-                            id: parseInt(id),
+                            id: parseInt(token.userId as string),
                         },
                     })
                 ),
