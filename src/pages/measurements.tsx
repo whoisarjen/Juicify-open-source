@@ -504,8 +504,6 @@ export default function MeasurementsPage() {
                                     .map((m) => ({
                                         date: fmt(m.whenAdded),
                                         weight: Number(m.weight) || null,
-                                        waist: m.waist ? Number(m.waist) : null,
-                                        hips: m.hips ? Number(m.hips) : null,
                                     }))}
                             >
                                 <defs>
@@ -518,8 +516,6 @@ export default function MeasurementsPage() {
                                 <YAxis domain={['dataMin - 1', 'dataMax + 1']} hide />
                                 <Tooltip contentStyle={tooltipStyle} labelStyle={{ color: '#a1a1aa' }} />
                                 <Area type="monotone" dataKey="weight" stroke="#38bdf8" strokeWidth={2} fill="url(#manualWeightGrad)" name="Weight (kg)" dot={{ r: 3, fill: '#38bdf8' }} connectNulls />
-                                <Area type="monotone" dataKey="waist" stroke="#fb923c" strokeWidth={1.5} fill="none" name="Waist (cm)" dot={{ r: 2, fill: '#fb923c' }} connectNulls />
-                                <Area type="monotone" dataKey="hips" stroke="#a78bfa" strokeWidth={1.5} fill="none" name="Hips (cm)" dot={{ r: 2, fill: '#a78bfa' }} connectNulls />
                             </AreaChart>
                         </ResponsiveContainer>
                     </div>
