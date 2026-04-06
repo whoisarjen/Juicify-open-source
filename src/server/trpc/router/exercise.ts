@@ -1,10 +1,10 @@
 import { createExerciseSchema } from "@/server/schema/exercise.schema";
 import { z } from "zod"
 
-import { router, publicProcedure, protectedProcedure } from "../trpc";
+import { router, protectedProcedure } from "../trpc";
 
 export const exerciseRouter = router({
-    getAll: publicProcedure
+    getAll: protectedProcedure
         .input(
             z.object({
                 name: z.string(),
@@ -27,7 +27,7 @@ export const exerciseRouter = router({
                         },
                         {
                             isDeleted: false,
-                            userId: ctx.session?.user?.id || null,
+                            userId: ctx.session.user.id,
                             name: {
                                 contains,
                                 mode: 'insensitive',

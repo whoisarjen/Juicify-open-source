@@ -1,10 +1,10 @@
 import { createProductSchema } from "@/server/schema/product.schema";
 import { z } from "zod"
 
-import { router, publicProcedure, protectedProcedure } from "../trpc";
+import { router, protectedProcedure } from "../trpc";
 
 export const productRouter = router({
-    getById: publicProcedure
+    getById: protectedProcedure
         .input(
             z.object({
                 id: z.coerce.number(),
@@ -21,14 +21,14 @@ export const productRouter = router({
                         },
                         {
                             isDeleted: false,
-                            userId: ctx.session?.user?.id || null,
+                            userId: ctx.session.user.id,
                             id,
                         },
                     ]
                 },
             })
         }),
-    getByBarcode: publicProcedure
+    getByBarcode: protectedProcedure
         .input(
             z.object({
                 barcode: z.string(),
@@ -45,7 +45,7 @@ export const productRouter = router({
                         },
                         {
                             isDeleted: false,
-                            userId: ctx.session?.user?.id || null,
+                            userId: ctx.session.user.id,
                             barcode,
                         },
                     ]
@@ -55,7 +55,7 @@ export const productRouter = router({
                 },
             })
         }),
-    getAll: publicProcedure
+    getAll: protectedProcedure
         .input(
             z.object({
                 name: z.string(),
@@ -81,7 +81,7 @@ export const productRouter = router({
                         },
                         {
                             isDeleted: false,
-                            userId: ctx.session?.user?.id || null,
+                            userId: ctx.session.user.id,
                             name: {
                                 contains,
                                 mode: 'insensitive',
