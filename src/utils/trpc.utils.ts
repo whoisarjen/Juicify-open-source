@@ -30,6 +30,7 @@ function getQueryClient() {
                         if (error instanceof TRPCClientError) {
                             const httpStatus = error.data?.httpStatus
                             if (httpStatus && httpStatus >= 400 && httpStatus < 500) {
+                                del('JUICIFY_CACHE')
                                 return true
                             }
                         }
