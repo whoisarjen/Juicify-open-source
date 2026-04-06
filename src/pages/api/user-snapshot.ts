@@ -12,7 +12,7 @@
  * Query params:
  *   token  (required) — user's apiToken OR CRON_SECRET env variable
  *   userId (required for cron mode only) — integer user ID
- *   days   (optional, cron mode only) — number of days to look back, default 60, max 365
+ *   days   (optional, cron mode only) — number of days to look back, default 30, max 90
  *
  * ┌─────────────────────────────────────────────────────────────────────────┐
  * │ IMPORTANT: When adding a new Prisma model that stores user data,      │
@@ -155,12 +155,12 @@ export default async function handler(
             return res.status(400).json({ error: 'userId must be an integer' })
         }
 
-        days = 60
+        days = 30
         const daysRaw = req.query.days
         if (daysRaw && !Array.isArray(daysRaw)) {
             const parsed = parseInt(daysRaw, 10)
             if (!isNaN(parsed) && parsed > 0) {
-                days = Math.min(parsed, 365)
+                days = Math.min(parsed, 90)
             }
         }
     } else {
