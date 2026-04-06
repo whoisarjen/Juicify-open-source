@@ -15,7 +15,7 @@ const CustomAutocomplete = ({
     setFind,
     isLoading,
     searchCache = [],
-    debounceDuration = 1000,
+    debounceDuration = 500,
 }: CustomAutocompleteProps) => {
     const { t } = useTranslation()
     const [localValue, setLocalValue] = useState(find || '')

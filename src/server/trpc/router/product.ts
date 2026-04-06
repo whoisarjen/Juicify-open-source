@@ -3,6 +3,9 @@ import { z } from "zod"
 
 import { router, protectedProcedure } from "../trpc";
 
+const removeDiacritics = (str: string) =>
+    str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+
 export const productRouter = router({
     getById: protectedProcedure
         .input(
@@ -64,35 +67,55 @@ export const productRouter = router({
             })
         )
         .query(async ({ ctx, input: { name, take, skip } }) => {
-            const contains = name.trim()
+            // === SEARCH MIGRATION — uncomment, trigger one search, then comment back ===
+            // await ctx.prisma.$executeRawUnsafe(`CREATE EXTENSION IF NOT EXISTS pg_trgm`);
+            // await ctx.prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS idx_product_name_trgm ON "Product" USING gin (name gin_trgm_ops)`);
+            // await ctx.prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS idx_product_name_tsv ON "Product" USING gin (to_tsvector('simple', name))`);
+            // await ctx.prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS idx_product_barcode ON "Product" (barcode) WHERE barcode IS NOT NULL`);
 
-            return await ctx.prisma.product.findMany({
-                take,
-                skip,
-                where: {
-                    OR: [
-                        {
-                            isDeleted: false,
-                            userId: null,
-                            name: {
-                                contains,
-                                mode: 'insensitive',
-                            },
-                        },
-                        {
-                            isDeleted: false,
-                            userId: ctx.session.user.id,
-                            name: {
-                                contains,
-                                mode: 'insensitive',
-                            },
-                        },
-                    ]
-                },
-                orderBy: {
-                    nameLength: 'asc',
-                },
-            })
+            const rawName = name.trim()
+            const normalizedName = removeDiacritics(rawName).toUpperCase()
+            const terms = normalizedName.split(/\s+/).filter(Boolean)
+
+            if (terms.length === 0) {
+                return []
+            }
+
+            const tsQuery = terms
+                .map(term => term.replace(/\W/g, ''))
+                .filter(term => term.length > 0)
+                .map(term => term.length > 3 ? `${term.slice(0, -1)}:*` : `${term}:*`)
+                .join(' & ')
+
+            const userId = ctx.session.user.id
+
+            return await ctx.prisma.$queryRaw<any[]>`
+                WITH exact_matches AS (
+                    SELECT p.*, 2 AS match_priority
+                    FROM "Product" p
+                    WHERE p."isDeleted" = false
+                      AND (p."userId" IS NULL OR p."userId" = ${userId})
+                      AND (p.barcode = ${rawName} OR UPPER(p.name) = ${normalizedName})
+                ),
+                fulltext_matches AS (
+                    SELECT p.*, 1 AS match_priority
+                    FROM "Product" p
+                    WHERE p."isDeleted" = false
+                      AND (p."userId" IS NULL OR p."userId" = ${userId})
+                      AND p.id NOT IN (SELECT id FROM exact_matches)
+                      AND to_tsvector('simple', p.name) @@ to_tsquery('simple', ${tsQuery})
+                ),
+                all_matches AS (
+                    SELECT * FROM exact_matches
+                    UNION ALL SELECT * FROM fulltext_matches
+                )
+                SELECT id, "createdAt", "updatedAt", "userId", name, "nameLength",
+                       proteins, carbs, sugar, fats, fiber, sodium, ethanol,
+                       "gramsPerPortion", barcode, "isVerified", "isDeleted", "isExpectingCheck"
+                FROM all_matches
+                ORDER BY match_priority DESC, "nameLength" ASC
+                LIMIT ${take} OFFSET ${skip}
+            `
         }),
     create: protectedProcedure
         .input(createProductSchema)
