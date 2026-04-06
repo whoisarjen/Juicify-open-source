@@ -57,10 +57,10 @@
  *   Account creation date (for tenure context)
  *
  * ── consumed ──────────────────────────────────────────────────────
- *   Every food log entry within the period
- *   Product macros expanded inline (proteins, carbs, sugar, fats, fiber, sodium, ethanol)
- *   Meal slot (0-4) and quantity (howMany)
- *   Timestamp (whenAdded) for time-of-day analysis
+ *   Aggregated by date (YYYY-MM-DD) → meal slot (0-4)
+ *   Each day shows mealCount and meals object keyed by meal number
+ *   Each meal entry has product macros (proteins, carbs, sugar, fats, fiber, sodium, ethanol)
+ *   and quantity (howMany)
  *
  * ── workoutResults ────────────────────────────────────────────────
  *   Every completed workout within the period
@@ -505,6 +505,22 @@ export default async function handler(
         }),
     ])
 
+    // ── Aggregate consumed by day → meal ────────────────────────────
+    const consumedByDay: Record<string, { mealCount: number; meals: Record<number, typeof consumed> }> = {}
+
+    for (const entry of consumed) {
+        const date = entry.whenAdded.toISOString().slice(0, 10)
+        if (!consumedByDay[date]) {
+            consumedByDay[date] = { mealCount: 0, meals: {} }
+        }
+        const day = consumedByDay[date]
+        if (!day.meals[entry.meal]) {
+            day.meals[entry.meal] = []
+            day.mealCount++
+        }
+        day.meals[entry.meal].push(entry)
+    }
+
     // ── Build response ─────────────────────────────────────────────
     return res.status(200).json({
         snapshot: {
@@ -514,7 +530,7 @@ export default async function handler(
             daysRequested: days,
 
             user,
-            consumed,
+            consumed: consumedByDay,
             workoutResults,
             workoutPlans,
             exercises,
