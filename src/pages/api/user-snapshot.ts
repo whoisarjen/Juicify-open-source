@@ -1,17 +1,18 @@
 /**
- * GET /api/user-snapshot?userId=<int>
+ * GET /api/user-snapshot?token=<apiToken>
  *
- * Returns a comprehensive 60-day snapshot of ALL user data for AI consumption.
+ * Returns a comprehensive snapshot of ALL user data for AI consumption.
  * Designed as the single source of truth for any AI agent that needs to reason
  * about a user's health, nutrition, training, sleep, and body composition.
  *
- * Authentication: token query param must match CRON_SECRET env variable.
- *   ?token=<CRON_SECRET>
+ * Authentication (two modes):
+ *   1. User token:  ?token=<user's apiToken>  → returns 30 days of that user's data
+ *   2. Cron token:  ?token=<CRON_SECRET>&userId=<int>  → internal use, configurable days
  *
  * Query params:
- *   token  (required) — must match CRON_SECRET env variable
- *   userId (required) — integer user ID
- *   days   (optional) — number of days to look back, default 60, max 365
+ *   token  (required) — user's apiToken OR CRON_SECRET env variable
+ *   userId (required for cron mode only) — integer user ID
+ *   days   (optional, cron mode only) — number of days to look back, default 60, max 365
  *
  * ┌─────────────────────────────────────────────────────────────────────────┐
  * │ IMPORTANT: When adding a new Prisma model that stores user data,      │
@@ -132,34 +133,47 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse,
 ) {
-    // ── Auth: require token query param matching CRON_SECRET ─────────
-    if (!env.CRON_SECRET) {
-        return res.status(501).json({ error: 'Cron not configured' })
-    }
-
+    // ── Auth: user apiToken OR CRON_SECRET ───────────────────────────
     const token = req.query.token
-    if (!token || token !== env.CRON_SECRET) {
-        return res.status(401).json({ error: 'Unauthorized' })
+    if (!token || Array.isArray(token)) {
+        return res.status(401).json({ error: 'token query param required' })
     }
 
-    // ── Parse & validate query params ──────────────────────────────
-    const userIdRaw = req.query.userId
-    if (!userIdRaw || Array.isArray(userIdRaw)) {
-        return res.status(400).json({ error: 'userId query param required (integer)' })
-    }
+    let userId: number
+    let days: number
 
-    const userId = parseInt(userIdRaw, 10)
-    if (isNaN(userId)) {
-        return res.status(400).json({ error: 'userId must be an integer' })
-    }
+    const isCronToken = env.CRON_SECRET && token === env.CRON_SECRET
 
-    const daysRaw = req.query.days
-    let days = 60
-    if (daysRaw && !Array.isArray(daysRaw)) {
-        const parsed = parseInt(daysRaw, 10)
-        if (!isNaN(parsed) && parsed > 0) {
-            days = Math.min(parsed, 365)
+    if (isCronToken) {
+        // Cron mode: require userId, allow days param
+        const userIdRaw = req.query.userId
+        if (!userIdRaw || Array.isArray(userIdRaw)) {
+            return res.status(400).json({ error: 'userId query param required (integer)' })
         }
+        userId = parseInt(userIdRaw, 10)
+        if (isNaN(userId)) {
+            return res.status(400).json({ error: 'userId must be an integer' })
+        }
+
+        days = 60
+        const daysRaw = req.query.days
+        if (daysRaw && !Array.isArray(daysRaw)) {
+            const parsed = parseInt(daysRaw, 10)
+            if (!isNaN(parsed) && parsed > 0) {
+                days = Math.min(parsed, 365)
+            }
+        }
+    } else {
+        // User token mode: look up user by apiToken, fixed 30 days
+        const tokenUser = await prisma.user.findUnique({
+            where: { apiToken: token },
+            select: { id: true },
+        })
+        if (!tokenUser) {
+            return res.status(401).json({ error: 'Unauthorized' })
+        }
+        userId = tokenUser.id
+        days = 30
     }
 
     // ── Date range: from N days ago (start of day UTC) to now ──────

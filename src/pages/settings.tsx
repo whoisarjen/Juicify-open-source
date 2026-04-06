@@ -6,12 +6,81 @@ import { trpc } from '@/utils/trpc.utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useSession } from 'next-auth/react'
 import useTranslation from 'next-translate/useTranslation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { DatePicker } from '@/components/DatePicker'
 import { handleSignOut } from '@/utils/user.utils'
 import NavbarOnlyTitle from '@/components/NavbarOnlyTitle/NavbarOnlyTitle'
-import { LogOut } from 'lucide-react'
+import { LogOut, Copy, Check, RefreshCw } from 'lucide-react'
+
+const ApiTokenCard = () => {
+    const { t } = useTranslation('settings')
+    const { data: sessionData } = useSession()
+    const [copied, setCopied] = useState(false)
+
+    const regenerate = trpc.user.regenerateApiToken.useMutation({
+        onSuccess() {
+            reloadSession()
+        },
+    })
+
+    const apiToken = (sessionData?.user as Record<string, unknown> | undefined)?.apiToken as string | undefined
+
+    const snapshotUrl = apiToken
+        ? `${window.location.origin}/api/user-snapshot?token=${apiToken}`
+        : ''
+
+    const handleCopy = async () => {
+        await navigator.clipboard.writeText(snapshotUrl)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+    }
+
+    const handleRegenerate = () => {
+        if (window.confirm(t('REGENERATE_CONFIRM'))) {
+            regenerate.mutate()
+        }
+    }
+
+    return (
+        <div className="glass p-4">
+            <div className="text-[11px] font-bold uppercase tracking-wide text-[#7a7a7a] mb-3">
+                {t('AI_DATA_LINK')}
+            </div>
+            <p className="text-[12px] text-[#9ca3af] mb-3 leading-relaxed">
+                {t('AI_DATA_LINK_DESC')}
+            </p>
+            {apiToken ? (
+                <>
+                    <div className="flex items-center gap-2">
+                        <div className="flex-1 min-w-0 rounded-lg bg-[rgba(255,255,255,0.03)] border border-glass-border px-3 py-2 text-[11px] font-mono text-zinc-400 truncate">
+                            {snapshotUrl}
+                        </div>
+                        <button
+                            type="button"
+                            onClick={handleCopy}
+                            className="flex-shrink-0 flex items-center gap-1.5 rounded-lg bg-[rgba(144,202,249,0.10)] border border-[rgba(144,202,249,0.25)] px-3 py-2 text-[11px] font-bold text-primary-dark hover:bg-[rgba(144,202,249,0.18)] transition-all duration-300"
+                        >
+                            {copied ? <Check size={12} /> : <Copy size={12} />}
+                            {copied ? t('COPIED') : t('COPY')}
+                        </button>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={handleRegenerate}
+                        disabled={regenerate.isPending}
+                        className="mt-2 flex items-center gap-1.5 text-[11px] text-[#7a7a7a] hover:text-zinc-300 transition-colors duration-200 disabled:opacity-50"
+                    >
+                        <RefreshCw size={11} className={regenerate.isPending ? 'animate-spin' : ''} />
+                        {t('REGENERATE')}
+                    </button>
+                </>
+            ) : (
+                <div className="h-8 rounded-lg bg-[rgba(255,255,255,0.03)] animate-pulse" />
+            )}
+        </div>
+    )
+}
 
 const SettingsPage = () => {
     const { t } = useTranslation('settings')
@@ -260,6 +329,9 @@ const SettingsPage = () => {
 
                 </div>
             </div>
+
+            {/* AI Data Link */}
+            <ApiTokenCard />
 
             {/* Actions */}
             {isDirty && (

@@ -8,7 +8,7 @@ import Head from 'next/head'
 import Logo from '@/components/Logo/Logo'
 import { useEffect, useMemo, useState } from 'react'
 import useTranslation from 'next-translate/useTranslation'
-import { Bot, Utensils, ScanLine, Dumbbell, CloudOff, Heart, Code } from 'lucide-react'
+import { Bot, Utensils, ScanLine, Dumbbell, Heart, Code, Link } from 'lucide-react'
 
 const Home = () => {
     const { t } = useTranslation('home')
@@ -58,6 +58,13 @@ const Home = () => {
 
     const features = [
         {
+            icon: <Link size={28} />,
+            title: t('LANDING_FEATURE_API_TITLE'),
+            desc: t('LANDING_FEATURE_API_DESC'),
+            badge: t('LANDING_BADGE_NEW'),
+            color: '#90caf9',
+        },
+        {
             icon: <Bot size={28} />,
             title: t('LANDING_FEATURE_AI_TITLE'),
             desc: t('LANDING_FEATURE_AI_DESC'),
@@ -81,13 +88,6 @@ const Home = () => {
             title: t('LANDING_FEATURE_WORKOUT_TITLE'),
             desc: t('LANDING_FEATURE_WORKOUT_DESC'),
             color: '#fb923c',
-        },
-        {
-            icon: <CloudOff size={28} />,
-            title: t('LANDING_FEATURE_OFFLINE_TITLE'),
-            desc: t('LANDING_FEATURE_OFFLINE_DESC'),
-            badge: t('LANDING_BADGE_COMING_SOON'),
-            color: '#60a5fa',
         },
         {
             icon: <Heart size={28} />,

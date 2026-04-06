@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { randomUUID } from 'crypto'
 
 import { router, protectedProcedure } from "../trpc";
 import { userSchema } from "../../schema/user.schema";
@@ -33,5 +34,14 @@ export const userRouter = router({
                     }
                 })
             )
+        }),
+    regenerateApiToken: protectedProcedure
+        .mutation(async ({ ctx }) => {
+            const user = await ctx.prisma.user.update({
+                where: { id: ctx.session.user.id },
+                data: { apiToken: randomUUID() },
+                select: { apiToken: true },
+            })
+            return { apiToken: user.apiToken }
         }),
 });

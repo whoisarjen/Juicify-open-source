@@ -17,5 +17,11 @@
     "Macronutrients": "Makroskładniki",
     "Save": "Zapisz",
     "Target": "Cel",
-    "Minimum": "Minimum"
+    "Minimum": "Minimum",
+    "AI_DATA_LINK": "Link do danych AI",
+    "AI_DATA_LINK_DESC": "Wklej ten link do ChatGPT, Claude lub dowolnego AI, aby udostępnić 30 dni swoich danych fitness.",
+    "COPY": "Kopiuj",
+    "COPIED": "Skopiowano!",
+    "REGENERATE": "Wygeneruj nowy",
+    "REGENERATE_CONFIRM": "Obecny link przestanie działać. Kontynuować?"
 }

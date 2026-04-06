@@ -104,6 +104,9 @@
     "LANDING_FINAL_DESC": "Pozwól AI poprowadzić Cię do celów fitnessowych. Za darmo, prywatnie i skutecznie.",
     "LANDING_SIGN_IN_WITH": "Zaloguj przez {{provider}}",
     "LANDING_BADGE_BETA": "Beta",
+    "LANDING_BADGE_NEW": "Nowość",
     "LANDING_BADGE_COMING_SOON": "Wkrótce",
+    "LANDING_FEATURE_API_TITLE": "API danych dla AI",
+    "LANDING_FEATURE_API_DESC": "Uzyskaj osobisty link do swoich danych fitness. Wklej go do ChatGPT, Claude lub dowolnego AI, aby uzyskać spersonalizowaną analizę.",
     "Supplements": "Suplementy"
 }

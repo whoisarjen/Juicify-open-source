@@ -17,5 +17,11 @@
     "Macronutrients": "Macronutrients",
     "Save": "Save",
     "Target": "Target",
-    "Minimum": "Minimum"
+    "Minimum": "Minimum",
+    "AI_DATA_LINK": "AI Data Link",
+    "AI_DATA_LINK_DESC": "Paste this link into ChatGPT, Claude, or any AI to share 30 days of your fitness data.",
+    "COPY": "Copy",
+    "COPIED": "Copied!",
+    "REGENERATE": "Regenerate",
+    "REGENERATE_CONFIRM": "This will invalidate your current link. Continue?"
 }

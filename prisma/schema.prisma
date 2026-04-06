@@ -146,6 +146,7 @@ model User {
   isSportActive       Boolean          @default(false)
   activityLevel       activityLevels   @default(AVERAGE)
   sex                 Boolean          @default(true)
+  apiToken            String           @unique @default(uuid())
   isBanned            Boolean          @default(false)
   permissions         Permission[]
   accounts            Account[]

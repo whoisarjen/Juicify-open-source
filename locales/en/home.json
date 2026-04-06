@@ -104,6 +104,9 @@
     "LANDING_FINAL_DESC": "Let AI guide your fitness journey. Free, private, and effective.",
     "LANDING_SIGN_IN_WITH": "Sign in with {{provider}}",
     "LANDING_BADGE_BETA": "Beta",
+    "LANDING_BADGE_NEW": "New",
     "LANDING_BADGE_COMING_SOON": "Coming Soon",
+    "LANDING_FEATURE_API_TITLE": "AI-Ready Data API",
+    "LANDING_FEATURE_API_DESC": "Get a personal link to your fitness data. Paste it into ChatGPT, Claude, or any AI for instant custom analysis and coaching.",
     "Supplements": "Supplements"
 }
