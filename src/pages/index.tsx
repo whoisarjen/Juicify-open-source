@@ -51,7 +51,7 @@ const Home = () => {
     const handleSignIn = () => {
         if (firstProvider) {
             signIn(firstProvider.id, {
-                callbackUrl: window.location.origin + '/coach',
+                callbackUrl: window.location.origin + '/',
             })
         }
     }

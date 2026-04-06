@@ -20,13 +20,18 @@ const PUBLIC_PATHS = [
     '/_offline',
 ]
 
-const getCookie = async (cookieName: string) => {
+const getCookie = (cookieName: string) => {
     let cookie: any = {}
     document.cookie.split(';').forEach(function (el) {
         let [key, value] = el.split('=')
         cookie[key.trim()] = value
     })
-    return cookie[cookieName]
+    const raw = cookie[cookieName]
+    try {
+        return raw ? decodeURIComponent(raw) : raw
+    } catch {
+        return raw
+    }
 }
 
 const Layout = ({ children }: { children: any }) => {
@@ -91,18 +96,13 @@ const Layout = ({ children }: { children: any }) => {
                 return
             }
 
+            // Fallback: if middleware redirect didn't fire (e.g. client-side nav to "/")
             if (
                 status === 'authenticated' &&
                 router.pathname === SIGN_IN_PATH
             ) {
-                const asPath = localStorage.getItem('asPath')
-
-                if (asPath?.includes('consumed') && sessionData.user && asPath.includes(sessionData.user.username)) {
-                    router.push(asPath.slice(0, asPath.length - 10) + moment().format('YYYY-MM-DD'))
-                    return
-                }
-
-                router.push(asPath && asPath !== SIGN_IN_PATH ? asPath : '/coach')
+                const lastPath = await getCookie('lastPath')
+                router.push(lastPath && lastPath !== SIGN_IN_PATH ? lastPath : '/coach')
                 return
             }
 
@@ -110,6 +110,7 @@ const Layout = ({ children }: { children: any }) => {
         })()
     }, [status, router, sessionData])
 
+    // Save current path as cookie so middleware can redirect instantly on next load
     useEffect(() => {
         if (
             router?.asPath &&
@@ -117,15 +118,14 @@ const Layout = ({ children }: { children: any }) => {
             !router.asPath.includes('callback') &&
             sessionData
         ) {
-            localStorage.setItem(
-                'asPath',
-                router.asPath.includes(
-                    `${sessionData?.user?.username}/consumed`
-                )
-                    ? router.asPath.slice(0, router.asPath.length - 10) +
-                          moment().format('YYYY-MM-DD')
-                    : router.asPath
+            const pathToSave = router.asPath.includes(
+                `${sessionData?.user?.username}/consumed`
             )
+                ? router.asPath.slice(0, router.asPath.length - 10) +
+                      moment().format('YYYY-MM-DD')
+                : router.asPath
+
+            document.cookie = `lastPath=${encodeURIComponent(pathToSave)}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`
         }
     }, [router.asPath, sessionData])
 

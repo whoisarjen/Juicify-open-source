@@ -3,6 +3,7 @@ import { omit } from 'lodash-es'
 
 export const handleSignOut = () => {
     localStorage.clear()
+    document.cookie = 'lastPath=; path=/; max-age=0'
     signOut({ redirect: true, callbackUrl: '/' })
 }
 
