@@ -31,6 +31,20 @@ export async function middleware(request: NextRequest) {
         }
     }
 
+    // PWA scope locale: if NEXT_LOCALE cookie differs from request locale, redirect
+    const preferredLocale = request.cookies.get('NEXT_LOCALE')?.value
+    if (
+        preferredLocale &&
+        preferredLocale !== locale &&
+        !pathname.startsWith('/api') &&
+        !pathname.startsWith('/_next') &&
+        !pathname.includes('.')
+    ) {
+        const url = request.nextUrl.clone()
+        url.locale = preferredLocale
+        return NextResponse.redirect(url)
+    }
+
     // Redirect blog-only locales away from non-blog pages
     if (locale && BLOG_ONLY_LOCALES.includes(locale)) {
         if (

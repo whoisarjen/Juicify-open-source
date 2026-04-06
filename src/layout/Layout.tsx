@@ -38,14 +38,10 @@ const Layout = ({ children }: { children: any }) => {
     const router = useRouter()
     const isPublicPath = PUBLIC_PATHS.some(p => router.pathname === p || router.pathname.startsWith(p + '/'))
     const [isAllowedLocation, setIsAllowedLocation] = useState(() => isPublicPath)
-    const [skippedSettings, setSkippedSettings] = useState(false)
+    const [skippedSettings, setSkippedSettings] = useState(() =>
+        typeof window !== 'undefined' && localStorage.getItem('skipMissingSettings') === 'true'
+    )
     const { data: sessionData, status } = useSession()
-
-    useEffect(() => {
-        if (localStorage.getItem('skipMissingSettings') === 'true') {
-            setSkippedSettings(true)
-        }
-    }, [])
 
     const handleSkipMissingSettings = useCallback(() => {
         localStorage.setItem('skipMissingSettings', 'true')
@@ -84,30 +80,21 @@ const Layout = ({ children }: { children: any }) => {
     }, [versionData])
 
     useEffect(() => {
-        (async () => {
-            const locale = await getCookie('NEXT_LOCALE') // Redirect for PWA's scope
+        if (status === 'loading') {
+            return
+        }
 
-            if (locale && router.locale != locale) {
-                router.push(router.asPath, router.asPath, { locale })
-                return
-            }
+        // Fallback: if middleware redirect didn't fire (e.g. client-side nav to "/")
+        if (
+            status === 'authenticated' &&
+            router.pathname === SIGN_IN_PATH
+        ) {
+            const lastPath = getCookie('lastPath')
+            router.push(lastPath && lastPath !== SIGN_IN_PATH ? lastPath : '/coach')
+            return
+        }
 
-            if (status === 'loading') {
-                return
-            }
-
-            // Fallback: if middleware redirect didn't fire (e.g. client-side nav to "/")
-            if (
-                status === 'authenticated' &&
-                router.pathname === SIGN_IN_PATH
-            ) {
-                const lastPath = await getCookie('lastPath')
-                router.push(lastPath && lastPath !== SIGN_IN_PATH ? lastPath : '/coach')
-                return
-            }
-
-            setIsAllowedLocation(true)
-        })()
+        setIsAllowedLocation(true)
     }, [status, router, sessionData])
 
     // Save current path as cookie so middleware can redirect instantly on next load
