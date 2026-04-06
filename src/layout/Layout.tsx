@@ -1,9 +1,8 @@
 import Footer from './Footer'
 import { useRouter } from 'next/router'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import TopNavbar from './TopNavbar'
 import { useSession } from 'next-auth/react'
-import { DialogMissingSettings } from '@/components/DialogMissingSettings'
 import FullPageError from '@/components/FullPageError'
 import moment from 'moment'
 import { trpc } from '@/utils/trpc.utils'
@@ -38,15 +37,7 @@ const Layout = ({ children }: { children: any }) => {
     const router = useRouter()
     const isPublicPath = PUBLIC_PATHS.some(p => router.pathname === p || router.pathname.startsWith(p + '/'))
     const [isAllowedLocation, setIsAllowedLocation] = useState(() => isPublicPath)
-    const [skippedSettings, setSkippedSettings] = useState(() =>
-        typeof window !== 'undefined' && localStorage.getItem('skipMissingSettings') === 'true'
-    )
     const { data: sessionData, status } = useSession()
-
-    const handleSkipMissingSettings = useCallback(() => {
-        localStorage.setItem('skipMissingSettings', 'true')
-        setSkippedSettings(true)
-    }, [])
 
     const { data: versionData } = trpc.version.get.useQuery(undefined, {
         enabled: typeof window !== 'undefined' && !!process.env.isProduction,
@@ -137,7 +128,6 @@ const Layout = ({ children }: { children: any }) => {
     }
 
     const isBlog = router.pathname.includes('blog')
-    const isNeutralPath = isBlog || router.pathname === SIGN_IN_PATH
     const isLandingPage = router.pathname === SIGN_IN_PATH && status !== 'loading' && !sessionData?.user
 
     const isFullWidthPage = isLandingPage || isBlog
@@ -159,9 +149,6 @@ const Layout = ({ children }: { children: any }) => {
                 </div>
             </div>
             <Footer />
-            {sessionData?.user?.height === 0 && !skippedSettings && (
-                <DialogMissingSettings onSkip={handleSkipMissingSettings} />
-            )}
         </main>
     )
 }
