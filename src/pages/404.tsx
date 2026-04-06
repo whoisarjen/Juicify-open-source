@@ -1,9 +1,7 @@
+import FullPageError from '@/components/FullPageError'
+
 const Error404 = () => {
-    return (
-        <div className="flex flex-1 items-center justify-center">
-            <h1>404</h1>
-        </div>
-    )
+    return <FullPageError code={404} message="Page not found" />
 }
 
 export default Error404

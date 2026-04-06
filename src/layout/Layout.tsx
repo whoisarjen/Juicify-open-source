@@ -4,21 +4,20 @@ import { useCallback, useEffect, useState } from 'react'
 import TopNavbar from './TopNavbar'
 import { useSession } from 'next-auth/react'
 import { DialogMissingSettings } from '@/components/DialogMissingSettings'
+import FullPageError from '@/components/FullPageError'
 import moment from 'moment'
 import { trpc } from '@/utils/trpc.utils'
 import { handleSignOut } from '@/utils/user.utils'
 
 const SIGN_IN_PATH = '/'
 
-const REQUIRED_AUTH_PATHS = [
-    '/workout',
-    '/statistics',
-    '/barcode',
-    '/coach',
-    '/macronutrients',
-    '/measurements',
-    '/supplements',
-    '/settings',
+const PUBLIC_PATHS = [
+    '/',
+    '/blog',
+    '/401',
+    '/403',
+    '/404',
+    '/_offline',
 ]
 
 const getCookie = async (cookieName: string) => {
@@ -32,9 +31,8 @@ const getCookie = async (cookieName: string) => {
 
 const Layout = ({ children }: { children: any }) => {
     const router = useRouter()
-    const [isAllowedLocation, setIsAllowedLocation] = useState(
-        () => !REQUIRED_AUTH_PATHS.includes(router.pathname)
-    )
+    const isPublicPath = PUBLIC_PATHS.some(p => router.pathname === p || router.pathname.startsWith(p + '/'))
+    const [isAllowedLocation, setIsAllowedLocation] = useState(() => isPublicPath)
     const [skippedSettings, setSkippedSettings] = useState(false)
     const { data: sessionData, status } = useSession()
 
@@ -94,14 +92,6 @@ const Layout = ({ children }: { children: any }) => {
             }
 
             if (
-                status === 'unauthenticated' &&
-                REQUIRED_AUTH_PATHS.includes(router.pathname)
-            ) {
-                router.push(SIGN_IN_PATH)
-                return
-            }
-
-            if (
                 status === 'authenticated' &&
                 router.pathname === SIGN_IN_PATH
             ) {
@@ -147,6 +137,16 @@ const Layout = ({ children }: { children: any }) => {
 
     if (!isAllowedLocation) {
         return null
+    }
+
+    if (status !== 'loading' && !isPublicPath) {
+        if (status === 'unauthenticated') {
+            return <FullPageError code={401} message="You need to sign in to access this page" />
+        }
+
+        if (router.query.login && router.query.login !== sessionData?.user?.username) {
+            return <FullPageError code={403} message="You don't have permission to access this page" />
+        }
     }
 
     const isBlog = router.pathname.includes('blog')
