@@ -186,7 +186,6 @@ const WorkoutResultPage = () => {
             <DatePicker
                 defaultDate={data?.whenAdded || moment().toDate()}
                 onChange={(newWhenAdded) => setValue('whenAdded', newWhenAdded)}
-                register={register('whenAdded')}
                 focused
                 maxDateTime={moment().add(2, 'hour').toDate()}
             />
@@ -201,7 +200,6 @@ const WorkoutResultPage = () => {
                 onChange={(newFinishedAt) =>
                     setValue('finishedAt', newFinishedAt)
                 }
-                register={register('finishedAt')}
                 focused
                 maxDateTime={moment().add(2, 'hour').toDate()}
             />

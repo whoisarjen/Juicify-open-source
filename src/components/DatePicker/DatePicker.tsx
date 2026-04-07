@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 interface DatePickerProps {
     sx?: object
-    register: object
+    register?: object
     defaultDate?: Date
     onChange: (newDate: Date) => void
     focused?: boolean
@@ -42,7 +42,6 @@ export const DatePicker = ({
             <input
                 type="datetime-local"
                 className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
-                {...register}
                 value={date}
                 onChange={(e) => handleOnChange(e.target.value)}
                 max={moment(maxDateTime).format('YYYY-MM-DDTHH:mm')}

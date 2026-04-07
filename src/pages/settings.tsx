@@ -324,7 +324,6 @@ const SettingsPage = () => {
                         onChange={(newBirth) =>
                             setValue('birth', newBirth, { shouldDirty: true })
                         }
-                        register={register('birth')}
                     />
 
                 </div>

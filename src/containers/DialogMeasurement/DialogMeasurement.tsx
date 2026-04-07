@@ -205,7 +205,6 @@ export const DialogMeasurement = ({
                                 defaultDate={getValues().whenAdded}
                                 onChange={newWhenAdded => setValue('whenAdded', moment(newWhenAdded).toDate())}
                                 sx={{ marginTop: '8px' }}
-                                register={register('whenAdded')}
                                 maxDateTime={moment().toDate()}
                             />
                             <div className="mt-2 w-full">
