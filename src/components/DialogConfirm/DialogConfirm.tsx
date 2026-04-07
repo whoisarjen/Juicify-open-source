@@ -27,8 +27,8 @@ const DialogConfirm = ({
 
     return (
         <>
-            <div onClick={event => handleSetIsDialog(event, true)}>{children}</div>
-            {!isDisabled && isDialog && (
+            <div onClick={event => !isDisabled && handleSetIsDialog(event, true)}>{children}</div>
+            {isDialog && (
                 <div className="fixed inset-0 z-[200] flex items-center justify-center">
                     <div className="fixed inset-0 bg-black/50" onClick={event => handleSetIsDialog(event, false)} />
                     <div className="relative z-[200] w-full max-w-lg rounded-lg bg-white p-0 shadow-xl dark:bg-gray-900 mx-4">
