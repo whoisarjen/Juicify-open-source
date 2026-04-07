@@ -136,7 +136,7 @@ const WorkoutPlan = () => {
     const isOwner = sessionData?.user?.id == data?.userId
 
     return (
-        <form className="flex flex-1 flex-col gap-2">
+        <form onSubmit={(e) => e.preventDefault()} className="flex flex-1 flex-col gap-2">
             <NavbarWorkout
                 isDisabled={isLoading || !data?.id}
                 isLoading={isLoading}
