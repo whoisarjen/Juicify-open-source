@@ -165,7 +165,7 @@ const WorkoutResultPage = () => {
         deleteWorkoutResult.isPending
 
     return (
-        <form className="flex min-w-0 flex-1 flex-col gap-3 overflow-hidden">
+        <form className="flex flex-1 flex-col gap-3">
             <NavbarWorkout
                 isDisabled={isLoading}
                 isLoading={isLoading}
@@ -177,7 +177,7 @@ const WorkoutResultPage = () => {
             <div>
                 <label className="mb-1 block text-sm text-gray-500">{t('Title')}</label>
                 <textarea
-                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
+                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
                     {...register('name')}
                 />
                 {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name.message}</p>}
@@ -191,24 +191,22 @@ const WorkoutResultPage = () => {
                 maxDateTime={moment().add(2, 'hour').toDate()}
             />
 
-            <DatePicker
-                label={t('Finished at')}
-                defaultDate={
-                    data?.finishedAt
-                        ? moment(data.finishedAt as unknown as Date).toDate()
-                        : moment().toDate()
-                }
-                onChange={(newFinishedAt) =>
-                    setValue('finishedAt', newFinishedAt)
-                }
-                register={register('finishedAt')}
-                focused
-                maxDateTime={moment().add(2, 'hour').toDate()}
-            />
+            {data?.finishedAt && (
+                <DatePicker
+                    label={t('Finished at')}
+                    defaultDate={moment(data.finishedAt as unknown as Date).toDate()}
+                    onChange={(newFinishedAt) =>
+                        setValue('finishedAt', newFinishedAt)
+                    }
+                    register={register('finishedAt')}
+                    focused
+                    maxDateTime={moment().add(2, 'hour').toDate()}
+                />
+            )}
 
             <div>
                 <label className="mb-1 block text-sm text-gray-500">{t('Burnt')}</label>
-                <div className="flex items-center rounded border border-gray-300 focus-within:border-primary-dark dark:border-gray-600">
+                <div className="flex items-center rounded border border-gray-300 focus-within:border-blue-500 dark:border-gray-600">
                     <input
                         className="flex-1 bg-transparent px-3 py-2 outline-none"
                         type="text"
@@ -223,7 +221,7 @@ const WorkoutResultPage = () => {
             <div>
                 <label className="mb-1 block text-sm text-gray-500">{t('Notes')}</label>
                 <textarea
-                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-primary-dark dark:border-gray-600"
+                    className="w-full rounded border border-gray-300 bg-transparent px-3 py-2 outline-none focus:border-blue-500 dark:border-gray-600"
                     {...register('note')}
                 />
                 {errors.note && <p className="mt-1 text-xs text-red-500">{errors.note.message}</p>}
@@ -256,7 +254,7 @@ const WorkoutResultPage = () => {
                                 }
                             )
                         }}
-                        className={`relative h-6 w-11 cursor-pointer rounded-full transition-colors ${searchAllPlans ? 'bg-primary-dark' : 'bg-gray-300 dark:bg-gray-600'}`}
+                        className={`relative h-6 w-11 cursor-pointer rounded-full transition-colors ${searchAllPlans ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'}`}
                     >
                         <span className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${searchAllPlans ? 'translate-x-5' : ''}`} />
                     </div>
@@ -312,7 +310,7 @@ const WorkoutResultPage = () => {
             {showFinishTimeModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center">
                     <div className="fixed inset-0 bg-black/50" onClick={handleCloseFinishTimeModal} />
-                    <div className="relative z-50 mx-4 w-full max-w-lg rounded-lg bg-white p-0 shadow-xl dark:bg-gray-900">
+                    <div className="relative z-50 w-full max-w-lg rounded-lg bg-white p-0 shadow-xl dark:bg-gray-900">
                         <div className="px-6 pt-6 text-lg font-semibold">{t('Update workout finish time?')}</div>
                         <div className="px-6 py-4">
                             <p className="text-sm text-gray-500">
@@ -320,14 +318,14 @@ const WorkoutResultPage = () => {
                             </p>
                         </div>
                         <div className="flex justify-end gap-2 px-6 pb-6">
-                            <button className="px-4 py-2 text-primary-dark hover:bg-[rgba(255,255,255,0.04)]" onClick={handleCloseFinishTimeModal}>
+                            <button className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800" onClick={handleCloseFinishTimeModal}>
                                 {t('Close')}
                             </button>
-                            <button className="px-4 py-2 text-primary-dark hover:bg-[rgba(255,255,255,0.04)]" onClick={handleSkipFinishTime}>
+                            <button className="px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800" onClick={handleSkipFinishTime}>
                                 {t('Skip')}
                             </button>
                             <button
-                                className="rounded bg-primary-dark px-4 py-2 text-[#121212] hover:bg-[#64b5f6] disabled:opacity-50"
+                                className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
                                 onClick={handleAcceptFinishTime}
                             >
                                 {t('Accept')}
