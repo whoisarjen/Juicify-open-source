@@ -19,28 +19,35 @@
  * │ See CLAUDE.md for the checklist.                                      │
  * └─────────────────────────────────────────────────────────────────────────┘
  *
- * Response shape (see bottom of file for full TypeScript type):
+ * Response shape:
  * {
  *   snapshot: {
  *     generatedAt:    ISO timestamp
- *     periodStart:    ISO date (60 days ago)
+ *     periodStart:    ISO date (N days ago)
  *     periodEnd:      ISO date (today)
  *     daysRequested:  number
  *
+ *     _guide:         AI-readable instructions for interpreting each field
  *     user:           full profile (macros, goals, diet, activity, body stats)
- *     consumed:       food log entries with product macros expanded
- *     workoutResults: completed workout sessions with exercise details
+ *
+ *     // Reference data (not date-bound)
  *     workoutPlans:   workout templates (active, not soft-deleted)
  *     exercises:      user's custom exercises (active, not soft-deleted)
- *     measurements:   body composition & vital sign readings
- *     burnedCalories: manual calorie burn entries
  *     supplements:    supplement stack with ingredients and schedules
- *     coach:          AI coaching history (macro recommendations, weight trend)
  *
- *     // Withings wearable data (only present if user has connected device)
- *     withingsActivity: daily step/calorie/HR summaries
- *     withingsWorkouts: device-recorded workout sessions
- *     withingsSleep:    nightly sleep stage & quality data
+ *     // All time-series data grouped by date
+ *     dailyLog: {
+ *       "YYYY-MM-DD": {
+ *         consumed?:         food log grouped by meal slot
+ *         workoutResults?:   completed workouts
+ *         measurements?:     body composition & vitals
+ *         burnedCalories?:   manual calorie burns
+ *         coach?:            AI coaching snapshots
+ *         withingsActivity?: wearable daily summary
+ *         withingsWorkouts?: wearable workout sessions
+ *         withingsSleep?:    wearable sleep data
+ *       }
+ *     }
  *   }
  * }
  *
@@ -497,20 +504,98 @@ export default async function handler(
         }),
     ])
 
-    // ── Aggregate consumed by day → meal ────────────────────────────
-    const consumedByDay: Record<string, { mealCount: number; meals: Record<number, typeof consumed> }> = {}
+    // ── Group ALL time-series data by date (YYYY-MM-DD) ──────────────
+    // This lets the AI see everything that happened on a given day in one place.
+    type DailyEntry = {
+        consumed?: { mealCount: number; meals: Record<number, typeof consumed> }
+        workoutResults?: typeof workoutResults
+        measurements?: typeof measurements
+        burnedCalories?: typeof burnedCalories
+        coach?: typeof coach
+        withingsActivity?: typeof withingsActivity
+        withingsWorkouts?: typeof withingsWorkouts
+        withingsSleep?: typeof withingsSleep
+    }
 
+    const dailyLog: Record<string, DailyEntry> = {}
+
+    const ensureDay = (date: string): DailyEntry => {
+        if (!dailyLog[date]) dailyLog[date] = {}
+        return dailyLog[date]
+    }
+
+    // Consumed → grouped by day → meal slot
     for (const entry of consumed) {
         const date = entry.whenAdded.toISOString().slice(0, 10)
-        if (!consumedByDay[date]) {
-            consumedByDay[date] = { mealCount: 0, meals: {} }
+        const day = ensureDay(date)
+        if (!day.consumed) day.consumed = { mealCount: 0, meals: {} }
+        if (!day.consumed.meals[entry.meal]) {
+            day.consumed.meals[entry.meal] = []
+            day.consumed.mealCount++
         }
-        const day = consumedByDay[date]
-        if (!day.meals[entry.meal]) {
-            day.meals[entry.meal] = []
-            day.mealCount++
-        }
-        day.meals[entry.meal].push(entry)
+        day.consumed.meals[entry.meal].push(entry)
+    }
+
+    // Workout results → by whenAdded date
+    for (const entry of workoutResults) {
+        const date = entry.whenAdded.toISOString().slice(0, 10)
+        const day = ensureDay(date)
+        if (!day.workoutResults) day.workoutResults = []
+        day.workoutResults.push(entry)
+    }
+
+    // Measurements → by whenAdded date
+    for (const entry of measurements) {
+        const date = entry.whenAdded.toISOString().slice(0, 10)
+        const day = ensureDay(date)
+        if (!day.measurements) day.measurements = []
+        day.measurements.push(entry)
+    }
+
+    // Burned calories → by whenAdded date
+    for (const entry of burnedCalories) {
+        const date = entry.whenAdded.toISOString().slice(0, 10)
+        const day = ensureDay(date)
+        if (!day.burnedCalories) day.burnedCalories = []
+        day.burnedCalories.push(entry)
+    }
+
+    // Coach → by createdAt date
+    for (const entry of coach) {
+        const date = entry.createdAt.toISOString().slice(0, 10)
+        const day = ensureDay(date)
+        if (!day.coach) day.coach = []
+        day.coach.push(entry)
+    }
+
+    // Withings activity → by date
+    for (const entry of withingsActivity) {
+        const date = entry.date.toISOString().slice(0, 10)
+        const day = ensureDay(date)
+        if (!day.withingsActivity) day.withingsActivity = []
+        day.withingsActivity.push(entry)
+    }
+
+    // Withings workouts → by startDate
+    for (const entry of withingsWorkouts) {
+        const date = entry.startDate.toISOString().slice(0, 10)
+        const day = ensureDay(date)
+        if (!day.withingsWorkouts) day.withingsWorkouts = []
+        day.withingsWorkouts.push(entry)
+    }
+
+    // Withings sleep → by date
+    for (const entry of withingsSleep) {
+        const date = entry.date.toISOString().slice(0, 10)
+        const day = ensureDay(date)
+        if (!day.withingsSleep) day.withingsSleep = []
+        day.withingsSleep.push(entry)
+    }
+
+    // Sort dailyLog keys chronologically
+    const sortedDailyLog: Record<string, DailyEntry> = {}
+    for (const date of Object.keys(dailyLog).sort()) {
+        sortedDailyLog[date] = dailyLog[date]
     }
 
     // ── Build response ─────────────────────────────────────────────
@@ -521,18 +606,82 @@ export default async function handler(
             periodEnd: now.toISOString(),
             daysRequested: days,
 
+            _guide: {
+                overview: 'This snapshot contains ALL user data grouped by date. Use dailyLog to see everything that happened on a given day. Reference data (workoutPlans, exercises, supplements) is separate because it is not date-bound.',
+                dailyLog: {
+                    structure: 'Object keyed by date (YYYY-MM-DD) in chronological order. Each day contains only the sections that have data — missing keys mean no data for that day/section.',
+                    consumed: {
+                        description: 'Food log grouped by meal slot number (0-based, up to numberOfMeals-1 from user profile).',
+                        macroCalculation: 'Product macros (proteins, carbs, fats, etc.) are per 100g. Multiply each macro by (howMany / 100) to get the actual intake for that entry. Sum across all entries in a day for daily totals.',
+                        example: 'If product.proteins=25 and howMany=200, actual protein intake = 25 * (200/100) = 50g.',
+                    },
+                    workoutResults: {
+                        description: 'Completed workout sessions. Duration = finishedAt - whenAdded. The exercises field is a JSON array of exercise objects.',
+                        exerciseFormat: 'Each exercise in the JSON has a name and sets array. Each set has reps and weight (kg). To calculate volume: sum(reps * weight) across all sets.',
+                        burnedCalories: 'Actual calories burned during this workout session.',
+                        workoutPlanId: 'References a template in workoutPlans — null if the workout was ad-hoc.',
+                    },
+                    measurements: {
+                        description: 'Body composition and vital sign readings.',
+                        units: 'weight: kg, fatRatio: %, temperature/bodyTemperature/skinTemperature: °C, heartPulse: bpm, blood pressure: mmHg, spo2: %, vo2Max: mL/kg/min, waist/hips: cm.',
+                        morningPulse: 'pulseSleep/pulseFatigue/pulseMood/pulseSoreness/pulseStress/pulseErection are 1-5 subjective scales (1=worst, 5=best). These are self-reported morning wellness indicators.',
+                        source: '"manual" = user-entered, "withings" = synced from Withings device.',
+                    },
+                    burnedCalories: {
+                        description: 'Standalone manual calorie burn entries (walking, cycling, etc.). Separate from workout burnedCalories.',
+                    },
+                    coach: {
+                        description: 'AI coaching analysis snapshots. Shows calculated macro targets and weight at that point in time.',
+                        countedFields: 'countedProteins/Carbs/Fats/Calories are the recommended daily targets the coach calculated.',
+                        changeInWeight: 'Weight change (kg) since previous coach analysis. Positive = gained, negative = lost.',
+                    },
+                    withingsActivity: {
+                        description: 'Daily wearable summary. Durations are in seconds.',
+                        calorieTypes: 'activeCalories = movement only, totalCalories = activeCalories + BMR.',
+                        hrZones: 'hrZone0-3 are durations (seconds) in each heart rate zone (0=rest, 1=light, 2=moderate, 3=intense).',
+                    },
+                    withingsWorkouts: {
+                        description: 'Individual workout sessions recorded by Withings device. Duration = endDate - startDate minus pauseDuration.',
+                    },
+                    withingsSleep: {
+                        description: 'Nightly sleep data. All durations are in seconds.',
+                        sleepScore: 'Overall sleep quality score 0-100.',
+                        sleepEfficiency: 'Percentage of time in bed actually spent sleeping.',
+                        waso: 'Wake After Sleep Onset — total seconds awake after initially falling asleep.',
+                        rrFields: 'Respiratory rate (breaths per minute) during sleep.',
+                    },
+                },
+                user: {
+                    macroTargets: 'proteinsDay0-6 / carbsDay0-6 / fatsDay0-6 are daily macro targets in grams. Day numbers: 0=Sunday, 1=Monday, ..., 6=Saturday. Use the day-of-week from the date to pick the correct targets.',
+                    minMacroTargets: 'minProteinsDay0-6 etc. are minimum thresholds — the user should eat at least this much.',
+                    fiber: 'Daily fiber target in grams.',
+                    carbsPercentAsSugar: 'Maximum percentage of daily carbs that should come from sugar.',
+                    goal: 'Weight change goal per week (e.g., -0.5 = lose 0.5 kg/week, 0 = maintain, 0.5 = gain).',
+                    numberOfMeals: 'How many meal slots the user uses per day (determines meal numbers in consumed data).',
+                },
+                referenceData: {
+                    workoutPlans: 'Workout templates — not date-bound. Referenced by workoutPlanId in workoutResults.',
+                    exercises: 'Custom exercise definitions — referenced by name inside workout JSON.',
+                    supplements: 'Full supplement stack. isActive=true means currently taking. timeOfDay and frequency show the schedule.',
+                },
+                tips: [
+                    'To check adherence: compare daily consumed totals against the user macro targets for that day-of-week.',
+                    'To spot trends: iterate dailyLog dates chronologically and track weight, calories, or training volume over time.',
+                    'Days with no key in dailyLog had no tracked data — this itself is a signal (missed tracking).',
+                    'Cross-reference withingsActivity calories with consumed calories to estimate energy balance.',
+                    'Morning pulse ratings dropping over time may indicate overtraining or poor recovery.',
+                ],
+            },
+
             user,
-            consumed: consumedByDay,
-            workoutResults,
+
+            // Reference data (not date-bound)
             workoutPlans,
             exercises,
-            measurements,
-            burnedCalories,
             supplements,
-            coach,
-            withingsActivity,
-            withingsWorkouts,
-            withingsSleep,
+
+            // All time-series data grouped by date
+            dailyLog: sortedDailyLog,
         },
     })
 }
