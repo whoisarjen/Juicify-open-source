@@ -317,9 +317,7 @@ const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
                         <div className="flex items-baseline gap-1 shrink-0 text-right">
                             <span className="text-[11px] font-semibold text-[#9ca3af]">
                                 {isConsumed
-                                    ? minMacro.calories > 0
-                                        ? `${consumedMacro.calories} / ${minMacro.calories}–${expectedMacro.calories}`
-                                        : `${consumedMacro.calories} / ${expectedMacro.calories}`
+                                    ? consumedMacro.calories
                                     : expectedMacro.calories - consumedMacro.calories}
                             </span>
                             {burnedCaloriesTotalSum > 0 && (
