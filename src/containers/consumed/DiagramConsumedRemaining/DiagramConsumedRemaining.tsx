@@ -130,15 +130,6 @@ const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
 
     const calBelowMin = minMacro.calories > 0 && consumedMacro.calories < minMacro.calories
 
-    // Macro calorie percentage split
-    const proteinCals = (consumedMacro.proteins as number) * 4
-    const carbsCals = (consumedMacro.carbs as number) * 4
-    const fatCals = (consumedMacro.fats as number) * 9
-    const totalMacroCals = proteinCals + carbsCals + fatCals
-    const pCalPct = totalMacroCals > 0 ? (proteinCals / totalMacroCals) * 100 : 0
-    const cCalPct = totalMacroCals > 0 ? (carbsCals / totalMacroCals) * 100 : 0
-    const fCalPct = totalMacroCals > 0 ? (fatCals / totalMacroCals) * 100 : 0
-
     const hasTdee = canCalcTdee
     const hasPills = dayStats && (dayStats.hrAverage != null || dayStats.steps != null || dayStats.totalSleepTime != null)
 
@@ -260,31 +251,17 @@ const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
 
                     <div className="h-px bg-[rgba(255,255,255,0.06)]" />
 
-                    {/* Calories consumed + net — stacked by macro */}
-                    <div className="flex items-center gap-2 mt-2">
+                    {/* Calories consumed + net */}
+                    <div className="flex items-center gap-2">
                         <span className="text-[11px] font-semibold w-[46px] shrink-0 text-macro-kcal">
                             {t('Kcal')}
                         </span>
                         <div className="relative flex-1">
-                            <div className="flex h-[4px] rounded-full bg-[rgba(255,255,255,0.04)] overflow-hidden">
+                            <div className="h-[4px] rounded-full bg-[rgba(255,255,255,0.04)] overflow-hidden">
                                 <div
-                                    className="h-full bg-macro-protein transition-all duration-500"
+                                    className="h-full rounded-full transition-all duration-500 bg-macro-kcal"
                                     style={{
-                                        width: `${calPercent * pCalPct / 100}%`,
-                                        opacity: calBelowMin ? 0.4 : 1,
-                                    }}
-                                />
-                                <div
-                                    className="h-full bg-macro-carbs transition-all duration-500"
-                                    style={{
-                                        width: `${calPercent * cCalPct / 100}%`,
-                                        opacity: calBelowMin ? 0.4 : 1,
-                                    }}
-                                />
-                                <div
-                                    className="h-full bg-macro-fat transition-all duration-500"
-                                    style={{
-                                        width: `${calPercent * fCalPct / 100}%`,
+                                        width: `${calPercent}%`,
                                         opacity: calBelowMin ? 0.4 : 1,
                                     }}
                                 />
@@ -295,24 +272,6 @@ const DiagramConsumedRemaining = (props: DiagramConsumedRemainingProps) => {
                                     style={{ left: `${calMinPercent}%` }}
                                 />
                             )}
-                            {totalMacroCals > 0 && (() => {
-                                const pW = calPercent * pCalPct / 100
-                                const cW = calPercent * cCalPct / 100
-                                const fW = calPercent * fCalPct / 100
-                                return (
-                                    <>
-                                        <span className="absolute text-[8px] font-bold text-macro-protein -translate-x-1/2 transition-all duration-500" style={{ left: `${pW / 2}%`, top: '-11px' }}>
-                                            {Math.round(pCalPct)}%
-                                        </span>
-                                        <span className="absolute text-[8px] font-bold text-macro-carbs -translate-x-1/2 transition-all duration-500" style={{ left: `${pW + cW / 2}%`, top: '-11px' }}>
-                                            {Math.round(cCalPct)}%
-                                        </span>
-                                        <span className="absolute text-[8px] font-bold text-macro-fat -translate-x-1/2 transition-all duration-500" style={{ left: `${pW + cW + fW / 2}%`, top: '-11px' }}>
-                                            {Math.round(fCalPct)}%
-                                        </span>
-                                    </>
-                                )
-                            })()}
                         </div>
                         <div className="flex items-baseline gap-1 shrink-0 text-right">
                             <span className="text-[11px] font-semibold text-[#9ca3af]">
