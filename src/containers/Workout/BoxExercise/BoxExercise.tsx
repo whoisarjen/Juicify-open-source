@@ -136,7 +136,7 @@ const BaseBoxExercise = ({
                         isOwner={isOwner}
                         isLast={index + 1 === values.length}
                         openNewResult={openNewResult}
-                        previousSetAt={index > 0 ? values[index - 1]?.setAt : undefined}
+                        previousSetAt={index > 0 ? values[index - 1]?.setAt ?? undefined : undefined}
                     />
                 )
             )}

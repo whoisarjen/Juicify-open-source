@@ -4,10 +4,10 @@ import { exerciseSchema } from "./exercise.schema";
 import { decimal } from "./decimal";
 
 export const workoutPlanExerciseSchema = z.object({
-    series: z.coerce.number().min(1).max(10).optional(),
-    reps: z.coerce.number().min(1).max(100).optional(),
-    rir: z.coerce.number().min(0).max(5).optional(),
-    note: z.string().max(255).optional(),
+    series: z.coerce.number().min(1).max(10).optional().nullable(),
+    reps: z.coerce.number().min(1).max(100).optional().nullable(),
+    rir: z.coerce.number().min(0).max(5).optional().nullable(),
+    note: z.string().max(255).optional().nullable(),
 }).merge(exerciseSchema.pick({ id: true, name: true }))
 
 export type WorkoutPlanExerciseSchema = z.infer<typeof workoutPlanExerciseSchema>

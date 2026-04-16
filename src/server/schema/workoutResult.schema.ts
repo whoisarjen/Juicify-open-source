@@ -7,9 +7,9 @@ export const workoutResultExerciseResultSchema = z.object({
     open: z.coerce.boolean().optional(),
     reps: decimal(z.coerce.number()),
     weight: decimal(z.coerce.number()),
-    rir: z.coerce.number().optional(), // RIR wasn't supported before 20.07.2023
-    setAt: z.string().optional(), // UTC ISO timestamp when set was opened/recorded
-    timezone: z.string().optional(), // IANA timezone e.g. "Europe/Warsaw" - stored for future tz-aware display
+    rir: z.coerce.number().optional().nullable(), // RIR wasn't supported before 20.07.2023
+    setAt: z.string().optional().nullable(), // UTC ISO timestamp when set was opened/recorded
+    timezone: z.string().optional().nullable(), // IANA timezone e.g. "Europe/Warsaw" - stored for future tz-aware display
 })
 
 export type WorkoutResultExerciseResultSchema = z.infer<typeof workoutResultExerciseResultSchema>
