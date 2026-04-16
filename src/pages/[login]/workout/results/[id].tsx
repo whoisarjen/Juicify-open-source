@@ -124,23 +124,17 @@ const WorkoutResultPage = () => {
     const handleAcceptFinishTime = async () => {
         if (!pendingFormValues) return
         setShowFinishTimeModal(false)
-        try {
-            await updateWorkoutResult.mutateAsync({ ...pendingFormValues, finishedAt: new Date() })
-            router.push(`/${router.query?.login}/workout/results`)
-        } catch (e) {
-            console.error('Failed to save workout result:', e)
-        }
+        await updateWorkoutResult
+            .mutateAsync({ ...pendingFormValues, finishedAt: new Date() })
+            .then(() => router.push(`/${router.query?.login}/workout/results`))
     }
 
     const handleSkipFinishTime = async () => {
         if (!pendingFormValues) return
         setShowFinishTimeModal(false)
-        try {
-            await updateWorkoutResult.mutateAsync(pendingFormValues)
-            router.push(`/${router.query?.login}/workout/results`)
-        } catch (e) {
-            console.error('Failed to save workout result:', e)
-        }
+        await updateWorkoutResult
+            .mutateAsync(pendingFormValues)
+            .then(() => router.push(`/${router.query?.login}/workout/results`))
     }
 
     const handleCloseFinishTimeModal = () => {
@@ -175,14 +169,10 @@ const WorkoutResultPage = () => {
             <NavbarWorkout
                 isDisabled={isLoading}
                 isLoading={isLoading}
-                onSave={handleSubmit(handleOnSaveWithRouter, (errors) => console.error('Workout form validation errors:', errors))}
+                onSave={handleSubmit(handleOnSaveWithRouter)}
                 onDelete={() => deleteWorkoutResult.mutate({ id })}
                 onArrowBack={() => router.push(`/${username}/workout/results`)}
             />
-
-            {updateWorkoutResult.isError && (
-                <p className="text-xs text-red-500">{t('Failed to save. Please try again.')}</p>
-            )}
 
             <div>
                 <label className="mb-1 block text-sm text-gray-500">{t('Title')}</label>

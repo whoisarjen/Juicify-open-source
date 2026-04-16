@@ -281,7 +281,7 @@ const WorkoutPlan = () => {
                                                 label={t('Notes')}
                                                 type="text"
                                                 className="mt-2.5 w-full"
-                                                defaultValue={exercise.note ?? undefined}
+                                                defaultValue={exercise.note}
                                                 onChange={(note) =>
                                                     update(i, {
                                                         ...exercise,
