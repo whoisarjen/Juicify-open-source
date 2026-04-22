@@ -116,6 +116,8 @@ const WorkoutResultPage = () => {
     const handleOnSave = async (values: WorkoutResultSchema) =>
         await updateWorkoutResult.mutate(values)
 
+    const saveNow = () => handleSubmit(handleOnSave)()
+
     const handleOnSaveWithRouter = (newWorkoutResult: WorkoutResultSchema) => {
         setPendingFormValues(newWorkoutResult)
         setShowFinishTimeModal(true)
@@ -287,8 +289,14 @@ const WorkoutResultPage = () => {
                         }
                         setNewValues={(
                             results: WorkoutResultExerciseResult[]
-                        ) => update(index, { ...exercise, results })}
-                        deleteExerciseWithIndex={() => remove(index)}
+                        ) => {
+                            update(index, { ...exercise, results })
+                            saveNow()
+                        }}
+                        deleteExerciseWithIndex={() => {
+                            remove(index)
+                            saveNow()
+                        }}
                     />
                 </div>
             ))}
@@ -296,14 +304,15 @@ const WorkoutResultPage = () => {
             {sessionData?.user?.username == username && (
                 <ButtonMoreOptionsWorkoutResult
                     exercises={fields as unknown as WorkoutResultExercise[]}
-                    setExercises={(exercises) =>
+                    setExercises={(exercises) => {
                         append(
                             exercises.map((exercise) => ({
                                 ...pick(exercise, ['id', 'name']),
                                 results: [],
                             }))
                         )
-                    }
+                        saveNow()
+                    }}
                 />
             )}
 
