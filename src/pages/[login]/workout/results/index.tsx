@@ -25,7 +25,7 @@ const WorkoutResultsPage = () => {
     const isOwner = sessionData?.user?.username == username
 
     return (
-        <div className="flex flex-1 flex-col gap-4">
+        <div className="flex min-w-0 flex-1 flex-col gap-4">
             {isOwner ? (
                 <NavbarOnlyTitle title="home:WORKOUT_RESULTS">
                     <DialogAddWorkoutResult />

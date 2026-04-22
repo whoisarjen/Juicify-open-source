@@ -20,7 +20,7 @@ const BoxWorkout = ({
     return (
         <Link
             href={route}
-            className="glass-interactive flex w-full p-4 cursor-pointer"
+            className="glass-interactive flex w-full min-w-0 p-4 cursor-pointer"
         >
             <div className="flex flex-1 flex-col gap-1 min-w-0">
                 <h2 className="text-sm font-bold text-zinc-200 truncate">{title}</h2>
