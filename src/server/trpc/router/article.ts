@@ -83,13 +83,4 @@ export const articleRouter = router({
                 relatedArticles: related.map((a) => resolveArticleListItem(a, locale)),
             }
         }),
-
-    sitemap: publicProcedure
-        .query(async ({ ctx }) => {
-            return await ctx.prisma.article.findMany({
-                where: { isPublished: true },
-                select: { slug: true, updatedAt: true },
-                orderBy: { publishedAt: 'desc' },
-            })
-        }),
 })

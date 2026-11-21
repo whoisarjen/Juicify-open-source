@@ -16,12 +16,16 @@ const nextConfig = {
         ],
     },
     ...nextTranslate(),
-    async redirects() {
+    async headers() {
         return [
             {
-                source: '/sitemap.xml',
-                destination: '/api/sitemap',
-                permanent: true,
+                source: '/:path*',
+                headers: [
+                    {
+                        key: 'X-Robots-Tag',
+                        value: 'noindex, nofollow, noarchive, nosnippet, noimageindex',
+                    },
+                ],
             },
         ]
     },
